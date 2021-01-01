@@ -7,6 +7,9 @@ class UndirectedGraph extends Graph {
             console.error("Inserção de aresta chamada incorretamente.")
             return;
         }
+        if (nodeA == nodeB) {
+            return;
+        }
         debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
                    " até o nó " + nodeB.label, edge);
         this.data.get(nodeA).set(nodeB, edge)
