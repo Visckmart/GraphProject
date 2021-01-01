@@ -1,0 +1,38 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <script>
+        window.addEventListener("load", () => {
+            const urlParams = new URLSearchParams(location.search);
+
+            for (const [key, value] of urlParams) {
+                console.log(`${key}:${value}`);
+            }
+            function include(file) { 
+                var script = document.createElement('script'); 
+                script.src = file+"?random="+(new Date).getTime(); 
+                script.type = 'text/javascript'; 
+                script.defer = true; 
+
+                document.getElementsByTagName('head').item(0).appendChild(script); 
+            }
+            // include('General.js');
+            include("Node.js")
+            include("Edge.js")
+            include("Graph.js")
+            include("UndirectedGraph.js")
+            include("DirectedGraph.js")
+            include("Graph_Structure_Tests.js")
+        });
+
+        debugMode = true;
+        if (debugMode == true) {
+            var debugPrint = console.info.bind(window.console)
+        } else {
+            var debugPrint = function() { }
+        }
+    </script>
+</body>
+</html>
