@@ -8,13 +8,34 @@ class Graph {
     }
 
     insertNode(node) {
+        // Validação
         if (!(node)) {
             console.error("Inserção de nó chamada incorretamente.");
             return;
         }
         debugPrint("Inserindo nó", node)
         console.assert(this.data.has(node) == false, "Nó já estava no grafo.")
+        
+        // Operação
         this.data.set(node, new Map());
+    }
+
+    removeNode(node) {
+        // Validação
+        if (!(node)) {
+            console.error("Remoção de nó chamada incorretamente.");
+            return;
+        }
+        debugPrint("Removendo nó", node)
+        console.assert(this.data.has(node) == true, "Nó não está no grafo.")
+        
+        // Operação
+        for (let [_, nodeA, nodeB] of this.edges()) {
+            if (nodeB == node) {
+                this.removeEdgeBetween(nodeA, nodeB)
+            }
+        }
+        this.data.delete(node)
     }
 
     insertEdge(nodeA, nodeB, edge) {
@@ -28,11 +49,14 @@ class Graph {
     }
     
     removeEdge(edge) {
+        // Validação
         if (!(edge)) {
             console.error("Remoção de uma aresta específica chamada incorretamente.")
             return;
         }
         debugPrint("Removendo aresta " + edge.label)
+
+        // Operação
         let anyEdgeRemoved = false;
         for (let [currentEdge, nodeA, nodeB] of this.edges()) {
             if (currentEdge == edge) {
@@ -46,17 +70,21 @@ class Graph {
     }
 
     getEdgeBetween(nodeA, nodeB) {
+        // Validação
         let connA = this.data.get(nodeA)
         if (connA == null) {
             console.warn("Houve uma tentativa de obter uma aresta inexistente.")
             return null;
         }
+
+        // Operação
         return connA.get(nodeB)
     }
     
     checkEdgeBetween(nodeA, nodeB) {
         let connA = this.data.get(nodeA);
         if (connA == null) {
+            console.warn("Houve uma tentativa de checar uma aresta  inexistente.")
             return false;
         }
         return connA.get(nodeB) != null;

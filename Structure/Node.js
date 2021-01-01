@@ -1,11 +1,12 @@
+import { ctx } from "../General.js"
 // Node Definition
 const totalBlinkingFrames = 30;
 const nodeColorList = [
-    "darkorange", "gold", "lightskyblue", "springgreen", "crimson",
-    "mediumslateblue", "deeppink", "chocolate", "limegreen"
+    "lightskyblue", "springgreen", "gold", "red",
+    "mediumslateblue", "deeppink", "limegreen", "burlywood", "dodgerblue"
 ]
 
-var colorRotation = 2
+var colorRotation = 0
 class Node {
 
     constructor(x, y, label) {
