@@ -5,3 +5,5 @@ class Edge {
         this.label = label;
     }
 }
+
+export default Edge

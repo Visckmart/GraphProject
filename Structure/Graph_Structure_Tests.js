@@ -1,10 +1,15 @@
-gs = new UndirectedGraph()
+import Node from './Node.js'
+import UndirectedGraph from "./UndirectedGraph.js";
+import DirectedGraph from "./DirectedGraph.js";
+import Edge from "./Edge.js";
+
+let gs = new UndirectedGraph()
 // gs.showGraph()
-n1 = new Node(10, 20, "A")
+let n1 = new Node(10, 20, "A")
 gs.insertNode(n1)
-n2 = new Node(10, 30, "B")
+let n2 = new Node(10, 30, "B")
 gs.insertNode(n2)
-n3 = new Node(10, 20, "C")
+let n3 = new Node(10, 20, "C")
 gs.insertNode(n3)
 let e1 = new Edge("E1")
 let e2 = new Edge("E2")

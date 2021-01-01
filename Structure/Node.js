@@ -9,3 +9,5 @@ class Node {
         this.label = label;
     }
 }
+
+export default Node

@@ -1,3 +1,4 @@
+import Graph from "./Graph.js";
 class UndirectedGraph extends Graph {
 
     // Inserção
@@ -24,3 +25,5 @@ class UndirectedGraph extends Graph {
         this.data.get(nodeB).delete(nodeA)
     }
 }
+
+export default UndirectedGraph

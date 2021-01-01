@@ -1,3 +1,5 @@
+import Graph from "./Graph.js";
+
 class DirectedGraph extends Graph {
 
     // Inserção
@@ -23,3 +25,5 @@ class DirectedGraph extends Graph {
     }
 
 }
+
+export default DirectedGraph
