@@ -83,7 +83,7 @@ class Graph {
     *nodes() {
         // yield* this.data.keys()
         for (let n of this.data.keys()) {
-            this.data.delete(Array.from(this.data.keys())[2]);
+            // this.data.delete(Array.from(this.data.keys())[2]);
             yield n;
         }
     }
