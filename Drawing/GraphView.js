@@ -1,7 +1,7 @@
 import {canvas, ctx, Tool} from "./General.js"
-import UndirectedGraph from "./Structure/UndirectedGraph.js"
-import Node from "./Structure/Node.js"
-import Edge from "./Structure/Edge.js"
+import UndirectedGraph from "../Structure/UndirectedGraph.js"
+import Node from "../Structure/Node.js"
+import Edge from "../Structure/Edge.js"
 
 const nodeRadius = 14;
 const nodeBorderWidth = 2;

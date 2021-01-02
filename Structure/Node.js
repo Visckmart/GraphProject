@@ -1,4 +1,4 @@
-import { ctx } from "../General.js"
+import { ctx } from "../Drawing/General.js"
 // Node Definition
 const totalBlinkingFrames = 30;
 const nodeColorList = [
