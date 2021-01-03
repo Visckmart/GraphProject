@@ -48,6 +48,23 @@ class GraphView {
         return detectedNodes;
     }
 
+    getNodesWithin(initialPos, finalPos) {
+        let x = Math.min(initialPos.x, finalPos.x) - nodeRadius
+        let y = Math.min(initialPos.y, finalPos.y) - nodeRadius
+        let w = Math.max(initialPos.x, finalPos.x) - x + nodeRadius
+        let h = Math.max(initialPos.y, finalPos.y) - y + nodeRadius
+
+        let nodesWithin = []
+        for(let node of this.structure.nodes())
+        {
+            if(node.pos.x > x && node.pos.y > y && node.pos.x < x + w && node.pos.y < y + h)
+            {
+                nodesWithin.push(node)
+            }
+        }
+        return nodesWithin
+    }
+
     insertNewNodeAt(pos) {
         let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y, newLabel)
@@ -190,6 +207,26 @@ class GraphView {
         ctx.stroke();
     }
 
+    setSelectionRectangle(initialPos, pointerPos) {
+        if(initialPos === null || pointerPos === null)
+        {
+            this.drawSelectionRectangle = () => { }
+            return
+        }
+        this.drawSelectionRectangle = () => {
+            ctx.save()
+
+            ctx.strokeStyle = 'blue'
+            ctx.fillStyle = 'rgba(0,0,255,0.1)'
+            ctx.lineWidth = 2
+            ctx.strokeRect(initialPos.x, initialPos.y, pointerPos.x - initialPos.x, pointerPos.y - initialPos.y)
+            ctx.fillRect(initialPos.x, initialPos.y, pointerPos.x - initialPos.x, pointerPos.y - initialPos.y)
+
+            ctx.restore()
+        }
+    }
+
+
     // Debugging function
     sourceNodeCounter = 0;
     targetNodeCounter = 0;
@@ -249,6 +286,10 @@ class GraphView {
         // this.structure.nodes().forEach(this.drawNode);
         for (let node of this.structure.nodes()) {
             this.drawNode(node)
+        }
+        if(this.drawSelectionRectangle)
+        {
+            this.drawSelectionRectangle()
         }
     }
 

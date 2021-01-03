@@ -44,16 +44,21 @@ class Node {
             this.expansion += Math.sin((this.elapsedBlinkingTime / 10)/(Math.PI * 3)) * 2
             // console.log("x")
             // this.blinkingFrame += 1;
-            if (timestamp - this._initialBlinkingTime > 300) {
+            /*if (timestamp - this._initialBlinkingTime > 300) {
                 this._isBlinking = false;
                 this._initialBlinkingTime = 0;
-            }
+            }*/
         }
     }
 
     blink() {
         this._initialBlinkingTime = window.performance.now();
         this._isBlinking = true;
+    }
+
+    stopBlink() {
+        this._initialBlinkingTime = null
+        this._isBlinking = false
     }
 
 }

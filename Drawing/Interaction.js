@@ -49,11 +49,39 @@ function adaptCursorStyle(graph, isHoveringNode) {
     canvas.style.cursor = cursorStyle;
 }
 
+/* Destaca os nós selecionados */
+function updateMultipleSelectedNodes()
+{
+    for(let node of g.structure.nodes())
+    {
+        if(multipleSelectedNodes.includes(node))
+        {
+            node.blink()
+        } else {
+            node.stopBlink()
+        }
+    }
+}
+
 /* Registra caso um nó tenha sido movimentado, útil no mouse up */
 let movedNode = false;
 
+/* Variáveis para Seleção Múltipla */
+/* Tolerância para iniciar a seleção múltipla */
+let movementTolerance = 20
+/* Registra a ultima posição em que o mousedown ocorreu para fazer a seleção múltipla */
+let lastMousedownPosition = null
+/* Registra caso haja uma seleção múltipla acontecendo */
+let multipleSelection = false
+/* Registra nós selecionados na última seleção múltipla */
+let multipleSelectedNodes = []
+
 /* MOUSE DOWN */
 function mouseDown(e) {
+    // Reseta nós selecionados
+    multipleSelectedNodes = []
+    updateMultipleSelectedNodes()
+
     // Somente o botão esquerdo nos interessa
     if (e.button != 0) return;
 
@@ -62,6 +90,12 @@ function mouseDown(e) {
     g.selectedNode = g.getNodeIndexAt(pos)[0];
     movedNode = false;
     adaptCursorStyle(g, g.selectedNode != null);
+
+    if(!g.selectedNode)
+    {
+        // Registrando posição do mouseDown
+        lastMousedownPosition = pos
+    }
 }
 
 /* MOUSE MOVED */
@@ -71,9 +105,19 @@ function mouseMoved(e) {
     currentMousePos = pos;
     let hovering = g.getNodeIndexAt(pos)[0] != null;
 
-    // Se nada estiver selecionado, pare por aqui
     if (g.selectedNode == null) {
-        adaptCursorStyle(g, hovering);
+        // Se nada estiver selecionado, pare por aqui
+        if(lastMousedownPosition == null)
+        {
+            adaptCursorStyle(g, hovering);
+        }
+        else if(Math.abs(currentMousePos.x - lastMousedownPosition.x) > movementTolerance ||
+                Math.abs(currentMousePos.y - lastMousedownPosition.y) > movementTolerance) {
+            multipleSelection = true
+            g.setSelectionRectangle(lastMousedownPosition, currentMousePos)
+        } else if(multipleSelection) {
+            g.setSelectionRectangle(lastMousedownPosition, currentMousePos)
+        }
         return;
     }
     
@@ -105,7 +149,20 @@ function mouseUp(e) {
         return;
     }
     adaptCursorStyle(g, false);
-    
+
+    /* Selecionando nodes na área de seleção múltipla */
+    if (multipleSelection) {
+        multipleSelectedNodes = g.getNodesWithin(lastMousedownPosition, pos)
+        updateMultipleSelectedNodes()
+        multipleSelection = false
+        lastMousedownPosition = null
+        g.setSelectionRectangle(lastMousedownPosition, pos)
+
+        return
+    } else {
+        lastMousedownPosition = null
+    }
+
     // Se o botão esquerdo foi o levantado,
     switch (g.primaryTool) {
         // A ferramenta MOVE for a escolhida,
@@ -179,6 +236,16 @@ function keyboardEvent(event) {
             if (metaPressed == false && lastToolChoice == Tool.MOVE) {
                 g.primaryTool = Tool.MOVE;
             }
+            console.log(event.code)
+            if (event.code === "Delete")
+            {
+                for(let node of multipleSelectedNodes)
+                {
+                    g.structure.removeNode(node)
+                }
+                multipleSelectedNodes = []
+                updateMultipleSelectedNodes()
+            }
             break;
     }
     refreshInterfaceState()
@@ -188,6 +255,12 @@ function keyboardEvent(event) {
 document.body.onblur = function(e) {
     // console.log(e)
     // console.log("z");
+    if(multipleSelection)
+    {
+        multipleSelection = false
+        lastMousedownPosition = null
+        g.setSelectionRectangle(lastMousedownPosition, null)
+    }
     if (lastToolChoice == Tool.MOVE) {
         g.primaryTool = Tool.MOVE;
     }
