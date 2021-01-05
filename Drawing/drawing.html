@@ -7,38 +7,30 @@
     <script type="module" src="GraphView.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <!-- <button>Let's go !</button> -->
     <!-- <h1>Abcde</h1> -->
     <!-- <div class="gradient-box"> -->
-    <button id="movebtn" style = "border-radius: 5pt 0 0 5pt;">Move</button>
-    <button id="connectbtn" style = "border-radius: 0 5pt 5pt 0;">Connect</button>
+    <div class = "tools">
+        <button id="movebtn">Mover</button>
+        <button id="movebtn">Teste</button>
+        <button id="connectbtn">Connect</button>
+    </div>
     <br>
     <br>
-    <canvas></canvas>
+    <br>
+    <!-- <br> -->
+    <div class="canvasArea">
+        <canvas></canvas>
+    </div>
 <!-- </div> -->
     <!-- <canvas id = "s"></canvas> -->
     <script>
         window.addEventListener("load", () => {
             const urlParams = new URLSearchParams(location.search);
 
-for (const [key, value] of urlParams) {
-    console.log(`${key}:${value}`);
-}
-
-        //     function include(file) { 
-        //         var script = document.createElement('script'); 
-        //         script.src = file+"?random="+(new Date).getTime(); 
-        //         script.type = 'text/javascript'; 
-        //         script.defer = true; 
-
-        //         document.getElementsByTagName('head').item(0).appendChild(script); 
-        //     }
-        //     include('General.js');
-        //     include("Structure/Node.js")
-        //     include("Structure/Edge.js")
-        //     include("Structure/Graph.js")
-        //     include("Structure/UndirectedGraph.js")
-        //     include("Structure/DirectedGraph.js")
-        //     // include("Structure/Graph_Structure_Tests.js")
+            for (const [key, value] of urlParams) {
+                console.log(`${key}:${value}`);
+            }
         });
 
         debugMode = true;

@@ -1,5 +1,6 @@
-import { canvas, Tool } from "./General.js"
+import { canvas, Tool /*, HighFPSFeature*/ } from "./General.js"
 import { g } from "./GraphView.js"
+import Edge from "../Structure/Edge.js"
 
 const moveButton = document.getElementById("movebtn");
 const connectButton = document.getElementById("connectbtn");
@@ -61,6 +62,7 @@ function updateMultipleSelectedNodes()
             node.stopBlink()
         }
     }
+    // g.requestHighFPS(HighFPSFeature.BLINK, 30)
 }
 
 /* Registra caso um nó tenha sido movimentado, útil no mouse up */
@@ -182,6 +184,7 @@ function mouseUp(e) {
                 let releasedOverNode = g.getNodeIndexAt(pos)[0];
                 if (releasedOverNode != null) {
                     // Insira uma aresta conectando ambos
+                    // g.structure.insertEdge(g.selectedNode, releasedOverNode, new Edge())
                     g.insertEdgeBetween(g.selectedNode, releasedOverNode)
                 }
                 // Pare de atualizar a aresta temporária
@@ -227,6 +230,9 @@ function keyboardEvent(event) {
             if (event.keyCode == 69) {
                 g.structure.showGraph()
             }
+            // if (event.keyCode == 82) {
+                // g.structure.abc
+            // console.log(event.keyCode)
             if (metaPressed == true) {
                 g.primaryTool = Tool.CONNECT;
             }
@@ -236,7 +242,7 @@ function keyboardEvent(event) {
             if (metaPressed == false && lastToolChoice == Tool.MOVE) {
                 g.primaryTool = Tool.MOVE;
             }
-            console.log(event.code)
+            // console.log(event.code)
             if (event.code === "Delete")
             {
                 for(let node of multipleSelectedNodes)

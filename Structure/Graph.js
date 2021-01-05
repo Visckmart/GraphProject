@@ -1,3 +1,5 @@
+import Edge from "../Structure/Edge.js"
+
 class Graph {
     data = new Map();
 
@@ -46,6 +48,15 @@ class Graph {
     removeEdgeBetween(nodeA, nodeB) {
         console.trace()
         throw new Error("Não implementado!")
+    }
+
+    removeAllEdgesFromNode(node) {
+        for (let [edge, nodeA, nodeB] of this.edges()) {
+            if (nodeA == node || nodeB == node) {
+                this.removeEdge(edge)
+                console.count()
+            }
+        }
     }
     
     removeEdge(edge) {

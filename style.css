@@ -1,63 +1,81 @@
+:root {
+  --blurSize: 5pt;
+}
+
 canvas {
-  border: 5px solid;
-  border-image-slice: 1;
-  border-width: 5px;
-  border-image-source: linear-gradient(to right, #743ad5, #d53a9d);
+  margin-left: 10pt;
+  /*left: 30pt;*/
+  /*border: 5px solid;*/
+  /*border-image-slice: 1;*/
+  /*border-width: 5px;*/
+  /*border-image-source: linear-gradient(to right, #743ad5, #d53a9d);*/
   /*background-color: blue;*/
   /*width: 100%;*/
   /*height: 100%;*/
   /*object-fit: none;*/
+  border-radius: 10pt;
+  /*background: linear-gradient(to right, red, blue);*/
+  background: linear-gradient(to right, #E5E0FF, #FFE0F3);
 }
-button {
-  background-color: cornflowerblue;
+
+.canvasArea::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 57pt;
+  left: 15pt;
+  height: 75%;
+  width: 75%;
+  opacity: 0.65;
+  border-radius: 8pt;
+  background: linear-gradient(to right, #743ad5, #d53a9d);
+
+  -moz-filter: blur(var(--blurSize));
+  -o-filter: blur(var(--blurSize));
+  -ms-filter: blur(var(--blurSize));
+  filter: blur(var(--blurSize));
+  
+  transition: all 0.2s;
+}
+
+
+.tools {
+  margin-top: 10pt;
+  margin-left: 10pt;
+  padding-bottom: 5pt;
+}
+
+.tools button {
+  background-color: darkgray;
   color: white;
   transition: 0.1s;
   border-style: none;
-  border-width: 0;
   font-size: 18;
   width: 100px;
   float: left;
   height: 25pt;
+  border-left: 0.5pt solid #555;
+  border-right: 0.5pt solid #555;
 }
-button:hover {
-  cursor: pointer;
+.tools button:first-child {
+  /*background-color: red;*/
+  border-radius: 5pt 0 0 5pt;
+  border: 0;
 }
-button:disabled {
-  cursor: default;
-  /*opacity: 0.5;*/
-  background-color: royalblue;
+.tools button:last-child {
+  /*background-color: red;*/
+  border-radius: 0 5pt 5pt 0;
+  border: 0;
+}
+
+.tools button:hover {
+  background-color: #777;
+  /*cursor: pointer;*/
+}
+
+.tools button:disabled {
+  /*cursor: default;*/
+  background-color: #555;
   font-weight: bold;
 
-}
-.gradient-box {
-  display: flex;
-  align-items: center;
-  width: 90%;
-  margin: auto;
-  /*max-width: 22em;*/
-  height: 100%;
-  position: relative;
-  /*padding: 00%;*/
-  box-sizing: border-box;
-  color: #FFF;
-  background: #FFF;
-  background-clip: padding-box;
-  /* !importanté */
-  border: solid 10px transparent;
-  /* !importanté */
-  border-radius: 1em;
-}
-.gradient-box:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  margin: -10px;
-  /* !importanté */
-  border-radius: inherit;
-  /* !importanté */
-  background: linear-gradient(to left, #743ad5, #d53a9d);
 }

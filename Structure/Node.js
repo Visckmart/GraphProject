@@ -1,9 +1,13 @@
 import { ctx } from "../Drawing/General.js"
 // Node Definition
+export const nodeRadius = 14;
 const totalBlinkingFrames = 30;
 const nodeColorList = [
-    "lightskyblue", "springgreen", "gold", "red",
-    "mediumslateblue", "deeppink", "limegreen", "burlywood", "dodgerblue"
+    // "#32E6BC", "#E6DD27", "#E67955", "#27E64D"
+    // "#E9D879", "#32E6BA", "#E6DD27", "#E67855", "#27E64C"
+    // "#2FD6AE", "#D6CE24", "#D6704F", "#27E64C"
+    "dodgerblue", "limegreen", "#4FC3F7", "#F2CA00", "#FFA000",
+    "mediumslateblue", "deeppink", "burlywood", "#8D6E63", "#FF7043"
 ]
 
 var colorRotation = 0
@@ -17,39 +21,42 @@ class Node {
 
         this._isBlinking = false;
         this._initialBlinkingTime = null;
+        this.expansion = 3;
 
         function getCurrentColor() {
             if (this._isBlinking == true) {
-                ctx.fillStyle = "red";
+                return "blue";
             } else {
-                ctx.fillStyle = this._originalcolor
+                return this._originalcolor
             }
+            // ctx.fillStyle = this._originalcolor
+        }
+        Object.defineProperty(this, 'color', { get: getCurrentColor } );
+
+
+        function getCurrentRadius() {
+            let elapsedTime = window.performance.now() - this._initialTime;
+            let speed = 0.15
+            let expansion = Math.sin((elapsedTime / 100)*speed) * 1.5 - 2.5
+            if (this._isBlinking) {
+                // this.elapsedBlinkingTime = window.performance.now() - this._initialBlinkingTime;
+                // this.expansion = Math.sin(this.blinkingFrame / totalBlinkingFrames * Math.PI)
+                // expansion += Math.sin((this.elapsedBlinkingTime / 10)/(Math.PI * 3)) * 2
+                expansion += Math.sin((elapsedTime / 100)*(speed*2))
+            }
+            return nodeRadius * 2 + expansion;
         }
 
-        Object.defineProperty(this, 'color', { get: getCurrentColor } );
+        
+        Object.defineProperty(this, 'radius', { get: getCurrentRadius } );
         colorRotation += 1;
     }
 
 
-    update(timestamp) {
-        // if (!this._isBlinking) { return; }
-        // console.log(timestamp, timestamp - this.initialDate)
-        let elapsedTime = timestamp - this._initialTime;
-        let speed = 0.15
-        this.expansion = Math.sin((elapsedTime / 100)*speed) * 1.5 - 2.5;
-
-        if (this._isBlinking) {
-            this.elapsedBlinkingTime = timestamp - this._initialBlinkingTime;
-            // this.expansion = Math.sin(this.blinkingFrame / totalBlinkingFrames * Math.PI)
-            this.expansion += Math.sin((this.elapsedBlinkingTime / 10)/(Math.PI * 3)) * 2
-            // console.log("x")
-            // this.blinkingFrame += 1;
-            /*if (timestamp - this._initialBlinkingTime > 300) {
-                this._isBlinking = false;
-                this._initialBlinkingTime = 0;
-            }*/
-        }
-    }
+    // update(timestamp) {
+        
+        // this.expansion = Math.sin((elapsedTime / 100)*speed) * 1.5 - 2.5;
+    // }
 
     blink() {
         this._initialBlinkingTime = window.performance.now();

@@ -1,14 +1,19 @@
-import {canvas, ctx, Tool} from "./General.js"
+import {canvas, ctx, Tool, HighFPSFeature} from "./General.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import Node from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
+import { nodeRadius } from "../Structure/Node.js"
 
-const nodeRadius = 14;
+
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
 const nodeTextColor = "black";
 
 const edgeWidth = 3;
+
+const IDLE_MAX_FPS = 10;
+const INTERACTION_MAX_FPS = 90;
+
 
 // Graph
 class GraphView {
@@ -22,8 +27,6 @@ class GraphView {
 
     primaryTool = Tool.MOVE;
     structure = new UndirectedGraph();
-    // nodes = [new Node(100, 200, 0), new Node(300, 100, 1)];
-    // edges = new Map()
     highlightedEdges = new Map()
 
 
@@ -69,10 +72,14 @@ class GraphView {
         let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y, newLabel)
         this.structure.insertNode(newNode)
+        this.redrawGraph();
     }
 
     moveNode(node, pos) {
         node.pos = pos;
+        this.requestHighFPS(HighFPSFeature.MOVING, 90)
+        // console.log("move")
+        // this.redrawGraph();
     }
 
     insertEdgeBetween(nodeA, nodeB) {
@@ -92,6 +99,7 @@ class GraphView {
         }
         this.structure.removeNode(frontmostNode)
     }
+    
     // Graph Drawing
     
     // This function draws one node. This includes the circle, the text and
@@ -103,14 +111,17 @@ class GraphView {
         ctx.strokeStyle = nodeBorderColor;
 
         ctx.beginPath();
-        // console.log(nodeRadius, node.expansion)
-        ctx.arc(node.pos.x, node.pos.y, nodeRadius*2 + node.expansion, 0, 2*Math.PI);
+        ctx.arc(node.pos.x, node.pos.y, node.radius, 0, 2*Math.PI);
         ctx.fill();
         ctx.stroke();
-
+        
         // Draw text
         ctx.font = "30px Arial Bold";
-        ctx.fillStyle = nodeTextColor;
+        var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        grd.addColorStop(0, "#E5E0FF");
+        grd.addColorStop(1, "#FFE0F3");
+
+        ctx.fillStyle = grd;
 
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle'; 
@@ -198,6 +209,8 @@ class GraphView {
             return;
         }
         // console.log(2)
+        // this.inter = 1000/60;
+        this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
         ctx.lineWidth = edgeWidth;
         ctx.strokeStyle = "black";
         
@@ -213,14 +226,17 @@ class GraphView {
             this.drawSelectionRectangle = () => { }
             return
         }
+        this.requestHighFPS(HighFPSFeature.SELECTING, 90)
         this.drawSelectionRectangle = () => {
             ctx.save()
 
             ctx.strokeStyle = 'blue'
             ctx.fillStyle = 'rgba(0,0,255,0.1)'
-            ctx.lineWidth = 2
-            ctx.strokeRect(initialPos.x, initialPos.y, pointerPos.x - initialPos.x, pointerPos.y - initialPos.y)
-            ctx.fillRect(initialPos.x, initialPos.y, pointerPos.x - initialPos.x, pointerPos.y - initialPos.y)
+            ctx.lineWidth = 3
+            let finalPosX = pointerPos.x - initialPos.x;
+            let finalPosY = pointerPos.y - initialPos.y;
+            ctx.fillRect  (initialPos.x, initialPos.y, finalPosX, finalPosY)
+            ctx.strokeRect(initialPos.x, initialPos.y, finalPosX, finalPosY)
 
             ctx.restore()
         }
@@ -251,8 +267,6 @@ class GraphView {
 
         return [sourceNodeIndex, targetNodeIndex]
     }
-    
-    lastRandomEdge = null;
 
     checkEdge(nodeIndexA, nodeIndexB) {
         let smallIndex = Math.min(nodeIndexA, nodeIndexB)
@@ -265,48 +279,67 @@ class GraphView {
         }
     }
 
-    // completeGraph() {
+    drawCurrentMaxFPS(fps) {
+        ctx.fillStyle = "#AAA8";
+        ctx.font = "12pt Arial";
+        let content = fps + " FPS"
+        let textMeasurement = ctx.measureText(content)
+        ctx.fillText(content, canvas.width-textMeasurement.width/2 - 15, 20)
+    }
 
-    // }
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // if (this.lastRandomEdge == null || window.performance.now() - this.lastRandomEdge > 5000) {
-        //     this.lastRandomEdge = window.performance.now()
-        //     // this.generate()
-        //     // let nextEdge = this.getNextEdge()
-        //     // if (nextEdge) {
-        //     //     let [leftNodeIndex, rightNodeIndex] = nextEdge
-        //     //     this.highlightedEdges = new Map()
-        //     //     this.highlightedEdges.set(leftNodeIndex, new Set([rightNodeIndex]))
-        //     // }
-        // }
+        
         this.drawEdges()
-        // this.nodes.forEach(this.drawNode);
-        // this.structure.nodes().forEach(this.drawNode);
         for (let node of this.structure.nodes()) {
             this.drawNode(node)
+            if (node._isBlinking) {
+                this.requestHighFPS(HighFPSFeature.BLINKING, 60)
+            }
         }
-        if(this.drawSelectionRectangle)
-        {
+        if (this.drawSelectionRectangle) {
             this.drawSelectionRectangle()
         }
     }
 
+
     // Animations
+
+    lastFrameTimestamp = window.performance.now()
+    frameRateRequests = new Map()
+
+    requestHighFPS(feature, FPS) {
+        this.frameRateRequests.set(feature, FPS)
+    }
+    
+    getCurrentFPS() {
+        // if (this.frameRateRequests.size != 0) {
+        //     console.log(this.frameRateRequests)
+        // }
+        let highestFPS = Math.max(Array.from(this.frameRateRequests.values()))
+        if (highestFPS < IDLE_MAX_FPS) {
+            highestFPS = IDLE_MAX_FPS
+        }
+        return highestFPS;
+    }
+
     // This function updates every node and redraws the graph.
     updateAnimations(timestamp) {
-        // console.log("Update Animations");
-        
-        // let requestNewUpdate = false;
-        for (let node of this.structure.nodes()) {
-            node.update(timestamp);
-            // if (node.isBlinking) { requestNewUpdate = true; }
+        requestAnimationFrame(this.updateAnimations.bind(this));
+
+        let currentFPS = this.getCurrentFPS()
+        // console.log(currentFPS + "FPS", this.frameRateRequests)
+        let timeBetweenFrames = 1000/currentFPS;
+        if ((timestamp - this.lastFrameTimestamp) < timeBetweenFrames) {
+            return;
         }
+        this.lastFrameTimestamp = timestamp;
+        this.frameRateRequests = new Map();
         
         this.redrawGraph();
+        this.drawCurrentMaxFPS(currentFPS)
         
-        requestAnimationFrame(this.updateAnimations.bind(this));
     }
     
 
@@ -316,4 +349,11 @@ class GraphView {
 export let g = new GraphView(canvas);
 g.redrawGraph();
 g.updateAnimations();
+
+window.onresize = function () {
+  // canvas.style.borderImageSource = "linear-gradient(to right, #743ad5, red)";
+  canvas.width = window.innerWidth*0.75;
+  canvas.height = window.innerHeight*0.75;
+  g.redrawGraph()
+}
 // redrawGraph();

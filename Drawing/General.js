@@ -30,6 +30,12 @@ export const Tool = {
     MOVE: "move",
     CONNECT: "connect"
 }
+export const HighFPSFeature = {
+    MOVING: "moving",
+    CONNECTING: "connecting",
+    SELECTING: "selecting",
+    BLINKING: "blinking"
+}
 // function include(file) { 
 //     var script = document.createElement('script'); 
 //     script.src = file+"?random="+(new Date).getTime(); 
