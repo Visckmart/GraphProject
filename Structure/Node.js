@@ -6,8 +6,8 @@ const nodeColorList = [
     // "#32E6BC", "#E6DD27", "#E67955", "#27E64D"
     // "#E9D879", "#32E6BA", "#E6DD27", "#E67855", "#27E64C"
     // "#2FD6AE", "#D6CE24", "#D6704F", "#27E64C"
-    "dodgerblue", "limegreen", "#FFA0A0",
-    "mediumslateblue", "#8D6E63", "deeppink", "#4FC3F7", "burlywood", "#FF7043"
+    "dodgerblue", "limegreen", "deeppink",
+    "mediumslateblue", "#8D6E63", "#FFA0A0", "#4FC3F7", "burlywood", "#FF7043"
 ]
 
 var colorRotation = 0

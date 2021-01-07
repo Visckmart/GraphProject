@@ -301,7 +301,11 @@ class GraphView {
         // if (this.frameRateRequests.size != 0) {
         //     console.log(this.frameRateRequests)
         // }
-        let highestFPS = Math.max(Array.from(this.frameRateRequests.values()))
+        let highestFPS = Math.max(...Array.from(this.frameRateRequests.values()))
+
+        // if (highestFPS == NaN) {
+            // console.log(Array.from(this.frameRateRequests.values()) + " " + highestFPS)
+        // }
         if (highestFPS < IDLE_MAX_FPS) {
             highestFPS = IDLE_MAX_FPS
         }

@@ -77,11 +77,10 @@ let multipleSelection = false
 /* Registra nós selecionados na última seleção múltipla */
 let multipleSelectedNodes = []
 
+let selectionPoint = null
+let selectedOriginalPos = []
 /* MOUSE DOWN */
 function mouseDown(e) {
-    // Reseta nós selecionados
-    multipleSelectedNodes = []
-    updateMultipleSelectedNodes()
 
     // Somente o botão esquerdo nos interessa
     if (e.button != 0) return;
@@ -92,10 +91,17 @@ function mouseDown(e) {
     movedNode = false;
     adaptCursorStyle(g, g.selectedNode != null);
 
+    // console.log(!g.selectedNode)
     if(!g.selectedNode)
     {
+    // Reseta nós selecionados
+    multipleSelectedNodes = []
+    updateMultipleSelectedNodes()
         // Registrando posição do mouseDown
         lastMousedownPosition = pos
+    } else {
+        selectionPoint = pos
+        // console.log("abcde")
     }
 }
 
@@ -128,8 +134,20 @@ function mouseMoved(e) {
 
     // Caso a ferramenta Move esteja selecionada
     if (g.primaryTool == Tool.MOVE) {
-        // Mova o nó para o ponteiro do mouse
-        g.moveNode(g.selectedNode, pos);
+        if (multipleSelectedNodes.length <= 1) {
+            // Mova o nó para o ponteiro do mouse
+            g.moveNode(g.selectedNode, pos);
+        } else {
+            for (let nodeIndex in multipleSelectedNodes) {
+                let posBeforeMove = selectedOriginalPos[nodeIndex]
+                let newPosition = {
+                    x: posBeforeMove.x + pos.x - selectionPoint.x,
+                    y: posBeforeMove.y + pos.y - selectionPoint.y
+                }
+                g.moveNode(multipleSelectedNodes[nodeIndex], newPosition);
+            }
+        }
+
         // Registre que um nó se moveu
         movedNode = true;
 
@@ -155,6 +173,7 @@ function mouseUp(e) {
     /* Selecionando nodes na área de seleção múltipla */
     if (multipleSelection) {
         multipleSelectedNodes = g.getNodesWithin(lastMousedownPosition, pos)
+        selectedOriginalPos = Array.from(multipleSelectedNodes.map(node => node.pos))
         updateMultipleSelectedNodes()
         multipleSelection = false
         lastMousedownPosition = null
