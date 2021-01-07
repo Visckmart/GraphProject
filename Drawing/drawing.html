@@ -7,12 +7,8 @@
     <script type="module" src="GraphView.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- <button>Let's go !</button> -->
-    <!-- <h1>Abcde</h1> -->
-    <!-- <div class="gradient-box"> -->
     <div class = "tools">
         <button id="movebtn">Mover</button>
-        <button id="movebtn">Teste</button>
         <button id="connectbtn">Connect</button>
     </div>
     <br>
@@ -21,6 +17,18 @@
     <!-- <br> -->
     <div class="canvasArea">
         <canvas></canvas>
+
+        <div class="menuArea">
+            <h2>Grafo</h2>
+            <p>Nomenclatura dos nós
+            <select id="nodeNames">
+                <option value="numbers_0" disabled>Números a partir de 0</option>
+                <option value="numbers_1" disabled>Números a partir de 1</option>
+                <option value="letters_ordered" disabled>Letras Em Ordem Alfabética</option>
+                <option value="letters_randomized" selected>Letras Aleatórias</option>
+            </select>
+        </p>
+        </div>
     </div>
 <!-- </div> -->
     <!-- <canvas id = "s"></canvas> -->

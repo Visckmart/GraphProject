@@ -188,6 +188,7 @@ function mouseUp(e) {
     switch (g.primaryTool) {
         // A ferramenta MOVE for a escolhida,
         case Tool.MOVE:
+            selectedOriginalPos = Array.from(multipleSelectedNodes.map(node => node.pos))
             // E nenhum nó tenha sido movido no gesto atual
             if (movedNode == false) {
                 // Insira um nó novo
