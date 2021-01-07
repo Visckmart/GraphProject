@@ -190,7 +190,7 @@ class GraphView {
             ctx.stroke();
         }
         // Draw text
-        ctx.font = "30px Arial Bold";
+        ctx.font = "30px Arial";
         var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
         grd.addColorStop(0, "#E5E0FF");
         grd.addColorStop(1, "#FFE0F3");
