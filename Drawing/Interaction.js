@@ -1,11 +1,13 @@
 import { canvas, Tool } from "./General.js"
 import { g } from "./GraphView.js"
 
-const moveButton = document.getElementById("movebtn");
-const connectButton = document.getElementById("connectbtn");
-
-moveButton.onclick = moveTool;
-connectButton.onclick = connectTool;
+for(let element of document.querySelector("#tool_tray").children)
+{
+    if(element.tagName === "INPUT")
+    {
+        element.onchange = () => changeTool(element.value)
+    }
+}
 
 canvas.addEventListener("mousedown", mouseDown);
 canvas.addEventListener("contextmenu", contextMenuOpened);
@@ -237,7 +239,7 @@ document.body.onkeyup = keyboardEvent;
 
 /* Variável para relembrar a ferramenta escolhida depois da tecla
    especial ser levantada. */
-let lastToolChoice = Tool.MOVE;
+var lastToolChoice = Tool.MOVE;
 
 function keyboardEvent(event) {
     let metaPressed = event.metaKey;
@@ -254,6 +256,10 @@ function keyboardEvent(event) {
                 // g.structure.abc
             // console.log(event.keyCode)
             if (metaPressed == true) {
+                if(lastToolChoice === null)
+                {
+                    lastToolChoice = g.primaryTool;
+                }
                 g.primaryTool = Tool.CONNECT;
             }
             break;
@@ -261,6 +267,7 @@ function keyboardEvent(event) {
         case "keyup":
             if (metaPressed == false && lastToolChoice == Tool.MOVE) {
                 g.primaryTool = Tool.MOVE;
+                lastToolChoice = null;
             }
             // console.log(event.code)
             if (event.code === "Delete")
@@ -295,15 +302,12 @@ document.body.onblur = function(e) {
 
 /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
 function refreshInterfaceState() {
-    switch (g.primaryTool) {
-        case Tool.MOVE:
-            moveButton.disabled = true;
-            connectButton.disabled = false;
-            break;
-        case Tool.CONNECT:
-            moveButton.disabled = false;
-            connectButton.disabled = true;
-            break;
+    for(let element of document.querySelector("#tool_tray").children)
+    {
+        if(element.tagName === "INPUT" && element.value === g.primaryTool)
+        {
+            element.click()
+        }
     }
     adaptCursorStyle(g)
 }
@@ -311,16 +315,7 @@ function refreshInterfaceState() {
 // Executa a primeira vez
 refreshInterfaceState();
 
-function moveTool() {
-    g.primaryTool = Tool.MOVE;
-    lastToolChoice = Tool.MOVE;
-    // console.log(g.primaryTool)
-    refreshInterfaceState();
-}
 
-function connectTool() {
-    g.primaryTool = Tool.CONNECT;
-    lastToolChoice = Tool.CONNECT;
-    // console.log(g.primaryTool)
-    refreshInterfaceState();
+function changeTool(tool) {
+    g.primaryTool = tool
 }
