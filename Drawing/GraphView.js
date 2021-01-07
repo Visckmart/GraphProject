@@ -149,6 +149,13 @@ class GraphView {
         return [sourceNodeIndex, targetNodeIndex]
     }
     
+    s1 = 10
+    s2 = 10
+    selectionPrototyping(a, b) {
+        // console.log(a, b)
+        this.s1 = a/10
+        this.s2 = b/10
+    }
     // Graph Drawing
     
     // This function draws one node. This includes the circle, the text and
@@ -164,6 +171,24 @@ class GraphView {
         ctx.fill();
         ctx.stroke();
         
+        if (node._isBlinking) {
+            ctx.strokeStyle = "#1050FF"
+            ctx.lineWidth = 4
+            let t = window.performance.now()/1000
+            let t2 = t/2
+            let r = node.radius + 2
+            // let r = Math.sin(t)*10+20
+            let c = 2*Math.PI*r
+            // console.log(c, this.s1, this.s2)
+            // ctx.setLineDash([c/this.s1, c/this.s2]);
+            ctx.setLineDash([c/12.5, c/22]);
+            ctx.beginPath()
+            // console.log(h)
+            // ctx.moveTo(100, 100);
+            // ctx.lineTo(x, 200);
+            ctx.arc(node.pos.x, node.pos.y, r, 0+t2, 2*Math.PI+t2);
+            ctx.stroke();
+        }
         // Draw text
         ctx.font = "30px Arial Bold";
         var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
@@ -190,8 +215,9 @@ class GraphView {
 
     drawEdges() {
         // ctx.lineWidth = Math.sin(window.performance.now()/1000)+15;
-        ctx.lineWidth = 8
-        ctx.strokeStyle = "black";
+        ctx.lineWidth = 7
+        ctx.strokeStyle = "#333";
+        ctx.setLineDash([]);
         let drawn = new Set()
         for (let [e, nodeIndexA, nodeIndexB] of this.structure.edges()) {
             if (drawn.has(e)) continue;
@@ -207,8 +233,12 @@ class GraphView {
         }
 
         this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
-        ctx.lineWidth = edgeWidth;
+        ctx.lineWidth = 5;
         ctx.strokeStyle = "black";
+        // let h = Math.sqrt(Math.pow(Math.abs(pointerPos.x-anchorNode.pos.x), 2) + Math.pow(Math.abs(pointerPos.y - anchorNode.pos.y), 2))
+        // console.log(h)
+        // let s = Math.floor(h/100)*5
+        ctx.setLineDash([10, 5]);
         
         ctx.beginPath()
         ctx.moveTo(anchorNode.pos.x, anchorNode.pos.y);
@@ -232,12 +262,29 @@ class GraphView {
         for (let node of this.structure.nodes()) {
             this.drawNode(node)
             if (node._isBlinking) {
-                this.requestHighFPS(HighFPSFeature.BLINKING, 60)
+                this.requestHighFPS(HighFPSFeature.BLINKING, 30)
             }
         }
         if (this.drawSelectionRectangle) {
             this.drawSelectionRectangle()
         }
+
+        // ctx.strokeStyle = "black"
+        // ctx.lineWidth = 3
+        // let t = window.performance.now()/1000
+        // // console.log(t)
+        // let x = Math.sin(t)*50+200
+        // let y = 200
+        // let h = Math.sqrt(Math.pow(x-100, 2) + Math.pow(y - 100, 2))
+        // let r = Math.sin(t)*10+20
+        // let c = 2*Math.PI*r
+        // ctx.setLineDash([c/30, c/15]);
+        // ctx.beginPath()
+        // // console.log(h)
+        // // ctx.moveTo(100, 100);
+        // // ctx.lineTo(x, 200);
+        // ctx.arc(100, 100, r, t, 2*Math.PI+t);
+        // ctx.stroke();
     }
 
 

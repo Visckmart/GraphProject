@@ -6,8 +6,8 @@ const nodeColorList = [
     // "#32E6BC", "#E6DD27", "#E67955", "#27E64D"
     // "#E9D879", "#32E6BA", "#E6DD27", "#E67855", "#27E64C"
     // "#2FD6AE", "#D6CE24", "#D6704F", "#27E64C"
-    "dodgerblue", "limegreen", "#4FC3F7", "#F2CA00", "#FFA000",
-    "mediumslateblue", "deeppink", "burlywood", "#8D6E63", "#FF7043"
+    "dodgerblue", "limegreen", "#FFA0A0",
+    "mediumslateblue", "#8D6E63", "deeppink", "#4FC3F7", "burlywood", "#FF7043"
 ]
 
 var colorRotation = 0
@@ -25,7 +25,7 @@ class Node {
 
         function getCurrentColor() {
             if (this._isBlinking == true) {
-                return "blue";
+                return this._originalcolor
             } else {
                 return this._originalcolor
             }

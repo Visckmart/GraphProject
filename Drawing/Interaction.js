@@ -104,6 +104,7 @@ function mouseDown(e) {
 function mouseMoved(e) {
     let pos = getMousePos(e);
     currentMousePos = pos;
+    // g.selectionPrototyping(pos.x, pos.y)
     let hovering = g.getNodeIndexAt(pos)[0] != null;
 
     if (g.selectedNode == null) {
