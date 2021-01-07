@@ -1,6 +1,5 @@
-import { canvas, Tool /*, HighFPSFeature*/ } from "./General.js"
+import { canvas, Tool } from "./General.js"
 import { g } from "./GraphView.js"
-import Edge from "../Structure/Edge.js"
 
 const moveButton = document.getElementById("movebtn");
 const connectButton = document.getElementById("connectbtn");

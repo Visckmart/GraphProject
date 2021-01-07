@@ -36,15 +36,14 @@ class GraphView {
     // The lookup is done from the last node to the first, the inverse of the
     // drawing lookup in order to return the frontmost node.
     getNodeIndexAt(pos, checkForConflict = false) {
-        let radiusCheck;
-        if (checkForConflict) { radiusCheck = nodeRadius * 2; }
-        else                  { radiusCheck = nodeRadius; }
-        
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
+            let radiusCheck;
+            if (checkForConflict) { radiusCheck = node.radius * 2; }
+            else                  { radiusCheck = node.radius; }
             let dx = node.pos.x - pos.x;
             let dy = node.pos.y - pos.y;
-            if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck*2) {
+            if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck) {
                 detectedNodes.push(node);
             }
         }
@@ -52,16 +51,17 @@ class GraphView {
     }
 
     getNodesWithin(initialPos, finalPos) {
-        let x = Math.min(initialPos.x, finalPos.x) - nodeRadius
-        let y = Math.min(initialPos.y, finalPos.y) - nodeRadius
-        let w = Math.max(initialPos.x, finalPos.x) - x + nodeRadius
-        let h = Math.max(initialPos.y, finalPos.y) - y + nodeRadius
+        let leftmost   = Math.min(initialPos.x, finalPos.x)
+        let rightmost  = Math.max(initialPos.x, finalPos.x)
+        let topmost    = Math.min(initialPos.y, finalPos.y)
+        let bottommost = Math.max(initialPos.y, finalPos.y)
 
         let nodesWithin = []
-        for(let node of this.structure.nodes())
-        {
-            if(node.pos.x > x && node.pos.y > y && node.pos.x < x + w && node.pos.y < y + h)
-            {
+        for (let node of this.structure.nodes()) {
+            if (   node.pos.x + node.radius > leftmost
+                && node.pos.x - node.radius < rightmost
+                && node.pos.y + node.radius > topmost
+                && node.pos.y - node.radius < bottommost) {
                 nodesWithin.push(node)
             }
         }
@@ -69,6 +69,9 @@ class GraphView {
     }
 
     insertNewNodeAt(pos) {
+        if (this.getNodeIndexAt(pos, true).length != 0) {
+            return;
+        }
         let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y, newLabel)
         this.structure.insertNode(newNode)
@@ -76,10 +79,8 @@ class GraphView {
     }
 
     moveNode(node, pos) {
-        node.pos = pos;
         this.requestHighFPS(HighFPSFeature.MOVING, 90)
-        // console.log("move")
-        // this.redrawGraph();
+        node.pos = pos;
     }
 
     insertEdgeBetween(nodeA, nodeB) {
@@ -99,133 +100,13 @@ class GraphView {
         }
         this.structure.removeNode(frontmostNode)
     }
-    
-    // Graph Drawing
-    
-    // This function draws one node. This includes the circle, the text and
-    // the appropriate color (considering any animation happening).
-    drawNode(node) {
-        // Draw circle
-        ctx.lineWidth = nodeBorderWidth;
-        ctx.fillStyle = node.color;
-        ctx.strokeStyle = nodeBorderColor;
-
-        ctx.beginPath();
-        ctx.arc(node.pos.x, node.pos.y, node.radius, 0, 2*Math.PI);
-        ctx.fill();
-        ctx.stroke();
-        
-        // Draw text
-        ctx.font = "30px Arial Bold";
-        var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        grd.addColorStop(0, "#E5E0FF");
-        grd.addColorStop(1, "#FFE0F3");
-
-        ctx.fillStyle = grd;
-
-        ctx.textAlign = "center";
-        ctx.textBaseline = 'middle'; 
-        ctx.fillText(node.label, node.pos.x, node.pos.y);
-    }
-
-    drawEdge(nodeA, nodeB) {
-        if (nodeA == null || nodeB == null)
-            return;
-        // let connA = this.highlightedEdges.get(nodeIndexA);
-        // // console.log(connA)
-        // if (connA && connA.has(nodeIndexB)) {
-        //     ctx.strokeStyle = "blue";
-        // } else {
-        //     ctx.strokeStyle = "gray";
-        // }
-        ctx.beginPath()
-        ctx.moveTo(nodeA.pos.x, nodeA.pos.y);
-        // let mpx = (nodeA.pos.x + nodeB.pos.x)/2
-        // let mpy = (nodeA.pos.y + nodeB.pos.y)/2
-        // ctx.bezierCurveTo(nodeA.pos.x, nodeA.pos.y - 100, nodeB.pos.x, nodeA.pos.y - 100, nodeB.pos.x, nodeB.pos.y);
-        // DUAS ARESTAS NOS MESMOS NÓS
-        /*
-        let mpx = (nodeA.pos.x + nodeB.pos.x)/2
-        let mpy = (nodeA.pos.y + nodeB.pos.y)/2
-
-        // angle of perpendicular to line:
-        var theta = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x) - Math.PI / 2;
-
-        // distance of control point from mid-point of line:
-        var offset = 50;
-        // if (nodeIndexA < nodeIndexB) {
-        //     offset = -offset;
-        // }
-
-        // location of control point:
-        var c1x = mpx + offset * Math.cos(theta);
-        var c1y = mpy + offset * Math.sin(theta);
-        ctx.quadraticCurveTo(c1x, c1y, nodeB.pos.x, nodeB.pos.y);
-        */
-        // let a = mpx
-        // let b = mpy
-        ctx.lineTo(nodeB.pos.x, nodeB.pos.y);
-        ctx.stroke();
-        // ctx.textAlign = "center";
-        // ctx.textBaseline = 'middle';
-        // // ctx.translate(-50, -50)
-        // ctx.save()
-        // ctx.translate(a, b)
-        // // let h = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
-        // let theta = Math.atan2(-mpy, -mpx); // range (-PI, PI]
-        //   // theta *= 180 / Math.PI; 
-        // ctx.rotate(theta)
-        // ctx.translate(0, -15)
-        // ctx.translate(-a, -b)
-        
-        // // ctx.rotate(Math.sin((window.performance.now() - nodeA._initialTime)/100)) 
-        // // ctx.rotate(1)
-        // // ctx.translate(-nodeA.pos.x, -nodeA.pos.y)
-        // // console.log(nodeA._initialTime)
-        // // ctx.translate(canvas.width/2, canvas.height/2)
-        // ctx.fillText("AB", a, b);
-        // // ctx.translate(-canvas.width/2 + nodeA.pos.x+50, -canvas.height/2 + nodeA.pos.y + 50)
-        // // ctx.translate(0, 0);
-        // ctx.restore()
-        // ctx.translate(50, 50)
-    }
-
-    drawEdges() {
-        // ctx.lineWidth = Math.sin(window.performance.now()/1000)+15;
-        ctx.lineWidth = 8
-        ctx.strokeStyle = "black";
-        let drawn = new Set()
-        for (let [e, nodeIndexA, nodeIndexB] of this.structure.edges()) {
-            if (drawn.has(e)) continue;
-            drawn.add(e)
-            this.drawEdge(nodeIndexA, nodeIndexB);
-        }
-        this.drawTemporaryEdge(this.selectedNode, this.pointerPos);
-    }
-
-    drawTemporaryEdge(anchorNode, pointerPos) {
-        if (anchorNode == null || pointerPos == null) {
-            // console.log(1)
-            return;
-        }
-        // console.log(2)
-        // this.inter = 1000/60;
-        this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
-        ctx.lineWidth = edgeWidth;
-        ctx.strokeStyle = "black";
-        
-        ctx.beginPath()
-        ctx.moveTo(anchorNode.pos.x, anchorNode.pos.y);
-        ctx.lineTo(pointerPos.x, pointerPos.y);
-        ctx.stroke();
-    }
 
     setSelectionRectangle(initialPos, pointerPos) {
-        if(initialPos === null || pointerPos === null)
-        {
-            this.drawSelectionRectangle = () => { }
-            return
+        if(initialPos === null || pointerPos === null) {
+            this.drawSelectionRectangle = () => { };
+            return;
         }
+        
         this.requestHighFPS(HighFPSFeature.SELECTING, 90)
         this.drawSelectionRectangle = () => {
             ctx.save()
@@ -267,16 +148,72 @@ class GraphView {
 
         return [sourceNodeIndex, targetNodeIndex]
     }
+    
+    // Graph Drawing
+    
+    // This function draws one node. This includes the circle, the text and
+    // the appropriate color (considering any animation happening).
+    drawNode(node) {
+        // Draw circle
+        ctx.lineWidth = nodeBorderWidth;
+        ctx.fillStyle = node.color;
+        ctx.strokeStyle = nodeBorderColor;
 
-    checkEdge(nodeIndexA, nodeIndexB) {
-        let smallIndex = Math.min(nodeIndexA, nodeIndexB)
-        let bigIndex   = Math.max(nodeIndexA, nodeIndexB)
-        let outgoingEdges = this.edges.get(smallIndex)
-        if (outgoingEdges && outgoingEdges.has(bigIndex)) {
-            return true;
-        } else {
-            return false;
+        ctx.beginPath();
+        ctx.arc(node.pos.x, node.pos.y, node.radius, 0, 2*Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Draw text
+        ctx.font = "30px Arial Bold";
+        var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        grd.addColorStop(0, "#E5E0FF");
+        grd.addColorStop(1, "#FFE0F3");
+
+        ctx.fillStyle = grd;
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = 'middle'; 
+        ctx.fillText(node.label, node.pos.x, node.pos.y);
+    }
+
+    drawEdge(nodeA, nodeB) {
+        if (nodeA == null || nodeB == null) {
+            return;
         }
+        
+        ctx.beginPath()
+        ctx.moveTo(nodeA.pos.x, nodeA.pos.y);
+        ctx.lineTo(nodeB.pos.x, nodeB.pos.y);
+        ctx.stroke();
+    }
+
+    drawEdges() {
+        // ctx.lineWidth = Math.sin(window.performance.now()/1000)+15;
+        ctx.lineWidth = 8
+        ctx.strokeStyle = "black";
+        let drawn = new Set()
+        for (let [e, nodeIndexA, nodeIndexB] of this.structure.edges()) {
+            if (drawn.has(e)) continue;
+            drawn.add(e)
+            this.drawEdge(nodeIndexA, nodeIndexB);
+        }
+        this.drawTemporaryEdge(this.selectedNode, this.pointerPos);
+    }
+
+    drawTemporaryEdge(anchorNode, pointerPos) {
+        if (anchorNode == null || pointerPos == null) {
+            return;
+        }
+
+        this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
+        ctx.lineWidth = edgeWidth;
+        ctx.strokeStyle = "black";
+        
+        ctx.beginPath()
+        ctx.moveTo(anchorNode.pos.x, anchorNode.pos.y);
+        ctx.lineTo(pointerPos.x, pointerPos.y);
+        ctx.stroke();
     }
 
     drawCurrentMaxFPS(fps) {
@@ -341,8 +278,6 @@ class GraphView {
         this.drawCurrentMaxFPS(currentFPS)
         
     }
-    
-
     
 }
 

@@ -36,16 +36,3 @@ export const HighFPSFeature = {
     SELECTING: "selecting",
     BLINKING: "blinking"
 }
-// function include(file) { 
-//     var script = document.createElement('script'); 
-//     script.src = file+"?random="+(new Date).getTime(); 
-//     script.type = 'text/javascript'; 
-//     script.defer = false; 
-
-//     document.getElementsByTagName('head').item(0).appendChild(script); 
-// }
-
-/* Include Many js files */
-// include('NodeView.js'); 
-// include('Graph.js');
-// include('Interaction.js');

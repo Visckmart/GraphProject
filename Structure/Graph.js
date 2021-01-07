@@ -1,5 +1,3 @@
-import Edge from "../Structure/Edge.js"
-
 class Graph {
     data = new Map();
 

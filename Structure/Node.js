@@ -52,12 +52,6 @@ class Node {
         colorRotation += 1;
     }
 
-
-    // update(timestamp) {
-        
-        // this.expansion = Math.sin((elapsedTime / 100)*speed) * 1.5 - 2.5;
-    // }
-
     blink() {
         this._initialBlinkingTime = window.performance.now();
         this._isBlinking = true;
