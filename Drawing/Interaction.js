@@ -5,7 +5,12 @@ for(let element of document.querySelector("#tool_tray").children)
 {
     if(element.tagName === "INPUT")
     {
-        element.onchange = () => changeTool(element.value)
+        element.addEventListener("change", () => changeTool(element.value))
+    }
+
+    if(element.tagName === "BUTTON")
+    {
+        element.addEventListener("click", () => useTool(element.value))
     }
 }
 
@@ -111,3 +116,14 @@ refreshInterfaceState();
 function changeTool(tool) {
     g.primaryTool = tool
 }
+
+function useTool(tool) {
+    switch(tool)
+    {
+        case Tool.CONNECT_ALL:
+        {
+            g.connectAllEdges()
+        }
+    }
+}
+

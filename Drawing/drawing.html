@@ -24,7 +24,7 @@
         </div>
         <div id="tray" class="toolTray">
             <div class="toolTrayTab">
-                <a class="toolTrayCaretUp">
+                <a class="toolTrayCaretUp" href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                     </svg>
@@ -48,20 +48,20 @@
                 <input type="radio" name="tool" value="connect" id="connect_input"/>
                 <label onclick="window.location='#'" for="connect_input">
                     <div>
-                        <span style="font-size: 2.5rem; margin-top: -1pt;">
+                        <span style="font-size: 2rem; margin-top: -1pt;">
                             ⧟
                         </span>
                     </div>
                     <div>Conectar</div>
                 </label>
-                <label onclick="window.location='#'" style="margin-left: auto">
+                <button onclick="window.location='#'" style="margin-left: auto" value="connect_all">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                         </svg>
                     </div>
                     <div>Conectar todos</div>
-                </label>
+                </button>
             </div>
         </div>
     </div>

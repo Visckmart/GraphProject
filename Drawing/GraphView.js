@@ -136,6 +136,16 @@ class GraphView {
         this.redrawGraph();
     }
 
+    connectAllEdges() {
+        for(let node of this.structure.nodes())
+        {
+            for(let innerNode of this.structure.nodes())
+            {
+                this.insertEdgeBetween(node, innerNode)
+            }
+        }
+    }
+
     moveNode(node, pos) {
         this.requestHighFPS(HighFPSFeature.MOVING, 90)
         node.pos = pos;
