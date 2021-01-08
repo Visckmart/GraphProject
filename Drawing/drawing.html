@@ -1,16 +1,13 @@
 <html>
 <head>
-    <link rel="stylesheet" href="../style.css">
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="./tool_tray.css">
     <script type="module" src="General.js" crossorigin="anonymous"></script>
     <script type="module" src="Interaction.js" crossorigin="anonymous"></script>
     <script type="module" src="GraphView.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <br>
-    <br>
-    <br>
-    <!-- <br> -->
     <div class="canvasArea">
         <canvas></canvas>
 
@@ -23,7 +20,7 @@
                 <option value="letters_ordered" disabled>Letras Em Ordem Alfabética</option>
                 <option value="letters_randomized" selected>Letras Aleatórias</option>
             </select>
-        </p>
+            </p>
         </div>
         <div id="tray" class="toolTray">
             <div class="toolTrayTab">
@@ -51,7 +48,7 @@
                 <input type="radio" name="tool" value="connect" id="connect_input"/>
                 <label onclick="window.location='#'" for="connect_input">
                     <div>
-                        <span style="font-size: 1.5rem">
+                        <span style="font-size: 2.5rem; margin-top: -1pt;">
                             ⧟
                         </span>
                     </div>
@@ -68,8 +65,6 @@
             </div>
         </div>
     </div>
-<!-- </div> -->
-    <!-- <canvas id = "s"></canvas> -->
     <script>
         window.addEventListener("load", () => {
             const urlParams = new URLSearchParams(location.search);

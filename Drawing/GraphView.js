@@ -190,7 +190,7 @@ class GraphView {
             ctx.stroke();
         }
         // Draw text
-        ctx.font = "30px Arial";
+        ctx.font = "bold 30px Arial";
         var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
         grd.addColorStop(0, "#E5E0FF");
         grd.addColorStop(1, "#FFE0F3");
@@ -339,7 +339,7 @@ g.updateAnimations();
 window.onresize = function () {
   // canvas.style.borderImageSource = "linear-gradient(to right, #743ad5, red)";
   canvas.width = window.innerWidth*0.75;
-  canvas.height = window.innerHeight*0.75;
+  canvas.height = window.innerHeight*0.95;
   g.redrawGraph()
 }
 // redrawGraph();
