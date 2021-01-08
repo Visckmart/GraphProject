@@ -2,7 +2,7 @@ import {canvas, ctx, Tool, HighFPSFeature} from "./General.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import Node from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
-import { nodeRadius } from "../Structure/Node.js"
+import GraphInteraction from "./GraphInteraction.js"
 
 
 const nodeBorderWidth = 2;
@@ -21,14 +21,72 @@ class GraphView {
     constructor (canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
+
         this.insertNewNodeAt({x: 100, y: 150})
         this.insertNewNodeAt({x: 200, y: 50})
+
+        // console.log(this.mouseDownEvent)
+        // console.log(this.prototype)
+        Object.assign(this, GraphInteraction(this))
+        // Object.assign(this, GraphInteraction.nodeDragHandler(this))
+        // console.log(this.a)
     }
 
     primaryTool = Tool.MOVE;
     structure = new UndirectedGraph();
     highlightedEdges = new Map()
 
+
+    // Interaction
+
+    getMousePos(mouseEvent) {
+        var canvasRect = this.canvas.getBoundingClientRect();
+        return {
+            x: mouseEvent.clientX - canvasRect.left,
+            y: mouseEvent.clientY - canvasRect.top
+        };
+    }
+
+    refreshCursorStyle() {
+        // Restaura o ponteiro para o visual padrão
+        let cursorStyle = null;
+        // Se não sabemos a posição (acontece antes do primeiro movimento)
+        if (this.currentMousePos == null) {
+            return;
+        }
+        let isHoveringNode = this.getNodeIndexAt(this.currentMousePos).length > 0;
+        // Checa se a ferramenta MOVE está selecionada
+        let moveToolSelected = this.primaryTool == Tool.MOVE;
+        
+        // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
+        if (moveToolSelected && isHoveringNode) {
+            if (this.selectedNode == null) {
+                cursorStyle = "grab"
+            } else {
+                cursorStyle = "grabbing"
+            }
+        }
+        if (g.multipleSelection == true) {
+            cursorStyle = "crosshair"
+        }
+        // Atualize o estilo apropriadamente
+        this.canvas.style.cursor = cursorStyle;
+    }
+
+    /* Destaca os nós selecionados */
+    updateMultipleSelectedNodes()
+    {
+        for(let node of g.structure.nodes())
+        {
+            if(this.multipleSelectedNodes.includes(node))
+            {
+                node.blink()
+            } else {
+                node.stopBlink()
+            }
+        }
+        // g.requestHighFPS(HighFPSFeature.BLINK, 30)
+    }
 
     // Node Handling
 
@@ -190,7 +248,7 @@ class GraphView {
             ctx.stroke();
         }
         // Draw text
-        ctx.font = "30px Arial";
+        ctx.font = "bold 30px Arial";
         var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
         grd.addColorStop(0, "#E5E0FF");
         grd.addColorStop(1, "#FFE0F3");
@@ -339,7 +397,7 @@ g.updateAnimations();
 window.onresize = function () {
   // canvas.style.borderImageSource = "linear-gradient(to right, #743ad5, red)";
   canvas.width = window.innerWidth*0.75;
-  canvas.height = window.innerHeight*0.75;
+  canvas.height = window.innerHeight*0.95;
   g.redrawGraph()
 }
 // redrawGraph();
