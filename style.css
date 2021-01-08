@@ -192,6 +192,7 @@ canvas {
 #tray:not(:target) > .toolTrayTab > .toolTrayCaretDown, .toolTray:hover > .toolTrayTab > .toolTrayCaretDown {
   display: block;
 }
+/* Fim da terra de ninguém */
 
 .toolTrayBody {
   width: 100%;
