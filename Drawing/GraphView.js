@@ -2,7 +2,7 @@ import {canvas, ctx, Tool, HighFPSFeature} from "./General.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import Node from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
-import { nodeRadius } from "../Structure/Node.js"
+import GraphInteraction from "./GraphInteraction.js"
 
 
 const nodeBorderWidth = 2;
@@ -21,8 +21,15 @@ class GraphView {
     constructor (canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
+
         this.insertNewNodeAt({x: 100, y: 150})
         this.insertNewNodeAt({x: 200, y: 50})
+
+        // console.log(this.mouseDownEvent)
+        // console.log(this.prototype)
+        Object.assign(this, GraphInteraction(this))
+        // Object.assign(this, GraphInteraction.nodeDragHandler(this))
+        // console.log(this.a)
     }
 
     primaryTool = Tool.MOVE;
@@ -66,6 +73,20 @@ class GraphView {
         this.canvas.style.cursor = cursorStyle;
     }
 
+    /* Destaca os nós selecionados */
+    updateMultipleSelectedNodes()
+    {
+        for(let node of g.structure.nodes())
+        {
+            if(this.multipleSelectedNodes.includes(node))
+            {
+                node.blink()
+            } else {
+                node.stopBlink()
+            }
+        }
+        // g.requestHighFPS(HighFPSFeature.BLINK, 30)
+    }
 
     // Node Handling
 
