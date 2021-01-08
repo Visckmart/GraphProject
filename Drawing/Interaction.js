@@ -18,38 +18,38 @@ canvas.addEventListener("mousemove", mouseMoved);
 // Mouse Handling
 
 let currentMousePos = null;
-function getMousePos(e) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    };
-}
+// function getMousePos(e) {
+//     var rect = canvas.getBoundingClientRect();
+//     return {
+//         x: e.clientX - rect.left,
+//         y: e.clientY - rect.top
+//     };
+// }
 
-function adaptCursorStyle(graph, isHoveringNode) {
-    // Restaura o ponteiro para o visual padrão
-    let cursorStyle = null;
-    if (isHoveringNode == null) {
-        if (currentMousePos == null) {
-            return;
-        } else {
-            isHoveringNode = graph.getNodeIndexAt(currentMousePos)[0] != null;
-        }
-    }
-    // Checa se a ferramenta MOVE está selecionada
-    let moveToolSelected = graph.primaryTool == Tool.MOVE;
+// function adaptCursorStyle(graph, isHoveringNode) {
+//     // Restaura o ponteiro para o visual padrão
+//     let cursorStyle = null;
+//     if (isHoveringNode == null) {
+//         if (currentMousePos == null) {
+//             return;
+//         } else {
+//             isHoveringNode = graph.getNodeIndexAt(currentMousePos)[0] != null;
+//         }
+//     }
+//     // Checa se a ferramenta MOVE está selecionada
+//     let moveToolSelected = graph.primaryTool == Tool.MOVE;
     
-    // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
-    if (moveToolSelected && isHoveringNode != false) {
-        if (g.selectedNode == null) {
-            cursorStyle = "grab"
-        } else {
-            cursorStyle = "grabbing"
-        }
-    }
-    // Atualize o estilo apropriadamente
-    canvas.style.cursor = cursorStyle;
-}
+//     // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
+//     if (moveToolSelected && isHoveringNode != false) {
+//         if (g.selectedNode == null) {
+//             cursorStyle = "grab"
+//         } else {
+//             cursorStyle = "grabbing"
+//         }
+//     }
+//     // Atualize o estilo apropriadamente
+//     canvas.style.cursor = cursorStyle;
+// }
 
 /* Destaca os nós selecionados */
 function updateMultipleSelectedNodes()
@@ -88,17 +88,17 @@ function mouseDown(e) {
     if (e.button != 0) return;
 
     // Seleciona o nó clicado
-    let pos = getMousePos(e);
+    let pos = g.getMousePos(e);
     g.selectedNode = g.getNodeIndexAt(pos)[0];
     movedNode = false;
-    adaptCursorStyle(g, g.selectedNode != null);
+    g.refreshCursorStyle();
 
     // console.log(!g.selectedNode)
     if(!g.selectedNode)
     {
-    // Reseta nós selecionados
-    multipleSelectedNodes = []
-    updateMultipleSelectedNodes()
+        // Reseta nós selecionados
+        multipleSelectedNodes = []
+        updateMultipleSelectedNodes()
         // Registrando posição do mouseDown
         lastMousedownPosition = pos
     } else {
@@ -110,20 +110,22 @@ function mouseDown(e) {
 /* MOUSE MOVED */
 
 function mouseMoved(e) {
-    let pos = getMousePos(e);
+    let pos = g.getMousePos(e);
     currentMousePos = pos;
+    g.currentMousePos = pos
     // g.selectionPrototyping(pos.x, pos.y)
     let hovering = g.getNodeIndexAt(pos)[0] != null;
 
     if (g.selectedNode == null) {
         // Se nada estiver selecionado, pare por aqui
+            g.refreshCursorStyle()
         if(lastMousedownPosition == null)
         {
-            adaptCursorStyle(g, hovering);
         }
         else if(Math.abs(currentMousePos.x - lastMousedownPosition.x) > movementTolerance ||
                 Math.abs(currentMousePos.y - lastMousedownPosition.y) > movementTolerance) {
             multipleSelection = true
+            g.multipleSelection = true
             g.setSelectionRectangle(lastMousedownPosition, currentMousePos)
         } else if(multipleSelection) {
             g.setSelectionRectangle(lastMousedownPosition, currentMousePos)
@@ -132,7 +134,7 @@ function mouseMoved(e) {
     }
     
     // Caso o usuário esteja movendo o nó, altere o ponteiro
-    adaptCursorStyle(g, hovering);
+    // adaptCursorStyle(g, hovering);
 
     // Caso a ferramenta Move esteja selecionada
     if (g.primaryTool == Tool.MOVE) {
@@ -163,14 +165,14 @@ function mouseMoved(e) {
 
 /* MOUSE UP */
 function mouseUp(e) {
-    let pos = getMousePos(e);
+    let pos = g.getMousePos(e);
     // Se o botão direito foi o levantado
     if (e.button == 2) {
         // Tente remover um nó, se o mouse estiver sobre algum
         g.removeNodeAt(pos);
         return;
     }
-    adaptCursorStyle(g, false);
+    // adaptCursorStyle(g, false);
 
     /* Selecionando nodes na área de seleção múltipla */
     if (multipleSelection) {
@@ -178,6 +180,7 @@ function mouseUp(e) {
         selectedOriginalPos = Array.from(multipleSelectedNodes.map(node => node.pos))
         updateMultipleSelectedNodes()
         multipleSelection = false
+        g.multipleSelection = false
         lastMousedownPosition = null
         g.setSelectionRectangle(lastMousedownPosition, pos)
 
@@ -221,6 +224,7 @@ function mouseUp(e) {
     }
     // Remova a seleção do nó
     g.selectedNode = null;
+    g.refreshCursorStyle()
 }
 
 // Evite abrir o menu de contexto para não haver conflito com o gesto
@@ -309,7 +313,7 @@ function refreshInterfaceState() {
             element.click()
         }
     }
-    adaptCursorStyle(g)
+    g.refreshCursorStyle()
 }
 
 // Executa a primeira vez

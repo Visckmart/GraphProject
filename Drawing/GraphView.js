@@ -30,6 +30,43 @@ class GraphView {
     highlightedEdges = new Map()
 
 
+    // Interaction
+
+    getMousePos(mouseEvent) {
+        var canvasRect = this.canvas.getBoundingClientRect();
+        return {
+            x: mouseEvent.clientX - canvasRect.left,
+            y: mouseEvent.clientY - canvasRect.top
+        };
+    }
+
+    refreshCursorStyle() {
+        // Restaura o ponteiro para o visual padrão
+        let cursorStyle = null;
+        // Se não sabemos a posição (acontece antes do primeiro movimento)
+        if (this.currentMousePos == null) {
+            return;
+        }
+        let isHoveringNode = this.getNodeIndexAt(this.currentMousePos).length > 0;
+        // Checa se a ferramenta MOVE está selecionada
+        let moveToolSelected = this.primaryTool == Tool.MOVE;
+        
+        // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
+        if (moveToolSelected && isHoveringNode) {
+            if (this.selectedNode == null) {
+                cursorStyle = "grab"
+            } else {
+                cursorStyle = "grabbing"
+            }
+        }
+        if (g.multipleSelection == true) {
+            cursorStyle = "crosshair"
+        }
+        // Atualize o estilo apropriadamente
+        this.canvas.style.cursor = cursorStyle;
+    }
+
+
     // Node Handling
 
     // Searches for nodes that contain the point `pos`
