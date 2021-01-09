@@ -14,11 +14,10 @@
         <div class="menuArea">
             <h2>Grafo</h2>
             <p>Nomenclatura dos nós
-            <select id="nodeNames">
-                <option value="numbers_0" disabled>Números a partir de 0</option>
-                <option value="numbers_1" disabled>Números a partir de 1</option>
-                <option value="letters_ordered" disabled>Letras Em Ordem Alfabética</option>
-                <option value="letters_randomized" selected>Letras Aleatórias</option>
+            <select id="nodeLabeling">
+                <option value="numbers">Números (Em Ordem Crescente)</option>
+                <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
+                <option value="letters_randomized" selected>Letras (Aleatórias)</option>
             </select>
             </p>
         </div>
@@ -54,6 +53,14 @@
                     </div>
                     <div>Conectar</div>
                 </label>
+                <button onclick="window.location='#'" style="margin-left: auto;" value="disconnect_all">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
+                        </svg>
+                    </div>
+                    <div>Desconectar todos</div>
+                </button>
                 <button onclick="window.location='#'" style="margin-left: auto" value="connect_all">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">

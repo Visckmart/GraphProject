@@ -19,7 +19,7 @@ canvas.width = window.innerWidth*0.75;
 canvas.height = window.innerHeight*0.95;
 // resizeCanvasToDisplaySize(canvas)
 export var ctx = canvas.getContext("2d");
-
+export let nodeLabelingSelector = document.getElementById("nodeLabeling")
 // Animation
 var requestAnimationFrame = window.requestAnimationFrame || 
                         window.mozRequestAnimationFrame || 
@@ -29,7 +29,8 @@ var requestAnimationFrame = window.requestAnimationFrame ||
 export const Tool = {
     MOVE: "move",
     CONNECT: "connect",
-    CONNECT_ALL: "connect_all"
+    CONNECT_ALL: "connect_all",
+    DISCONNECT_ALL: "disconnect_all"
 }
 export const HighFPSFeature = {
     MOVING: "moving",

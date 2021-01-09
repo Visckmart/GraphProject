@@ -1,6 +1,7 @@
-import { canvas, Tool } from "./General.js"
+import { canvas, Tool, nodeLabelingSelector } from "./General.js"
 import { g } from "./GraphView.js"
 
+nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 for(let element of document.querySelector("#tool_tray").children)
 {
     if(element.tagName === "INPUT")
@@ -45,11 +46,15 @@ function keyboardEvent(event) {
     }
     switch (event.type) {
         case "keydown":
-        // console.log(event.keyCode)
+        // console.log(event.keyCode, metaPressed)
             if (event.keyCode == 69) {
                 g.structure.showGraph()
             }
-            // if (event.keyCode == 82) {
+            if (event.keyCode == 65) {
+                g.multipleSelectedNodes = Array.from(g.structure.nodes())
+                g.updateMultipleSelectedNodes()
+                event.preventDefault()
+            }
                 // g.structure.abc
             // console.log(event.keyCode)
             if (metaPressed == true) {
@@ -123,6 +128,11 @@ function useTool(tool) {
         case Tool.CONNECT_ALL:
         {
             g.connectAllEdges()
+        }
+        break;
+        case Tool.DISCONNECT_ALL:
+        {
+            g.removeAllEdges()
         }
     }
 }
