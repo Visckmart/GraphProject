@@ -19,7 +19,7 @@ canvas.width = window.innerWidth*0.75;
 canvas.height = window.innerHeight*0.95;
 // resizeCanvasToDisplaySize(canvas)
 export var ctx = canvas.getContext("2d");
-
+export let nodeLabelingSelector = document.getElementById("nodeLabeling")
 // Animation
 var requestAnimationFrame = window.requestAnimationFrame || 
                         window.mozRequestAnimationFrame || 

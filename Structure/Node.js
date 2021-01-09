@@ -9,13 +9,35 @@ const nodeColorList = [
     "dodgerblue", "limegreen", "deeppink",
     "mediumslateblue", "#8D6E63", "#FFA0A0", "#4FC3F7", "burlywood", "#FF7043"
 ]
-
 var colorRotation = 0
+var globalNodeIndex = 0
+
+var usedLabels = new Set()
+
+function generateNewRandomLetter() {
+    let newRandomLetter;
+    if (usedLabels.size < 26) {
+        do {
+            let randomCharCode = Math.floor(Math.random()*26)+65
+            newRandomLetter = String.fromCharCode(randomCharCode)
+        } while (usedLabels.has(newRandomLetter));
+    } else {
+        let randomCharCode = Math.floor(Math.random()*26)+65
+        newRandomLetter = String.fromCharCode(randomCharCode)
+    }
+    return newRandomLetter;
+}
 class Node {
 
     constructor(x, y, label) {
         this.pos = {x: x, y: y};
+
         this.label = label;
+        this.index = globalNodeIndex++;
+        let newRandomLabel = generateNewRandomLetter()
+        usedLabels.add(newRandomLabel)
+        this.randomLabel = newRandomLabel
+        
         this._originalcolor = nodeColorList[colorRotation % nodeColorList.length];
         this._initialTime = window.performance.now();
 

@@ -15,6 +15,12 @@ const IDLE_MAX_FPS = 10;
 const INTERACTION_MAX_FPS = 90;
 
 
+
+const NodeLabeling = {
+    NUMBERS: "numbers",
+    LETTERS_RAND: "letters_randomized",
+    LETTERS_ORD: "letters_ordered"
+}
 // Graph
 class GraphView {
 
@@ -34,7 +40,8 @@ class GraphView {
 
     primaryTool = Tool.MOVE;
     structure = new UndirectedGraph();
-    highlightedEdges = new Map()
+    highlightedEdges = new Map();
+    nodeLabeling = NodeLabeling.LETTERS_RAND;
 
 
     // Interaction
@@ -130,8 +137,8 @@ class GraphView {
         if (this.getNodeIndexAt(pos, true).length != 0) {
             return;
         }
-        let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
-        let newNode = new Node(pos.x, pos.y, newLabel)
+        // let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
+        let newNode = new Node(pos.x, pos.y)
         this.structure.insertNode(newNode)
         this.redrawGraph();
     }
@@ -267,7 +274,19 @@ class GraphView {
 
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle'; 
-        ctx.fillText(node.label, node.pos.x, node.pos.y);
+        let nodeText;
+        switch (this.nodeLabeling) {
+            case NodeLabeling.NUMBERS:
+                nodeText = node.index;
+                break;
+            case NodeLabeling.LETTERS_RAND:
+                nodeText = node.randomLabel;
+                break;
+            case NodeLabeling.LETTERS_ORD:
+                nodeText = String.fromCharCode(node.index+65)
+                break;
+        }
+        ctx.fillText(node.label || nodeText, node.pos.x, node.pos.y);
     }
 
     drawEdge(nodeA, nodeB) {
