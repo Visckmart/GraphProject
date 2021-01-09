@@ -29,7 +29,8 @@ var requestAnimationFrame = window.requestAnimationFrame ||
 export const Tool = {
     MOVE: "move",
     CONNECT: "connect",
-    CONNECT_ALL: "connect_all"
+    CONNECT_ALL: "connect_all",
+    DISCONNECT_ALL: "disconnect_all"
 }
 export const HighFPSFeature = {
     MOVING: "moving",

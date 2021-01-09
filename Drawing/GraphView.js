@@ -147,14 +147,25 @@ class GraphView {
         let nodesToConnect;
         if (this.multipleSelectedNodes.length > 0) {
             nodesToConnect = this.multipleSelectedNodes;
-        } else {
-            nodesToConnect = this.structure.nodes()
         }
 
-        for(let node of nodesToConnect) {
-            for(let innerNode of nodesToConnect) {
+        for (let node of (nodesToConnect || this.structure.nodes())) {
+            for (let innerNode of (nodesToConnect || this.structure.nodes())) {
                 this.insertEdgeBetween(node, innerNode)
             }
+        }
+    }
+
+    removeAllEdges() {
+        let nodesToDisconnect;
+        if (this.multipleSelectedNodes.length > 0) {
+            nodesToDisconnect = this.multipleSelectedNodes;
+        } else {
+            nodesToDisconnect = this.structure.nodes()
+        }
+        
+        for (let node of nodesToDisconnect) {
+            this.structure.removeAllEdgesFromNode(node)
         }
     }
 

@@ -129,6 +129,11 @@ function useTool(tool) {
         {
             g.connectAllEdges()
         }
+        break;
+        case Tool.DISCONNECT_ALL:
+        {
+            g.removeAllEdges()
+        }
     }
 }
 

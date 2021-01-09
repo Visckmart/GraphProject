@@ -52,7 +52,6 @@ class Graph {
         for (let [edge, nodeA, nodeB] of this.edges()) {
             if (nodeA == node || nodeB == node) {
                 this.removeEdge(edge)
-                console.count()
             }
         }
     }
