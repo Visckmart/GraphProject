@@ -144,10 +144,15 @@ class GraphView {
     }
 
     connectAllEdges() {
-        for(let node of this.structure.nodes())
-        {
-            for(let innerNode of this.structure.nodes())
-            {
+        let nodesToConnect;
+        if (this.multipleSelectedNodes.length > 0) {
+            nodesToConnect = this.multipleSelectedNodes;
+        } else {
+            nodesToConnect = this.structure.nodes()
+        }
+
+        for(let node of nodesToConnect) {
+            for(let innerNode of nodesToConnect) {
                 this.insertEdgeBetween(node, innerNode)
             }
         }
