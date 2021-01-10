@@ -14,13 +14,24 @@ const edgeWidth = 3;
 const IDLE_MAX_FPS = 10;
 const INTERACTION_MAX_FPS = 90;
 
-
-
 const NodeLabeling = {
     NUMBERS: "numbers",
     LETTERS_RAND: "letters_randomized",
     LETTERS_ORD: "letters_ordered"
 }
+
+function integrateComponent(original, newComponent) {
+    // Associa as variáveis e os métodos ao objeto original
+    Object.assign(original, newComponent)
+    // Associa getters e setters ao objeto original
+    for (let property of Object.getOwnPropertyNames(newComponent)) {
+        let propertyDescriptor = Object.getOwnPropertyDescriptor(newComponent, property)
+        if (propertyDescriptor.get != null || propertyDescriptor.set != null) {
+            Object.defineProperty(original, property, propertyDescriptor)
+        }
+    }
+}
+
 // Graph
 class GraphView {
 
@@ -29,19 +40,9 @@ class GraphView {
         this.ctx = canvas.getContext("2d");
 
         this.insertNewNodeAt({x: 100, y: 150})
-        this.insertNewNodeAt({x: 200, y: 50})
+        this.insertNewNodeAt({x: 200, y: 80})
 
-        let z = GraphInteraction(this)
-        Object.assign(this, z)
-        console.log(Object.getOwnPropertyNames(this))
-        for (let a of Object.getOwnPropertyNames(z)) {
-            let b = Object.getOwnPropertyDescriptor(z, a)
-            if (b.get != null || b.set != null) {
-                Object.defineProperty(this, a, b)
-            }
-        }
-        console.log(Object.getOwnPropertyNames(this))
-        console.log(this.multipleSelectedNodes)
+        integrateComponent(this, GraphInteraction(this))
     }
 
     primaryTool = Tool.MOVE;
