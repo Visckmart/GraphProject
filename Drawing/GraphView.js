@@ -31,7 +31,12 @@ function integrateComponent(original, newComponent) {
         }
     }
 }
-
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+let t0 = window.performance.now()
 // Graph
 class GraphView {
 
@@ -39,16 +44,31 @@ class GraphView {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
-        this.insertNewNodeAt({x: 100, y: 150})
-        this.insertNewNodeAt({x: 220, y: 80})
-        this.insertNewNodeAt({x: 150, y: 100})
-        this.insertNewNodeAt({x: 350, y: 120})
-
-        Array.from(this.structure.nodes())[1].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-
         integrateComponent(this, GraphMouseInteraction(this))
         integrateComponent(this, GraphKeyboardInteraction(this))
 
+        // Debugging
+        this.generateRandomNodes(10)
+
+        for (let j = 0; j < getRandomInt(0, 4); j++ ) {
+            let r = getRandomInt(0, 9)
+            Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        }
+
+    }
+
+    generateRandomNodes(quantity) {
+        let i = 0
+        while (i < quantity) {
+            let x = Math.random()*70+5
+            let y = Math.random()*20+5
+            x *= 10
+            y *= 10
+            if (this.getNodeIndexAt({x: x, y: y}, true)[0] == null) {
+                i++;
+                this.insertNewNodeAt({x: x, y: y})
+            }
+        }
     }
 
     _primaryTool = Tool.MOVE;
@@ -181,13 +201,14 @@ class GraphView {
 
     insertNewNodeAt(pos) {
         if (this.getNodeIndexAt(pos, true).length != 0) {
-            return;
+            return false;
         }
         // let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y)
         this.structure.insertNode(newNode)
         Array.from(this.structure.nodes())[0].removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         this.redrawGraph();
+        return true;
     }
 
     connectAllEdges() {
@@ -315,10 +336,25 @@ class GraphView {
         // Faz o nó piscar uma cor mais clara
         if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
             let t = window.performance.now()/350
-            let a = Math.abs(Math.sin(t - node._initialTime)) - 0.75
-            let c = "rgba(255, 255, 255," + a + ")"
+            let a = Math.abs(Math.sin(t)) - 0.75
+            let c = "rgba(" + 255 + "," + 255 + "," + 255 + "," + a + ")"
             ctx.fillStyle = c
             ctx.fill()
+
+            let c2 = "rgba(" + 0 + "," + 0 + "," + 0 + "," + 0.5 + ")"
+            ctx.strokeStyle = c2
+            ctx.lineWidth = 4
+            // Raio do tracejado
+            // (A soma faz com que o tracejado fique do lado de fora do círculo)
+            let dashRadius = node.radius - ctx.lineWidth/2;
+            
+            ctx.setLineDash([]);
+            
+            // let t = window.performance.now()/2000;
+            // Desenhamos a borda tracejada
+            ctx.beginPath();
+            ctx.arc(node.pos.x, node.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
+            ctx.stroke();
         }
         if (node.isSelected) {
             ctx.strokeStyle = "#1050FF"

@@ -5,8 +5,8 @@ const nodeColorList = [
     // "#32E6BC", "#E6DD27", "#E67955", "#27E64D"
     // "#E9D879", "#32E6BA", "#E6DD27", "#E67855", "#27E64C"
     // "#2FD6AE", "#D6CE24", "#D6704F", "#27E64C"
-    "dodgerblue", "limegreen", "deeppink",
-    "mediumslateblue", "#8D6E63", "#FFA0A0", "#4FC3F7", "burlywood", "#FF7043"
+    "dodgerblue", "limegreen",
+    "mediumslateblue", "#8D6E63", "#4FC3F7", "burlywood", "#FF7043"
 ]
 var colorRotation = 0
 var globalNodeIndex = 0
@@ -54,13 +54,9 @@ export class Node {
             amplitude: 1.5,
             offset: -2.5
         }
-        // this._isBlinking = false;
-        // this._initialBlinkingTime = null;
-        // this.expansion = 3;
 
         function getCurrentColor() {
             return this._originalcolor
-            // ctx.fillStyle = this._originalcolor
         }
         Object.defineProperty(this, 'color', { get: getCurrentColor } );
 
@@ -77,9 +73,8 @@ export class Node {
             let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset
             return nodeRadius * 2 + expansion;
         }
-
-        
         Object.defineProperty(this, 'radius', { get: getCurrentRadius } );
+        
         colorRotation += 1;
     }
 

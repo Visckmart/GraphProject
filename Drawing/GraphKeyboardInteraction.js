@@ -14,6 +14,14 @@ const graphKeyboardHandler = (graphView) => ({
         return metaPressed
     },
 
+    isDeletionKey(keyboardEvent) {
+        let pressed = keyboardEvent.code === "Backspace"
+        if (navigator.platform.includes("Mac") == false) {
+            pressed = keyboardEvent.code === "Delete"
+        }
+        return pressed
+    },
+
     keyPressed(keyboardEvent) {
         let metaPressed = graphView.isMetaKey(keyboardEvent)
         if (keyboardEvent.keyCode == 69) { // E
@@ -37,7 +45,7 @@ const graphKeyboardHandler = (graphView) => ({
             graphView.primaryTool = Tool.MOVE;
             graphView.lastToolChoice = null;
         }
-        if (keyboardEvent.code === "Delete") {
+        if (graphView.isDeletionKey(keyboardEvent)) {
             for (let node of graphView.multipleSelectedNodes) {
                 graphView.structure.removeNode(node)
             }
