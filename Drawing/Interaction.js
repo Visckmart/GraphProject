@@ -6,12 +6,12 @@ for(let element of document.querySelector("#tool_tray").children)
 {
     if(element.tagName === "INPUT")
     {
-        element.addEventListener("change", () => changeTool(element.value))
+        element.addEventListener("change", () => g.changeTool(element.value))
     }
 
     if(element.tagName === "BUTTON")
     {
-        element.addEventListener("click", () => useTool(element.value))
+        element.addEventListener("click", () => g.useTool(element.value))
     }
 }
 
@@ -32,108 +32,16 @@ function contextMenuOpened(e) {
 // Tratamento da seleção da ferramenta Connect ao pressionar a tecla "meta".
 // No caso do Mac a tecla em questão é Command
 
-document.body.onkeydown = keyboardEvent;
-document.body.onkeyup = keyboardEvent;
-
-/* Variável para relembrar a ferramenta escolhida depois da tecla
-   especial ser levantada. */
-var lastToolChoice = Tool.MOVE;
-
-function keyboardEvent(event) {
-    let metaPressed = event.metaKey;
-    if (navigator.platform.includes("Mac") == false) {
-        metaPressed = event.ctrlKey;
-    }
-    switch (event.type) {
-        case "keydown":
-        // console.log(event.keyCode, metaPressed)
-            if (event.keyCode == 69) {
-                g.structure.showGraph()
-            }
-            if (event.keyCode == 65) {
-                g.multipleSelectedNodes = Array.from(g.structure.nodes())
-                // g.updateMultipleSelectedNodes()
-                event.preventDefault()
-            }
-                // g.structure.abc
-            // console.log(event.keyCode)
-            if (metaPressed == true) {
-                if(lastToolChoice === null)
-                {
-                    lastToolChoice = g.primaryTool;
-                }
-                g.primaryTool = Tool.CONNECT;
-            }
-            break;
-
-        case "keyup":
-            if (metaPressed == false && lastToolChoice == Tool.MOVE) {
-                g.primaryTool = Tool.MOVE;
-                lastToolChoice = null;
-            }
-            // console.log(event.code)
-            if (event.code === "Delete")
-            {
-                for(let node of multipleSelectedNodes)
-                {
-                    g.structure.removeNode(node)
-                }
-                multipleSelectedNodes = []
-                updateMultipleSelectedNodes()
-            }
-            break;
-    }
-    refreshInterfaceState()
-}
+document.body.onkeydown = g.keyPressed;
+document.body.onkeyup = g.keyReleased;
 
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
 document.body.onblur = function(e) {
-    // console.log(e)
-    // console.log("z");
-    // if(multipleSelection)
-    // {
-    //     multipleSelection = false
-    //     lastMousedownPosition = null
-    //     g.setSelectionRectangle(lastMousedownPosition, null)
-    // }
-    if (lastToolChoice == Tool.MOVE) {
+    if (g.lastToolChoice == Tool.MOVE) {
         g.primaryTool = Tool.MOVE;
     }
-    refreshInterfaceState()
-}
-
-/* Atualiza a interface para que os botões reflitam o estado das ferramentas */
-function refreshInterfaceState() {
-    for(let element of document.querySelector("#tool_tray").children)
-    {
-        if(element.tagName === "INPUT" && element.value === g.primaryTool)
-        {
-            element.click()
-        }
-    }
-    g.refreshCursorStyle()
+    g.refreshInterfaceState()
 }
 
 // Executa a primeira vez
-refreshInterfaceState();
-
-
-function changeTool(tool) {
-    g.primaryTool = tool
-}
-
-function useTool(tool) {
-    switch(tool)
-    {
-        case Tool.CONNECT_ALL:
-        {
-            g.connectAllEdges()
-        }
-        break;
-        case Tool.DISCONNECT_ALL:
-        {
-            g.removeAllEdges()
-        }
-    }
-}
-
+g.refreshInterfaceState();

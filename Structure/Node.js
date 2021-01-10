@@ -32,11 +32,15 @@ class Node {
     constructor(x, y, label) {
         this.pos = {x: x, y: y};
 
-        this.label = label;
         this.index = globalNodeIndex++;
         let newRandomLabel = generateNewRandomLetter()
         usedLabels.add(newRandomLabel)
         this.randomLabel = newRandomLabel
+        if (label != null) {
+            this.label = label;
+        } else {
+            this.label = newRandomLabel;
+        }
         
         this._originalcolor = nodeColorList[colorRotation % nodeColorList.length];
         this._initialTime = window.performance.now();

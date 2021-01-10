@@ -2,7 +2,9 @@ import {canvas, ctx, Tool, HighFPSFeature} from "./General.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import Node from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
-import GraphInteraction from "./GraphInteraction.js"
+
+import GraphMouseInteraction from "./GraphMouseInteraction.js"
+import GraphKeyboardInteraction from "./GraphKeyboardInteraction.js"
 
 
 const nodeBorderWidth = 2;
@@ -42,10 +44,19 @@ class GraphView {
         this.insertNewNodeAt({x: 100, y: 150})
         this.insertNewNodeAt({x: 200, y: 80})
 
-        integrateComponent(this, GraphInteraction(this))
+        integrateComponent(this, GraphMouseInteraction(this))
+        integrateComponent(this, GraphKeyboardInteraction(this))
     }
 
-    primaryTool = Tool.MOVE;
+    _primaryTool = Tool.MOVE;
+    get primaryTool() {
+        return this._primaryTool;
+    }
+    set primaryTool(anotherTool) {
+        this._primaryTool = anotherTool;
+        this.refreshInterfaceState()
+    }
+
     structure = new UndirectedGraph();
     highlightedEdges = new Map();
     nodeLabeling = NodeLabeling.LETTERS_RAND;
@@ -87,6 +98,16 @@ class GraphView {
         this.canvas.style.cursor = cursorStyle;
     }
 
+    /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
+    refreshInterfaceState() {
+        for(let element of document.querySelector("#tool_tray").children) {
+            if(element.tagName === "INPUT" && element.value === this.primaryTool) {
+                element.click()
+            }
+        }
+        this.refreshCursorStyle()
+    }
+
     /* Destaca os nós selecionados */
     updateMultipleSelectedNodes() {
         for (let node of g.structure.nodes()) {
@@ -95,6 +116,25 @@ class GraphView {
             } else {
                 node.stopBlink()
             }
+        }
+    }
+
+    selectAllNodes() {
+        this.multipleSelectedNodes = Array.from(this.structure.nodes())
+    }
+
+    changeTool(tool) {
+        this.primaryTool = tool
+    }
+
+    useTool(tool) {
+        switch(tool) {
+            case Tool.CONNECT_ALL:
+                g.connectAllEdges()
+                break;
+            case Tool.DISCONNECT_ALL:
+                g.removeAllEdges()
+                break;
         }
     }
 
