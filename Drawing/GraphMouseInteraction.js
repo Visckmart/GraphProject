@@ -19,6 +19,7 @@ const graphMouseHandler = (graphView) => ({
     },
     set multipleSelectedNodes(selectedNodes) {
         graphView._multipleSelectedNodes = selectedNodes
+        graphView.selectedOriginalPos = Array.from(selectedNodes.map(node => node.pos))
         graphView.updateMultipleSelectedNodes()
     },
     selectionPoint: null,
@@ -35,27 +36,21 @@ const graphMouseHandler = (graphView) => ({
         graphView.currentMousePos = pos
         graphView.refreshCursorStyle();
 
-        // console.log(!g.selectedNode)
         if (!graphView.selectedNode) {
             // Reseta nós selecionados
             graphView.multipleSelectedNodes = []
-            // graphView.updateMultipleSelectedNodes()
             // Registrando posição do mouseDown
             graphView.lastMousedownPosition = pos
         } else {
             graphView.selectionPoint = pos
-            // console.log("abcde")
         }
     },
 
     mouseDragEvent(mouseEvent) {
         let pos = graphView.getMousePos(mouseEvent);
         graphView.currentMousePos = pos
-        // g.selectionPrototyping(pos.x, pos.y)
-        let hovering = graphView.getNodeIndexAt(pos)[0] != null;
-        // console.log(graphView.lastMousedownPosition)
 
-        // Se nada estiver selecionado, pare por aqui
+        // Se nada estiver selecionado
         if (graphView.selectedNode == null) {
             if (graphView.lastMousedownPosition != null) {
                 let currentPos = graphView.currentMousePos
@@ -70,21 +65,15 @@ const graphMouseHandler = (graphView) => ({
                     graphView.setSelectionRectangle(lastPos, currentPos)
                 }
             }
-            else {
-                // console.trace()
-                // console.warn("Last mouse down null")
-            }
             graphView.refreshCursorStyle()
             return;
         }
         
         // Caso o usuário esteja movendo o nó, altere o ponteiro
-        // adaptCursorStyle(g, hovering);
-        // console.log(graphView.multipleSelectedNodes)
         // Caso a ferramenta Move esteja selecionada
         if (graphView.primaryTool == Tool.MOVE) {
-            // Se não há nós na seleção múltipla, mova o único clicado
-            // se houver 1 na seleção múltipla, mova o mesmo.
+            // Se não há nós na seleção múltipla, mova o único clicado.
+            // Se houver 1 na seleção múltipla, mova o único clicado.
             if (graphView.multipleSelectedNodes.length <= 1) {
                 // Mova o nó para o ponteiro do mouse
                 graphView.moveNode(graphView.selectedNode, pos);
@@ -122,13 +111,10 @@ const graphMouseHandler = (graphView) => ({
             graphView.removeNodeAt(pos);
             return;
         }
-        // adaptCursorStyle(g, false);
 
         /* Selecionando nodes na área de seleção múltipla */
         if (graphView.multipleSelection) {
             graphView.multipleSelectedNodes = graphView.getNodesWithin(graphView.lastMousedownPosition, pos)
-            graphView.selectedOriginalPos = Array.from(graphView.multipleSelectedNodes.map(node => node.pos))
-            // graphView.updateMultipleSelectedNodes()
             graphView.multipleSelection = false
             graphView.lastMousedownPosition = null
             graphView.setSelectionRectangle(graphView.lastMousedownPosition, pos)
@@ -158,7 +144,6 @@ const graphMouseHandler = (graphView) => ({
                     let releasedOverNode = graphView.getNodeIndexAt(pos)[0];
                     if (releasedOverNode != null) {
                         // Insira uma aresta conectando ambos
-                        // g.structure.insertEdge(g.selectedNode, releasedOverNode, new Edge())
                         graphView.insertEdgeBetween(graphView.selectedNode, releasedOverNode)
                     }
                     // Pare de atualizar a aresta temporária

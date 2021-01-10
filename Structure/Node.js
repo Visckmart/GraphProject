@@ -1,4 +1,3 @@
-import { ctx } from "../Drawing/General.js"
 // Node Definition
 export const nodeRadius = 14;
 const totalBlinkingFrames = 30;
@@ -27,7 +26,12 @@ function generateNewRandomLetter() {
     }
     return newRandomLetter;
 }
-class Node {
+
+export const NodeHighlightType = {
+    SELECTION: 1,
+    ALGORITHM_FOCUS: 2
+}
+export class Node {
 
     constructor(x, y, label) {
         this.pos = {x: x, y: y};
@@ -41,20 +45,21 @@ class Node {
         } else {
             this.label = newRandomLabel;
         }
+        this.highlight = 0;
         
         this._originalcolor = nodeColorList[colorRotation % nodeColorList.length];
         this._initialTime = window.performance.now();
-
-        this._isBlinking = false;
-        this._initialBlinkingTime = null;
-        this.expansion = 3;
+        this.breatheSettings = {
+            speed: 0.15,
+            amplitude: 1.5,
+            offset: -2.5
+        }
+        // this._isBlinking = false;
+        // this._initialBlinkingTime = null;
+        // this.expansion = 3;
 
         function getCurrentColor() {
-            if (this._isBlinking == true) {
-                return this._originalcolor
-            } else {
-                return this._originalcolor
-            }
+            return this._originalcolor
             // ctx.fillStyle = this._originalcolor
         }
         Object.defineProperty(this, 'color', { get: getCurrentColor } );
@@ -62,14 +67,14 @@ class Node {
 
         function getCurrentRadius() {
             let elapsedTime = window.performance.now() - this._initialTime;
-            let speed = 0.15
-            let expansion = Math.sin((elapsedTime / 100)*speed) * 1.5 - 2.5
-            if (this._isBlinking) {
-                // this.elapsedBlinkingTime = window.performance.now() - this._initialBlinkingTime;
-                // this.expansion = Math.sin(this.blinkingFrame / totalBlinkingFrames * Math.PI)
-                // expansion += Math.sin((this.elapsedBlinkingTime / 10)/(Math.PI * 3)) * 2
-                expansion += Math.sin((elapsedTime / 100)*(speed*2))
+            let speed = this.breatheSettings.speed
+            let mult = this.breatheSettings.amplitude
+            let offset = this.breatheSettings.offset
+            if (this.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
+                speed = 0.2;
+                mult = 2.5;
             }
+            let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset
             return nodeRadius * 2 + expansion;
         }
 
@@ -78,16 +83,23 @@ class Node {
         colorRotation += 1;
     }
 
-    blink() {
-        this._initialBlinkingTime = window.performance.now();
-        this._isBlinking = true;
+    addHighlight(type) {
+        // Checa se já está adicionado
+        if ((this.highlight & type) == false) {
+            this.highlight |= type;
+        }
     }
 
-    stopBlink() {
-        this._initialBlinkingTime = null
-        this._isBlinking = false
+    removeHighlight(type) {
+        // Checa se pode ser removido
+        if (this.highlight & type) {
+            this.highlight &= ~type;
+        }
     }
 
+    get isSelected() {
+        return this.highlight & NodeHighlightType.SELECTION;
+    }
 }
 
-export default Node
+// export {Node, NodeHighlightType}

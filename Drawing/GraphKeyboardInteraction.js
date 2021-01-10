@@ -38,10 +38,10 @@ const graphKeyboardHandler = (graphView) => ({
             graphView.lastToolChoice = null;
         }
         if (keyboardEvent.code === "Delete") {
-            for (let node of multipleSelectedNodes) {
+            for (let node of graphView.multipleSelectedNodes) {
                 graphView.structure.removeNode(node)
             }
-            multipleSelectedNodes = []
+            graphView.multipleSelectedNodes = []
         }
     }
 })

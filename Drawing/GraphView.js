@@ -1,15 +1,13 @@
-import {canvas, ctx, Tool, HighFPSFeature} from "./General.js"
-import UndirectedGraph from "../Structure/UndirectedGraph.js"
-import Node from "../Structure/Node.js"
+import { canvas, ctx, Tool, HighFPSFeature } from "./General.js"
+import {Node, NodeHighlightType} from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
+import UndirectedGraph from "../Structure/UndirectedGraph.js"
 
 import GraphMouseInteraction from "./GraphMouseInteraction.js"
 import GraphKeyboardInteraction from "./GraphKeyboardInteraction.js"
 
-
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
-const nodeTextColor = "black";
 
 const edgeWidth = 3;
 
@@ -42,10 +40,15 @@ class GraphView {
         this.ctx = canvas.getContext("2d");
 
         this.insertNewNodeAt({x: 100, y: 150})
-        this.insertNewNodeAt({x: 200, y: 80})
+        this.insertNewNodeAt({x: 220, y: 80})
+        this.insertNewNodeAt({x: 150, y: 100})
+        this.insertNewNodeAt({x: 350, y: 120})
+
+        Array.from(this.structure.nodes())[1].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
 
         integrateComponent(this, GraphMouseInteraction(this))
         integrateComponent(this, GraphKeyboardInteraction(this))
+
     }
 
     _primaryTool = Tool.MOVE;
@@ -112,9 +115,9 @@ class GraphView {
     updateMultipleSelectedNodes() {
         for (let node of g.structure.nodes()) {
             if (this.multipleSelectedNodes.includes(node)) {
-                node.blink()
+                node.addHighlight(NodeHighlightType.SELECTION)
             } else {
-                node.stopBlink()
+                node.removeHighlight(NodeHighlightType.SELECTION)
             }
         }
     }
@@ -183,6 +186,7 @@ class GraphView {
         // let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y)
         this.structure.insertNode(newNode)
+        Array.from(this.structure.nodes())[0].removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         this.redrawGraph();
     }
 
@@ -197,6 +201,8 @@ class GraphView {
                 this.insertEdgeBetween(node, innerNode)
             }
         }
+        // console.log(Array.from(this.structure.edges()))
+        // console.log(Array.from(this.structure.uniqueEdges()))
     }
 
     removeAllEdges() {
@@ -283,13 +289,14 @@ class GraphView {
         return [sourceNodeIndex, targetNodeIndex]
     }
     
-    s1 = 10
-    s2 = 10
-    selectionPrototyping(a, b) {
-        // console.log(a, b)
-        this.s1 = a/10
-        this.s2 = b/10
-    }
+    // s1 = 10
+    // s2 = 10
+    // selectionPrototyping(a, b) {
+    //     // console.log(a, b)
+    //     this.s1 = a/10
+    //     this.s2 = b/10
+    // }
+
     // Graph Drawing
     
     // This function draws one node. This includes the circle, the text and
@@ -304,23 +311,38 @@ class GraphView {
         ctx.arc(node.pos.x, node.pos.y, node.radius, 0, 2*Math.PI);
         ctx.fill();
         ctx.stroke();
-        
-        if (node._isBlinking) {
+
+        // Faz o nó piscar uma cor mais clara
+        if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
+            let t = window.performance.now()/350
+            let a = Math.abs(Math.sin(t - node._initialTime)) - 0.75
+            let c = "rgba(255, 255, 255," + a + ")"
+            ctx.fillStyle = c
+            ctx.fill()
+        }
+        if (node.isSelected) {
             ctx.strokeStyle = "#1050FF"
             ctx.lineWidth = 4
-            let t = window.performance.now()/1000
-            let t2 = t/2
-            let r = node.radius + 2
-            // let r = Math.sin(t)*10+20
-            let c = 2*Math.PI*r
-            // console.log(c, this.s1, this.s2)
-            // ctx.setLineDash([c/this.s1, c/this.s2]);
-            ctx.setLineDash([c/12.5, c/22]);
-            ctx.beginPath()
-            // console.log(h)
-            // ctx.moveTo(100, 100);
-            // ctx.lineTo(x, 200);
-            ctx.arc(node.pos.x, node.pos.y, r, 0+t2, 2*Math.PI+t2);
+            if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
+                ctx.strokeStyle = "#00A0FF"
+                // ctx.lineWidth = 4
+            }
+            
+            // Para mantermos o mesmo número de traços independente
+            // do raio do círculo, fazemos os passos seguintes.
+
+            // Raio do tracejado
+            // (A soma faz com que o tracejado fique do lado de fora do círculo)
+            let dashRadius = node.radius + ctx.lineWidth/2;
+            // Circunferência do círculo (2π * r)
+            let circ = 2*Math.PI * dashRadius;
+            
+            ctx.setLineDash([circ/12.5, circ/22]);
+            
+            let t = window.performance.now()/2000;
+            // Desenhamos a borda tracejada
+            ctx.beginPath();
+            ctx.arc(node.pos.x, node.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
             ctx.stroke();
         }
         // Draw text
@@ -364,10 +386,7 @@ class GraphView {
         ctx.lineWidth = 7
         ctx.strokeStyle = "#333";
         ctx.setLineDash([]);
-        let drawn = new Set()
-        for (let [e, nodeIndexA, nodeIndexB] of this.structure.edges()) {
-            if (drawn.has(e)) continue;
-            drawn.add(e)
+        for (let [_, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
             this.drawEdge(nodeIndexA, nodeIndexB);
         }
         this.drawTemporaryEdge(this.selectedNode, this.pointerPos);
@@ -381,9 +400,6 @@ class GraphView {
         this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
         ctx.lineWidth = 5;
         ctx.strokeStyle = "black";
-        // let h = Math.sqrt(Math.pow(Math.abs(pointerPos.x-anchorNode.pos.x), 2) + Math.pow(Math.abs(pointerPos.y - anchorNode.pos.y), 2))
-        // console.log(h)
-        // let s = Math.floor(h/100)*5
         ctx.setLineDash([10, 5]);
         
         ctx.beginPath()
@@ -405,32 +421,20 @@ class GraphView {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         this.drawEdges()
+        
         for (let node of this.structure.nodes()) {
             this.drawNode(node)
-            if (node._isBlinking) {
+            if (node.isSelected) {
                 this.requestHighFPS(HighFPSFeature.BLINKING, 30)
             }
+            if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
+                this.requestHighFPS(HighFPSFeature.BLINKING, 20)
+            }
         }
+        
         if (this.drawSelectionRectangle) {
             this.drawSelectionRectangle()
         }
-
-        // ctx.strokeStyle = "black"
-        // ctx.lineWidth = 3
-        // let t = window.performance.now()/1000
-        // // console.log(t)
-        // let x = Math.sin(t)*50+200
-        // let y = 200
-        // let h = Math.sqrt(Math.pow(x-100, 2) + Math.pow(y - 100, 2))
-        // let r = Math.sin(t)*10+20
-        // let c = 2*Math.PI*r
-        // ctx.setLineDash([c/30, c/15]);
-        // ctx.beginPath()
-        // // console.log(h)
-        // // ctx.moveTo(100, 100);
-        // // ctx.lineTo(x, 200);
-        // ctx.arc(100, 100, r, t, 2*Math.PI+t);
-        // ctx.stroke();
     }
 
 
@@ -444,17 +448,12 @@ class GraphView {
     }
     
     getCurrentFPS() {
-        // if (this.frameRateRequests.size != 0) {
-        //     console.log(this.frameRateRequests)
-        // }
         let highestFPS = Math.max(...Array.from(this.frameRateRequests.values()))
 
-        // if (highestFPS == NaN) {
-            // console.log(Array.from(this.frameRateRequests.values()) + " " + highestFPS)
-        // }
         if (highestFPS < IDLE_MAX_FPS) {
             highestFPS = IDLE_MAX_FPS
         }
+
         return highestFPS;
     }
 
@@ -469,11 +468,10 @@ class GraphView {
             return;
         }
         this.lastFrameTimestamp = timestamp;
-        this.frameRateRequests = new Map();
+        this.frameRateRequests.clear();
         
         this.redrawGraph();
         this.drawCurrentMaxFPS(currentFPS)
-        
     }
     
 }
@@ -483,9 +481,7 @@ g.redrawGraph();
 g.updateAnimations();
 
 window.onresize = function () {
-  // canvas.style.borderImageSource = "linear-gradient(to right, #743ad5, red)";
   canvas.width = window.innerWidth*0.75;
   canvas.height = window.innerHeight*0.95;
   g.redrawGraph()
 }
-// redrawGraph();

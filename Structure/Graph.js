@@ -131,6 +131,17 @@ class Graph {
             }
         }
     }
+
+    *uniqueEdges() {
+        let previousEdges = new Set()
+        for (let [nodeA, connections] of this.data) {
+            for (let [nodeB, edge] of connections) {
+                if (previousEdges.has(edge)) continue;
+                previousEdges.add(edge)
+                yield [edge, nodeA, nodeB];
+            }
+        }
+    }
 }
 
 export default Graph
