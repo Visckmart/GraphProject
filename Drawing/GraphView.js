@@ -31,11 +31,17 @@ class GraphView {
         this.insertNewNodeAt({x: 100, y: 150})
         this.insertNewNodeAt({x: 200, y: 50})
 
-        // console.log(this.mouseDownEvent)
-        // console.log(this.prototype)
-        Object.assign(this, GraphInteraction(this))
-        // Object.assign(this, GraphInteraction.nodeDragHandler(this))
-        // console.log(this.a)
+        let z = GraphInteraction(this)
+        Object.assign(this, z)
+        console.log(Object.getOwnPropertyNames(this))
+        for (let a of Object.getOwnPropertyNames(z)) {
+            let b = Object.getOwnPropertyDescriptor(z, a)
+            if (b.get != null || b.set != null) {
+                Object.defineProperty(this, a, b)
+            }
+        }
+        console.log(Object.getOwnPropertyNames(this))
+        console.log(this.multipleSelectedNodes)
     }
 
     primaryTool = Tool.MOVE;
@@ -81,18 +87,14 @@ class GraphView {
     }
 
     /* Destaca os nós selecionados */
-    updateMultipleSelectedNodes()
-    {
-        for(let node of g.structure.nodes())
-        {
-            if(this.multipleSelectedNodes.includes(node))
-            {
+    updateMultipleSelectedNodes() {
+        for (let node of g.structure.nodes()) {
+            if (this.multipleSelectedNodes.includes(node)) {
                 node.blink()
             } else {
                 node.stopBlink()
             }
         }
-        // g.requestHighFPS(HighFPSFeature.BLINK, 30)
     }
 
     // Node Handling

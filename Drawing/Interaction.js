@@ -52,7 +52,7 @@ function keyboardEvent(event) {
             }
             if (event.keyCode == 65) {
                 g.multipleSelectedNodes = Array.from(g.structure.nodes())
-                g.updateMultipleSelectedNodes()
+                // g.updateMultipleSelectedNodes()
                 event.preventDefault()
             }
                 // g.structure.abc

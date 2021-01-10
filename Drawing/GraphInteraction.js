@@ -13,8 +13,14 @@ const graphMouseHandler = (graphView) => ({
     /* Registra caso haja uma seleção múltipla acontecendo */
     multipleSelection: false,
     /* Registra nós selecionados na última seleção múltipla */
-    multipleSelectedNodes: [],
-    
+    _multipleSelectedNodes: [],
+    get multipleSelectedNodes() {
+        return graphView._multipleSelectedNodes
+    },
+    set multipleSelectedNodes(selectedNodes) {
+        graphView._multipleSelectedNodes = selectedNodes
+        graphView.updateMultipleSelectedNodes()
+    },
     selectionPoint: null,
 
     mouseDownEvent(mouseEvent) {
@@ -33,7 +39,7 @@ const graphMouseHandler = (graphView) => ({
         if (!graphView.selectedNode) {
             // Reseta nós selecionados
             graphView.multipleSelectedNodes = []
-            graphView.updateMultipleSelectedNodes()
+            // graphView.updateMultipleSelectedNodes()
             // Registrando posição do mouseDown
             graphView.lastMousedownPosition = pos
         } else {
@@ -74,6 +80,7 @@ const graphMouseHandler = (graphView) => ({
         
         // Caso o usuário esteja movendo o nó, altere o ponteiro
         // adaptCursorStyle(g, hovering);
+        // console.log(graphView.multipleSelectedNodes)
         // Caso a ferramenta Move esteja selecionada
         if (graphView.primaryTool == Tool.MOVE) {
             // Se não há nós na seleção múltipla, mova o único clicado
@@ -121,7 +128,7 @@ const graphMouseHandler = (graphView) => ({
         if (graphView.multipleSelection) {
             graphView.multipleSelectedNodes = graphView.getNodesWithin(graphView.lastMousedownPosition, pos)
             graphView.selectedOriginalPos = Array.from(graphView.multipleSelectedNodes.map(node => node.pos))
-            graphView.updateMultipleSelectedNodes()
+            // graphView.updateMultipleSelectedNodes()
             graphView.multipleSelection = false
             graphView.lastMousedownPosition = null
             graphView.setSelectionRectangle(graphView.lastMousedownPosition, pos)
