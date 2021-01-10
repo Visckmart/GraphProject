@@ -47,15 +47,15 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
 - [X] Mover nó
 - [ ] Alterar informações de um nó
 - [ ] Alterar informações de uma aresta
-- [ ] Completar o grafo (conectar todos os nós em todos os outros nós)
-- [ ] Apagar todas as arestas
+- [X] Completar o grafo (conectar todos os nós em todos os outros nós)
+- [X] Apagar todas as arestas
 - [ ] Limpar o grafo
 - Selecionar nós
-    - [ ] Mover múltiplos nós simultaneamente
+    - [X] Mover múltiplos nós simultaneamente
     - [ ] Alterar informações de várias arestas simultaneamente
-    - [ ] Completar sub-grafo (conjunto de nós) selecionado
-    - [ ] Apagar todas as arestas dos nós selecionados
-    - [ ] Apagar todos os nós selecionados
+    - [X] Completar sub-grafo (conjunto de nós) selecionado
+    - [X] Apagar todas as arestas dos nós selecionados
+    - [X] Apagar todos os nós selecionados
 - [ ] Desfazer última ação
 - [ ] Refazer última ação
 - [ ] Incluir como parte de grupo (nó inicial, nó final, etc.)
