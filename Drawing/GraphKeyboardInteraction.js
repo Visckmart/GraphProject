@@ -24,13 +24,16 @@ const graphKeyboardHandler = (graphView) => ({
 
     keyPressed(keyboardEvent) {
         let metaPressed = graphView.isMetaKey(keyboardEvent)
-        if (keyboardEvent.keyCode == 69) { // E
+        console.log(keyboardEvent)
+        if (keyboardEvent.key == "e") { // E
             graphView.structure.showGraph()
         }
-        if (keyboardEvent.keyCode == 65) { // A
+        if (keyboardEvent.key == "a") { // A
             graphView.selectAllNodes()
             event.preventDefault()
         }
+        // Tratamento da seleção da ferramenta Connect ao pressionar a tecla "meta".
+        // No caso do Mac a tecla em questão é Command
         if (metaPressed) {
             if(graphView.lastToolChoice === null) {
                 graphView.lastToolChoice = graphView.primaryTool;

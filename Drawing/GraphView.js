@@ -3,8 +3,9 @@ import {Node, NodeHighlightType} from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 
-import GraphMouseInteraction from "./GraphMouseInteraction.js"
+import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardInteraction from "./GraphKeyboardInteraction.js"
+import GraphSelection from "./GraphSelection.js"
 
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
@@ -36,6 +37,9 @@ function getRandomInt(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
 }
+function colorFromComponents(r, g, b, a = 1) {
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")"
+}
 let t0 = window.performance.now()
 // Graph
 class GraphView {
@@ -44,16 +48,45 @@ class GraphView {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
-        integrateComponent(this, GraphMouseInteraction(this))
+        this.selectionHandler = new GraphSelection(canvas, this.structure);
+        // let mouseHandlerAuxInfo = {
+        //     structure: this.structure,
+        //     canvas: this.canvas,
+        //     selectionHandler: this.selectionHandler,
+        //     getNodeIndexAt: this.getNodeIndexAt,
+        //     graphView: this
+        // }
+        let mouse = new GraphMouseHandler(this)
+        // let keyboard = new GraphKeyboardHandler(this)
+        this.interactionHandler = {mouse: mouse/*, keyboard: keyboard*/}
         integrateComponent(this, GraphKeyboardInteraction(this))
-
+        // console.log(this)
+        
         // Debugging
-        this.generateRandomNodes(10)
+        this.generateRandomNodes(5)
+        let mouseHandler = this.interactionHandler.mouse
+        canvas.addEventListener("mousedown",
+            mouseHandler.mouseDownEvent.bind(mouseHandler)
+        );
+        // Evite abrir o menu de contexto para não haver conflito com o gesto
+        // de deletar nós.
+        canvas.addEventListener("contextmenu", e => e.preventDefault());
+        canvas.addEventListener("mouseup",
+            mouseHandler.mouseUpEvent.bind(mouseHandler)
+        );
+        canvas.addEventListener("mousemove",
+            mouseHandler.mouseDragEvent.bind(mouseHandler)
+        );
 
-        for (let j = 0; j < getRandomInt(0, 4); j++ ) {
-            let r = getRandomInt(0, 9)
-            Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        }
+        // KEYBOARD
+
+        document.body.onkeydown = this.keyPressed;
+        document.body.onkeyup = this.keyReleased;
+
+        // for (let j = 0; j < getRandomInt(0, 4); j++ ) {
+        //     let r = getRandomInt(0, 9)
+        //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        // }
 
     }
 
@@ -87,40 +120,6 @@ class GraphView {
 
     // Interaction
 
-    getMousePos(mouseEvent) {
-        var canvasRect = this.canvas.getBoundingClientRect();
-        return {
-            x: mouseEvent.clientX - canvasRect.left,
-            y: mouseEvent.clientY - canvasRect.top
-        };
-    }
-
-    refreshCursorStyle() {
-        // Restaura o ponteiro para o visual padrão
-        let cursorStyle = null;
-        // Se não sabemos a posição (acontece antes do primeiro movimento)
-        if (this.currentMousePos == null) {
-            return;
-        }
-        let isHoveringNode = this.getNodeIndexAt(this.currentMousePos).length > 0;
-        // Checa se a ferramenta MOVE está selecionada
-        let moveToolSelected = this.primaryTool == Tool.MOVE;
-        
-        // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
-        if (moveToolSelected && isHoveringNode) {
-            if (this.selectedNode == null) {
-                cursorStyle = "grab"
-            } else {
-                cursorStyle = "grabbing"
-            }
-        }
-        if (g.multipleSelection == true) {
-            cursorStyle = "crosshair"
-        }
-        // Atualize o estilo apropriadamente
-        this.canvas.style.cursor = cursorStyle;
-    }
-
     /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
     refreshInterfaceState() {
         for(let element of document.querySelector("#tool_tray").children) {
@@ -128,18 +127,7 @@ class GraphView {
                 element.click()
             }
         }
-        this.refreshCursorStyle()
-    }
-
-    /* Destaca os nós selecionados */
-    updateMultipleSelectedNodes() {
-        for (let node of g.structure.nodes()) {
-            if (this.multipleSelectedNodes.includes(node)) {
-                node.addHighlight(NodeHighlightType.SELECTION)
-            } else {
-                node.removeHighlight(NodeHighlightType.SELECTION)
-            }
-        }
+        this.interactionHandler.mouse.refreshCursorStyle()
     }
 
     selectAllNodes() {
@@ -200,15 +188,15 @@ class GraphView {
     }
 
     insertNewNodeAt(pos) {
-        if (this.getNodeIndexAt(pos, true).length != 0) {
-            return false;
-        }
+        // if (this.getNodeIndexAt(pos, true).length != 0) {
+        //     return false;
+        // }
         // let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y)
         this.structure.insertNode(newNode)
         Array.from(this.structure.nodes())[0].removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         this.redrawGraph();
-        return true;
+        return newNode;
     }
 
     connectAllEdges() {
@@ -241,6 +229,7 @@ class GraphView {
 
     moveNode(node, pos) {
         this.requestHighFPS(HighFPSFeature.MOVING, 90)
+        // console.log(node, pos)
         node.pos = pos;
     }
 
@@ -337,11 +326,11 @@ class GraphView {
         if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
             let t = window.performance.now()/350
             let a = Math.abs(Math.sin(t)) - 0.75
-            let c = "rgba(" + 255 + "," + 255 + "," + 255 + "," + a + ")"
+            let c = colorFromComponents(255, 255, 255, a)
             ctx.fillStyle = c
             ctx.fill()
 
-            let c2 = "rgba(" + 0 + "," + 0 + "," + 0 + "," + 0.5 + ")"
+            let c2 = colorFromComponents(0, 0, 0, 0.5)
             ctx.strokeStyle = c2
             ctx.lineWidth = 4
             // Raio do tracejado
@@ -356,7 +345,7 @@ class GraphView {
             ctx.arc(node.pos.x, node.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
             ctx.stroke();
         }
-        if (node.isSelected) {
+        if (node.isSelected && this.selectionHandler.temporarySelection == false) {
             ctx.strokeStyle = "#1050FF"
             ctx.lineWidth = 4
             if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
@@ -425,7 +414,13 @@ class GraphView {
         for (let [_, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
             this.drawEdge(nodeIndexA, nodeIndexB);
         }
-        this.drawTemporaryEdge(this.selectedNode, this.pointerPos);
+        if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
+            let a = this.getNodeIndexAt(this.interactionHandler.mouse.clickPosition)[0]
+            let b = this.interactionHandler.mouse.currentMousePos
+            // console.log(a, b)
+            // console.log(2)
+            this.drawTemporaryEdge(a, b);
+        }
     }
 
     drawTemporaryEdge(anchorNode, pointerPos) {
@@ -468,8 +463,10 @@ class GraphView {
             }
         }
         
-        if (this.drawSelectionRectangle) {
-            this.drawSelectionRectangle()
+        if (this.selectionHandler.drawingSelection) {
+            this.selectionHandler.drawSelectionArea()
+            this.requestHighFPS(HighFPSFeature.SELECTING, 90);
+            // console.log(1)
         }
     }
 
