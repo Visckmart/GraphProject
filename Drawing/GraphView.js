@@ -4,7 +4,7 @@ import Edge from "../Structure/Edge.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
-import GraphKeyboardInteraction from "./GraphKeyboardInteraction.js"
+import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
 const nodeBorderWidth = 2;
@@ -48,41 +48,34 @@ class GraphView {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
+        // INTERACTION
         this.selectionHandler = new GraphSelection(canvas, this.structure);
-        // let mouseHandlerAuxInfo = {
-        //     structure: this.structure,
-        //     canvas: this.canvas,
-        //     selectionHandler: this.selectionHandler,
-        //     getNodeIndexAt: this.getNodeIndexAt,
-        //     graphView: this
-        // }
-        let mouse = new GraphMouseHandler(this)
-        // let keyboard = new GraphKeyboardHandler(this)
-        this.interactionHandler = {mouse: mouse/*, keyboard: keyboard*/}
-        integrateComponent(this, GraphKeyboardInteraction(this))
-        // console.log(this)
+        let mouseHandler = new GraphMouseHandler(this)
+        let keyboardHandler = new GraphKeyboardHandler(this)
+        this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
+        // integrateComponent(this, GraphKeyboardInteraction(this))
         
-        // Debugging
-        this.generateRandomNodes(5)
-        let mouseHandler = this.interactionHandler.mouse
+        // MOUSE
         canvas.addEventListener("mousedown",
             mouseHandler.mouseDownEvent.bind(mouseHandler)
-        );
-        // Evite abrir o menu de contexto para não haver conflito com o gesto
-        // de deletar nós.
-        canvas.addEventListener("contextmenu", e => e.preventDefault());
-        canvas.addEventListener("mouseup",
-            mouseHandler.mouseUpEvent.bind(mouseHandler)
         );
         canvas.addEventListener("mousemove",
             mouseHandler.mouseDragEvent.bind(mouseHandler)
         );
+        canvas.addEventListener("mouseup",
+            mouseHandler.mouseUpEvent.bind(mouseHandler)
+        );
+        // Evite abrir o menu de contexto para não haver conflito com o gesto
+        // de deletar nós.
+        canvas.addEventListener("contextmenu", event => event.preventDefault());
 
         // KEYBOARD
 
-        document.body.onkeydown = this.keyPressed;
-        document.body.onkeyup = this.keyReleased;
+        document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
+        document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
 
+        // Debugging
+        this.generateRandomNodes(5)
         // for (let j = 0; j < getRandomInt(0, 4); j++ ) {
         //     let r = getRandomInt(0, 9)
         //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
@@ -131,7 +124,7 @@ class GraphView {
     }
 
     selectAllNodes() {
-        this.multipleSelectedNodes = Array.from(this.structure.nodes())
+        this.selectionHandler.selectedNodes = Array.from(this.structure.nodes())
     }
 
     changeTool(tool) {

@@ -1,60 +1,66 @@
 import { Tool } from "./General.js"
 
-const graphKeyboardHandler = (graphView) => ({
+class GraphKeyboardHandler {
+
+    constructor(graphView) {
+        this.graphView = graphView;
+        this.selection = graphView.selectionHandler;
+    }
 
     /* Variável para relembrar a ferramenta escolhida depois da tecla
        especial ser levantada. */
-    lastToolChoice: Tool.MOVE,
+    lastToolChoice = Tool.MOVE;
 
     isMetaKey(keyboardEvent) {
         let metaPressed = event.metaKey;
         if (navigator.platform.includes("Mac") == false) {
             metaPressed = event.ctrlKey;
         }
-        return metaPressed
-    },
+        return metaPressed;
+    }
 
     isDeletionKey(keyboardEvent) {
-        let pressed = keyboardEvent.code === "Backspace"
+        let pressed = keyboardEvent.key === "Backspace";
         if (navigator.platform.includes("Mac") == false) {
-            pressed = keyboardEvent.code === "Delete"
+            pressed = keyboardEvent.key === "Delete";
         }
-        return pressed
-    },
+        return pressed;
+    }
 
     keyPressed(keyboardEvent) {
-        let metaPressed = graphView.isMetaKey(keyboardEvent)
-        console.log(keyboardEvent)
+        let metaPressed = this.isMetaKey(keyboardEvent)
+        // console.log(keyboardEvent)
         if (keyboardEvent.key == "e") { // E
-            graphView.structure.showGraph()
+            this.graphView.structure.showGraph()
         }
+        // console.log(keyboardEvent.key)
         if (keyboardEvent.key == "a") { // A
-            graphView.selectAllNodes()
-            event.preventDefault()
+            this.graphView.selectAllNodes()
+            keyboardEvent.preventDefault()
         }
         // Tratamento da seleção da ferramenta Connect ao pressionar a tecla "meta".
         // No caso do Mac a tecla em questão é Command
         if (metaPressed) {
-            if(graphView.lastToolChoice === null) {
-                graphView.lastToolChoice = graphView.primaryTool;
+            if(this.graphView.lastToolChoice == null) {
+                this.graphView.lastToolChoice = this.graphView.primaryTool;
             }
-            graphView.primaryTool = Tool.CONNECT;
-        }
-    },
-
-    keyReleased(keyboardEvent) {
-        let metaPressed = graphView.isMetaKey(keyboardEvent)
-        if (metaPressed == false && graphView.lastToolChoice == Tool.MOVE) {
-            graphView.primaryTool = Tool.MOVE;
-            graphView.lastToolChoice = null;
-        }
-        if (graphView.isDeletionKey(keyboardEvent)) {
-            for (let node of graphView.multipleSelectedNodes) {
-                graphView.structure.removeNode(node)
-            }
-            graphView.multipleSelectedNodes = []
+            this.graphView.primaryTool = Tool.CONNECT;
         }
     }
-})
 
-export default graphKeyboardHandler
+    keyReleased(keyboardEvent) {
+        let metaPressed = this.isMetaKey(keyboardEvent)
+        if (metaPressed == false && this.graphView.lastToolChoice == Tool.MOVE) {
+            this.graphView.primaryTool = Tool.MOVE;
+            this.graphView.lastToolChoice = null;
+        }
+        if (this.isDeletionKey(keyboardEvent)) {
+            for (let node of this.selection.selectedNodes) {
+                this.graphView.structure.removeNode(node)
+            }
+            this.selection.clear()
+        }
+    }
+}
+
+export default GraphKeyboardHandler
