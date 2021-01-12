@@ -261,96 +261,6 @@ class GraphView {
     //     this.s2 = b/10
     // }
 
-    // Graph Drawing
-    
-    // This function draws one node. This includes the circle, the text and
-    // the appropriate color (considering any animation happening).
-    drawNode(node) {
-        // Draw circle
-        ctx.lineWidth = nodeBorderWidth;
-        ctx.fillStyle = node.color;
-        ctx.strokeStyle = nodeBorderColor;
-
-        ctx.beginPath();
-        ctx.arc(node.pos.x, node.pos.y, node.radius, 0, 2*Math.PI);
-        ctx.fill();
-        ctx.stroke();
-
-        // Faz o nó piscar uma cor mais clara
-        if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
-            let t = window.performance.now()/350
-            let a = Math.abs(Math.sin(t)) - 0.75
-            let c = colorFromComponents(255, 255, 255, a)
-            ctx.fillStyle = c
-            ctx.fill()
-
-            let c2 = colorFromComponents(0, 0, 0, 0.5)
-            ctx.strokeStyle = c2
-            ctx.lineWidth = node.radius/7
-            // Raio do tracejado
-            // (A soma faz com que o tracejado fique do lado de fora do círculo)
-            let dashRadius = node.radius - ctx.lineWidth/2;
-            
-            ctx.setLineDash([]);
-            if (dashRadius > 0) {
-            // let t = window.performance.now()/2000;
-            // Desenhamos a borda tracejada
-            ctx.beginPath();
-            // console.log("d", dashRadius)
-            ctx.arc(node.pos.x, node.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
-            ctx.stroke();
-        }
-        }
-        if (node.isSelected && this.selectionHandler.temporarySelection == false) {
-            ctx.strokeStyle = "#1050FF"
-            ctx.lineWidth = 4
-            if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
-                ctx.strokeStyle = "#00A0FF"
-                // ctx.lineWidth = 4
-            }
-            
-            // Para mantermos o mesmo número de traços independente
-            // do raio do círculo, fazemos os passos seguintes.
-
-            // Raio do tracejado
-            // (A soma faz com que o tracejado fique do lado de fora do círculo)
-            let dashRadius = node.radius + ctx.lineWidth/2;
-            // Circunferência do círculo (2π * r)
-            let circ = 2*Math.PI * dashRadius;
-            
-            ctx.setLineDash([circ/12.5, circ/22]);
-            
-            let t = window.performance.now()/2000;
-            // Desenhamos a borda tracejada
-            ctx.beginPath();
-            ctx.arc(node.pos.x, node.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
-            ctx.stroke();
-        }
-        // Draw text
-        ctx.font = "bold 30px Arial";
-        var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        grd.addColorStop(0, "#E5E0FF");
-        grd.addColorStop(1, "#FFE0F3");
-
-        ctx.fillStyle = grd;
-
-        ctx.textAlign = "center";
-        ctx.textBaseline = 'middle'; 
-        let nodeText;
-        switch (this.nodeLabeling) {
-            case NodeLabeling.NUMBERS:
-                nodeText = node.index;
-                break;
-            case NodeLabeling.LETTERS_RAND:
-                nodeText = node.randomLabel;
-                break;
-            case NodeLabeling.LETTERS_ORD:
-                nodeText = String.fromCharCode(node.index+65)
-                break;
-        }
-        ctx.fillText(node.label || nodeText, node.pos.x, node.pos.y);
-    }
-
     drawEdges() {
         // ctx.lineWidth = Math.sin(window.performance.now()/1000)+15;
 
@@ -382,7 +292,7 @@ class GraphView {
         this.drawEdges()
         
         for (let node of this.structure.nodes()) {
-            this.drawNode(node)
+            node.draw()
             if (node.isSelected) {
                 this.requestHighFPS(HighFPSFeature.BLINKING, 30)
             }
