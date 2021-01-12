@@ -1,5 +1,6 @@
 import { canvas, Tool, nodeLabelingSelector } from "./General.js"
 import { g } from "./GraphView.js"
+import ToolRepository from "./ToolRepository.js";
 
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 for(let element of document.querySelector("#tool_tray").children)
@@ -11,7 +12,7 @@ for(let element of document.querySelector("#tool_tray").children)
 
     if(element.tagName === "BUTTON")
     {
-        element.addEventListener("click", () => g.useTool(element.value))
+        element.addEventListener("click", ToolRepository[element.value].bind(g))
     }
 }
 
