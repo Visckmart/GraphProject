@@ -131,17 +131,6 @@ class GraphView {
         this.primaryTool = tool
     }
 
-    useTool(tool) {
-        switch(tool) {
-            case Tool.CONNECT_ALL:
-                g.connectAllEdges()
-                break;
-            case Tool.DISCONNECT_ALL:
-                g.removeAllEdges()
-                break;
-        }
-    }
-
     // Node Handling
 
     // Searches for nodes that contain the point `pos`
@@ -192,34 +181,6 @@ class GraphView {
         return newNode;
     }
 
-    connectAllEdges() {
-        let nodesToConnect;
-        if (this.multipleSelectedNodes.length > 0) {
-            nodesToConnect = this.multipleSelectedNodes;
-        }
-
-        for (let node of (nodesToConnect || this.structure.nodes())) {
-            for (let innerNode of (nodesToConnect || this.structure.nodes())) {
-                this.insertEdgeBetween(node, innerNode)
-            }
-        }
-        // console.log(Array.from(this.structure.edges()))
-        // console.log(Array.from(this.structure.uniqueEdges()))
-    }
-
-    removeAllEdges() {
-        let nodesToDisconnect;
-        if (this.multipleSelectedNodes.length > 0) {
-            nodesToDisconnect = this.multipleSelectedNodes;
-        } else {
-            nodesToDisconnect = this.structure.nodes()
-        }
-        
-        for (let node of nodesToDisconnect) {
-            this.structure.removeAllEdgesFromNode(node)
-        }
-    }
-
     moveNode(node, pos) {
         this.requestHighFPS(HighFPSFeature.MOVING, 90)
         // console.log(node, pos)
@@ -227,7 +188,7 @@ class GraphView {
     }
 
     insertEdgeBetween(nodeA, nodeB) {
-        this.structure.insertEdge(nodeA, nodeB, new Edge())
+        this.structure.insertEdge(nodeA, nodeB)
     }
 
     removeNodeAt(pos) {
@@ -388,48 +349,20 @@ class GraphView {
         ctx.fillText(node.label || nodeText, node.pos.x, node.pos.y);
     }
 
-    drawEdge(nodeA, nodeB) {
-        if (nodeA == null || nodeB == null) {
-            return;
-        }
-        
-        ctx.beginPath()
-        ctx.moveTo(nodeA.pos.x, nodeA.pos.y);
-        ctx.lineTo(nodeB.pos.x, nodeB.pos.y);
-        ctx.stroke();
-    }
-
     drawEdges() {
         // ctx.lineWidth = Math.sin(window.performance.now()/1000)+15;
-        ctx.lineWidth = 7
-        ctx.strokeStyle = "#333";
-        ctx.setLineDash([]);
-        for (let [_, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
-            this.drawEdge(nodeIndexA, nodeIndexB);
+
+        for (let [edge, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
+            edge.draw(nodeIndexA.pos, nodeIndexB.pos)
         }
         if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
             let a = this.getNodeIndexAt(this.interactionHandler.mouse.clickPosition)[0]
             let b = this.interactionHandler.mouse.currentMousePos
             // console.log(a, b)
             // console.log(2)
-            this.drawTemporaryEdge(a, b);
+            this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
+            this.structure.createTemporaryEdge().draw(a.pos, b);
         }
-    }
-
-    drawTemporaryEdge(anchorNode, pointerPos) {
-        if (anchorNode == null || pointerPos == null) {
-            return;
-        }
-
-        this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = "black";
-        ctx.setLineDash([10, 5]);
-        
-        ctx.beginPath()
-        ctx.moveTo(anchorNode.pos.x, anchorNode.pos.y);
-        ctx.lineTo(pointerPos.x, pointerPos.y);
-        ctx.stroke();
     }
 
     drawCurrentMaxFPS(fps) {

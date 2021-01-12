@@ -1,8 +1,11 @@
 import Graph from "./Graph.js";
+import {UndirectedEdge} from "./UndirectedEdge.js";
+import {UndirectedTemporaryEdge} from "./UndirectedTemporaryEdge.js";
 class UndirectedGraph extends Graph {
 
     // Inserção
-    insertEdge(nodeA, nodeB, edge) {
+    insertEdge(nodeA, nodeB) {
+        let edge = new UndirectedEdge("")
         // Verificação
         if (!(nodeA && nodeB && edge)) {
             console.error("Inserção de aresta chamada incorretamente.")
@@ -17,6 +20,11 @@ class UndirectedGraph extends Graph {
         // Operação
         this.data.get(nodeA).set(nodeB, edge)
         this.data.get(nodeB).set(nodeA, edge)
+    }
+
+    // Criando aresta temporária
+    createTemporaryEdge() {
+        return new UndirectedTemporaryEdge("")
     }
 
     // Remoção
