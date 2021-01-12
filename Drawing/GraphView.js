@@ -292,7 +292,7 @@ class GraphView {
         this.drawEdges()
         
         for (let node of this.structure.nodes()) {
-            node.draw()
+            node.draw(this.nodeLabeling)
             if (node.isSelected) {
                 this.requestHighFPS(HighFPSFeature.BLINKING, 30)
             }
