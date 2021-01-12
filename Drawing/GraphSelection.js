@@ -31,12 +31,16 @@ export default class GraphSelection {
         endPoint: null
     }
 
-    setSelectionArea(endPoint) {
-        if (this.selectionArea.startPoint == null || endPoint == null) {
+    setSelectionArea(startPoint, endPoint) {
+        if (startPoint == null || endPoint == null) {
             console.log("No selection area.")
             this.drawingSelection = false;
             return;
         }
+        if (this.checkSelectionGesture(startPoint, endPoint) == false) {
+            return;
+        }
+        this.selectionArea.startPoint = startPoint;
         this.selectionArea.endPoint = endPoint;
         this.drawingSelection = true;
     }
@@ -56,6 +60,12 @@ export default class GraphSelection {
         return this._selectedNodes
     }
     set selectedNodes(selectedNodes) {
+        let d = document.getElementById("dynamic")
+        if (selectedNodes.length > 0) {
+            d.innerHTML = selectedNodes.length + " nós selecionados"
+        } else {
+            d.innerHTML = "Nenhum nó selecionado."
+        }
         this._selectedNodes = selectedNodes
         this.updateOriginalPositions()
         this.temporarySelection = false;
@@ -74,7 +84,7 @@ export default class GraphSelection {
         this.updateNodesAppearance()
     }
     selectNodeTemporarily(node) {
-        this.selectedNodes.push(node)
+        this.selectedNodes = [node]
         this.temporarySelection = true
     }
     updateOriginalPositions() {
