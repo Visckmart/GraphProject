@@ -151,8 +151,8 @@ class GraphView {
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
             let radiusCheck;
-            if (checkForConflict) { radiusCheck = node.radius * 2; }
-            else                  { radiusCheck = node.radius; }
+            if (checkForConflict) { radiusCheck = Math.max(node.radius, 28) * 2; }
+            else                  { radiusCheck = Math.max(node.radius, 28); }
             let dx = node.pos.x - pos.x;
             let dy = node.pos.y - pos.y;
             if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck) {
@@ -181,9 +181,9 @@ class GraphView {
     }
 
     insertNewNodeAt(pos) {
-        // if (this.getNodeIndexAt(pos, true).length != 0) {
-        //     return false;
-        // }
+        if (this.getNodeIndexAt(pos, true).length != 0) {
+            return false;
+        }
         // let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y)
         this.structure.insertNode(newNode)
@@ -325,18 +325,20 @@ class GraphView {
 
             let c2 = colorFromComponents(0, 0, 0, 0.5)
             ctx.strokeStyle = c2
-            ctx.lineWidth = 4
+            ctx.lineWidth = node.radius/7
             // Raio do tracejado
             // (A soma faz com que o tracejado fique do lado de fora do círculo)
             let dashRadius = node.radius - ctx.lineWidth/2;
             
             ctx.setLineDash([]);
-            
+            if (dashRadius > 0) {
             // let t = window.performance.now()/2000;
             // Desenhamos a borda tracejada
             ctx.beginPath();
+            // console.log("d", dashRadius)
             ctx.arc(node.pos.x, node.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
             ctx.stroke();
+        }
         }
         if (node.isSelected && this.selectionHandler.temporarySelection == false) {
             ctx.strokeStyle = "#1050FF"
