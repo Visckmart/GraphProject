@@ -317,6 +317,7 @@ export let g = new GraphView(canvas);
 g.redrawGraph();
 g.updateAnimations();
 
+let blurTimeout = null
 window.onresize = function (a) {
     let wr = (window.innerWidth*0.75)/canvas.width
     let wh = (window.innerHeight*0.95)/canvas.height
@@ -326,6 +327,11 @@ window.onresize = function (a) {
         node.pos.x *= wr
         node.pos.y *= wh
     }
+    canvas.style.filter = "blur(15pt)"
+    if (blurTimeout) { clearTimeout(blurTimeout) }
+    blurTimeout = setTimeout(function() {
+        canvas.style.filter = null
+    }, 250)
     g.redrawGraph()
 }
 

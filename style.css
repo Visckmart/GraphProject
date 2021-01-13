@@ -27,6 +27,7 @@ canvas {
   border-radius: 10pt 0pt 0pt 10pt;
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
   /*flex-grow:1;*/
+  transition: 0.1s;
   
 }
 .canvasArea {
