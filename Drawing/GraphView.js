@@ -317,8 +317,15 @@ export let g = new GraphView(canvas);
 g.redrawGraph();
 g.updateAnimations();
 
-window.onresize = function () {
-  canvas.width = window.innerWidth*0.75;
-  canvas.height = window.innerHeight*0.95;
-  g.redrawGraph()
+window.onresize = function (a) {
+    let wr = (window.innerWidth*0.75)/canvas.width
+    let wh = (window.innerHeight*0.95)/canvas.height
+    canvas.width = window.innerWidth*0.75;
+    canvas.height = window.innerHeight*0.95;
+    for (let node of g.structure.nodes()) {
+        node.pos.x *= wr
+        node.pos.y *= wh
+    }
+    g.redrawGraph()
 }
+
