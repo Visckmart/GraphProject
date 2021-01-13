@@ -12,6 +12,11 @@ export default class GraphSelection {
 
     /* Registra caso haja uma seleção múltipla acontecendo */
     drawingSelection = false;
+    
+    selectionArea = {
+        startPoint: null,
+        endPoint: null
+    }
 
     checkSelectionGesture(startingPoint, currentPoint) {
         if (startingPoint == null || currentPoint == null) {
@@ -21,11 +26,6 @@ export default class GraphSelection {
         let verticalMove   = Math.abs(currentPoint.y - startingPoint.y)
 
         return (horizontalMove > movementTolerance || verticalMove > movementTolerance)
-    }
-    
-    selectionArea = {
-        startPoint: null,
-        endPoint: null
     }
 
     startSelection(pos) {
@@ -72,9 +72,22 @@ export default class GraphSelection {
         this.updateNodesAppearance()
     }
 
+    removeSelectionFrom(node) {
+        let currentSelectedNodes = this.selectedNodes;
+        let indexOfNode = currentSelectedNodes.indexOf(node)
+        currentSelectedNodes.splice(indexOfNode, 1)
+        this.selectedNodes = currentSelectedNodes;
+    }
+
+    clear() {
+        // console.trace()
+        this.selectedNodes = [];
+    }
+
     get hasSelectedNodes() {
         return this.selectedNodes.length > 0;
     }
+
     
     _temporarySelection = false;
     get temporarySelection() {
@@ -89,6 +102,7 @@ export default class GraphSelection {
         this.selectedNodes = [node]
         this.temporarySelection = true
     }
+
     
     updateOriginalPositions() {
         this.selectedOriginalPos = Array.from(this.selectedNodes.map(node => node.pos))
@@ -105,9 +119,6 @@ export default class GraphSelection {
         }
     }
 
-    clear() {
-        this.selectedNodes = [];
-    }
 
     drawSelectionArea() {
         let startPoint = this.selectionArea.startPoint;

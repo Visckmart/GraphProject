@@ -7,39 +7,6 @@ class GraphMouseHandler {
         this.selection = graphView.selectionHandler;
     }
 
-    getMousePos(mouseEvent) {
-        var canvasRect = this.graphView.canvas.getBoundingClientRect();
-        return {
-            x: mouseEvent.clientX - canvasRect.left,
-            y: mouseEvent.clientY - canvasRect.top
-        };
-    }
-
-    refreshCursorStyle() {
-        // Restaura o ponteiro para o visual padrão
-        let cursorStyle = null;
-        // Se não sabemos a posição (acontece antes do primeiro movimento)
-        if (this.currentMousePos == null) { return; }
-
-        let isHoveringNode = this.graphView.getNodeIndexAt(this.currentMousePos).length > 0;
-        // Checa se a ferramenta MOVE está selecionada
-        let moveToolSelected = this.graphView.primaryTool == Tool.MOVE;
-        
-        // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
-        if (moveToolSelected && isHoveringNode) {
-            if (this.selection.hasSelectedNodes && this.clickPosition == this.currentMousePos) {
-                cursorStyle = "grabbing"
-            } else {
-                cursorStyle = "grab"
-            }
-        }
-        if (this.selection.drawingSelection == true) {
-            cursorStyle = "crosshair"
-        }
-        // Atualize o estilo apropriadamente
-        this.graphView.canvas.style.cursor = cursorStyle;
-    }
-
 
 
     /* Registra a ultima posição em que o mousedown ocorreu para
@@ -58,7 +25,7 @@ class GraphMouseHandler {
     mostRecentNode = null;
     mouseDownEvent(mouseEvent) {
         // Somente o botão esquerdo nos interessa
-        if (mouseEvent.button != 0) return;
+        // if (mouseEvent.button != 0) return;
         // console.log(this)
         // console.info("Mouse down event")
         let pos = this.getMousePos(mouseEvent);
@@ -97,7 +64,7 @@ class GraphMouseHandler {
         this.currentMousePos = pos;
 
         // Se não for um clique do botão esquerdo, ignoramos
-        if (mouseEvent.buttons == 0 || mouseEvent.button != 0) {
+        if (mouseEvent.buttons == 0 || mouseEvent.button != 0 || mouseEvent.buttons == 2) {
             this.refreshCursorStyle();
             return;
         }
@@ -155,7 +122,7 @@ class GraphMouseHandler {
 
     mouseUpEvent(mouseEvent) {
         let pos = this.getMousePos(mouseEvent);
-
+        console.log()
         // Se o botão direito foi o levantado
         if (mouseEvent.button == 2) {
             this.selection.clearSelectionArea()
@@ -164,7 +131,6 @@ class GraphMouseHandler {
             return;
         }
         // console.info("Mouse up event")
-
         // SELEÇÃO
         /* Se fez uma área de seleção, selecione os nós contidos */
         if (this.selection.drawingSelection) {
@@ -232,6 +198,40 @@ class GraphMouseHandler {
         }
         // Remova a seleção do nó
         this.refreshCursorStyle()
+    }
+
+
+    getMousePos(mouseEvent) {
+        var canvasRect = this.graphView.canvas.getBoundingClientRect();
+        return {
+            x: mouseEvent.clientX - canvasRect.left,
+            y: mouseEvent.clientY - canvasRect.top
+        };
+    }
+
+    refreshCursorStyle() {
+        // Restaura o ponteiro para o visual padrão
+        let cursorStyle = null;
+        // Se não sabemos a posição (acontece antes do primeiro movimento)
+        if (this.currentMousePos == null) { return; }
+
+        let isHoveringNode = this.graphView.getNodeIndexAt(this.currentMousePos).length > 0;
+        // Checa se a ferramenta MOVE está selecionada
+        let moveToolSelected = this.graphView.primaryTool == Tool.MOVE;
+        
+        // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
+        if (moveToolSelected && isHoveringNode) {
+            if (this.selection.hasSelectedNodes && this.clickPosition == this.currentMousePos) {
+                cursorStyle = "grabbing"
+            } else {
+                cursorStyle = "grab"
+            }
+        }
+        if (this.selection.drawingSelection == true) {
+            cursorStyle = "crosshair"
+        }
+        // Atualize o estilo apropriadamente
+        this.graphView.canvas.style.cursor = cursorStyle;
     }
 }
 

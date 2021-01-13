@@ -61,9 +61,9 @@ class GraphView {
         document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
 
         // Debugging
-        this.generateRandomNodes(5)
-        for (let j = 0; j < getRandomInt(0, 4); j++ ) {
-            let r = getRandomInt(0, 4)
+        this.generateRandomNodes(3)
+        for (let j = 0; j < getRandomInt(0, 3); j++ ) {
+            let r = getRandomInt(0, 3)
             Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         }
 
@@ -187,6 +187,7 @@ class GraphView {
             }
         }
         this.structure.removeNode(frontmostNode)
+        this.selectionHandler.removeSelectionFrom(frontmostNode)
     }
 
 
