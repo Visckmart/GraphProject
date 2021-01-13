@@ -21,26 +21,12 @@ const NodeLabeling = {
     LETTERS_ORD: "letters_ordered"
 }
 
-function integrateComponent(original, newComponent) {
-    // Associa as variáveis e os métodos ao objeto original
-    Object.assign(original, newComponent)
-    // Associa getters e setters ao objeto original
-    for (let property of Object.getOwnPropertyNames(newComponent)) {
-        let propertyDescriptor = Object.getOwnPropertyDescriptor(newComponent, property)
-        if (propertyDescriptor.get != null || propertyDescriptor.set != null) {
-            Object.defineProperty(original, property, propertyDescriptor)
-        }
-    }
-}
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
 }
-function colorFromComponents(r, g, b, a = 1) {
-    return "rgba(" + r + "," + g + "," + b + "," + a + ")"
-}
-let t0 = window.performance.now()
+
 // Graph
 class GraphView {
 
@@ -76,10 +62,10 @@ class GraphView {
 
         // Debugging
         this.generateRandomNodes(5)
-        // for (let j = 0; j < getRandomInt(0, 4); j++ ) {
-        //     let r = getRandomInt(0, 9)
-        //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        // }
+        for (let j = 0; j < getRandomInt(0, 4); j++ ) {
+            let r = getRandomInt(0, 4)
+            Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        }
 
     }
 
@@ -173,10 +159,8 @@ class GraphView {
         if (this.getNodeIndexAt(pos, true).length != 0) {
             return false;
         }
-        // let newLabel = String.fromCharCode(Math.floor(Math.random()*26)+65)
         let newNode = new Node(pos.x, pos.y)
         this.structure.insertNode(newNode)
-        Array.from(this.structure.nodes())[0].removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         this.redrawGraph();
         return newNode;
     }
@@ -188,7 +172,7 @@ class GraphView {
     }
 
     insertEdgeBetween(nodeA, nodeB) {
-        this.structure.insertEdge(nodeA, nodeB)
+        this.structure.insertEdgeBetween(nodeA, nodeB)
     }
 
     removeNodeAt(pos) {
@@ -198,33 +182,11 @@ class GraphView {
         }
         let frontmostNode = nodes[0]
         for (let node of nodes) {
-            if (node._initialTime > frontmostNode._initialTime) {
+            if (node.index > frontmostNode.index) {
                 frontmostNode = node
             }
         }
         this.structure.removeNode(frontmostNode)
-    }
-
-    setSelectionRectangle(initialPos, pointerPos) {
-        if(initialPos === null || pointerPos === null) {
-            this.drawSelectionRectangle = () => { };
-            return;
-        }
-        
-        this.requestHighFPS(HighFPSFeature.SELECTING, 90)
-        this.drawSelectionRectangle = () => {
-            ctx.save()
-
-            ctx.strokeStyle = 'blue'
-            ctx.fillStyle = 'rgba(0,0,255,0.1)'
-            ctx.lineWidth = 3
-            let finalPosX = pointerPos.x - initialPos.x;
-            let finalPosY = pointerPos.y - initialPos.y;
-            ctx.fillRect  (initialPos.x, initialPos.y, finalPosX, finalPosY)
-            ctx.strokeRect(initialPos.x, initialPos.y, finalPosX, finalPosY)
-
-            ctx.restore()
-        }
     }
 
 
@@ -262,16 +224,17 @@ class GraphView {
     // }
 
     drawEdges() {
-        // ctx.lineWidth = Math.sin(window.performance.now()/1000)+15;
-
         for (let [edge, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
             edge.draw(nodeIndexA.pos, nodeIndexB.pos)
         }
         if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
             let a = this.getNodeIndexAt(this.interactionHandler.mouse.clickPosition)[0]
             let b = this.interactionHandler.mouse.currentMousePos
-            // console.log(a, b)
-            // console.log(2)
+            if (a == null || b == null) {
+                console.warn("Situação estranha.")
+                this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
+                return;
+            }
             this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
             this.structure.createTemporaryEdge().draw(a.pos, b);
         }
@@ -291,16 +254,15 @@ class GraphView {
         
         this.drawEdges()
         
+        let maxFPSRequest = 0;
         for (let node of this.structure.nodes()) {
-            node.draw(this.nodeLabeling)
-            if (node.isSelected) {
-                this.requestHighFPS(HighFPSFeature.BLINKING, 30)
-            }
-            if (node.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
-                this.requestHighFPS(HighFPSFeature.BLINKING, 20)
-            }
+            let fpsRequest = node.draw(this.nodeLabeling);
+            maxFPSRequest = Math.max(maxFPSRequest, fpsRequest)
         }
-        
+        if (maxFPSRequest > 0) {
+            this.requestHighFPS(HighFPSFeature.NODE_HIGHLIGHT, maxFPSRequest);
+        }
+
         if (this.selectionHandler.drawingSelection) {
             this.selectionHandler.drawSelectionArea()
             this.requestHighFPS(HighFPSFeature.SELECTING, 90);
@@ -315,6 +277,10 @@ class GraphView {
     frameRateRequests = new Map()
 
     requestHighFPS(feature, FPS) {
+        if (feature == undefined) {
+            console.warn("Unknown High FPS feature")
+            return;
+        }
         this.frameRateRequests.set(feature, FPS)
     }
     

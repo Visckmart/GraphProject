@@ -4,8 +4,8 @@ import {UndirectedTemporaryEdge} from "./UndirectedTemporaryEdge.js";
 class UndirectedGraph extends Graph {
 
     // Inserção
-    insertEdge(nodeA, nodeB) {
-        let edge = new UndirectedEdge("")
+    insertEdgeBetween(nodeA, nodeB) {
+        let edge = new UndirectedEdge(String.fromCharCode(Math.floor(Math.random()*26)+65))
         // Verificação
         if (!(nodeA && nodeB && edge)) {
             console.error("Inserção de aresta chamada incorretamente.")

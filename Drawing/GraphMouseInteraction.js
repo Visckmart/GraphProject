@@ -1,6 +1,5 @@
 import { Tool } from "./General.js"
-import { Node } from "../Structure/Node.js"
-let graphView = null;
+
 class GraphMouseHandler {
     
     constructor(graphView) {
@@ -77,9 +76,11 @@ class GraphMouseHandler {
             if (this.selection.selectedNodes.includes(this.clickedNode) == false) {
                 // Limpe a seleção
                 this.selection.clear()
-                // E coloque o nó temporariamente
-                // (Para não mostrar pontilhado e mover imediatamente)
-                this.selection.selectNodeTemporarily(this.clickedNode)
+                if (this.graphView.primaryTool == Tool.MOVE) {
+                    // E coloque o nó temporariamente
+                    // (Para não mostrar pontilhado e mover imediatamente)
+                    this.selection.selectNodeTemporarily(this.clickedNode)
+                }
             }
         } else {
             // console.log("Mouse down on background")
@@ -114,7 +115,7 @@ class GraphMouseHandler {
         // MOVER
         // Caso a ferramenta Move esteja selecionada,
         switch (this.graphView.primaryTool) {
-            case Tool.MOVE:
+            case Tool.MOVE: {
                 // Se há uma seleção temporária,
                 if (this.selection.temporarySelection) {
                     console.assert(
@@ -139,15 +140,17 @@ class GraphMouseHandler {
                     }
                 }
                 break;
+            }
 
         // Caso a ferramenta Connect esteja selecionada
-            case Tool.CONNECT: 
+            case Tool.CONNECT: {
                 // Registre a nova posição do mouse no grafo
                 // para que a aresta temporária seja desenhada corretamente.
                 // graphView.pointerPos = pos;
                 this.shouldDrawTemporaryEdge = true;
                 break;
             }
+        }
     }
 
     mouseUpEvent(mouseEvent) {
@@ -155,6 +158,7 @@ class GraphMouseHandler {
 
         // Se o botão direito foi o levantado
         if (mouseEvent.button == 2) {
+            this.selection.clearSelectionArea()
             // Tente remover um nó, se o mouse estiver sobre algum
             this.graphView.removeNodeAt(pos);
             return;
@@ -174,7 +178,7 @@ class GraphMouseHandler {
         // Se o botão esquerdo foi o levantado,
         switch (this.graphView.primaryTool) {
             // A ferramenta MOVE for a escolhida,
-            case Tool.MOVE:
+            case Tool.MOVE: {
                 // console.log("...with MOVE tool")
                 /* Se soltou um único nó que estava sendo movido, limpe a seleção */
                 if (this.selection.temporarySelection) {
@@ -204,19 +208,15 @@ class GraphMouseHandler {
                     }
                 }
                 break;
+            }
 
             // A ferramenta CONNECT for a escolhida
-            case Tool.CONNECT:
-                let initialNode;
+            case Tool.CONNECT: {
+                let initialNode = this.graphView.getNodeIndexAt(this.clickPosition)[0];
 
                 // Se um nó estiver selecionado,
-                if (this.selection.hasSelectedNodes) {
-                    // O inicial é o selecionado
-                    initialNode = this.graphView.getNodeIndexAt(this.clickPosition)[0];
-                } else {
-                    // console.error("Nunca acontece porque a seleção interrompe a ação.")
-                    // initialNode = this.graphView.insertNewNodeAt(this.clickPosition)
-                    break;
+                if (initialNode == null) {
+                    return;
                 }
 
                 // Nó abaixo do ponteiro do mouse atualmente
@@ -228,6 +228,7 @@ class GraphMouseHandler {
                 // Pare de atualizar a aresta temporária
                 this.shouldDrawTemporaryEdge = false;
                 break;
+            }
         }
         // Remova a seleção do nó
         this.refreshCursorStyle()

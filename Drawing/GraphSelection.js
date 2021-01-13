@@ -15,20 +15,22 @@ export default class GraphSelection {
 
     checkSelectionGesture(startingPoint, currentPoint) {
         if (startingPoint == null || currentPoint == null) {
-            // console.warn("Checagem estranha")
             return false;
         }
         let horizontalMove = Math.abs(currentPoint.x - startingPoint.x)
         let verticalMove   = Math.abs(currentPoint.y - startingPoint.y)
 
-        let z =  (horizontalMove > movementTolerance || verticalMove > movementTolerance)
-        // console.log(z)
-        return z
+        return (horizontalMove > movementTolerance || verticalMove > movementTolerance)
     }
     
     selectionArea = {
         startPoint: null,
         endPoint: null
+    }
+
+    startSelection(pos) {
+        this.selectionArea.startPoint = pos;
+        this.drawingSelection = true;
     }
 
     setSelectionArea(startPoint, endPoint) {
@@ -44,18 +46,16 @@ export default class GraphSelection {
         this.selectionArea.endPoint = endPoint;
         this.drawingSelection = true;
     }
-    // firstSelectionPoint = null;
 
-    startSelection(pos) {
-        this.selectionArea.startPoint = pos;
-        // console.log("this.selectionArea.startPoint", this.selectionArea.startPoint)
-        this.drawingSelection = true;
+    clearSelectionArea() {
+        this.selectionArea.startPoint = null;
+        this.selectionArea.endPoint = null;
+        this.drawingSelection = false;
     }
 
 
     /* Registra nós selecionados na última seleção múltipla */
     _selectedNodes = [];
-
     get selectedNodes() {
         return this._selectedNodes
     }
@@ -71,6 +71,7 @@ export default class GraphSelection {
         this.temporarySelection = false;
         this.updateNodesAppearance()
     }
+
     get hasSelectedNodes() {
         return this.selectedNodes.length > 0;
     }
@@ -83,10 +84,12 @@ export default class GraphSelection {
         this._temporarySelection = temp;
         this.updateNodesAppearance()
     }
+
     selectNodeTemporarily(node) {
         this.selectedNodes = [node]
         this.temporarySelection = true
     }
+    
     updateOriginalPositions() {
         this.selectedOriginalPos = Array.from(this.selectedNodes.map(node => node.pos))
     }
@@ -94,7 +97,7 @@ export default class GraphSelection {
     /* Destaca os nós selecionados */
     updateNodesAppearance() {
         for (let node of this.structure.nodes()) {
-            if (this.selectedNodes.includes(node)) {
+            if (this.selectedNodes.includes(node) && this.temporarySelection == false) {
                 node.addHighlight(NodeHighlightType.SELECTION)
             } else {
                 node.removeHighlight(NodeHighlightType.SELECTION)

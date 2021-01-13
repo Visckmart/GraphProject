@@ -1,22 +1,18 @@
 // Node Definition
-import {canvas, ctx} from "../Drawing/General.js";
+import { canvas, ctx } from "../Drawing/General.js";
 
-export const nodeRadius = 14;
-const totalBlinkingFrames = 30;
+export const regularNodeRadius = 28;
 const nodeColorList = [
-    // "#32E6BC", "#E6DD27", "#E67955", "#27E64D"
-    // "#E9D879", "#32E6BA", "#E6DD27", "#E67855", "#27E64C"
-    // "#2FD6AE", "#D6CE24", "#D6704F", "#27E64C"
     "dodgerblue", "limegreen",
     "mediumslateblue", "#8D6E63", "#4FC3F7", "burlywood", "#FF7043"
 ]
 var colorRotation = 0
+
 var globalNodeIndex = 0
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
 
 var usedLabels = new Set()
-
 
 function generateNewRandomLetter() {
     let newRandomLetter;
@@ -33,55 +29,68 @@ function generateNewRandomLetter() {
 }
 
 export const NodeHighlightType = {
-    SELECTION: 1,
-    ALGORITHM_FOCUS: 2
+    SELECTION: "selection",
+    ALGORITHM_FOCUS: "algorithm_focus"
 }
+function colorFromComponents(r, g, b, a = 1) {
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")"
+}
+
+const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+transparentLabelGradient.addColorStop(0, "#E5E0FF");
+transparentLabelGradient.addColorStop(1, "#FFE0F3");
+
 export class Node {
 
     constructor(x, y, label) {
-        this.pos = {x: x, y: y};
 
-        this.index = globalNodeIndex++;
-        let newRandomLabel = generateNewRandomLetter()
-        usedLabels.add(newRandomLabel)
-        this.randomLabel = newRandomLabel
-        if (label != null) {
-            this.label = label;
-        } else {
-            this.label = newRandomLabel;
-        }
-        this.highlight = 0;
-        
-        this._originalcolor = nodeColorList[colorRotation % nodeColorList.length];
         this._initialTime = window.performance.now();
-        this.breatheSettings = {
+        this.index = globalNodeIndex++;
+        this._originalcolor = nodeColorList[colorRotation % nodeColorList.length];
+        this._breatheSettings = {
             speed: 0.15,
             amplitude: 1.5,
             offset: -2.5
         }
 
-        function getCurrentColor() {
-            return this._originalcolor
-        }
-        Object.defineProperty(this, 'color', { get: getCurrentColor } );
+        // Posição
+        this.pos = {x: x, y: y};
 
+        // Informações de label
+        let newRandomLabel = generateNewRandomLetter()
+        usedLabels.add(newRandomLabel)
+        this.randomLabel = newRandomLabel
 
-        function getCurrentRadius() {
-            let elapsedTime = window.performance.now() - this._initialTime;
-            let speed = this.breatheSettings.speed
-            let mult = this.breatheSettings.amplitude
-            let offset = this.breatheSettings.offset
-            if (this.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
-                speed = 0.2;
-                mult = 2.5;
-            }
-            let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset
-            return nodeRadius * 2 + expansion;
+        if (label != null) {
+            this.label = label;
+        } else {
+            this.label = newRandomLabel;
         }
-        Object.defineProperty(this, 'radius', { get: getCurrentRadius } );
+        
+        this.highlights = new Set();
         
         colorRotation += 1;
     }
+
+    get color() {
+        return this._originalcolor
+    }
+
+    get radius() {
+        let elapsedTime = window.performance.now() - this._initialTime;
+        let speed  = this._breatheSettings.speed
+        let mult   = this._breatheSettings.amplitude
+        let offset = this._breatheSettings.offset
+        if (this.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
+            speed = 0.4;
+            mult = 2.5;
+        }
+        let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset
+        return regularNodeRadius + expansion;
+    }
+
+
+    // DRAWING
 
     // This function draws one node. This includes the circle, the text and
     // the appropriate color (considering any animation happening).
@@ -96,63 +105,71 @@ export class Node {
         ctx.fill();
         ctx.stroke();
 
-        // Faz o nó piscar uma cor mais clara
-        if (this.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
-            let t = window.performance.now()/350
-            let a = Math.abs(Math.sin(t)) - 0.75
-            ctx.fillStyle = "rgba(255,255,255,a)"
-            ctx.fill()
+        // Draw highlights
+        let maxFPSRequest = 0;
+        for (let h of this.highlights) {
+            let fpsRequest = this._drawHighlight(h)
+            maxFPSRequest = Math.max(maxFPSRequest, fpsRequest)
+        }
 
-            let c2 = colorFromComponents(0, 0, 0, 0.5)
-            ctx.strokeStyle = c2
-            ctx.lineWidth = this.radius/7
-            // Raio do tracejado
-            // (A soma faz com que o tracejado fique do lado de fora do círculo)
-            let dashRadius = this.radius - ctx.lineWidth/2;
+        // Draw label
+        this._drawLabel(nodeLabeling)
 
-            ctx.setLineDash([]);
-            if (dashRadius > 0) {
-                // let t = window.performance.now()/2000;
+        return maxFPSRequest;
+    }
+
+    _drawHighlight(highlight) {
+        switch (highlight) {
+            case NodeHighlightType.SELECTION: {
+                ctx.strokeStyle = "#1050FF"
+                ctx.lineWidth = 4
+
+                /// Para mantermos o mesmo número de traços independente
+                /// do raio do círculo, fazemos os passos seguintes.
+
+                // Raio do tracejado
+                // (A soma faz com que o tracejado fique do lado de fora do círculo)
+                let dashRadius = this.radius + ctx.lineWidth/2;
+                // Circunferência do círculo (2π * r)
+                let circunference = 2*Math.PI * dashRadius;
+
+                ctx.setLineDash([circunference/12.5, circunference/22]);
+
+                let rotationOffset = window.performance.now()/2000;
                 // Desenhamos a borda tracejada
                 ctx.beginPath();
-                // console.log("d", dashRadius)
-                ctx.arc(this.pos.x, this.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
+                ctx.arc(this.pos.x, this.pos.y, dashRadius,
+                        rotationOffset, 2*Math.PI + rotationOffset);
                 ctx.stroke();
+                return 20;
+            }
+            case NodeHighlightType.ALGORITHM_FOCUS: {
+                // Pisca o nó
+                let twinkleTime = window.performance.now()/500
+                let whiteLayerAlpha = Math.abs(Math.sin(twinkleTime)) - 0.7
+                ctx.fillStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
+                ctx.fill()
+
+                // Borda clara
+                ctx.strokeStyle = colorFromComponents(255, 255, 255, 0.5)
+                ctx.lineWidth = this.radius/7
+                
+                // Raio do tracejado
+                let lightBorderRadius = this.radius - ctx.lineWidth/2
+                ctx.setLineDash([]);
+                if (lightBorderRadius > 0) {
+                    ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);
+                    ctx.stroke();
+                }
+                return 20;
             }
         }
-        if (this.isSelected) {
-            ctx.strokeStyle = "#1050FF"
-            ctx.lineWidth = 4
-            if (this.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
-                ctx.strokeStyle = "#00A0FF"
-                // ctx.lineWidth = 4
-            }
+    }
 
-            // Para mantermos o mesmo número de traços independente
-            // do raio do círculo, fazemos os passos seguintes.
-
-            // Raio do tracejado
-            // (A soma faz com que o tracejado fique do lado de fora do círculo)
-            let dashRadius = this.radius + ctx.lineWidth/2;
-            // Circunferência do círculo (2π * r)
-            let circ = 2*Math.PI * dashRadius;
-
-            ctx.setLineDash([circ/12.5, circ/22]);
-
-            let t = window.performance.now()/2000;
-            // Desenhamos a borda tracejada
-            ctx.beginPath();
-            ctx.arc(this.pos.x, this.pos.y, dashRadius, 0 + t, 2*Math.PI + t);
-            ctx.stroke();
-        }
-        // Draw text
+    _drawLabel(nodeLabeling) {
         ctx.font = "bold 30px Arial";
-        var grd = ctx.createLinearGradient(0, 0, canvas.width, 0);
-        grd.addColorStop(0, "#E5E0FF");
-        grd.addColorStop(1, "#FFE0F3");
-
-        ctx.fillStyle = grd;
-
+        ctx.fillStyle = transparentLabelGradient;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
@@ -167,26 +184,20 @@ export class Node {
                 nodeText = String.fromCharCode(this.index+65)
                 break;
         }
-        ctx.fillText(this.label || nodeText, this.pos.x, this.pos.y);
+        ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
+
+    // HIGHLIGHTS
     
     addHighlight(type) {
-        // Checa se já está adicionado
-        if ((this.highlight & type) == false) {
-            this.highlight |= type;
-        }
+        this.highlights.add(type)
     }
 
     removeHighlight(type) {
-        // Checa se pode ser removido
-        if (this.highlight & type) {
-            this.highlight &= ~type;
-        }
+        this.highlights.delete(type)
     }
 
     get isSelected() {
-        return this.highlight & NodeHighlightType.SELECTION;
+        return this.highlights.has(NodeHighlightType.SELECTION);
     }
 }
-
-// export {Node, NodeHighlightType}

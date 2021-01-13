@@ -36,5 +36,6 @@ export const HighFPSFeature = {
     MOVING: "moving",
     CONNECTING: "connecting",
     SELECTING: "selecting",
-    BLINKING: "blinking"
+    BLINKING: "blinking",
+    NODE_HIGHLIGHT: "node_highlight"
 }
