@@ -10,6 +10,19 @@ body {
   margin-left: 0pt;
   margin-right: 0pt;
 }
+.menuArea > div > p {
+  font-weight: bold;
+  color: #444;
+  margin-top: 8pt;
+  margin-bottom: 0;
+  padding-bottom: 8pt;
+  border-bottom: 1pt solid gray;
+  /*background-color: white;*/
+}
+.menuArea > div > p > input {
+  font-size: 11pt;
+  margin-left: 2ch;
+ }
 
 canvas {
   margin-left: 10pt;
@@ -60,6 +73,7 @@ canvas {
   /*background-color: blue;*/
   margin-right: 10pt;
   padding-left: 15pt;
+  padding-right: 15pt;
   background: linear-gradient(to right, #EBEBEB, #D9D9D9);
   border-radius: 0pt 10pt 10pt 0pt;
   border-left: 2pt solid darkgray;
