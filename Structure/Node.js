@@ -3,8 +3,8 @@ import { canvas, ctx } from "../Drawing/General.js";
 
 export const regularNodeRadius = 28;
 const nodeColorList = [
-    "dodgerblue", "limegreen",
-    "mediumslateblue", "#8D6E63", "#4FC3F7", "burlywood", "#FF7043"
+    "#1E90FF", "#32CD32",
+    "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
 ]
 var colorRotation = 0
 

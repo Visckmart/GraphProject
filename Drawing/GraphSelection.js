@@ -67,9 +67,12 @@ export default class GraphSelection {
         } else {
             d.innerHTML = "Nenhum nó selecionado."
         }
+
         this._selectedNodes = selectedNodes
         this.updateOriginalPositions()
-        this.temporarySelection = false;
+        if (this.selectedNodes.length == 0) {
+            this.temporarySelection = false;
+        }
         this.updateNodesAppearance()
         this.graphView.refreshMenu(this.selectedNodes.length)
     }
@@ -82,7 +85,6 @@ export default class GraphSelection {
     }
 
     clear() {
-        // console.trace()
         this.selectedNodes = [];
     }
 
@@ -98,11 +100,13 @@ export default class GraphSelection {
     set temporarySelection(temp) {
         this._temporarySelection = temp;
         this.updateNodesAppearance()
+        this.graphView.refreshMenu(this.selectedNodes.length)
     }
 
     selectNodeTemporarily(node) {
-        this.selectedNodes = [node]
         this.temporarySelection = true
+        this.selectedNodes = [node]
+        // this.graphView.refreshMenu(this.selectedNodes.length, this.temporarySelection)
     }
 
     

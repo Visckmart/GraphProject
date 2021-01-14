@@ -60,6 +60,7 @@ class GraphMouseHandler {
     mouseDragEvent(mouseEvent) {
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
+        // console.log(this.selection.temporarySelection)
 
         // Se não for um clique do botão esquerdo, ignoramos
         if (mouseEvent.buttons == 0 || mouseEvent.button != 0 || mouseEvent.buttons == 2) {

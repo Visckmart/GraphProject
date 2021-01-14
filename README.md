@@ -43,9 +43,9 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
 - [X] Criar nó
 - [X] Criar aresta
 - [X] Apagar nó
-- [X] Apagar aresta
+- [ ] Apagar aresta
 - [X] Mover nó
-- [ ] Alterar informações de um nó
+- [X] Alterar informações de um nó
 - [ ] Alterar informações de uma aresta
 - [X] Completar o grafo (conectar todos os nós em todos os outros nós)
 - [X] Apagar todas as arestas

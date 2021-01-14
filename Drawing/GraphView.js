@@ -116,22 +116,22 @@ class GraphView {
             s.style.display = "none"
         }
         let showSettings;
-        if (numberOfSelectedNodes == 1) {
+        if (numberOfSelectedNodes == 1 && this.selectionHandler.temporarySelection == false) {
             showSettings = document.getElementById("NodeSettings")
+            let selectionHandler = this.selectionHandler
+
             let labelInput = document.getElementById("label")
-            let t = this
-            console.log("FOCUS")
             labelInput.value = this.selectionHandler.selectedNodes[0].randomLabel
-            setTimeout(function () {
-                labelInput.focus()
-            }, 0);
-            labelInput.oninput = function(a) {
-                // console.log(a)
-                t.selectionHandler.selectedNodes[0].randomLabel = a.target.value
+            labelInput.oninput = function(input) {
+                selectionHandler.selectedNodes[0].randomLabel = input.target.value
             }
+            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
+
             let colorInput = document.getElementById("color")
-            // console.log(colorInput)
             colorInput.value = this.selectionHandler.selectedNodes[0].color
+            colorInput.oninput = function(input) {
+                selectionHandler.selectedNodes[0]._originalcolor = input.target.value
+            }
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
