@@ -76,6 +76,18 @@ export default class GraphSelection {
         this.updateNodesAppearance()
         this.graphView.refreshMenu(this.selectedNodes.length)
     }
+    /* Registra nós selecionados na última seleção múltipla */
+    _selectedEdges = [];
+    get selectedEdges() {
+        return this._selectedEdges
+    }
+    set selectedEdges(selectedEdges) {
+        this._selectedEdges = selectedEdges
+
+        this.updateEdgesAppearance()
+        // this.graphView.refreshMenu(this.selectedNodes.length)
+    }
+    // selectedEdges = new Set()
 
     removeSelectionFrom(node) {
         let currentSelectedNodes = this.selectedNodes;
@@ -86,6 +98,7 @@ export default class GraphSelection {
 
     clear() {
         this.selectedNodes = [];
+        this.selectedEdges = new Set;
     }
 
     get hasSelectedNodes() {
@@ -121,6 +134,16 @@ export default class GraphSelection {
                 node.addHighlight(NodeHighlightType.SELECTION)
             } else {
                 node.removeHighlight(NodeHighlightType.SELECTION)
+            }
+        }
+    }
+
+    updateEdgesAppearance() {
+        for (let [edge, a, b] of this.structure.edges()) {
+            if (this.selectedEdges.has(edge)) {
+                edge.addHighlight(NodeHighlightType.SELECTION)
+            } else {
+                edge.removeHighlight(NodeHighlightType.SELECTION)
             }
         }
     }

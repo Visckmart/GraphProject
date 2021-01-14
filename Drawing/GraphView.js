@@ -188,30 +188,16 @@ class GraphView {
             }
         }
 
-        console.log(this.getEdgesWithin(initialPos, finalPos))
         return nodesWithin
     }
 
     getEdgesWithin(initialPos, finalPos) {
-        let leftmost   = Math.min(initialPos.x, finalPos.x)
-        let rightmost  = Math.max(initialPos.x, finalPos.x)
-        let topmost    = Math.min(initialPos.y, finalPos.y)
-        let bottommost = Math.max(initialPos.y, finalPos.y)
-
-        let nodesWithin = new Set()
-        for (let node of this.structure.nodes()) {
-            if (   node.pos.x + node.radius > leftmost
-                && node.pos.x - node.radius < rightmost
-                && node.pos.y + node.radius > topmost
-                && node.pos.y - node.radius < bottommost) {
-                nodesWithin.add(node)
-            }
-        }
+        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos))
 
         let edgesWithin = new Set()
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-                edgesWithin.add(edge.label)
+                edgesWithin.add(edge)
                 edge.selected = true
             }
         }

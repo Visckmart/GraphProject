@@ -135,7 +135,19 @@ class GraphMouseHandler {
         if (this.selection.drawingSelection) {
             // console.log("...finishing selection")
             this.selection.drawingSelection = false
-            this.selection.selectedNodes = this.graphView.getNodesWithin(this.clickPosition, pos)
+            // Se o botão esquerdo foi o levantado,
+            switch (this.graphView.primaryTool) {
+                // A ferramenta MOVE for a escolhida,
+                case Tool.MOVE: {
+                    this.selection.selectedNodes = this.graphView.getNodesWithin(this.clickPosition, pos)
+                    break;
+                }
+                case Tool.CONNECT: {
+                    this.selection.selectedEdges = this.graphView.getEdgesWithin(this.clickPosition, pos)
+                    break;
+                }
+            }
+            // console.log(this.selection.selectedEdges)
             // this.clickPosition = null
             return
         }

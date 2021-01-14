@@ -67,6 +67,9 @@ class GraphKeyboardHandler {
                 for (let node of this.selection.selectedNodes) {
                     this.graphView.structure.removeNode(node)
                 }
+                for (let edge of this.selection.selectedEdges) {
+                    this.graphView.structure.removeEdge(edge)
+                }
                 this.selection.clear()
             }
         }

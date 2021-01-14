@@ -1,10 +1,11 @@
 import Edge from "./Edge.js";
+import { NodeHighlightType } from "../Structure/Node.js"
 import {canvas, ctx} from "../Drawing/General.js";
 
 export class UndirectedEdge extends Edge {
     constructor(label) {
         super(label);
-        this.selected = false;
+        this.highlights = new Set()
     }
 
     draw({ x: xStart, y: yStart },
@@ -12,8 +13,14 @@ export class UndirectedEdge extends Edge {
         ctx.save()
         ctx.lineWidth = 7
         ctx.strokeStyle = "#333";
-        if (this.selected) { ctx.strokeStyle = "red"; }
         ctx.setLineDash([]);
+
+        if (this.isSelected) {
+            ctx.setLineDash([15, 15]);
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 5
+            ctx.lineDashOffset = window.performance.now()/50
+        }
 
         ctx.beginPath()
         ctx.moveTo(xStart, yStart);
@@ -59,6 +66,20 @@ export class UndirectedEdge extends Edge {
         ctx.fillText(this.label, 0, 0);
         
         ctx.restore();
+    }
+
+    // HIGHLIGHTS
+    
+    addHighlight(type) {
+        this.highlights.add(type)
+    }
+
+    removeHighlight(type) {
+        this.highlights.delete(type)
+    }
+
+    get isSelected() {
+        return this.highlights.has(NodeHighlightType.SELECTION);
     }
 
 }
