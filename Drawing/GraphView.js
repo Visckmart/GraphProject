@@ -89,6 +89,10 @@ class GraphView {
     }
     set primaryTool(anotherTool) {
         this._primaryTool = anotherTool;
+        if (this.primaryTool != Tool.CONNECT) {
+            // Pare de atualizar a aresta temporária
+            this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
+        }
         this.refreshInterfaceState()
     }
 
@@ -109,6 +113,7 @@ class GraphView {
         this.interactionHandler.mouse.refreshCursorStyle()
     }
 
+    // TODO: Organizar
     refreshMenu(numberOfSelectedNodes) {
         let settingsList = ["GraphSettings", "NodeSettings"]
         for (let settingsID of settingsList) {
@@ -135,7 +140,6 @@ class GraphView {
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
-        // console.log("refreshMenu", showSettings)
         showSettings.style.display = "initial"
 
     }
@@ -183,7 +187,35 @@ class GraphView {
                 nodesWithin.push(node)
             }
         }
+
+        console.log(this.getEdgesWithin(initialPos, finalPos))
         return nodesWithin
+    }
+
+    getEdgesWithin(initialPos, finalPos) {
+        let leftmost   = Math.min(initialPos.x, finalPos.x)
+        let rightmost  = Math.max(initialPos.x, finalPos.x)
+        let topmost    = Math.min(initialPos.y, finalPos.y)
+        let bottommost = Math.max(initialPos.y, finalPos.y)
+
+        let nodesWithin = new Set()
+        for (let node of this.structure.nodes()) {
+            if (   node.pos.x + node.radius > leftmost
+                && node.pos.x - node.radius < rightmost
+                && node.pos.y + node.radius > topmost
+                && node.pos.y - node.radius < bottommost) {
+                nodesWithin.add(node)
+            }
+        }
+
+        let edgesWithin = new Set()
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
+                edgesWithin.add(edge.label)
+                edge.selected = true
+            }
+        }
+        return edgesWithin
     }
 
     insertNewNodeAt(pos) {

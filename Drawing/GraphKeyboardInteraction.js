@@ -49,6 +49,11 @@ class GraphKeyboardHandler {
             }
             this.graphView.primaryTool = Tool.CONNECT;
         }
+        if (keyboardEvent.key == 1) {
+            this.graphView.primaryTool = Tool.MOVE;
+        } else if (keyboardEvent.key == 2) {
+            this.graphView.primaryTool = Tool.CONNECT;
+        }
     }
 
     keyReleased(keyboardEvent) {

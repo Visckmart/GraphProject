@@ -4,14 +4,15 @@ import {canvas, ctx} from "../Drawing/General.js";
 export class UndirectedEdge extends Edge {
     constructor(label) {
         super(label);
+        this.selected = false;
     }
 
     draw({ x: xStart, y: yStart },
-         { x: xEnd,   y: yEnd   })
-    {
+         { x: xEnd,   y: yEnd   }) {
         ctx.save()
         ctx.lineWidth = 7
         ctx.strokeStyle = "#333";
+        if (this.selected) { ctx.strokeStyle = "red"; }
         ctx.setLineDash([]);
 
         ctx.beginPath()
