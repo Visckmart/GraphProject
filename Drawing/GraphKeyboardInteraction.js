@@ -30,13 +30,16 @@ class GraphKeyboardHandler {
     keyPressed(keyboardEvent) {
         let metaPressed = this.isMetaKey(keyboardEvent)
         // console.log(keyboardEvent)
-        if (keyboardEvent.key == "e") { // E
-            this.graphView.structure.showGraph()
-        }
-        // console.log(keyboardEvent.key)
-        if (keyboardEvent.key == "a") { // A
-            this.graphView.selectAllNodes()
-            keyboardEvent.preventDefault()
+        if (document.activeElement.tagName == "BODY") {
+            if (keyboardEvent.key == "e") { // E
+                this.graphView.structure.showGraph()
+            }
+            // console.log(keyboardEvent.key)
+            if (keyboardEvent.key == "a") { // A
+                console.log(document.activeElement.tagName)
+                this.graphView.selectAllNodes()
+                keyboardEvent.preventDefault()
+            }
         }
         // Tratamento da seleção da ferramenta Connect ao pressionar a tecla "meta".
         // No caso do Mac a tecla em questão é Command
@@ -54,11 +57,13 @@ class GraphKeyboardHandler {
             this.graphView.primaryTool = Tool.MOVE;
             this.graphView.lastToolChoice = null;
         }
-        if (this.isDeletionKey(keyboardEvent)) {
-            for (let node of this.selection.selectedNodes) {
-                this.graphView.structure.removeNode(node)
+        if (document.activeElement.tagName == "BODY") {
+            if (this.isDeletionKey(keyboardEvent)) {
+                for (let node of this.selection.selectedNodes) {
+                    this.graphView.structure.removeNode(node)
+                }
+                this.selection.clear()
             }
-            this.selection.clear()
         }
     }
 }

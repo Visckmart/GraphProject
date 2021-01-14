@@ -7,8 +7,6 @@ class GraphMouseHandler {
         this.selection = graphView.selectionHandler;
     }
 
-
-
     /* Registra a ultima posição em que o mousedown ocorreu para
        fazer a seleção múltipla */
     _clickPosition = null;

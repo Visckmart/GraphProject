@@ -4,10 +4,11 @@ import { NodeHighlightType } from "../Structure/Node.js"
 const movementTolerance = 20
 
 export default class GraphSelection {
-    constructor(canvas, structure) {
+    constructor(canvas, structure, graphView) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.structure = structure;
+        this.graphView = graphView;
     }
 
     /* Registra caso haja uma seleção múltipla acontecendo */
@@ -70,6 +71,7 @@ export default class GraphSelection {
         this.updateOriginalPositions()
         this.temporarySelection = false;
         this.updateNodesAppearance()
+        this.graphView.refreshMenu(this.selectedNodes.length)
     }
 
     removeSelectionFrom(node) {

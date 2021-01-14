@@ -35,7 +35,7 @@ class GraphView {
         this.ctx = canvas.getContext("2d");
 
         // INTERACTION
-        this.selectionHandler = new GraphSelection(canvas, this.structure);
+        this.selectionHandler = new GraphSelection(canvas, this.structure, this);
         let mouseHandler = new GraphMouseHandler(this)
         let keyboardHandler = new GraphKeyboardHandler(this)
         this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
@@ -107,6 +107,37 @@ class GraphView {
             }
         }
         this.interactionHandler.mouse.refreshCursorStyle()
+    }
+
+    refreshMenu(numberOfSelectedNodes) {
+        let settingsList = ["GraphSettings", "NodeSettings"]
+        for (let settingsID of settingsList) {
+            let s = document.getElementById(settingsID)
+            s.style.display = "none"
+        }
+        let showSettings;
+        if (numberOfSelectedNodes == 1) {
+            showSettings = document.getElementById("NodeSettings")
+            let labelInput = document.getElementById("label")
+            let t = this
+            console.log("FOCUS")
+            labelInput.value = this.selectionHandler.selectedNodes[0].randomLabel
+            setTimeout(function () {
+                labelInput.focus()
+            }, 0);
+            labelInput.oninput = function(a) {
+                // console.log(a)
+                t.selectionHandler.selectedNodes[0].randomLabel = a.target.value
+            }
+            let colorInput = document.getElementById("color")
+            // console.log(colorInput)
+            colorInput.value = this.selectionHandler.selectedNodes[0].color
+        } else {
+            showSettings = document.getElementById("GraphSettings")
+        }
+        // console.log("refreshMenu", showSettings)
+        showSettings.style.display = "initial"
+
     }
 
     selectAllNodes() {
