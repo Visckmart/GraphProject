@@ -1,6 +1,7 @@
 import Graph from "./Graph.js";
 import {UndirectedEdge} from "./UndirectedEdge.js";
 import {UndirectedTemporaryEdge} from "./UndirectedTemporaryEdge.js";
+import {Node} from "./Node.js";
 class UndirectedGraph extends Graph {
 
     // Inserção
@@ -17,6 +18,24 @@ class UndirectedGraph extends Graph {
         debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
                    " até o nó " + nodeB.label, edge);
         
+        // Operação
+        this.data.get(nodeA).set(nodeB, edge)
+        this.data.get(nodeB).set(nodeA, edge)
+    }
+
+    // Inserindo edge específico
+    insertEdge(nodeA, nodeB, edge) {
+        // Verificação
+        if (!(nodeA && nodeB)) {
+            console.error("Inserção de aresta chamada incorretamente.")
+            return;
+        }
+        if (nodeA === nodeB) {
+            return;
+        }
+        debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
+            " até o nó " + nodeB.label, edge);
+
         // Operação
         this.data.get(nodeA).set(nodeB, edge)
         this.data.get(nodeB).set(nodeA, edge)
@@ -40,6 +59,28 @@ class UndirectedGraph extends Graph {
         // Operação
         this.data.get(nodeA).delete(nodeB)
         this.data.get(nodeB).delete(nodeA)
+    }
+
+    static deserialize(string) {
+        let object = JSON.parse(string)
+        let graph = new UndirectedGraph()
+        let deserializedNodes = []
+        for(let node of object.data.nodes)
+        {
+            let deserializedNode = Node.deserialize(node)
+            graph.insertNode(deserializedNode)
+
+            deserializedNodes.push(deserializedNode)
+        }
+        let edgeIndex = 0
+        for(let pair of object.pairs) {
+            graph.insertEdge(
+                deserializedNodes.find(n => n.index === pair[0].index),
+                deserializedNodes.find(n => n.index === pair[1].index),
+                UndirectedEdge.deserialize(object.data.edges[edgeIndex]))
+            edgeIndex++
+        }
+        return graph
     }
 }
 

@@ -34,6 +34,10 @@ class GraphView {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
+        this.structure = new UndirectedGraph();
+        this.highlightedEdges = new Map();
+        this.nodeLabeling = NodeLabeling.LETTERS_RAND;
+
         // INTERACTION
         this.selectionHandler = new GraphSelection(canvas, this.structure, this);
         let mouseHandler = new GraphMouseHandler(this)
@@ -95,10 +99,6 @@ class GraphView {
         }
         this.refreshInterfaceState()
     }
-
-    structure = new UndirectedGraph();
-    highlightedEdges = new Map();
-    nodeLabeling = NodeLabeling.LETTERS_RAND;
 
 
     // Interaction
@@ -364,8 +364,14 @@ class GraphView {
 }
 
 export let g = new GraphView(canvas);
+document.addEventListener("dblclick", () => {
+    g.structure = UndirectedGraph.deserialize(g.structure.serialize())
+    g.redrawGraph()
+    g.updateAnimations()
+})
 g.redrawGraph();
 g.updateAnimations();
+
 
 let blurTimeout = null
 window.onresize = function (a) {

@@ -200,4 +200,37 @@ export class Node {
     get isSelected() {
         return this.highlights.has(NodeHighlightType.SELECTION);
     }
+
+    serialize() {
+        // Serializando somente informações importantes do nó
+        return JSON.stringify({
+            index: this.index,
+            pos: this.pos,
+            _originalColor: this._originalcolor,
+            label: this.label,
+            randomLabel: this.randomLabel,
+            highlights: Array.from(this.highlights).filter(highlight => {
+                switch (highlight) {
+                    // Tipos de Highlight que fazem sentido serializar
+                    case NodeHighlightType.ALGORITHM_FOCUS:
+                        return true
+
+                    // Tipos de Highlight que não devem ser serializados
+                    case NodeHighlightType.SELECTION:
+                        return false
+                }
+            })
+        })
+    }
+
+    static deserialize(string) {
+        let object = JSON.parse(string)
+        let node = new Node(object.pos.x, object.pos.y, object.label)
+        node.index = object.index
+        node._originalcolor = object._originalColor
+        node.randomLabel = object.randomLabel
+        node.highlights = new Set(object.highlights)
+
+        return node
+    }
 }

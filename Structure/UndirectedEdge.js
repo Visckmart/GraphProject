@@ -82,4 +82,10 @@ export class UndirectedEdge extends Edge {
         return this.highlights.has(NodeHighlightType.SELECTION);
     }
 
+
+    static deserialize(string) {
+        let object = JSON.parse(string)
+        let edge = new UndirectedEdge(object.label)
+        return edge
+    }
 }

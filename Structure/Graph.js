@@ -142,6 +142,35 @@ class Graph {
             }
         }
     }
+
+    serialize() {
+        let serializedNodes = []
+        for(let node of this.nodes())
+        {
+            serializedNodes.push(node.serialize())
+        }
+
+        let serializedEdged = []
+        let pairs = []
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
+        {
+            serializedEdged.push(edge.serialize())
+            pairs.push([nodeA,nodeB])
+        }
+
+        return JSON.stringify({
+            data: {
+                nodes: serializedNodes,
+                edges: serializedEdged
+            },
+            pairs
+        })
+    }
+
+    static deserialize(string) {
+        console.warn("Can't deserialize abstract class")
+        return null
+    }
 }
 
 export default Graph

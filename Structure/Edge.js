@@ -13,6 +13,18 @@ class Edge {
     {
         console.warn("Nâo implementado!")
     }
+
+    serialize() {
+        // Serializando somente informações importantes da aresta
+        return JSON.stringify({
+            label: this.label
+        })
+    }
+
+    static deserialize(string) {
+        console.warn("Can't deserialize abstract class")
+        return null
+    }
 }
 
 export default Edge

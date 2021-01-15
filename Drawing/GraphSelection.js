@@ -7,7 +7,6 @@ export default class GraphSelection {
     constructor(canvas, structure, graphView) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
-        this.structure = structure;
         this.graphView = graphView;
     }
 
@@ -129,7 +128,7 @@ export default class GraphSelection {
 
     /* Destaca os nós selecionados */
     updateNodesAppearance() {
-        for (let node of this.structure.nodes()) {
+        for (let node of this.graphView.structure.nodes()) {
             if (this.selectedNodes.includes(node) && this.temporarySelection == false) {
                 node.addHighlight(NodeHighlightType.SELECTION)
             } else {
@@ -139,7 +138,7 @@ export default class GraphSelection {
     }
 
     updateEdgesAppearance() {
-        for (let [edge, a, b] of this.structure.edges()) {
+        for (let [edge, a, b] of this.graphView.structure.edges()) {
             if (this.selectedEdges.has(edge)) {
                 edge.addHighlight(NodeHighlightType.SELECTION)
             } else {
