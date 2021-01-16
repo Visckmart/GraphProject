@@ -159,11 +159,11 @@ class Graph {
         }
 
         return JSON.stringify({
-            data: {
-                nodes: serializedNodes,
-                edges: serializedEdged
+            d: {
+                n: serializedNodes,
+                e: serializedEdged
             },
-            pairs
+            p:pairs
         })
     }
 

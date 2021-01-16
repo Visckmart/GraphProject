@@ -65,7 +65,7 @@ class UndirectedGraph extends Graph {
         let object = JSON.parse(string)
         let graph = new UndirectedGraph()
         let deserializedNodes = []
-        for(let node of object.data.nodes)
+        for(let node of object.d.n)
         {
             let deserializedNode = Node.deserialize(node)
             graph.insertNode(deserializedNode)
@@ -73,7 +73,7 @@ class UndirectedGraph extends Graph {
             deserializedNodes.push(deserializedNode)
         }
         let edgeIndex = 0
-        for(let pair of object.pairs) {
+        for(let pair of object.p) {
             graph.insertEdge(
                 deserializedNodes.find(n => n.index === pair[0].index),
                 deserializedNodes.find(n => n.index === pair[1].index),

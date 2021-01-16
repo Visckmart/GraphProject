@@ -74,22 +74,6 @@ class GraphMouseHandler {
             // Atualize a área de seleção
             this.selection.setSelectionArea(this.clickPosition, pos);
             this.refreshCursorStyle()
-            // Atualize os nós selecionados
-            if (this.selection.drawingSelection) {
-                // Se o botão esquerdo foi o levantado,
-                switch (this.graphView.primaryTool) {
-                    // A ferramenta MOVE for a escolhida,
-                    case Tool.MOVE: {
-                        this.selection.selectedNodes = this.graphView.getNodesWithin(this.clickPosition, pos)
-                        break;
-                    }
-                    case Tool.CONNECT: {
-                        this.selection.selectedEdges = this.graphView.getEdgesWithin(this.clickPosition, pos)
-                        break;
-                    }
-                }
-                return
-            }
             return;
         }
 
@@ -146,24 +130,10 @@ class GraphMouseHandler {
         }
         // console.info("Mouse up event")
         // SELEÇÃO
-        /* Se fez uma área de seleção, selecione os nós contidos */
+        /* Se fez uma área de seleção, finalize-a */
         if (this.selection.drawingSelection) {
-            // console.log("...finishing selection")
             this.selection.drawingSelection = false
-            // Se o botão esquerdo foi o levantado,
-            switch (this.graphView.primaryTool) {
-                // A ferramenta MOVE for a escolhida,
-                case Tool.MOVE: {
-                    this.selection.selectedNodes = this.graphView.getNodesWithin(this.clickPosition, pos)
-                    break;
-                }
-                case Tool.CONNECT: {
-                    this.selection.selectedEdges = this.graphView.getEdgesWithin(this.clickPosition, pos)
-                    break;
-                }
-            }
-            // console.log(this.selection.selectedEdges)
-            // this.clickPosition = null
+            this.graphView.refreshMenu(this.selection.selectedNodes.length)
             return
         }
        

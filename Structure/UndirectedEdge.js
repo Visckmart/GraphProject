@@ -85,7 +85,7 @@ export class UndirectedEdge extends Edge {
 
     static deserialize(string) {
         let object = JSON.parse(string)
-        let edge = new UndirectedEdge(object.label)
+        let edge = new UndirectedEdge(object.l)
         return edge
     }
 }

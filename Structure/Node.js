@@ -204,12 +204,12 @@ export class Node {
     serialize() {
         // Serializando somente informações importantes do nó
         return JSON.stringify({
-            index: this.index,
-            pos: this.pos,
-            _originalColor: this._originalcolor,
-            label: this.label,
-            randomLabel: this.randomLabel,
-            highlights: Array.from(this.highlights).filter(highlight => {
+            i: this.index,
+            p: this.pos,
+            c: this._originalcolor,
+            l: this.label,
+            r: this.randomLabel,
+            h: Array.from(this.highlights).filter(highlight => {
                 switch (highlight) {
                     // Tipos de Highlight que fazem sentido serializar
                     case NodeHighlightType.ALGORITHM_FOCUS:
@@ -225,11 +225,11 @@ export class Node {
 
     static deserialize(string) {
         let object = JSON.parse(string)
-        let node = new Node(object.pos.x, object.pos.y, object.label)
-        node.index = object.index
-        node._originalcolor = object._originalColor
-        node.randomLabel = object.randomLabel
-        node.highlights = new Set(object.highlights)
+        let node = new Node(object.p.x, object.p.y, object.l)
+        node.index = object.i
+        node._originalcolor = object.c
+        node.randomLabel = object.r
+        node.highlights = new Set(object.h)
 
         return node
     }

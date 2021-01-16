@@ -3,6 +3,8 @@ import {Node, NodeHighlightType} from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 
+import LZString from '../libs/lz-string/libs/lz-string.js'
+
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
@@ -121,7 +123,9 @@ class GraphView {
             s.style.display = "none"
         }
         let showSettings;
-        if (numberOfSelectedNodes == 1 && this.selectionHandler.temporarySelection == false) {
+        if (numberOfSelectedNodes == 1 &&
+            this.selectionHandler.temporarySelection === false &&
+            !this.selectionHandler.drawingSelection) {
             showSettings = document.getElementById("NodeSettings")
             let selectionHandler = this.selectionHandler
 
@@ -395,13 +399,19 @@ window.onresize = function (a) {
 window.addEventListener("load", () => {
     const urlParams = new URLSearchParams(location.search);
     for (const [key, value] of urlParams) {
-        g.structure = UndirectedGraph.deserialize(atob(value))
+        g.structure = UndirectedGraph.deserialize(LZString.decompressFromUTF16(value))
         g.redrawGraph()
         g.updateAnimations()
     }
 
     let share = document.getElementById("share")
     share.onclick = function() {
-        window.location.href = window.location.href.split('?')[0] + "?graph=" + btoa(g.structure.serialize())
+        let serialized = g.structure.serialize()
+        console.log(`
+            Normal: ${serialized.length};
+            Base64: ${btoa(serialized).length}
+            Base64 Compressed: ${LZString.compressToBase64(serialized).length}
+        `)
+        window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToUTF16(serialized)
     }
 });

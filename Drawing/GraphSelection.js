@@ -1,4 +1,5 @@
 import { NodeHighlightType } from "../Structure/Node.js"
+import {Tool} from "./General.js";
 
 /* Tolerância para iniciar a seleção múltipla */
 const movementTolerance = 20
@@ -45,6 +46,7 @@ export default class GraphSelection {
         this.selectionArea.startPoint = startPoint;
         this.selectionArea.endPoint = endPoint;
         this.drawingSelection = true;
+        this.updateSelectedElements()
     }
 
     clearSelectionArea() {
@@ -87,6 +89,23 @@ export default class GraphSelection {
         // this.graphView.refreshMenu(this.selectedNodes.length)
     }
     // selectedEdges = new Set()
+
+    updateSelectedElements() {
+        if (this.drawingSelection) {
+            // Se o botão esquerdo foi o levantado,
+            switch (this.graphView.primaryTool) {
+                // A ferramenta MOVE for a escolhida,
+                case Tool.MOVE: {
+                    this.selectedNodes = this.graphView.getNodesWithin(this.selectionArea.startPoint, this.selectionArea.endPoint)
+                    break;
+                }
+                case Tool.CONNECT: {
+                    this.selectedEdges = this.graphView.getEdgesWithin(this.selectionArea.startPoint, this.selectionArea.endPoint)
+                    break;
+                }
+            }
+        }
+    }
 
     removeSelectionFrom(node) {
         let currentSelectedNodes = this.selectedNodes;

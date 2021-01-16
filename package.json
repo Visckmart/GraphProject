@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/Visckmart/GraphProject#readme",
   "dependencies": {
-    "@assemblyscript/loader": "^0.17.12"
+    "@assemblyscript/loader": "^0.17.12",
+    "lz-string": "^1.4.4"
   },
   "devDependencies": {
     "assemblyscript": "^0.17.12"

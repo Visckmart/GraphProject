@@ -17,7 +17,7 @@ class Edge {
     serialize() {
         // Serializando somente informações importantes da aresta
         return JSON.stringify({
-            label: this.label
+            l: this.label
         })
     }
 
