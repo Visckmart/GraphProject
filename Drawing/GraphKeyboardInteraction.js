@@ -28,6 +28,12 @@ class GraphKeyboardHandler {
     }
 
     keyPressed(keyboardEvent) {
+        // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
+        if(this.selection.drawingSelection)
+        {
+            return
+        }
+
         let metaPressed = this.isMetaKey(keyboardEvent)
         // console.log(keyboardEvent)
         if (document.activeElement.tagName == "BODY") {
@@ -57,6 +63,12 @@ class GraphKeyboardHandler {
     }
 
     keyReleased(keyboardEvent) {
+        // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
+        if(this.selection.drawingSelection)
+        {
+            return
+        }
+
         let metaPressed = this.isMetaKey(keyboardEvent)
         if (metaPressed == false && this.graphView.lastToolChoice == Tool.MOVE) {
             this.graphView.primaryTool = Tool.MOVE;

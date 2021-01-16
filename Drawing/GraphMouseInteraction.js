@@ -71,10 +71,25 @@ class GraphMouseHandler {
         // SELEÇÃO
         // Se um nó não tiver sido selecionado,
         if (this.clickedNode == null && this.mostRecentNode == null) {
-            // console.log(1)
             // Atualize a área de seleção
             this.selection.setSelectionArea(this.clickPosition, pos);
             this.refreshCursorStyle()
+            // Atualize os nós selecionados
+            if (this.selection.drawingSelection) {
+                // Se o botão esquerdo foi o levantado,
+                switch (this.graphView.primaryTool) {
+                    // A ferramenta MOVE for a escolhida,
+                    case Tool.MOVE: {
+                        this.selection.selectedNodes = this.graphView.getNodesWithin(this.clickPosition, pos)
+                        break;
+                    }
+                    case Tool.CONNECT: {
+                        this.selection.selectedEdges = this.graphView.getEdgesWithin(this.clickPosition, pos)
+                        break;
+                    }
+                }
+                return
+            }
             return;
         }
 
