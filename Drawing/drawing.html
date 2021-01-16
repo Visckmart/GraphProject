@@ -29,6 +29,7 @@
             </div>
 
             <p><span id="dynamic"></span></p>
+            <button id="share">Compartilhar</button>
         </div>
         <div id="tray" class="toolTray">
             <div class="toolTrayTab">
@@ -82,14 +83,6 @@
         </div>
     </div>
     <script>
-        window.addEventListener("load", () => {
-            const urlParams = new URLSearchParams(location.search);
-
-            for (const [key, value] of urlParams) {
-                console.log(`${key}:${value}`);
-            }
-        });
-
         debugMode = true;
         if (debugMode == true) {
             var debugPrint = console.info.bind(window.console)

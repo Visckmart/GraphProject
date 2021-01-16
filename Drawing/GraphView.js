@@ -365,7 +365,8 @@ class GraphView {
 
 export let g = new GraphView(canvas);
 document.addEventListener("dblclick", () => {
-    g.structure = UndirectedGraph.deserialize(g.structure.serialize())
+    let s = g.structure.serialize()
+    g.structure = UndirectedGraph.deserialize(s)
     g.redrawGraph()
     g.updateAnimations()
 })
@@ -391,3 +392,16 @@ window.onresize = function (a) {
     g.redrawGraph()
 }
 
+window.addEventListener("load", () => {
+    const urlParams = new URLSearchParams(location.search);
+    for (const [key, value] of urlParams) {
+        g.structure = UndirectedGraph.deserialize(atob(value))
+        g.redrawGraph()
+        g.updateAnimations()
+    }
+
+    let share = document.getElementById("share")
+    share.onclick = function() {
+        window.location.href = window.location.href.split('?')[0] + "?graph=" + btoa(g.structure.serialize())
+    }
+});
