@@ -2,6 +2,10 @@
   --blurSize: 5pt;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Helvetica Neue, sans-serif;
   overflow: hidden;

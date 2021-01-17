@@ -8,6 +8,7 @@ import LZString from '../libs/lz-string/libs/lz-string.js'
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
+import AlgorithmControlsController from "./AlgorithmControlsController.js";
 
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
@@ -415,3 +416,5 @@ share.onclick = function() {
     `)
     window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToEncodedURIComponent(serialized)
 }
+
+let algorithmController = new AlgorithmControlsController(5)
