@@ -398,20 +398,20 @@ window.onresize = function (a) {
 
 window.addEventListener("load", () => {
     const urlParams = new URLSearchParams(location.search);
-    for (const [key, value] of urlParams) {
-        g.structure = UndirectedGraph.deserialize(LZString.decompressFromBase64(value))
+    if(urlParams.has("graph")) {
+        g.structure = UndirectedGraph.deserialize(LZString.decompressFromEncodedURIComponent(urlParams.get("graph")))
         g.redrawGraph()
         g.updateAnimations()
     }
+});
 
-    let share = document.getElementById("share")
-    share.onclick = function() {
-        let serialized = g.structure.serialize()
-        console.log(`
+let share = document.getElementById("share")
+share.onclick = function() {
+    let serialized = g.structure.serialize()
+    console.log(`
             Normal: ${serialized.length};
             Base64: ${btoa(serialized).length}
-            Base64 Compressed: ${LZString.compressToBase64(serialized).length}
-        `)
-        window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.decompressFromBase64(serialized)
-    }
-});
+            Base64 Compressed: ${LZString.compressToEncodedURIComponent(serialized).length}
+    `)
+    window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToEncodedURIComponent(serialized)
+}

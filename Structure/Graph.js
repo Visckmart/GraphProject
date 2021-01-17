@@ -155,7 +155,7 @@ class Graph {
         for(let [edge, nodeA, nodeB] of this.uniqueEdges())
         {
             serializedEdged.push(edge.serialize())
-            pairs.push([nodeA,nodeB])
+            pairs.push([nodeA.index,nodeB.index])
         }
 
         return JSON.stringify({

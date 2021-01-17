@@ -75,9 +75,9 @@ class UndirectedGraph extends Graph {
         let edgeIndex = 0
         for(let pair of object.p) {
             graph.insertEdge(
-                deserializedNodes.find(n => n.index === pair[0].index),
-                deserializedNodes.find(n => n.index === pair[1].index),
-                UndirectedEdge.deserialize(object.data.edges[edgeIndex]))
+                deserializedNodes.find(n => n.index === pair[0]),
+                deserializedNodes.find(n => n.index === pair[1]),
+                UndirectedEdge.deserialize(object.d.e[edgeIndex]))
             edgeIndex++
         }
         return graph
