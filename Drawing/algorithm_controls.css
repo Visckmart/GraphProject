@@ -10,83 +10,51 @@
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
     z-index: 0;
-}
-
-.algorithmButtons {
-    flex: 1 1 auto;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    padding: 10pt 20pt 8pt;
+    padding: 10pt;
+}
+.slider {
+        border-radius: 50pt;
+        -webkit-appearance: none;  /* Override default CSS styles */
+        appearance: none;
+        width: 80%; /* Full-width */
+        height: 20pt; /* Specified height */
+        background: #d3d3d3A0; /* Grey background */
+        outline: none; /* Remove outline */
+        -webkit-transition: .1s; /* 0.2 seconds transition on hover */
+        transition: background .1s;
+        margin-top: 5pt;
+    }
+
+    /* Mouse-over effects */
+    .slider:hover {
+      opacity: 1; /* Fully shown on mouse-over */
+        background: #d3d3d3FF; /* Grey background */
+  }
+  
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+  .slider::-webkit-slider-thumb {
+    border-radius: 50pt;
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 20pt; /* Set a specific slider handle width */
+    height: 20pt; /* Slider handle height */
+    background: #2149C1D0; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    transition: 0.1s;
+}
+  .slider::-webkit-slider-thumb:hover {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 20pt; /* Set a specific slider handle width */
+    height: 20pt; /* Slider handle height */
+    background: #4169E1FF; /* Green background */
+    cursor: pointer; /* Cursor on hover */
 }
 
-.algorithmButtons > a {
-    cursor: pointer;
-}
-
-.algorithmProgressBar {
-    margin: 0 20pt;
-    position: relative;
-}
-
-.algorithmProgressBar > .progressBar {
-    width: 0;
-    z-index: 2;
-    height: 5pt;
-    background-color: white;
-    border-radius: 5px;
-    margin: 5pt 0pt 20pt;
-    position: relative;
-}
-
-.algorithmProgressBar > .progressOutline {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 6pt;
-    background-color: #222;
-    opacity: 0.2;
-    border-radius: 5px;
-    margin: 5pt 0pt 20pt;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-.algorithmProgressBar > .progressOutline > .progressMarker {
-    background-color: #fff;
-    width: 5px;
-    height: 20px;
-    z-index: 999;
-    position: center;
-}
-
-.algorithmProgressBar > .progressButton {
-    width: 10pt;
-    height: 10pt;
-    z-index: 2;
-    border-radius: 50%;
-    background-color: white;
-    position: absolute;
-    left: 0;
-    margin-left: -6px;
-    top:2.5pt;
-    border: 5.2pt solid #ddd;
-    cursor: grab;
-
-    user-select: none;
-}
-
-.algorithmProgressBar > .progressButton:active {
-    cursor: grabbing;
-}
-
-
-.algorithmProgressBar > .progressButton:hover, .algorithmProgressBar > .progressButton:active {
-    width: 15pt;
-    height: 15pt;
-    top:1.5pt;
-    margin-left: calc(-6px - 2pt);
+.slider::-moz-range-thumb {
+  width: 20px; /* Set a specific slider handle width */
+  height: 20px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
 }
