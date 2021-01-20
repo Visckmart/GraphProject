@@ -143,6 +143,13 @@ class Graph {
         }
     }
 
+    *edgesFrom(node) {
+        for(let [nodeB, edge] of this.data.get(node))
+        {
+            yield [edge, nodeB]
+        }
+    }
+
     serialize() {
         let serializedNodes = []
         for(let node of this.nodes())

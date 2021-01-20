@@ -33,7 +33,7 @@
 }
 
 #tray:target {
-  bottom: calc(-80pt - 10pt);
+  bottom: calc(-80pt + 10pt);
 }
 
 /* Terra de ninguém */

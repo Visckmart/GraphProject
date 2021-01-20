@@ -10,30 +10,61 @@ export class UndirectedEdge extends Edge {
 
     draw({ x: xStart, y: yStart },
          { x: xEnd,   y: yEnd   }) {
-        ctx.save()
-        ctx.lineWidth = 7
-        ctx.strokeStyle = "#333";
-        ctx.setLineDash([]);
+        if(!this.isSelected) {
+            ctx.save()
+            ctx.lineWidth = 7
+            ctx.strokeStyle = "#333";
+            ctx.setLineDash([]);
 
-        if (this.isSelected) {
-            ctx.setLineDash([15, 15]);
-            ctx.strokeStyle = "blue";
-            ctx.lineWidth = 5
-            ctx.lineDashOffset = window.performance.now()/50
+
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
+
+            ctx.restore()
         }
-
-        ctx.beginPath()
-        ctx.moveTo(xStart, yStart);
-        ctx.lineTo(xEnd, yEnd);
-        ctx.stroke();
-
-        ctx.restore()
-
+        for(let highlight of this.highlights)
+        {
+            this._drawHighlight(highlight, xStart, yStart, xEnd, yEnd)
+        }
 
         ctx.save();
 
         this._drawText({ x: xStart, y: yStart },
                        { x: xEnd,   y: yEnd   })
+    }
+
+    _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
+        switch(highlight) {
+            case NodeHighlightType.SELECTION:
+                ctx.save()
+
+                ctx.setLineDash([15, 15]);
+                ctx.strokeStyle = "blue";
+                ctx.lineWidth = 5
+                ctx.lineDashOffset = window.performance.now()/50
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break
+            case NodeHighlightType.ALGORITHM_FOCUS:
+                ctx.save()
+                ctx.lineWidth = 7
+                ctx.strokeStyle = "rgb(255,0,0)";
+                ctx.setLineDash([]);
+
+
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+        }
     }
 
     _drawText({ x: xStart, y: yStart },
@@ -82,10 +113,18 @@ export class UndirectedEdge extends Edge {
         return this.highlights.has(NodeHighlightType.SELECTION);
     }
 
+    serialize() {
+        // Serializando somente informações importantes da aresta
+        return JSON.stringify({
+            l: this.label,
+            h: Array.from(this.highlights)
+        })
+    }
 
     static deserialize(string) {
         let object = JSON.parse(string)
         let edge = new UndirectedEdge(object.l)
+        edge.highlights = new Set(object.h)
         return edge
     }
 }

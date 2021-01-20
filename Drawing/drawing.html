@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="./tool_tray.css">
-    <link rel="stylesheet" href="algorithm_controls.css">
+    <link rel="stylesheet" href="AlgorithmControls/algorithm_controls.css">
     <script type="module" src="General.js" crossorigin="anonymous"></script>
     <script type="module" src="Interaction.js" crossorigin="anonymous"></script>
     <script type="module" src="GraphView.js" crossorigin="anonymous"></script>
@@ -32,7 +32,9 @@
             <p><span id="dynamic"></span></p>
             <button id="share">Compartilhar</button>
         </div>
-        <div id="tray" class="toolTray" style="display: none">
+
+        <!--    Ferramentas    -->
+        <div id="tray" class="toolTray">
             <div class="toolTrayTab">
                 <a class="toolTrayCaretUp" href="#">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -82,7 +84,9 @@
                 </button>
             </div>
         </div>
-        <div class="algorithmControls">
+
+        <!--    Controle de Algoritmos    -->
+        <div class="algorithmControls" style="display: none">
             <div class="algorithmButtons">
                 <a id="back_button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-skip-start" viewBox="0 0 16 16">

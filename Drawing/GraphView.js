@@ -8,7 +8,8 @@ import LZString from '../libs/lz-string/libs/lz-string.js'
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
-import AlgorithmControlsController from "./AlgorithmControlsController.js";
+import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
+import BFS from "../Algorithm/BFS.js";
 
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
@@ -69,10 +70,10 @@ class GraphView {
 
         // Debugging
         this.generateRandomNodes(3)
-        for (let j = 0; j < getRandomInt(0, 3); j++ ) {
-            let r = getRandomInt(0, 3)
-            Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        }
+        // for (let j = 0; j < getRandomInt(0, 3); j++ ) {
+        //     let r = getRandomInt(0, 3)
+        //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        // }
 
     }
 
@@ -369,14 +370,19 @@ class GraphView {
 }
 
 export let g = new GraphView(canvas);
-document.addEventListener("dblclick", () => {
-    let s = g.structure.serialize()
-    g.structure = UndirectedGraph.deserialize(s)
-    g.redrawGraph()
-    g.updateAnimations()
-})
 g.redrawGraph();
 g.updateAnimations();
+
+//DEBUG
+document.ondblclick = () => {
+    let algorithmController = new AlgorithmController(g)
+    let node = g.structure.nodes().next()
+    BFS(algorithmController, node.value)
+    console.log(algorithmController.steps)
+    algorithmController.ready()
+
+    document.ondblclick = null
+}
 
 
 let blurTimeout = null
@@ -416,5 +422,3 @@ share.onclick = function() {
     `)
     window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToEncodedURIComponent(serialized)
 }
-
-let algorithmController = new AlgorithmControlsController(5)

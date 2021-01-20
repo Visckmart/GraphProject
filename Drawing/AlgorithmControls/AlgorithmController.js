@@ -1,15 +1,10 @@
-class ProgressMarker extends HTMLDivElement {
-    constructor() {
-        super();
-        this.className = "progressMarker"
-    }
-}
+import UndirectedGraph from "../../Structure/UndirectedGraph.js";
 
-customElements.define('progress-marker', ProgressMarker, { extends: 'div'})
-
-class AlgorithmControlsController {
-    constructor(numberOfSteps) {
-        this.numberOfSteps = numberOfSteps
+class AlgorithmController {
+    constructor(graphView, steps = []) {
+        this.steps = []
+        this.graphView = graphView
+        this.initialGraph = graphView.structure
 
         // Capturando elementos do HTML
         this.container = document.querySelector(".algorithmControls")
@@ -19,19 +14,17 @@ class AlgorithmControlsController {
         this.backButton = document.querySelector("#back_button")
         this.forwardButton = document.querySelector("#forward_button")
 
-        this.progressBar.setAttribute("min", 0)
-        this.progressBar.setAttribute("max", numberOfSteps)
+        this.progressBar.setAttribute("min", "0")
+        this.progressBar.setAttribute("max", this.numberOfSteps.toString())
 
         this.initializeControls()
 
-        // Adiciona os markers de progresso
-        for(let i=0;i<numberOfSteps - 1;i++)
-        {
-            let marker = document.createElement("div", { is: 'progress-marker'})
-            this.progressOutline.appendChild(marker)
-        }
-
         this.progress = 0
+        this.hide()
+    }
+
+    get numberOfSteps() {
+        return this.steps.length
     }
 
     // Progresso das etapas
@@ -44,8 +37,11 @@ class AlgorithmControlsController {
         {
             this._progress = value
             this.progressBar.value = value
+            if(this.steps[value])
+            {
+                this.graphView.structure = this.steps[value]
+            }
         }
-
     }
 
 
@@ -110,7 +106,35 @@ class AlgorithmControlsController {
             this.playing = false
             this.progress -= 1
         })
+
+        this.progressBar.addEventListener("change", () => {
+            this.progress = this.progressBar.value
+        })
+    }
+
+    hide() {
+        this.container.style.display = 'none'
+    }
+
+    show() {
+        this.container.style.display = 'flex'
+    }
+
+    get currentStep() {
+        return this.steps[this.progress]
+    }
+
+    addStep(graph) {
+        let clone = UndirectedGraph.deserialize(graph.serialize())
+        this.steps.push(clone)
+        this.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
+    }
+
+    ready() {
+        this.show()
+        this.progress = 0
+        this.playing = true
     }
 }
 
-export default AlgorithmControlsController
+export default AlgorithmController
