@@ -13,14 +13,14 @@ class AlgorithmControlsController {
 
         // Capturando elementos do HTML
         this.container = document.querySelector(".algorithmControls")
-        this.progressOutline = document.querySelector(".progressOutline")
-        this.progressBar = document.querySelector(".progressBar")
-        this.progressButton = document.querySelector(".progressButton")
+        this.progressBar = document.querySelector(".algorithmProgress")
         this.playButton = document.querySelector("#play_button")
         this.stopButton = document.querySelector("#stop_button")
         this.backButton = document.querySelector("#back_button")
         this.forwardButton = document.querySelector("#forward_button")
 
+        this.progressBar.setAttribute("min", 0)
+        this.progressBar.setAttribute("max", numberOfSteps)
 
         this.initializeControls()
 
@@ -43,10 +43,7 @@ class AlgorithmControlsController {
         if(value >= 0 && value <= this.numberOfSteps)
         {
             this._progress = value
-            let percentageProgress = `${(value/this.numberOfSteps) * 100}%`
-
-            this.progressBar.style.width = percentageProgress
-            this.progressButton.style.left = percentageProgress
+            this.progressBar.value = value
         }
 
     }
@@ -112,55 +109,6 @@ class AlgorithmControlsController {
         this.backButton.addEventListener("click", () => {
             this.playing = false
             this.progress -= 1
-        })
-
-        this.progressButton.addEventListener("mousedown", () => {
-            this.playing = false
-
-            this.container.style.cursor = 'grabbing'
-
-            let dragListener = ({clientX}) => {
-                let offsetX = clientX - this.progressBar.getBoundingClientRect().x
-                let widthSteps = this.container.clientWidth/(this.numberOfSteps * 2 + 1)
-                let step = 0;
-                for(let offset=0;step<this.numberOfSteps*2;offset+=widthSteps)
-                {
-                    if(offset > offsetX)
-                    {
-                        break
-                    }
-                    step++
-                }
-
-                console.log(step)
-                if(step === 1)
-                {
-                    this.progress = 0
-                } else {
-                    this.progress = Math.round((step/2) - 0.5)
-                }
-            }
-
-
-            let mouseupListener = () => {
-                this.playing = false
-                this.container.style.cursor = 'default'
-                this.container.removeEventListener("mouseup", mouseupListener)
-                this.container.removeEventListener("mouseleave", mouseupListener)
-                this.container.removeEventListener("blur", mouseupListener)
-                this.container.removeEventListener("mousemove", dragListener)
-            }
-            this.container.addEventListener("mouseup", mouseupListener)
-            this.container.addEventListener("mouseleave", mouseupListener)
-            this.container.addEventListener("blur", mouseupListener)
-            this.container.addEventListener("mousemove", dragListener)
-
-        })
-
-        this.container.addEventListener("mouseup", () => {
-            this.playing = false
-
-            this.container.style.cursor = 'default'
         })
     }
 }

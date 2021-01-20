@@ -7,13 +7,28 @@
     color:white;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding-bottom: 13pt;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
     z-index: 0;
-    align-items: center;
-    padding: 10pt;
 }
-.slider {
+
+.algorithmButtons {
+    flex: 1 1 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10pt 20pt 0;
+}
+
+.algorithmButtons > a {
+    cursor: pointer;
+}
+
+.algorithmProgress {
         border-radius: 50pt;
         -webkit-appearance: none;  /* Override default CSS styles */
         appearance: none;
@@ -27,13 +42,13 @@
     }
 
     /* Mouse-over effects */
-    .slider:hover {
+    .algorithmProgress:hover {
       opacity: 1; /* Fully shown on mouse-over */
         background: #d3d3d3FF; /* Grey background */
   }
   
   /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
-  .slider::-webkit-slider-thumb {
+  .algorithmProgress::-webkit-slider-thumb {
     border-radius: 50pt;
     -webkit-appearance: none; /* Override default look */
     appearance: none;
@@ -43,7 +58,7 @@
     cursor: pointer; /* Cursor on hover */
     transition: 0.1s;
 }
-  .slider::-webkit-slider-thumb:hover {
+  .algorithmProgress::-webkit-slider-thumb:hover {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
     width: 20pt; /* Set a specific slider handle width */
@@ -52,7 +67,7 @@
     cursor: pointer; /* Cursor on hover */
 }
 
-.slider::-moz-range-thumb {
+.algorithmProgress::-moz-range-thumb {
   width: 20px; /* Set a specific slider handle width */
   height: 20px; /* Slider handle height */
   background: #4CAF50; /* Green background */
