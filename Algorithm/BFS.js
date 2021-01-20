@@ -33,8 +33,8 @@ export default function BFS(controller, startNode)
         {
             if(!node.visited)
             {
-                console.log(node)
                 queue.push(node)
+                node.visited = true
                 edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
                 anyEdges = true
             }
