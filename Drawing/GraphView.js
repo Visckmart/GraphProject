@@ -59,14 +59,15 @@ class GraphView {
         canvas.addEventListener("mouseup",
             mouseHandler.mouseUpEvent.bind(mouseHandler)
         );
+
+        // KEYBOARD
+        document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
+        document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
+
         // Evite abrir o menu de contexto para não haver conflito com o gesto
         // de deletar nós.
         canvas.addEventListener("contextmenu", event => event.preventDefault());
 
-        // KEYBOARD
-
-        document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
-        document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
 
         // Debugging
         this.generateRandomNodes(3)

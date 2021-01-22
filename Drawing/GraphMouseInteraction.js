@@ -5,6 +5,7 @@ class GraphMouseHandler {
     constructor(graphView) {
         this.graphView = graphView;
         this.selection = graphView.selectionHandler;
+        this._enabled = true
     }
 
     /* Registra a ultima posição em que o mousedown ocorreu para
@@ -22,6 +23,12 @@ class GraphMouseHandler {
     to = null;
     mostRecentNode = null;
     mouseDownEvent(mouseEvent) {
+        // Eventos de mouse desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         // Somente o botão esquerdo nos interessa
         // if (mouseEvent.button != 0) return;
         // console.log(this)
@@ -58,6 +65,12 @@ class GraphMouseHandler {
     }
 
     mouseDragEvent(mouseEvent) {
+        // Eventos de mouse desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         // console.log(this.selection.temporarySelection)
@@ -119,6 +132,12 @@ class GraphMouseHandler {
     }
 
     mouseUpEvent(mouseEvent) {
+        // Eventos de mouse desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         let pos = this.getMousePos(mouseEvent);
         console.log()
         // Se o botão direito foi o levantado
@@ -198,6 +217,12 @@ class GraphMouseHandler {
 
 
     getMousePos(mouseEvent) {
+        // Eventos de mouse desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         var canvasRect = this.graphView.canvas.getBoundingClientRect();
         return {
             x: mouseEvent.clientX - canvasRect.left,
@@ -206,6 +231,12 @@ class GraphMouseHandler {
     }
 
     refreshCursorStyle() {
+        // Eventos de mouse desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         // Restaura o ponteiro para o visual padrão
         let cursorStyle = null;
         // Se não sabemos a posição (acontece antes do primeiro movimento)
@@ -228,6 +259,15 @@ class GraphMouseHandler {
         }
         // Atualize o estilo apropriadamente
         this.graphView.canvas.style.cursor = cursorStyle;
+    }
+
+    enable() {
+        this._enabled = true
+    }
+
+    disable() {
+        this._enabled = false
+        this.graphView.canvas.style.cursor = "default"
     }
 }
 

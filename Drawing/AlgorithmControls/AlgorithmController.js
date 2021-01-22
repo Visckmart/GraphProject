@@ -13,6 +13,7 @@ class AlgorithmController {
         this.stopButton = document.querySelector("#stop_button")
         this.backButton = document.querySelector("#back_button")
         this.forwardButton = document.querySelector("#forward_button")
+        this.exitButton = document.querySelector("#exit_button")
 
         this.progressBar.setAttribute("min", "0")
         this.progressBar.setAttribute("max", this.numberOfSteps.toString())
@@ -107,7 +108,14 @@ class AlgorithmController {
             this.progress -= 1
         })
 
+        this.exitButton.addEventListener("click", () => this.finish())
+
         this.progressBar.addEventListener("change", () => {
+            this.playing = false
+            this.progress = this.progressBar.value
+        })
+        this.progressBar.addEventListener("input", () => {
+            this.playing = false
             this.progress = this.progressBar.value
         })
     }
@@ -130,10 +138,29 @@ class AlgorithmController {
         this.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
     }
 
+    disableHandler (e) {
+        e.stopPropagation()
+        e.preventDefault()
+    }
+
     ready() {
+        this.graphView.interactionHandler.mouse.disable()
+        this.graphView.interactionHandler.keyboard.disable()
+
+        document.querySelector(".toolTray").style.display = 'none'
+
         this.show()
         this.progress = 0
         this.playing = true
+    }
+
+    finish () {
+        this.graphView.interactionHandler.mouse.enable()
+        this.graphView.interactionHandler.keyboard.enable()
+
+        document.querySelector(".toolTray").style.display = 'unset'
+
+        this.hide()
     }
 }
 

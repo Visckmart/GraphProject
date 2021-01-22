@@ -5,6 +5,9 @@ class GraphKeyboardHandler {
     constructor(graphView) {
         this.graphView = graphView;
         this.selection = graphView.selectionHandler;
+
+        // Começa habilitado
+        this._enabled = true
     }
 
     /* Variável para relembrar a ferramenta escolhida depois da tecla
@@ -28,6 +31,12 @@ class GraphKeyboardHandler {
     }
 
     keyPressed(keyboardEvent) {
+        // Eventos de teclado desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
         if(this.selection.drawingSelection)
         {
@@ -63,6 +72,12 @@ class GraphKeyboardHandler {
     }
 
     keyReleased(keyboardEvent) {
+        // Eventos de teclado desabilitados
+        if(!this._enabled)
+        {
+            return
+        }
+
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
         if(this.selection.drawingSelection)
         {
@@ -85,6 +100,14 @@ class GraphKeyboardHandler {
                 this.selection.clear()
             }
         }
+    }
+
+    enable() {
+        this._enabled = true
+    }
+
+    disable() {
+        this._enabled = false
     }
 }
 
