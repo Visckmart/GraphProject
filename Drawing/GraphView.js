@@ -70,7 +70,8 @@ class GraphView {
 
 
         // Debugging
-        this.generateRandomNodes(3)
+        this.generateRandomNodes(4)
+        this.generateRandomEdges(3)
         // for (let j = 0; j < getRandomInt(0, 3); j++ ) {
         //     let r = getRandomInt(0, 3)
         //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
@@ -88,6 +89,20 @@ class GraphView {
             if (this.getNodeIndexAt({x: x, y: y}, true)[0] == null) {
                 i++;
                 this.insertNewNodeAt({x: x, y: y})
+            }
+        }
+    }
+
+    generateRandomEdges(quantity) {
+        let i = 0
+        for (let nodeA of this.structure.nodes()) {
+            for (let nodeB of this.structure.nodes()) {
+                if (i >= quantity) return;
+                let x = Math.random() < 0.5
+                if (x) {
+                    i++
+                    this.insertEdgeBetween(nodeA, nodeB)
+                }
             }
         }
     }
