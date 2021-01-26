@@ -95,6 +95,10 @@ class UndirectedGraph extends Graph {
         
         return graph
     }
+
+    clone () {
+        return UndirectedGraph.deserialize(this.serialize())
+    }
 }
 
 export default UndirectedGraph

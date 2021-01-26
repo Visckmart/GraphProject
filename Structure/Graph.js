@@ -171,6 +171,11 @@ class Graph {
         console.warn("Can't deserialize abstract class")
         return null
     }
+
+    clone (graph) {
+        console.warn("Can't clone abstract class")
+        return null
+    }
 }
 
 export default Graph
