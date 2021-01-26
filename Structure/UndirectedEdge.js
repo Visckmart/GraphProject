@@ -53,10 +53,20 @@ export class UndirectedEdge extends Edge {
                 break
             case NodeHighlightType.ALGORITHM_FOCUS:
                 ctx.save()
-                ctx.lineWidth = 7
-                ctx.strokeStyle = "rgb(255,0,0)";
+                ctx.lineWidth = 8
+                ctx.strokeStyle = "#19ED79";
                 ctx.setLineDash([]);
 
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                ctx.save()
+                ctx.lineWidth = 2
+                ctx.strokeStyle = "#119E51";
+                ctx.setLineDash([]);
 
                 ctx.beginPath()
                 ctx.moveTo(xStart, yStart);
