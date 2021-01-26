@@ -213,6 +213,7 @@ export class Node {
         let serializedPosition = `${percX}_${percY}`
 
         let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+        this.highlights.delete(NodeHighlightType.SELECTION)
         let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h))
         
         return `${this.index}-${serializedColors}-${serializedLabels}-${serializedPosition}-${numberedHighlights}-`
@@ -233,7 +234,9 @@ export class Node {
         this._originalcolor = nodeColorList[oColor % nodeColorList.length];
         node.randomLabel = rLabel
         let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
-        node.highlights = new Set(highlights.split(",").map(h => highlightNames[h]))
+        if (highlights.length > 0) {
+            node.highlights = new Set(highlights.split(",").map(h => highlightNames[h]))
+        }
         return node
     }
 }

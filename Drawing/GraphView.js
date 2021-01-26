@@ -70,12 +70,12 @@ class GraphView {
 
 
         // Debugging
-        // this.generateRandomNodes(4)
-        // this.generateRandomEdges(3)
-        // for (let j = 0; j < getRandomInt(0, 3); j++ ) {
-        //     let r = getRandomInt(0, 3)
-        //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        // }
+        this.generateRandomNodes(4)
+        this.generateRandomEdges(3)
+        for (let j = 0; j < getRandomInt(0, 3); j++ ) {
+            let r = getRandomInt(0, 3)
+            Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        }
 
     }
 

@@ -115,6 +115,7 @@ export class UndirectedEdge extends Edge {
 
     serialize() {
         let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+        this.highlights.delete(NodeHighlightType.SELECTION)
         let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h))
         return `${this.label}-${numberedHighlights}-`
     }
