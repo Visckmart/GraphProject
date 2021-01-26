@@ -1,5 +1,13 @@
 import UndirectedGraph from "../../Structure/UndirectedGraph.js";
 
+
+class Step {
+    constructor(graph, message = "") {
+        this.graphState = graph.clone()
+        this.message = message
+    }
+}
+
 class AlgorithmController {
     constructor(graphView, steps = []) {
         this.steps = []
@@ -28,7 +36,8 @@ class AlgorithmController {
         return this.steps.length
     }
 
-    // Progresso das etapas
+    //#region Comportamento de progresso
+    // Etapa atual
     _progress = 0
     get progress() {
         return this._progress
@@ -38,19 +47,22 @@ class AlgorithmController {
         {
             this._progress = value
             this.progressBar.value = value
+
+            // Se a etapa atual é válida atualiza o grafo sendo mostrado
             if(this.steps[value])
             {
-                this.graphView.structure = this.steps[value]
+                this.graphView.structure = this.steps[value].graphState
             }
         }
     }
+    //#endregion
 
-
-    // Status de play
+    //#region Comportamento de reprodução
+    // Status de reprodução
     _playing = false
     _interval = null
     get playing() {
-        return false
+        return this._playing
     }
     set playing(value) {
         if(value) {
@@ -85,8 +97,9 @@ class AlgorithmController {
 
         this._playing = value
     }
+    //#endregion
 
-    // Inicializa a funcionalidade dos controles
+    // Inicializa as funcionalidades dos elementos HTML dos controles
     initializeControls() {
         this.playButton.addEventListener("click", () => {
             this.playButton.style.display = this.playButton.style.display === 'none' ? 'block' : 'none'
@@ -120,29 +133,23 @@ class AlgorithmController {
         })
     }
 
+    // Esconde a barra de play
     hide() {
         this.container.style.display = 'none'
     }
 
+    // Mostra a barra de play
     show() {
         this.container.style.display = 'flex'
     }
 
-    get currentStep() {
-        return this.steps[this.progress]
-    }
-
-    addStep(graph) {
-        let clone = UndirectedGraph.deserialize(graph.serialize())
-        this.steps.push(clone)
+    // Adiciona uma nova etapa
+    addStep(graph, message) {
+        this.steps.push(new Step(graph, message))
         this.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
     }
 
-    disableHandler (e) {
-        e.stopPropagation()
-        e.preventDefault()
-    }
-
+    // Inicializa a demonstração do algoritmo
     ready() {
         this.graphView.interactionHandler.mouse.disable()
         this.graphView.interactionHandler.keyboard.disable()
@@ -154,6 +161,8 @@ class AlgorithmController {
         this.playing = true
     }
 
+
+    // Finaliza a demonstração do algoritmo
     finish () {
         this.graphView.interactionHandler.mouse.enable()
         this.graphView.interactionHandler.keyboard.enable()
