@@ -2,6 +2,7 @@ import Graph from "./Graph.js";
 import {UndirectedEdge} from "./UndirectedEdge.js";
 import {UndirectedTemporaryEdge} from "./UndirectedTemporaryEdge.js";
 import {Node} from "./Node.js";
+import {resetColorRotation} from "../Drawing/General.js";
 class UndirectedGraph extends Graph {
 
     // Inserção
@@ -62,6 +63,7 @@ class UndirectedGraph extends Graph {
     }
 
     static deserialize(string) {
+        resetColorRotation()
         let graph = new UndirectedGraph()
         let [allNodesStr, allEdgesStr] = string.split("~")
         let deserializedNodes = []

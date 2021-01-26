@@ -1,12 +1,11 @@
 // Node Definition
-import { canvas, ctx } from "../Drawing/General.js";
+import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
 
 export const regularNodeRadius = 28;
 const nodeColorList = [
     "#1E90FF", "#32CD32",
     "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
 ]
-var colorRotation = 0
 
 var globalNodeIndex = 0
 const nodeBorderWidth = 2;
@@ -46,7 +45,7 @@ export class Node {
 
         this._initialTime = window.performance.now();
         this.index = globalNodeIndex++;
-        this._originalcolor = nodeColorList[colorRotation % nodeColorList.length];
+        this._originalcolor = nodeColorList[getColorRotation() % nodeColorList.length];
         this._breatheSettings = {
             speed: 0.15,
             amplitude: 1.5,
@@ -68,8 +67,6 @@ export class Node {
         }
         
         this.highlights = new Set();
-        
-        colorRotation += 1;
     }
 
     get color() {
