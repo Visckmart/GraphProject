@@ -29,7 +29,8 @@ function generateNewRandomLetter() {
 
 export const NodeHighlightType = {
     SELECTION: "selection",
-    ALGORITHM_FOCUS: "algorithm_focus"
+    ALGORITHM_FOCUS: "algorithm_focus",
+    ALGORITHM_FOCUS2: "algorithm_focus2"
 }
 function colorFromComponents(r, g, b, a = 1) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")"
@@ -140,6 +141,7 @@ export class Node {
                 ctx.stroke();
                 return 20;
             }
+            case NodeHighlightType.ALGORITHM_FOCUS2:
             case NodeHighlightType.ALGORITHM_FOCUS: {
                 // Pisca o nó
                 let twinkleTime = window.performance.now()/500

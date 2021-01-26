@@ -74,6 +74,22 @@ export class UndirectedEdge extends Edge {
                 ctx.stroke();
 
                 ctx.restore()
+                break
+
+            case NodeHighlightType.ALGORITHM_FOCUS2:
+                ctx.save()
+                ctx.lineWidth = 8
+                ctx.strokeStyle = "rgb(255,0,0)";
+                ctx.setLineDash([]);
+
+
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break
         }
     }
 
