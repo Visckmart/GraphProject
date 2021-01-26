@@ -204,9 +204,18 @@ export class Node {
     serialize() {
         // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
         // 0;9,;"U",;700,400;2;
+        let serializedColors = `${nodeColorList.indexOf(this._originalcolor)}_`
+        
+        let serializedLabels = `${this.randomLabel}_${this.label != this.randomLabel ? this.label : ""}`
+        
         let percX = Math.round((this.pos.x/canvas.width)*100);
         let percY = Math.round((this.pos.y/canvas.height)*100);
-        return `${this.index}-${nodeColorList.indexOf(this._originalcolor)}_-${this.randomLabel}_${this.label != this.randomLabel ? this.label : ""}-${percX}_${percY}--`
+        let serializedPosition = `${percX}_${percY}`
+
+        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+        let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h))
+        
+        return `${this.index}-${serializedColors}-${serializedLabels}-${serializedPosition}-${numberedHighlights}-`
     }
 
     static deserialize(string) {
@@ -216,9 +225,6 @@ export class Node {
         if (found == undefined) {return;}
         const [_, index, oColor, cColor, rLabel, cLabel, x, y, highlights] = found;
 
-        // console.log(news);
-        // console.log(index, oColor, cColor);
-
         let newX = x*canvas.width/100
         let newY = y*canvas.height/100
         // console.log(rLabel, cLabel, newX, newY, canvas.width, canvas.height)
@@ -226,7 +232,8 @@ export class Node {
         node.index = parseInt(index)
         this._originalcolor = nodeColorList[oColor % nodeColorList.length];
         node.randomLabel = rLabel
-        node.highlights = new Set()
+        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+        node.highlights = new Set(highlights.split(",").map(h => highlightNames[h]))
         return node
     }
 }

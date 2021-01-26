@@ -114,19 +114,21 @@ export class UndirectedEdge extends Edge {
     }
 
     serialize() {
-        return `${this.label}-${Array.from(this.highlights)}-`
-        // Serializando somente informações importantes da aresta
-        return JSON.stringify({
-            l: this.label,
-            h: Array.from(this.highlights)
-        })
+        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+        let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h))
+        return `${this.label}-${numberedHighlights}-`
     }
 
     static deserialize(string) {
-        let object = JSON.parse(string)
-        console.log(">", string)
-        let edge = new UndirectedEdge(object.l)
-        edge.highlights = new Set(object.h)
+        const re = /([a-zA-Z]+)-(.*)-/i;
+        let found = string.match(re);
+        if (found == undefined) {return;}
+        const [_, label, highlights] = found;
+
+        let edge = new UndirectedEdge(label)
+        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+        // console.log("highlights", highlights, highlights.split(",").map(h => highlightNames[h]))
+        edge.highlights = new Set(highlights.split(",").map(h => highlightNames[h]))
         return edge
     }
 }

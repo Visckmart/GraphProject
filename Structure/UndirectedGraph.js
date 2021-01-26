@@ -79,14 +79,16 @@ class UndirectedGraph extends Graph {
             let serializedEdges = allEdgesStr.split(".")
             serializedEdges.splice(-1, 1)
             for (let edgeStr of serializedEdges) {
-                const re = /(\d+)_(\d+)-([a-zA-Z]+)-(.*)-/i;
+                const re = /(\d+)_(\d+)-(.*)/i;
                 let found = edgeStr.match(re);
                 if (found == undefined) continue;
-                const [_, nodeA, nodeB, label] = found;
+                const [_, nodeA, nodeB, edgeData] = found;
+
+                let ne = UndirectedEdge.deserialize(edgeData)
                 graph.insertEdge(
                     deserializedNodes.find(n => n.index === parseInt(nodeA)),
                     deserializedNodes.find(n => n.index === parseInt(nodeB)),
-                    new UndirectedEdge(label)
+                    ne
                 )
             }
         }
