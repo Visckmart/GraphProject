@@ -214,7 +214,7 @@ export class Node {
 
         let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
         this.highlights.delete(NodeHighlightType.SELECTION)
-        let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h))
+        let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h)).filter(h => h != -1)
         
         return `${this.index}-${serializedColors}-${serializedLabels}-${serializedPosition}-${numberedHighlights}-`
     }
