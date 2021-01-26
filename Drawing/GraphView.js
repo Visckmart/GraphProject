@@ -70,8 +70,8 @@ class GraphView {
 
 
         // Debugging
-        this.generateRandomNodes(4)
-        this.generateRandomEdges(3)
+        // this.generateRandomNodes(4)
+        // this.generateRandomEdges(3)
         // for (let j = 0; j < getRandomInt(0, 3); j++ ) {
         //     let r = getRandomInt(0, 3)
         //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
@@ -422,7 +422,8 @@ window.onresize = function (a) {
 window.addEventListener("load", () => {
     const urlParams = new URLSearchParams(location.search);
     if(urlParams.has("graph")) {
-        g.structure = UndirectedGraph.deserialize(LZString.decompressFromEncodedURIComponent(urlParams.get("graph")))
+        console.log("graph", urlParams.get("graph"))
+        g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))
         g.redrawGraph()
         g.updateAnimations()
     }
@@ -431,10 +432,8 @@ window.addEventListener("load", () => {
 let share = document.getElementById("share")
 share.onclick = function() {
     let serialized = g.structure.serialize()
-    console.log(`
-            Normal: ${serialized.length};
-            Base64: ${btoa(serialized).length}
-            Base64 Compressed: ${LZString.compressToEncodedURIComponent(serialized).length}
-    `)
-    window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToEncodedURIComponent(serialized)
+
+    console.log(serialized, serialized.length)
+    history.pushState(null, null, "?graph="+serialized)
+    // window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToEncodedURIComponent(serialized)
 }

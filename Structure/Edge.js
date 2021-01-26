@@ -15,6 +15,9 @@ class Edge {
     }
 
     serialize() {
+        // nodeA nodeB  label  highlights
+        // 1,2;"L";;
+        return `${this.label};;`
         // Serializando somente informações importantes da aresta
         return JSON.stringify({
             l: this.label

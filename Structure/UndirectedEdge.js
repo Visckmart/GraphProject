@@ -114,6 +114,7 @@ export class UndirectedEdge extends Edge {
     }
 
     serialize() {
+        return `${this.label}-${Array.from(this.highlights)}-`
         // Serializando somente informações importantes da aresta
         return JSON.stringify({
             l: this.label,
@@ -123,6 +124,7 @@ export class UndirectedEdge extends Edge {
 
     static deserialize(string) {
         let object = JSON.parse(string)
+        console.log(">", string)
         let edge = new UndirectedEdge(object.l)
         edge.highlights = new Set(object.h)
         return edge

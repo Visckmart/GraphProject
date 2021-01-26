@@ -151,27 +151,20 @@ class Graph {
     }
 
     serialize() {
-        let serializedNodes = []
+        let serializedNodes = ""
         for(let node of this.nodes())
         {
-            serializedNodes.push(node.serialize())
+            serializedNodes += node.serialize() + "."
         }
 
-        let serializedEdged = []
-        let pairs = []
+        let serializedEdged = ""
         for(let [edge, nodeA, nodeB] of this.uniqueEdges())
         {
-            serializedEdged.push(edge.serialize())
-            pairs.push([nodeA.index,nodeB.index])
+            serializedEdged += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`
+            // pairs.push([nodeA.index,nodeB.index])
         }
 
-        return JSON.stringify({
-            d: {
-                n: serializedNodes,
-                e: serializedEdged
-            },
-            p:pairs
-        })
+        return serializedNodes + "~" + serializedEdged
     }
 
     static deserialize(string) {

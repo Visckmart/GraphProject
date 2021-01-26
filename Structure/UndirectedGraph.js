@@ -62,24 +62,35 @@ class UndirectedGraph extends Graph {
     }
 
     static deserialize(string) {
-        let object = JSON.parse(string)
         let graph = new UndirectedGraph()
+        let [allNodesStr, allEdgesStr] = string.split("~")
         let deserializedNodes = []
-        for(let node of object.d.n)
-        {
-            let deserializedNode = Node.deserialize(node)
-            graph.insertNode(deserializedNode)
-
-            deserializedNodes.push(deserializedNode)
+        if (allNodesStr) {
+            let serializedNodes = allNodesStr.split(".")
+            serializedNodes.splice(-1, 1)
+            for (let nodeStr of serializedNodes) {
+                let node = Node.deserialize(nodeStr)
+                if (node == undefined) continue;
+                deserializedNodes.push(node)
+                graph.insertNode(node)
+            }
         }
-        let edgeIndex = 0
-        for(let pair of object.p) {
-            graph.insertEdge(
-                deserializedNodes.find(n => n.index === pair[0]),
-                deserializedNodes.find(n => n.index === pair[1]),
-                UndirectedEdge.deserialize(object.d.e[edgeIndex]))
-            edgeIndex++
+        if (allEdgesStr) {
+            let serializedEdges = allEdgesStr.split(".")
+            serializedEdges.splice(-1, 1)
+            for (let edgeStr of serializedEdges) {
+                const re = /(\d+)_(\d+)-([a-zA-Z]+)-(.*)-/i;
+                let found = edgeStr.match(re);
+                if (found == undefined) continue;
+                const [_, nodeA, nodeB, label] = found;
+                graph.insertEdge(
+                    deserializedNodes.find(n => n.index === parseInt(nodeA)),
+                    deserializedNodes.find(n => n.index === parseInt(nodeB)),
+                    new UndirectedEdge(label)
+                )
+            }
         }
+        
         return graph
     }
 }

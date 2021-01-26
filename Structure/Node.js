@@ -202,35 +202,31 @@ export class Node {
     }
 
     serialize() {
-        // Serializando somente informações importantes do nó
-        return JSON.stringify({
-            i: this.index,
-            p: this.pos,
-            c: this._originalcolor,
-            l: this.label,
-            r: this.randomLabel,
-            h: Array.from(this.highlights).filter(highlight => {
-                switch (highlight) {
-                    // Tipos de Highlight que fazem sentido serializar
-                    case NodeHighlightType.ALGORITHM_FOCUS:
-                        return true
-
-                    // Tipos de Highlight que não devem ser serializados
-                    case NodeHighlightType.SELECTION:
-                        return false
-                }
-            })
-        })
+        // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
+        // 0;9,;"U",;700,400;2;
+        let percX = Math.round((this.pos.x/canvas.width)*100);
+        let percY = Math.round((this.pos.y/canvas.height)*100);
+        return `${this.index}-${nodeColorList.indexOf(this._originalcolor)}_-${this.randomLabel}_${this.label != this.randomLabel ? this.label : ""}-${percX}_${percY}--`
     }
 
     static deserialize(string) {
-        let object = JSON.parse(string)
-        let node = new Node(object.p.x, object.p.y, object.l)
-        node.index = object.i
-        node._originalcolor = object.c
-        node.randomLabel = object.r
-        node.highlights = new Set(object.h)
+        const re = /(\d)-([#0-9A-F]+)_([#0-9A-F]*)-([a-zA-Z])_([a-zA-Z])?-(\d+)_(\d+)-(.*)-(.*)/i;
+        // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
+        let found = string.match(re);
+        if (found == undefined) {return;}
+        const [_, index, oColor, cColor, rLabel, cLabel, x, y, highlights] = found;
 
+        // console.log(news);
+        // console.log(index, oColor, cColor);
+
+        let newX = x*canvas.width/100
+        let newY = y*canvas.height/100
+        // console.log(rLabel, cLabel, newX, newY, canvas.width, canvas.height)
+        let node = new Node(newX, newY, rLabel)
+        node.index = parseInt(index)
+        this._originalcolor = nodeColorList[oColor % nodeColorList.length];
+        node.randomLabel = rLabel
+        node.highlights = new Set()
         return node
     }
 }
