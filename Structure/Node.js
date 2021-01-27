@@ -150,11 +150,11 @@ export class Node {
                 ctx.fill()
 
                 // Borda clara
-                ctx.strokeStyle = colorFromComponents(255, 255, 255, 0.5)
-                ctx.lineWidth = this.radius/7
+                ctx.strokeStyle = "#2121C8"
+                ctx.lineWidth = this.radius/5
                 
                 // Raio do tracejado
-                let lightBorderRadius = this.radius - ctx.lineWidth/2
+                let lightBorderRadius = this.radius
                 ctx.setLineDash([]);
                 if (lightBorderRadius > 0) {
                     ctx.beginPath();

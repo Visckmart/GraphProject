@@ -390,7 +390,8 @@ g.redrawGraph();
 g.updateAnimations();
 
 //DEBUG
-document.ondblclick = () => {
+let runAlgorithmButton = document.getElementById("run_algorithm")
+runAlgorithmButton.onclick = () => {
     let algorithmController = new AlgorithmController(g)
     let node = g.structure.nodes().next()
     BFS(algorithmController, node.value)

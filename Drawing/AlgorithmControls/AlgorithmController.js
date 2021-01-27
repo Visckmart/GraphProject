@@ -158,7 +158,7 @@ class AlgorithmController {
 
         this.show()
         this.progress = 0
-        this.playing = true
+        this.playing = false
     }
 
 
