@@ -8,8 +8,6 @@ import LZString from '../libs/lz-string/libs/lz-string.js'
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
-import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
-import BFS from "../Algorithm/BFS.js";
 
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
@@ -388,53 +386,3 @@ class GraphView {
 export let g = new GraphView(canvas);
 g.redrawGraph();
 g.updateAnimations();
-
-//DEBUG
-let runAlgorithmButton = document.getElementById("run_algorithm")
-runAlgorithmButton.onclick = () => {
-    let algorithmController = new AlgorithmController(g)
-    let node = g.structure.nodes().next()
-    BFS(algorithmController, node.value)
-    console.log(algorithmController.steps)
-    algorithmController.ready()
-
-    document.ondblclick = null
-}
-
-
-let blurTimeout = null
-window.onresize = function (a) {
-    let wr = (window.innerWidth*0.75)/canvas.width
-    let wh = (window.innerHeight*0.95)/canvas.height
-    canvas.width = window.innerWidth*0.75;
-    canvas.height = window.innerHeight*0.95;
-    for (let node of g.structure.nodes()) {
-        node.pos.x *= wr
-        node.pos.y *= wh
-    }
-    canvas.style.filter = "blur(15pt)"
-    if (blurTimeout) { clearTimeout(blurTimeout) }
-    blurTimeout = setTimeout(function() {
-        canvas.style.filter = null
-    }, 250)
-    g.redrawGraph()
-}
-
-window.addEventListener("load", () => {
-    const urlParams = new URLSearchParams(location.search);
-    if(urlParams.has("graph")) {
-        console.log("graph", urlParams.get("graph"))
-        g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))
-        g.redrawGraph()
-        g.updateAnimations()
-    }
-});
-
-let share = document.getElementById("share")
-share.onclick = function() {
-    let serialized = g.structure.serialize()
-
-    console.log(serialized, serialized.length)
-    history.pushState(null, null, "?graph="+serialized)
-    // window.location.href = window.location.href.split('?')[0] + "?graph=" + LZString.compressToEncodedURIComponent(serialized)
-}
