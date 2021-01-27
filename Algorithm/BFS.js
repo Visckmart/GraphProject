@@ -6,42 +6,46 @@ export default function BFS(controller, startNode)
 {
     let graph = controller.initialGraph
 
-    let queue = [startNode]
+    let queue = [[startNode, null]]
 
-    let lastNode = null
-    let currentNode = null
+    let currentNode, currentEdge
     while(queue.length > 0){
-        if(currentNode)
-        {
-            lastNode = currentNode
-            lastNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        }
+        [currentNode, currentEdge] = queue.shift()
+        currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        currentNode.visited = true
 
-        currentNode = queue.shift()
-        if(currentNode)
+        if(currentEdge)
         {
-            currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-            currentNode.visited = true
+            currentEdge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+            controller.addStep(graph, `Visitando o nó ${currentNode.label} a partir da aresta ${currentEdge.label}.`)
         } else {
-            break
+            controller.addStep(graph, `Visitando o nó ${currentNode.label}.`)
         }
 
-        controller.addStep(graph)
 
-        let anyEdges = false
+        if(currentEdge)
+        {
+            currentEdge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        }
+
+        let visitedEdges = []
         for(let [edge, node] of graph.edgesFrom(currentNode))
         {
             if(!node.visited)
             {
-                queue.push(node)
+                queue.push([node, edge])
                 node.visited = true
                 edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-                anyEdges = true
+                visitedEdges.push(edge)
             }
         }
-        if(anyEdges)
+        if(visitedEdges.length > 0)
         {
-            controller.addStep(graph)
+            controller.addStep(graph, `Explorando as arestas ${visitedEdges.map(e => e.label).join(', ')}.`)
         }
+
+        currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
     }
+    currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+    controller.addStep(graph, "Algoritmo finalizado.")
 }
