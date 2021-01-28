@@ -107,11 +107,17 @@
             <div id="GraphSettings">
                 <h2>Grafo</h2>
                 <p>Nomenclatura dos nós
-                <select id="nodeLabeling">
-                    <option value="numbers">Números (Em Ordem Crescente)</option>
-                    <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
-                    <option value="letters_randomized" selected>Letras (Aleatórias)</option>
-                </select>
+                    <select id="nodeLabeling">
+                        <option value="numbers">Números (Em Ordem Crescente)</option>
+                        <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
+                        <option value="letters_randomized" selected>Letras (Aleatórias)</option>
+                    </select>
+                </p>
+                <p>Algoritmo<br>
+                    <select id="algorithm" disabled>
+                        <option value="BFS">Breadth-First Search</option>
+                    </select>
+                    <button id="run_algorithm">Run</button>
                 </p>
             </div>
             <div id="NodeSettings" style="display: none;">

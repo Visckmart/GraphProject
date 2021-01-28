@@ -35,44 +35,46 @@
 
 .algorithmButtons > a {
     cursor: pointer;
+    margin-left: 5pt;
+    margin-right: 5pt;
 }
 
 .algorithmProgress {
-        border-radius: 50pt;
-        -webkit-appearance: none;  /* Override default CSS styles */
-        appearance: none;
-        width: 80%; /* Full-width */
-        height: 20pt; /* Specified height */
-        background: #d3d3d3A0; /* Grey background */
-        outline: none; /* Remove outline */
-        -webkit-transition: .1s; /* 0.2 seconds transition on hover */
-        transition: background .1s;
-        margin-top: 5pt;
-    }
+    border-radius: 50pt;
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 40%; /* Full-width */
+    height: 5pt; /* Specified height */
+    background: #d3d3d3A0; /* Grey background */
+    outline: none; /* Remove outline */
+    -webkit-transition: .1s; /* 0.2 seconds transition on hover */
+    transition: background .1s;
+    margin-top: 5pt;
+}
 
-    /* Mouse-over effects */
-    .algorithmProgress:hover {
-      opacity: 1; /* Fully shown on mouse-over */
-        background: #d3d3d3FF; /* Grey background */
-  }
+/* Mouse-over effects */
+.algorithmProgress:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+    background: #d3d3d3FF; /* Grey background */
+}
   
   /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
-  .algorithmProgress::-webkit-slider-thumb {
+.algorithmProgress::-webkit-slider-thumb {
     border-radius: 50pt;
     -webkit-appearance: none; /* Override default look */
     appearance: none;
-    width: 20pt; /* Set a specific slider handle width */
-    height: 20pt; /* Slider handle height */
-    background: #2149C1D0; /* Green background */
+    width: 15pt; /* Set a specific slider handle width */
+    height: 15pt; /* Slider handle height */
+    background-color: #2121C8;
     cursor: pointer; /* Cursor on hover */
     transition: 0.1s;
 }
-  .algorithmProgress::-webkit-slider-thumb:hover {
+
+.algorithmProgress::-webkit-slider-thumb:hover {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
     width: 20pt; /* Set a specific slider handle width */
     height: 20pt; /* Slider handle height */
-    background: #4169E1FF; /* Green background */
     cursor: pointer; /* Cursor on hover */
 }
 
