@@ -10,7 +10,7 @@ class UndirectedGraph extends Graph {
         let edge = new UndirectedEdge(String.fromCharCode(Math.floor(Math.random()*26)+65))
         // Verificação
         if (!(nodeA && nodeB && edge)) {
-            console.error("Inserção de aresta chamada incorretamente.")
+            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
             return;
         }
         if (nodeA == nodeB) {
@@ -28,7 +28,7 @@ class UndirectedGraph extends Graph {
     insertEdge(nodeA, nodeB, edge) {
         // Verificação
         if (!(nodeA && nodeB)) {
-            console.error("Inserção de aresta chamada incorretamente.")
+            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
             return;
         }
         if (nodeA === nodeB) {
@@ -77,6 +77,7 @@ class UndirectedGraph extends Graph {
                 graph.insertNode(node)
             }
         }
+        console.log(allEdgesStr)
         if (allEdgesStr) {
             let serializedEdges = allEdgesStr.split(".")
             serializedEdges.splice(-1, 1)

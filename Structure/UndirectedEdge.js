@@ -6,7 +6,6 @@ export class UndirectedEdge extends Edge {
     constructor(label, highlights = null) {
         super(label);
         this.highlights = highlights ?? new Set();
-        console.log("t", this.highlights)
     }
 
     draw({ x: xStart, y: yStart },
@@ -142,15 +141,22 @@ export class UndirectedEdge extends Edge {
 
     serialize() {
         let serializedHighlights = prepareHighlightsForSharing(this.highlights)
-        return `${this.label}-${serializedHighlights}-`
+        if (serializedHighlights != "") {
+            serializedHighlights = "-" + serializedHighlights
+        }
+        return `${this.label}${serializedHighlights}`
     }
 
     static deserialize(serializedEdge) {
-        const edgeDeserializationFormat = /([a-zA-Z]+)-(.*)-/i;
+        const edgeDeserializationFormat = /([a-zA-Z]+)(-.*)?/i;
         let matchResult = serializedEdge.match(edgeDeserializationFormat);
         if (matchResult == undefined) return;
-        const [_, label, highlights] = matchResult;
-        let edge = new UndirectedEdge(label, deserializeHighlights(highlights))
+        const [_, label, serializedHighlights] = matchResult;
+        let highlights;
+        if (serializedHighlights != null) {
+            highlights = deserializeHighlights(highlights)
+        }
+        let edge = new UndirectedEdge(label, highlights)
         return edge
     }
 }

@@ -16,7 +16,7 @@ class GraphMouseHandler {
     }
     set clickPosition(pos) {
         this._clickPosition = pos;
-        this.clickedNode = this.graphView.getNodeIndexAt(this.clickPosition)[0]
+        this.clickedNode = this.graphView.getNodeIndexAt(this.clickPosition).pop()
     }
     clickedNode = false;
     justClearedSelection = false;

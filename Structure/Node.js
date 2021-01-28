@@ -54,6 +54,7 @@ export function prepareHighlightsForSharing(highlights) {
     let serializedHighlights = Array.from(highlightsCopy)
                                 .map(hName => highlightNames.indexOf(hName))
                                 .filter(hNum => hNum != -1)
+                                .join("_")
     return serializedHighlights
 }
 export function deserializeHighlights(serializedHighlights) {
@@ -64,14 +65,19 @@ export function deserializeHighlights(serializedHighlights) {
     return null
 }
 
+const up = Array.from({length: 26}, (_, i) => String.fromCharCode(65+i));
+const low = Array.from({length: 26}, (_, i) => String.fromCharCode(97+i));
+const c = Array.from({length: 10}, (_, i) => String.fromCharCode(48+i));
+
+const positionAlphabet = up.concat(low.concat(c))
 
 export class Node {
 
-    constructor(x, y, label, index = null, oColor = null, rLabel = null, highlights = null) {
+    constructor(x, y, label, index = null, oColor = null, highlights = null) {
 
         this._initialTime = window.performance.now();
         this.index = index ?? globalNodeIndex++;
-        this._originalcolor = nodeColorList[oColor ?? getColorRotation() % nodeColorList.length];
+        this._originalcolor = oColor ?? nodeColorList[getColorRotation() % nodeColorList.length];
         this._breatheSettings = {
             speed: 0.15,
             amplitude: 1.5,
@@ -82,9 +88,8 @@ export class Node {
         this.pos = {x: x, y: y};
 
         // Informações de label
-        let newRandomLabel = rLabel ?? generateNewRandomLetter()
+        let newRandomLabel = generateNewRandomLetter()
         usedLabels.add(newRandomLabel)
-        this.randomLabel = newRandomLabel
 
         if (label != null) {
             this.label = label;
@@ -93,7 +98,6 @@ export class Node {
         }
         
         this.highlights = highlights ?? new Set();
-        console.log("H", this.highlights)
     }
 
     get color() {
@@ -203,7 +207,7 @@ export class Node {
                 nodeText = this.index;
                 break;
             case "letters_randomized":
-                nodeText = this.randomLabel;
+                nodeText = this.label;
                 break;
             case "letters_ordered":
                 nodeText = String.fromCharCode(this.index+65)
@@ -227,40 +231,61 @@ export class Node {
     }
 
     serialize() {
-        // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
         // Colors
-        let serializedColors = `${nodeColorList.indexOf(this._originalcolor)}_`
-
-        // Labels
-        let customLabel = this.label != this.randomLabel ? this.label : ""
-        let serializedLabels = `${this.randomLabel}_${customLabel}`
+        let serializedColors;
+        let indexOfColor = nodeColorList.indexOf(this._originalcolor)
+        if (indexOfColor == -1) {
+            serializedColors = this._originalcolor.slice(1)
+        } else {
+            serializedColors = indexOfColor;
+        }
         
         // Position
-        let percX = Math.round((this.pos.x / canvas.width)*62);
-        let percY = Math.round((this.pos.y / canvas.height)*62);
-        let serializedPosition = `${percX}_${percY}`
+        let percX = Math.round((this.pos.x / canvas.width)*61);
+        let percY = Math.round((this.pos.y / canvas.height)*61);
+        let serializedPosition = `${positionAlphabet[percX]}${positionAlphabet[percY]}`
 
         // Highlights
         let serializedHighlights = prepareHighlightsForSharing(this.highlights)
+        if (serializedHighlights != "") {
+            serializedHighlights = "-" + serializedHighlights
+        }
         
-        return `${this.index}-${serializedColors}-${serializedLabels}-${serializedPosition}-${serializedHighlights}-`
+        return `${this.index}-${serializedColors}-${this.label}${serializedPosition}${serializedHighlights}`
     }
 
     static deserialize(serializedNode) {
-        // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
-        const nodeSerializationFormat = /(\d)-(\d+)_(\d*)-([a-zA-Z]+)_([a-zA-Z]*)?-(\d+)_(\d+)-(.*)-(.*)/i;
+        const nodeSerializationFormat = /(\d+)-(.+)-(.+)/i;
         let matchResult = serializedNode.match(nodeSerializationFormat);
+        // console.log(serializedNode, matchResult)
         if (matchResult == undefined) return;
-        let [_, index, oColor, cColor, rLabel, cLabel, x, y, highlights] = matchResult;
+        let [_, index, serializedColor, label_and_pos] = matchResult;
+        index = parseInt(index)
+        // console.log("index", index)
 
-        let newX = (x/62) * canvas.width
-        let newY = (y/62) * canvas.height
+        let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
+        if (colorMatchResult == undefined) return;
+        let [__, customColor, colorIndex] = colorMatchResult;
+        let color = customColor ?? nodeColorList[colorIndex % nodeColorList.length];
+        // console.log("color", color)
+
+        const labelAndPosFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))/i
+        let labelAndPosMatchResult = label_and_pos.match(labelAndPosFormat);
+        if (labelAndPosMatchResult == undefined) return;
+
+        let label = labelAndPosMatchResult.groups.label
+        let serializedPos = labelAndPosMatchResult.groups.pos
+
+        // console.log("label", label)
+        // console.log("pos", serializedPos)
+
+        let xPos = positionAlphabet.indexOf(serializedPos.charAt(0))
+        let yPos = positionAlphabet.indexOf(serializedPos.charAt(1))
+        if (xPos == null || yPos == null) return;
+        xPos *= canvas.width/61;
+        yPos *= canvas.height/61;
         
-        let node = new Node(newX, newY, cLabel,
-                            index  = parseInt(index),
-                            oColor = oColor,
-                            rLabel = rLabel,
-                            highlights = deserializeHighlights(highlights))
+        let node = new Node(xPos, yPos, label, index, color)
         
         return node;
     }

@@ -68,12 +68,12 @@ class GraphView {
 
 
         // Debugging
-        this.generateRandomNodes(4)
-        this.generateRandomEdges(3)
-        for (let j = 0; j < getRandomInt(0, 3); j++ ) {
-            let r = getRandomInt(0, 3)
-            Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        }
+        // this.generateRandomNodes(4)
+        // this.generateRandomEdges(3)
+        // for (let j = 0; j < getRandomInt(0, 3); j++ ) {
+        //     let r = getRandomInt(0, 3)
+        //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        // }
 
     }
 
@@ -146,9 +146,9 @@ class GraphView {
             let selectionHandler = this.selectionHandler
 
             let labelInput = document.getElementById("label")
-            labelInput.value = this.selectionHandler.selectedNodes[0].randomLabel
+            labelInput.value = this.selectionHandler.selectedNodes[0].label
             labelInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0].randomLabel = input.target.value
+                selectionHandler.selectedNodes[0].label = input.target.value
             }
             setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
 
