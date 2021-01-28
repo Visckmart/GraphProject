@@ -1,11 +1,12 @@
 import Edge from "./Edge.js";
-import { NodeHighlightType } from "../Structure/Node.js"
+import { NodeHighlightType, prepareHighlightsForSharing, deserializeHighlights } from "../Structure/Node.js"
 import {canvas, ctx} from "../Drawing/General.js";
-
+console.log(canvas.width, canvas.height)
 export class UndirectedEdge extends Edge {
-    constructor(label) {
+    constructor(label, highlights = null) {
         super(label);
-        this.highlights = new Set()
+        this.highlights = highlights ?? new Set();
+        console.log("t", this.highlights)
     }
 
     draw({ x: xStart, y: yStart },
@@ -140,22 +141,16 @@ export class UndirectedEdge extends Edge {
     }
 
     serialize() {
-        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
-        this.highlights.delete(NodeHighlightType.SELECTION)
-        let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h)).filter(h => h != -1)
-        return `${this.label}-${numberedHighlights}-`
+        let serializedHighlights = prepareHighlightsForSharing(this.highlights)
+        return `${this.label}-${serializedHighlights}-`
     }
 
-    static deserialize(string) {
-        const re = /([a-zA-Z]+)-(.*)-/i;
-        let found = string.match(re);
-        if (found == undefined) {return;}
-        const [_, label, highlights] = found;
-
-        let edge = new UndirectedEdge(label)
-        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
-        console.log("highlights", highlights.split(",").map(h => highlightNames[h]))
-        edge.highlights = new Set(highlights.split(",").map(h => highlightNames[h]))
+    static deserialize(serializedEdge) {
+        const edgeDeserializationFormat = /([a-zA-Z]+)-(.*)-/i;
+        let matchResult = serializedEdge.match(edgeDeserializationFormat);
+        if (matchResult == undefined) return;
+        const [_, label, highlights] = matchResult;
+        let edge = new UndirectedEdge(label, deserializeHighlights(highlights))
         return edge
     }
 }

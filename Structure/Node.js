@@ -32,6 +32,7 @@ export const NodeHighlightType = {
     ALGORITHM_FOCUS: "algorithm_focus",
     ALGORITHM_FOCUS2: "algorithm_focus2"
 }
+export const highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
 function colorFromComponents(r, g, b, a = 1) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")"
 }
@@ -39,14 +40,38 @@ function colorFromComponents(r, g, b, a = 1) {
 const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
 transparentLabelGradient.addColorStop(0, "#E5E0FF");
 transparentLabelGradient.addColorStop(1, "#FFE0F3");
+const filteredOutHighlights = [
+    NodeHighlightType.SELECTION,
+    NodeHighlightType.ALGORITHM_FOCUS,
+    NodeHighlightType.ALGORITHM_FOCUS2
+]
+
+export function prepareHighlightsForSharing(highlights) {
+    let highlightsCopy = new Set(highlights)
+    for (let highlight of filteredOutHighlights) {
+        highlightsCopy.delete(highlight)
+    }
+    let serializedHighlights = Array.from(highlightsCopy)
+                                .map(hName => highlightNames.indexOf(hName))
+                                .filter(hNum => hNum != -1)
+    return serializedHighlights
+}
+export function deserializeHighlights(serializedHighlights) {
+    if (serializedHighlights.length > 0) {
+        let namedHighlights = serializedHighlights.split(",").map(hNum => highlightNames[hNum])
+        return new Set(namedHighlights)
+    }
+    return null
+}
+
 
 export class Node {
 
-    constructor(x, y, label) {
+    constructor(x, y, label, index = null, oColor = null, rLabel = null, highlights = null) {
 
         this._initialTime = window.performance.now();
-        this.index = globalNodeIndex++;
-        this._originalcolor = nodeColorList[getColorRotation() % nodeColorList.length];
+        this.index = index ?? globalNodeIndex++;
+        this._originalcolor = nodeColorList[oColor ?? getColorRotation() % nodeColorList.length];
         this._breatheSettings = {
             speed: 0.15,
             amplitude: 1.5,
@@ -57,7 +82,7 @@ export class Node {
         this.pos = {x: x, y: y};
 
         // Informações de label
-        let newRandomLabel = generateNewRandomLetter()
+        let newRandomLabel = rLabel ?? generateNewRandomLetter()
         usedLabels.add(newRandomLabel)
         this.randomLabel = newRandomLabel
 
@@ -67,7 +92,8 @@ export class Node {
             this.label = newRandomLabel;
         }
         
-        this.highlights = new Set();
+        this.highlights = highlights ?? new Set();
+        console.log("H", this.highlights)
     }
 
     get color() {
@@ -202,40 +228,40 @@ export class Node {
 
     serialize() {
         // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
-        // 0;9,;"U",;700,400;2;
+        // Colors
         let serializedColors = `${nodeColorList.indexOf(this._originalcolor)}_`
+
+        // Labels
+        let customLabel = this.label != this.randomLabel ? this.label : ""
+        let serializedLabels = `${this.randomLabel}_${customLabel}`
         
-        let serializedLabels = `${this.randomLabel}_${this.label != this.randomLabel ? this.label : ""}`
-        
-        let percX = Math.round((this.pos.x/canvas.width)*100);
-        let percY = Math.round((this.pos.y/canvas.height)*100);
+        // Position
+        let percX = Math.round((this.pos.x / canvas.width)*100);
+        let percY = Math.round((this.pos.y / canvas.height)*100);
         let serializedPosition = `${percX}_${percY}`
 
-        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
-        this.highlights.delete(NodeHighlightType.SELECTION)
-        let numberedHighlights = Array.from(this.highlights).map(h => highlightNames.indexOf(h)).filter(h => h != -1)
+        // Highlights
+        let serializedHighlights = prepareHighlightsForSharing(this.highlights)
         
-        return `${this.index}-${serializedColors}-${serializedLabels}-${serializedPosition}-${numberedHighlights}-`
+        return `${this.index}-${serializedColors}-${serializedLabels}-${serializedPosition}-${serializedHighlights}-`
     }
 
-    static deserialize(string) {
-        const re = /(\d)-([#0-9A-F]+)_([#0-9A-F]*)-([a-zA-Z])_([a-zA-Z])?-(\d+)_(\d+)-(.*)-(.*)/i;
+    static deserialize(serializedNode) {
         // index  originalcolor customcolor  randomlabel customlabel  posx posy  highlights
-        let found = string.match(re);
-        if (found == undefined) {return;}
-        const [_, index, oColor, cColor, rLabel, cLabel, x, y, highlights] = found;
+        const nodeSerializationFormat = /(\d)-(\d+)_(\d*)-([a-zA-Z]+)_([a-zA-Z]*)?-(\d+)_(\d+)-(.*)-(.*)/i;
+        let matchResult = serializedNode.match(nodeSerializationFormat);
+        if (matchResult == undefined) return;
+        let [_, index, oColor, cColor, rLabel, cLabel, x, y, highlights] = matchResult;
 
-        let newX = x*canvas.width/100
-        let newY = y*canvas.height/100
-        // console.log(rLabel, cLabel, newX, newY, canvas.width, canvas.height)
-        let node = new Node(newX, newY, rLabel)
-        node.index = parseInt(index)
-        this._originalcolor = nodeColorList[oColor % nodeColorList.length];
-        node.randomLabel = rLabel
-        let highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
-        if (highlights.length > 0) {
-            node.highlights = new Set(highlights.split(",").map(h => highlightNames[h]))
-        }
-        return node
+        let newX = (x/100) * canvas.width
+        let newY = (y/100) * canvas.height
+        
+        let node = new Node(newX, newY, cLabel,
+                            index  = parseInt(index),
+                            oColor = oColor,
+                            rLabel = rLabel,
+                            highlights = deserializeHighlights(highlights))
+        
+        return node;
     }
 }
