@@ -1,18 +1,27 @@
 .algorithmControls {
     position: absolute;
     bottom: 0;
-    background-color: #777;
-    left:5%;
-    width:65%;
+    background-color: rgba(0,0,0, 0.4);
+    left:0;
+    margin: 0 auto;
+    right: 0;
+    width:fit-content;
     color:white;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    z-index: 0;
+}
+
+.algorithmContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-bottom: 13pt;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    z-index: 0;
+    min-width: 300pt;
 }
+
 
 .algorithmButtons {
     flex: 1 1 auto;
@@ -72,4 +81,20 @@
   height: 20px; /* Slider handle height */
   background: #4CAF50; /* Green background */
   cursor: pointer; /* Cursor on hover */
+}
+
+.messageTray {
+    min-width: 250pt;
+    max-width: 250pt;
+    padding: 10pt;
+    border-top-right-radius: 5px;
+}
+
+.messageTrayText {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.1);
+    padding: 5pt;
+    text-wrap: normal;
+    text-overflow: ellipsis;
 }

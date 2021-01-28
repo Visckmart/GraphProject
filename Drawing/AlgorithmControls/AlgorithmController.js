@@ -16,6 +16,8 @@ class AlgorithmController {
 
         // Capturando elementos do HTML
         this.container = document.querySelector(".algorithmControls")
+        this.messageContainer = document.querySelector(".messageTray")
+        this.message = document.querySelector(".messageTrayText")
         this.progressBar = document.querySelector(".algorithmProgress")
         this.playButton = document.querySelector("#play_button")
         this.stopButton = document.querySelector("#stop_button")
@@ -51,6 +53,13 @@ class AlgorithmController {
             // Se a etapa atual é válida atualiza o grafo sendo mostrado
             if(this.steps[value])
             {
+                if(this.steps[value].message)
+                {
+                    this.messageContainer.style.display = 'block'
+                    this.message.textContent = this.steps[value].message
+                } else {
+                    this.messageContainer.style.display = 'none'
+                }
                 this.graphView.structure = this.steps[value].graphState
             }
         }

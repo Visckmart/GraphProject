@@ -29,7 +29,6 @@ body {
  }
 
 canvas {
-  margin-left: 10pt;
   /*left: 30pt;*/
   /*border: 5px solid;*/
   /*border-image-slice: 1;*/
@@ -51,6 +50,10 @@ canvas {
   display: flex;
   position: relative;
   overflow: hidden;
+}
+
+.canvasContainer {
+  margin-left: 10pt;
 }
 /*.canvasArea::after {
   content: "";
