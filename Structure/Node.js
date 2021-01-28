@@ -236,8 +236,8 @@ export class Node {
         let serializedLabels = `${this.randomLabel}_${customLabel}`
         
         // Position
-        let percX = Math.round((this.pos.x / canvas.width)*100);
-        let percY = Math.round((this.pos.y / canvas.height)*100);
+        let percX = Math.round((this.pos.x / canvas.width)*62);
+        let percY = Math.round((this.pos.y / canvas.height)*62);
         let serializedPosition = `${percX}_${percY}`
 
         // Highlights
@@ -253,8 +253,8 @@ export class Node {
         if (matchResult == undefined) return;
         let [_, index, oColor, cColor, rLabel, cLabel, x, y, highlights] = matchResult;
 
-        let newX = (x/100) * canvas.width
-        let newY = (y/100) * canvas.height
+        let newX = (x/62) * canvas.width
+        let newY = (y/62) * canvas.height
         
         let node = new Node(newX, newY, cLabel,
                             index  = parseInt(index),
