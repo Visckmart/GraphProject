@@ -46,20 +46,35 @@ class AlgorithmController {
         return this.steps.length
     }
 
+    //#region Comportamento de bloqueio
     //Status de bloqueio
-    _blocked = false
+    _isBlocked = false
 
-    get blocked() {
-        return this._blocked
+    get isBlocked() {
+        return this._isBlocked
     }
-    set blocked(value) {
-        this._blocked = value
+    set isBlocked(value) {
+        this._isBlocked = value
         if(value) {
             this.progressBar.setAttribute("disabled", "true")
             this.container.setAttribute("disabled", "true")
         } else {
             this.progressBar.removeAttribute("disabled")
             this.container.removeAttribute("disabled")
+        }
+    }
+    //#endregion
+
+    //#region Comportamento de destaque de mensagem
+    //Status de destaque
+    _messageIsHighlighted = false
+
+    set messageIsHighlighted(value) {
+        this._messageIsHighlighted = value
+        if(value) {
+            this.message.setAttribute("highlighted", "true")
+        } else {
+            this.message.removeAttribute("highlighted")
         }
     }
 
@@ -71,7 +86,7 @@ class AlgorithmController {
         return this._progress
     }
     set progress(value) {
-        if(this.blocked){
+        if(this.isBlocked){
             return
         }
 
@@ -104,7 +119,7 @@ class AlgorithmController {
         return this._playing
     }
     set playing(value) {
-        if(this.blocked){
+        if(this.isBlocked){
             return
         }
 
@@ -165,7 +180,8 @@ class AlgorithmController {
     }
 
     async resolveRequirements() {
-        this.blocked = true
+        this.isBlocked = true
+        this.messageIsHighlighted = true
         for(let requirement of this.requirements) {
             this.message.textContent = requirement.message
             await requirement.handle()
@@ -174,7 +190,8 @@ class AlgorithmController {
         {
             this.message.textContent = this.steps[0].message
         }
-        this.blocked = false
+        this.messageIsHighlighted = false
+        this.isBlocked = false
     }
 
     // Inicializa a demonstração do algoritmo

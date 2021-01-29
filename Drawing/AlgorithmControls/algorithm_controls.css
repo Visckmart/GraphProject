@@ -108,3 +108,7 @@
     text-wrap: normal;
     text-overflow: ellipsis;
 }
+
+#messageTrayText[highlighted="true"] {
+    border: 3px solid red;
+}
