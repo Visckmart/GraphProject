@@ -1,4 +1,4 @@
-.algorithmControls {
+#algorithmControls {
     position: absolute;
     bottom: 0;
     background-color: rgba(0,0,0, 0.4);
@@ -14,7 +14,7 @@
     z-index: 0;
 }
 
-.algorithmContainer {
+#algorithmContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,8 +22,16 @@
     min-width: 300pt;
 }
 
+#algorithmContainer[disabled] {
+    cursor: default;
+    opacity: 0.3;
+}
 
-.algorithmButtons {
+#algorithmContainer[disabled] input, #algorithmContainer[disabled] div > a{
+    cursor: default;
+}
+
+#algorithmButtons {
     flex: 1 1 auto;
     width: 100%;
     display: flex;
@@ -33,13 +41,13 @@
     padding: 10pt 20pt 0;
 }
 
-.algorithmButtons > a {
+#algorithmButtons > a {
     cursor: pointer;
     margin-left: 5pt;
     margin-right: 5pt;
 }
 
-.algorithmProgress {
+#algorithmProgress {
     border-radius: 50pt;
     -webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
@@ -47,19 +55,19 @@
     height: 5pt; /* Specified height */
     background: #d3d3d3A0; /* Grey background */
     outline: none; /* Remove outline */
-    -webkit-transition: .1s; /* 0.2 seconds transition on hover */
+    -webkit-transition: .1s; /* 0#2 seconds transition on hover */
     transition: background .1s;
     margin-top: 5pt;
 }
 
 /* Mouse-over effects */
-.algorithmProgress:hover {
+#algorithmProgress:hover {
     opacity: 1; /* Fully shown on mouse-over */
     background: #d3d3d3FF; /* Grey background */
 }
   
   /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
-.algorithmProgress::-webkit-slider-thumb {
+#algorithmProgress::-webkit-slider-thumb {
     border-radius: 50pt;
     -webkit-appearance: none; /* Override default look */
     appearance: none;
@@ -67,10 +75,10 @@
     height: 15pt; /* Slider handle height */
     background-color: #2121C8;
     cursor: pointer; /* Cursor on hover */
-    transition: 0.1s;
+    transition: .1s;
 }
 
-.algorithmProgress::-webkit-slider-thumb:hover {
+#algorithmProgress::-webkit-slider-thumb:hover {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
     width: 20pt; /* Set a specific slider handle width */
@@ -78,21 +86,21 @@
     cursor: pointer; /* Cursor on hover */
 }
 
-.algorithmProgress::-moz-range-thumb {
+#algorithmProgress::-moz-range-thumb {
   width: 20px; /* Set a specific slider handle width */
   height: 20px; /* Slider handle height */
   background: #4CAF50; /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
 
-.messageTray {
+#messageTray {
     min-width: 250pt;
     max-width: 250pt;
     padding: 10pt;
     border-top-right-radius: 5px;
 }
 
-.messageTrayText {
+#messageTrayText {
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0, 0.1);

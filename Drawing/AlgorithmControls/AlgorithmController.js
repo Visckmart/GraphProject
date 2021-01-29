@@ -20,10 +20,11 @@ class AlgorithmController {
         this.initialGraph = graphView.structure
 
         // Capturando elementos do HTML
-        this.container = document.querySelector(".algorithmControls")
-        this.messageContainer = document.querySelector(".messageTray")
-        this.message = document.querySelector(".messageTrayText")
-        this.progressBar = document.querySelector(".algorithmProgress")
+        this.controls = document.querySelector("#algorithmControls")
+        this.container = document.getElementById("algorithmContainer")
+        this.messageContainer = document.querySelector("#messageTray")
+        this.message = document.querySelector("#messageTrayText")
+        this.progressBar = document.querySelector("#algorithmProgress")
         this.playButton = document.querySelector("#play_button")
         this.stopButton = document.querySelector("#stop_button")
         this.backButton = document.querySelector("#back_button")
@@ -55,8 +56,10 @@ class AlgorithmController {
         this._blocked = value
         if(value) {
             this.progressBar.setAttribute("disabled", "true")
+            this.container.setAttribute("disabled", "true")
         } else {
             this.progressBar.removeAttribute("disabled")
+            this.container.removeAttribute("disabled")
         }
     }
 
@@ -141,12 +144,12 @@ class AlgorithmController {
 
     // Esconde a barra de play
     hide() {
-        this.container.style.display = 'none'
+        this.controls.style.display = 'none'
     }
 
     // Mostra a barra de play
     show() {
-        this.container.style.display = 'flex'
+        this.controls.style.display = 'flex'
     }
 
     // Adiciona um novo requisito
