@@ -21,12 +21,14 @@ for(let element of document.querySelector("#tool_tray").children)
 
 function deserializeURL() {
     const urlParams = new URLSearchParams(location.search);
-    if(urlParams.has("graph")) {
+    if(urlParams.has("graph") && urlParams.has("graph") != "") {
         console.log("graph", urlParams.get("graph"))
-        g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))
-        g.redrawGraph()
-        g.updateAnimations()
+        g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))   
+    } else {
+        g.structure = new UndirectedGraph();
     }
+    g.redrawGraph()
+    g.updateAnimations()
 }
 window.addEventListener("load", deserializeURL);
 window.onpopstate = deserializeURL;
@@ -37,6 +39,12 @@ share.onclick = function() {
 
     console.log(serialized, serialized.length)
     history.pushState(null, null, "?graph="+serialized)
+}
+
+let clearButton = document.getElementById("clear")
+clear.onclick = function() {
+    history.pushState(null, null, "?")
+    deserializeURL()
 }
 
 //DEBUG

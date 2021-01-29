@@ -259,13 +259,13 @@ export class Node {
         let matchResult = serializedNode.match(nodeSerializationFormat);
         // console.log(serializedNode, matchResult)
         if (matchResult == undefined) return;
-        let [_, index, serializedColor, label_and_pos] = matchResult;
+        let [, index, serializedColor, label_and_pos] = matchResult;
         index = parseInt(index)
         // console.log("index", index)
 
         let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
         if (colorMatchResult == undefined) return;
-        let [__, customColor, colorIndex] = colorMatchResult;
+        let [, customColor, colorIndex] = colorMatchResult;
         let color = customColor ?? nodeColorList[colorIndex % nodeColorList.length];
         // console.log("color", color)
 
@@ -275,7 +275,6 @@ export class Node {
 
         let label = labelAndPosMatchResult.groups.label
         let serializedPos = labelAndPosMatchResult.groups.pos
-
         // console.log("label", label)
         // console.log("pos", serializedPos)
 
