@@ -3,16 +3,21 @@ import {NodeHighlightType} from "../Structure/Node.js";
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 
 // Prepara a execução do BFS
-export default function BFS(controller)
+export default async function BFS(controller)
 {
     controller.addRequirement(RequirementType.SELECT_NODE,
         "Selecione o nó de inicio para a o BFS",
-        (startNode) => executeBFS(controller, startNode))
+        (startNode) => {
+        controller.ready()
+        executeBFS(controller, startNode)
+    })
+    await controller.resolveRequirements()
 }
 
 // Executa o BFS
 function executeBFS(controller, startNode)
 {
+    controller.ready()
     let graph = controller.initialGraph
     let queue = [[startNode, null]]
 

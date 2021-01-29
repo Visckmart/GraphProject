@@ -90,7 +90,7 @@ class AlgorithmController {
             return
         }
 
-        if(value >= 0 && value <= this.numberOfSteps)
+        if(value >= 0 && value < this.numberOfSteps)
         {
             this._progress = value
             this.progressBar.value = value
@@ -182,7 +182,8 @@ class AlgorithmController {
     async resolveRequirements() {
         this.isBlocked = true
         this.messageIsHighlighted = true
-        for(let requirement of this.requirements) {
+        while(this.requirements.length > 0) {
+            let requirement = this.requirements.pop()
             this.message.textContent = requirement.message
             await requirement.handle()
         }
@@ -194,16 +195,22 @@ class AlgorithmController {
         this.isBlocked = false
     }
 
-    // Inicializa a demonstração do algoritmo
-    async ready() {
+    // Inicializa a preparação do algoritmo
+    async setup (algorithm) {
         this.graphView.interactionHandler.mouse.disable()
         this.graphView.interactionHandler.keyboard.disable()
 
         document.querySelector(".toolTray").style.display = 'none'
-
         this.show()
         this.playing = false
-        await this.resolveRequirements()
+        this.progress = 0
+
+        await algorithm(this)
+    }
+
+    // Inicializa a demonstração do algoritmo
+    ready() {
+        this.playing = false
         this.progress = 0
         this.graphView.redrawGraph()
     }
