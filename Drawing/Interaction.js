@@ -68,14 +68,8 @@ clear.onclick = function() {
 let runAlgorithmButton = document.getElementById("run_algorithm")
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
-    let firstNode = g.structure.nodes().next()
-    console.log("Initial node is", firstNode)
 
-    BFS(algorithmController, firstNode.value)
-    console.log(algorithmController.steps)
-    await algorithmController.ready()
-
-    runAlgorithmButton.onclick = null
+    await algorithmController.setup(BFS)
 }
 
 let blurTimeout = null
