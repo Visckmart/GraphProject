@@ -1,5 +1,6 @@
 class Graph {
     data = new Map();
+    debug = true;
 
     constructor() {
         if (this.constructor == Graph) {
@@ -13,7 +14,9 @@ class Graph {
             console.error("Inserção de nó chamada incorretamente.");
             return;
         }
-        debugPrint("Inserindo nó", node)
+        if (this.debug) {
+            debugPrint("Inserindo nó", node)
+        }
         console.assert(this.data.has(node) == false, "Nó já estava no grafo.")
         
         // Operação

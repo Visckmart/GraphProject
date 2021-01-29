@@ -42,8 +42,6 @@ transparentLabelGradient.addColorStop(0, "#E5E0FF");
 transparentLabelGradient.addColorStop(1, "#FFE0F3");
 const filteredOutHighlights = [
     NodeHighlightType.SELECTION,
-    NodeHighlightType.ALGORITHM_FOCUS,
-    NodeHighlightType.ALGORITHM_FOCUS2
 ]
 
 export function prepareHighlightsForSharing(highlights) {
@@ -59,7 +57,7 @@ export function prepareHighlightsForSharing(highlights) {
 }
 export function deserializeHighlights(serializedHighlights) {
     if (serializedHighlights.length > 0) {
-        let namedHighlights = serializedHighlights.split(",").map(hNum => highlightNames[hNum])
+        let namedHighlights = serializedHighlights.split("_").map(hNum => highlightNames[hNum])
         return new Set(namedHighlights)
     }
     return null
@@ -257,28 +255,33 @@ export class Node {
     }
 
     static deserialize(serializedNode) {
-        const nodeSerializationFormat = /(\d+)-(.+)-(.+)/i;
+        const nodeSerializationFormat = /(\d+)-(.+?)-(.+)?/i;
         let matchResult = serializedNode.match(nodeSerializationFormat);
         // console.log(serializedNode, matchResult)
         if (matchResult == undefined) return;
-        let [, index, serializedColor, label_and_pos] = matchResult;
+        let [, index, serializedColor, moreInfo] = matchResult;
         index = parseInt(index)
         // console.log("index", index)
-
+        
         let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
         if (colorMatchResult == undefined) return;
         let [, customColor, colorIndex] = colorMatchResult;
         let color = customColor ?? nodeColorList[colorIndex % nodeColorList.length];
         // console.log("color", color)
 
-        const labelAndPosFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))/i
-        let labelAndPosMatchResult = label_and_pos.match(labelAndPosFormat);
-        if (labelAndPosMatchResult == undefined) return;
+        const moreInfoFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))(-(?<highlights>.+))?/i
+        let moreInfoResult = moreInfo.match(moreInfoFormat);
+        if (moreInfoResult == undefined) return;
 
-        let label = labelAndPosMatchResult.groups.label
-        let serializedPos = labelAndPosMatchResult.groups.pos
+        let label = moreInfoResult.groups.label
+        let serializedPos = moreInfoResult.groups.pos
+        let serializedHighlights = moreInfoResult.groups.highlights
         // console.log("label", label)
         // console.log("pos", serializedPos)
+        let highlights;
+        if (serializedHighlights != null) {
+            highlights = deserializeHighlights(serializedHighlights)
+        }
 
         let xPos = positionAlphabet.indexOf(serializedPos.charAt(0))
         let yPos = positionAlphabet.indexOf(serializedPos.charAt(1))
@@ -286,7 +289,7 @@ export class Node {
         xPos *= canvas.width/61;
         yPos *= canvas.height/61;
         
-        let node = new Node(xPos, yPos, label, index, color)
+        let node = new Node(xPos, yPos, label, index, color, highlights)
         
         return node;
     }

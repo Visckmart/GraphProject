@@ -25,7 +25,7 @@ export default function BFS(controller, startNode)
 
         if(currentEdge)
         {
-            currentEdge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+            // currentEdge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
         }
 
         let visitedEdges = []

@@ -76,13 +76,16 @@ class GraphMouseHandler {
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         // console.log(this.selection.temporarySelection)
-        let e = this.graphView.checkEdgeCollision(pos)
+        let nodeHover = this.graphView.getNodeIndexAt(pos)
         if (this.edgeColision) {
             this.edgeColision.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
         }
-        this.edgeColision = e
-        if (e) {
-            e.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        if (nodeHover.length == 0) {
+            let edgeHover = this.graphView.checkEdgeCollision(pos)
+            this.edgeColision = edgeHover
+            if (edgeHover) {
+                edgeHover.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+            }
         }
         // Se não for um clique do botão esquerdo, ignoramos
         if (mouseEvent.buttons == 0 || mouseEvent.button != 0 || mouseEvent.buttons == 2) {

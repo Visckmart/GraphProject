@@ -34,8 +34,10 @@ class UndirectedGraph extends Graph {
         if (nodeA === nodeB) {
             return;
         }
-        debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
-            " até o nó " + nodeB.label, edge);
+        if (this.debug) {
+            debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
+                " até o nó " + nodeB.label, edge);
+        }
 
         // Operação
         this.data.get(nodeA).set(nodeB, edge)
@@ -62,9 +64,10 @@ class UndirectedGraph extends Graph {
         this.data.get(nodeB).delete(nodeA)
     }
 
-    static deserialize(string) {
+    static deserialize(string, clone = false) {
         resetColorRotation()
         let graph = new UndirectedGraph()
+        graph.debug = !clone;
         let [allNodesStr, allEdgesStr] = string.split("~")
         let deserializedNodes = []
         if (allNodesStr) {
@@ -77,7 +80,7 @@ class UndirectedGraph extends Graph {
                 graph.insertNode(node)
             }
         }
-        console.log(allEdgesStr)
+        
         if (allEdgesStr) {
             let serializedEdges = allEdgesStr.split(".")
             serializedEdges.splice(-1, 1)
@@ -100,7 +103,7 @@ class UndirectedGraph extends Graph {
     }
 
     clone () {
-        return UndirectedGraph.deserialize(this.serialize())
+        return UndirectedGraph.deserialize(this.serialize(), true)
     }
 }
 

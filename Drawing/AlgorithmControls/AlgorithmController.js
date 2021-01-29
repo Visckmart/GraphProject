@@ -1,4 +1,5 @@
 import UndirectedGraph from "../../Structure/UndirectedGraph.js";
+import { NodeHighlightType } from "../../Structure/Node.js"
 
 
 class Step {
@@ -179,6 +180,17 @@ class AlgorithmController {
         document.querySelector(".toolTray").style.display = 'unset'
 
         this.hide()
+
+        // Remover os destaques
+        for (let node of this.graphView.structure.nodes()) {
+            node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        }
+        
+        for (let [edge, , ] of this.graphView.structure.uniqueEdges()) {
+            edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        }
     }
 }
 

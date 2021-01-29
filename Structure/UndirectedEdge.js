@@ -148,13 +148,13 @@ export class UndirectedEdge extends Edge {
     }
 
     static deserialize(serializedEdge) {
-        const edgeDeserializationFormat = /([a-zA-Z]+)(-.*)?/i;
+        const edgeDeserializationFormat = /([a-zA-Z]+)-?(.*)?/i;
         let matchResult = serializedEdge.match(edgeDeserializationFormat);
         if (matchResult == undefined) return;
         const [_, label, serializedHighlights] = matchResult;
         let highlights;
         if (serializedHighlights != null) {
-            highlights = deserializeHighlights(highlights)
+            highlights = deserializeHighlights(serializedHighlights)
         }
         let edge = new UndirectedEdge(label, highlights)
         return edge
