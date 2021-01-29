@@ -191,6 +191,22 @@ class GraphView {
         }
         return detectedNodes;
     }
+    getDistanceOf(A, B) {
+        return Math.sqrt(Math.pow(Math.abs(B.x-A.x), 2) + Math.pow(Math.abs(B.y-A.y), 2))
+    }
+    checkEdgeCollision(pos) {
+        // console.log(pos)
+        const eps = 1
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            // console.log("e", edge)
+            let lineLength = this.getDistanceOf(nodeA.pos, nodeB.pos)
+            let distA = this.getDistanceOf(pos, nodeA.pos)
+            let distB = this.getDistanceOf(pos, nodeB.pos)
+            if (distA + distB >= lineLength-eps && distA + distB <= lineLength + eps) {
+                return edge
+            }
+        }
+    }
 
     getNodesWithin(initialPos, finalPos) {
         let leftmost   = Math.min(initialPos.x, finalPos.x)

@@ -76,8 +76,9 @@ export class Node {
     constructor(x, y, label, index = null, oColor = null, highlights = null) {
 
         this._initialTime = window.performance.now();
-        this.index = index ?? globalNodeIndex++;
-        this._originalcolor = oColor ?? nodeColorList[getColorRotation() % nodeColorList.length];
+        this.index = index ?? globalNodeIndex;
+        let nextColor = getColorRotation()
+        this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
         this._breatheSettings = {
             speed: 0.15,
             amplitude: 1.5,
@@ -98,6 +99,7 @@ export class Node {
         }
         
         this.highlights = highlights ?? new Set();
+        globalNodeIndex++;
     }
 
     get color() {

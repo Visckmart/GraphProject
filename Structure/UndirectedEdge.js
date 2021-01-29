@@ -1,7 +1,7 @@
 import Edge from "./Edge.js";
 import { NodeHighlightType, prepareHighlightsForSharing, deserializeHighlights } from "../Structure/Node.js"
 import {canvas, ctx} from "../Drawing/General.js";
-console.log(canvas.width, canvas.height)
+
 export class UndirectedEdge extends Edge {
     constructor(label, highlights = null) {
         super(label);
@@ -53,7 +53,7 @@ export class UndirectedEdge extends Edge {
                 break
             case NodeHighlightType.ALGORITHM_FOCUS:
                 ctx.save()
-                ctx.lineWidth = 8
+                ctx.lineWidth = 9
                 ctx.strokeStyle = "#2121C8";
                 ctx.setLineDash([]);
 
@@ -78,7 +78,7 @@ export class UndirectedEdge extends Edge {
 
             case NodeHighlightType.ALGORITHM_FOCUS2:
                 ctx.save()
-                ctx.lineWidth = 8
+                ctx.lineWidth = 9
                 ctx.strokeStyle = "#528FFF";
                 ctx.setLineDash([]);
 

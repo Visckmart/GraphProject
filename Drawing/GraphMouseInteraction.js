@@ -1,4 +1,5 @@
 import { Tool } from "./General.js"
+import { NodeHighlightType } from "../Structure/Node.js"
 
 class GraphMouseHandler {
     
@@ -64,6 +65,7 @@ class GraphMouseHandler {
         this.refreshCursorStyle()
     }
 
+    edgeColision = null
     mouseDragEvent(mouseEvent) {
         // Eventos de mouse desabilitados
         if(!this._enabled)
@@ -74,7 +76,14 @@ class GraphMouseHandler {
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         // console.log(this.selection.temporarySelection)
-
+        let e = this.graphView.checkEdgeCollision(pos)
+        if (this.edgeColision) {
+            this.edgeColision.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        }
+        this.edgeColision = e
+        if (e) {
+            e.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        }
         // Se não for um clique do botão esquerdo, ignoramos
         if (mouseEvent.buttons == 0 || mouseEvent.button != 0 || mouseEvent.buttons == 2) {
             this.refreshCursorStyle();
