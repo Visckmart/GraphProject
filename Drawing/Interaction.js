@@ -19,11 +19,28 @@ for(let element of document.querySelector("#tool_tray").children)
     }
 }
 
+let serialTextarea = document.getElementById("serializationText")
+serialTextarea.onkeypress = function(event) {
+    if (event.key == "Enter") {
+        g.structure = UndirectedGraph.deserialize(serialTextarea.value);
+        event.preventDefault();
+    }
+}
+let exportButton = document.getElementById("export")
+exportButton.onclick = function () {
+    serialTextarea.value = g.structure.serialize()
+}
+
+let importButton = document.getElementById("import")
+importButton.onclick = function () {
+    g.structure = UndirectedGraph.deserialize(serialTextarea.value)
+}
 function deserializeURL() {
     const urlParams = new URLSearchParams(location.search);
-    if(urlParams.has("graph") && urlParams.has("graph") != "") {
+    if(urlParams.has("graph") && urlParams.get("graph") != "") {
         console.log("graph", urlParams.get("graph"))
         g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))   
+        serialTextarea.value = urlParams.get("graph")
     } else {
         g.structure = new UndirectedGraph();
     }

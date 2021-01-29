@@ -106,7 +106,7 @@ canvas {
 }*/
 
 
-select {
+select, textarea {
   margin-left: 0pt;
   width: 150pt;
 }
