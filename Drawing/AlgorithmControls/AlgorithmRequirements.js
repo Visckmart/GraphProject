@@ -37,8 +37,7 @@ export class Requirement {
                             resolve(clickedNodes[0])
                         }
                     }
-                    this.inputHandler.canvas.addEventListener("mouseup",
-                        (event) => handler(event))
+                    this.inputHandler.canvas.addEventListener("mouseup",handler)
                     break
             }
         })
