@@ -180,6 +180,7 @@ class AlgorithmController {
         document.querySelector(".toolTray").style.display = 'unset'
 
         this.hide()
+        this.graphView.structure.debug = true
 
         // Remover os destaques
         for (let node of this.graphView.structure.nodes()) {
