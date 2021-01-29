@@ -1,5 +1,7 @@
 import UndirectedGraph from "../../Structure/UndirectedGraph.js";
 import { NodeHighlightType } from "../../Structure/Node.js"
+import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
+import {Requirement} from "./AlgorithmRequirements.js";
 
 
 class Step {
@@ -12,6 +14,8 @@ class Step {
 class AlgorithmController {
     constructor(graphView, steps = []) {
         this.steps = []
+        this.requirements = []
+
         this.graphView = graphView
         this.initialGraph = graphView.structure
 
@@ -29,7 +33,9 @@ class AlgorithmController {
         this.progressBar.setAttribute("min", "0")
         this.progressBar.setAttribute("max", this.numberOfSteps.toString())
 
-        this.initializeControls()
+
+        // Instanciando handler de inputs
+        this.inputHandler = new AlgorithmInputHandler(this)
 
         this.progress = 0
         this.hide()
@@ -39,6 +45,22 @@ class AlgorithmController {
         return this.steps.length
     }
 
+    //Status de bloqueio
+    _blocked = false
+
+    get blocked() {
+        return this._blocked
+    }
+    set blocked(value) {
+        this._blocked = value
+        if(value) {
+            this.progressBar.setAttribute("disabled", "true")
+        } else {
+            this.progressBar.removeAttribute("disabled")
+        }
+    }
+
+
     //#region Comportamento de progresso
     // Etapa atual
     _progress = 0
@@ -46,6 +68,10 @@ class AlgorithmController {
         return this._progress
     }
     set progress(value) {
+        if(this.blocked){
+            return
+        }
+
         if(value >= 0 && value <= this.numberOfSteps)
         {
             this._progress = value
@@ -75,6 +101,10 @@ class AlgorithmController {
         return this._playing
     }
     set playing(value) {
+        if(this.blocked){
+            return
+        }
+
         if(value) {
             this.playButton.style.display = this.playButton.style.display = 'none'
             this.stopButton.style.display = this.stopButton.style.display = 'block'
@@ -109,40 +139,6 @@ class AlgorithmController {
     }
     //#endregion
 
-    // Inicializa as funcionalidades dos elementos HTML dos controles
-    initializeControls() {
-        this.playButton.addEventListener("click", () => {
-            this.playButton.style.display = this.playButton.style.display === 'none' ? 'block' : 'none'
-            this.stopButton.style.display = this.stopButton.style.display === 'none' ? 'block' : 'none'
-
-            this.playing = true
-        })
-        this.stopButton.addEventListener("click", () => {
-            this.playing = false
-        })
-
-        this.forwardButton.addEventListener("click", () => {
-            this.playing = false
-            this.progress += 1
-        })
-
-        this.backButton.addEventListener("click", () => {
-            this.playing = false
-            this.progress -= 1
-        })
-
-        this.exitButton.addEventListener("click", () => this.finish())
-
-        this.progressBar.addEventListener("change", () => {
-            this.playing = false
-            this.progress = this.progressBar.value
-        })
-        this.progressBar.addEventListener("input", () => {
-            this.playing = false
-            this.progress = this.progressBar.value
-        })
-    }
-
     // Esconde a barra de play
     hide() {
         this.container.style.display = 'none'
@@ -153,22 +149,43 @@ class AlgorithmController {
         this.container.style.display = 'flex'
     }
 
+    // Adiciona um novo requisito
+    addRequirement(type, message, callback) {
+        let requirement = new Requirement(this.inputHandler, type, message, callback)
+        this.requirements.push(requirement)
+    }
+
     // Adiciona uma nova etapa
     addStep(graph, message) {
         this.steps.push(new Step(graph, message))
         this.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
     }
 
+    async resolveRequirements() {
+        this.blocked = true
+        for(let requirement of this.requirements) {
+            this.message.textContent = requirement.message
+            await requirement.handle()
+        }
+        if(this.steps.length > 0)
+        {
+            this.message.textContent = this.steps[0].message
+        }
+        this.blocked = false
+    }
+
     // Inicializa a demonstração do algoritmo
-    ready() {
+    async ready() {
         this.graphView.interactionHandler.mouse.disable()
         this.graphView.interactionHandler.keyboard.disable()
 
         document.querySelector(".toolTray").style.display = 'none'
 
         this.show()
-        this.progress = 0
         this.playing = false
+        await this.resolveRequirements()
+        this.progress = 0
+        this.graphView.redrawGraph()
     }
 
 

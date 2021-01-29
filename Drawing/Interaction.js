@@ -66,14 +66,14 @@ clear.onclick = function() {
 
 //DEBUG
 let runAlgorithmButton = document.getElementById("run_algorithm")
-runAlgorithmButton.onclick = () => {
+runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
     let firstNode = g.structure.nodes().next()
     console.log("Initial node is", firstNode)
 
     BFS(algorithmController, firstNode.value)
     console.log(algorithmController.steps)
-    algorithmController.ready()
+    await algorithmController.ready()
 
     runAlgorithmButton.onclick = null
 }

@@ -229,11 +229,6 @@ class GraphMouseHandler {
 
 
     getMousePos(mouseEvent) {
-        // Eventos de mouse desabilitados
-        if(!this._enabled)
-        {
-            return
-        }
 
         var canvasRect = this.graphView.canvas.getBoundingClientRect();
         return {
