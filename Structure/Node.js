@@ -3,7 +3,7 @@ import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
 
 export const regularNodeRadius = 28;
 const nodeColorList = [
-    "#1E90FF", "#32CD32",
+    "#32CD32",
     "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
 ]
 
@@ -129,6 +129,9 @@ export class Node {
         ctx.strokeStyle = nodeBorderColor;
 
         ctx.beginPath();
+        ctx.fillStyle = transparentLabelGradient;
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 8;
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2*Math.PI);
         ctx.fill();
         ctx.stroke();
@@ -141,7 +144,7 @@ export class Node {
         }
 
         // Draw label
-        this._drawLabel(nodeLabeling)
+        this._drawLabel(nodeLabeling, this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) ? "#528FFF" : this.color)
 
         return maxFPSRequest;
     }
@@ -176,12 +179,12 @@ export class Node {
                 // Pisca o nó
                 let twinkleTime = window.performance.now()/500
                 let whiteLayerAlpha = Math.abs(Math.sin(twinkleTime)) - 0.7
-                ctx.fillStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
-                ctx.fill()
+                ctx.strokeStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
+                ctx.stroke()
 
                 // Borda clara
-                ctx.strokeStyle = "#2121C8"
-                ctx.lineWidth = this.radius/5
+                ctx.strokeStyle = "#528FFF"
+                ctx.lineWidth = 10
                 
                 // Raio do tracejado
                 let lightBorderRadius = this.radius
@@ -196,9 +199,9 @@ export class Node {
         }
     }
 
-    _drawLabel(nodeLabeling) {
+    _drawLabel(nodeLabeling, color) {
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = transparentLabelGradient;
+        ctx.fillStyle = color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;

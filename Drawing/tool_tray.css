@@ -7,6 +7,7 @@
   margin: 0 auto;
   transition: bottom ease-in-out 150ms;
   width: 65%;
+  /*background-color: green;*/
 }
 
 /* Puxador */
@@ -19,6 +20,7 @@
   max-width: 10vw;
   border-top-left-radius: 5pt;
   border-top-right-radius: 5pt;
+  /*background-color: red;*/
 }
 
 .toolTrayCaretUp, .toolTrayCaretDown {
@@ -53,46 +55,60 @@
 #tray:not(:target) > .toolTrayTab > .toolTrayCaretDown {
   display: block;
 }
+
+
 .toolTrayBody {
   width: 100%;
-  height: 70pt;
+  /*height: 70pt;*/
   background-color: rgba(0,0,0,0.4);
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: start;
+  align-items: stretch;
+  /*align-content: center;*/
+  justify-content: space-between;
   column-gap: 20px;
-  border-top-right-radius: 5pt;
-  padding: 10pt;
+  border-top-right-radius: 8pt;
+  padding: 10pt 5pt;
   overflow: visible;
+  font-size: 11pt;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  /*background-color: blue;*/
+  /*padding-bottom: 0;*/
 }
 
-.toolTrayBody > input {
+.toolTrayBody > div > input {
   display: none;
+  background-color: blue;
 }
-
-.toolTrayBody > input:checked+label > *:first-child, .toolTrayBody > button:active > *:first-child {
-  background-color: white;
-  color: black;
+#leftItems {
+  /*background-color: blue;*/
+  display: flex;
+  flex-direction: row;
 }
-
-.toolTrayBody > label, .toolTrayBody > button {
+#rightItems {
+  /*background-color: red;*/
+  display: flex;
+  flex-direction: row;
+}
+.toolTrayBody > div > label {
   cursor: pointer;
   color: white;
   text-decoration: none;
-  width: fit-content;
-  height: fit-content;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: none;
-  outline: none;
-  border: none;
+
+  /*background-color: lightblue;*/
+  margin-left: 4pt;
+  margin-right: 4pt;
 }
 
-.toolTrayBody > label > *:first-child, .toolTrayBody > button > *:first-child{
+.icon {
   border: 2pt solid white;
-  border-radius: 4pt;
+  border-radius: 5pt;
   min-width: 40px;
   max-width: 40px;
   min-height: 40px;
@@ -102,11 +118,21 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /*background-color: orangered;*/
 }
 
-.toolTrayBody > label > *:nth-child(2), .toolTrayBody > button > *:nth-child(2){
-  max-width: 80px;
-  width: 80px;
+.icon:hover {
+  background-color: #FFF4;
+}
+
+.icon:active, .toolTrayBody > div > input:checked+label > *:first-child {
+  background-color: white;
+  color: black;
+}
+
+.name {
+  margin: 0;
+  margin-top: 5pt;
   text-align: center;
-  user-select: none;
+  /*background-color: red;*/
 }

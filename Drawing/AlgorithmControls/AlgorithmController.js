@@ -202,7 +202,7 @@ class AlgorithmController {
 
         document.querySelector(".toolTray").style.display = 'none'
         this.show()
-        this.playing = false
+        this.playing = true
         this.progress = 0
 
         await algorithm(this)
@@ -210,8 +210,9 @@ class AlgorithmController {
 
     // Inicializa a demonstração do algoritmo
     ready() {
-        this.playing = false
+        this.playing = true
         this.progress = 0
+        this.progressBar.value = 0
         this.graphView.redrawGraph()
     }
 

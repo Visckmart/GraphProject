@@ -31,7 +31,7 @@ function getRandomInt(min, max) {
 
 // Graph
 class GraphView {
-
+    overlay = false;
     constructor (canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
@@ -169,6 +169,7 @@ class GraphView {
     }
 
     changeTool(tool) {
+        console.log(tool)
         this.primaryTool = tool
     }
 
@@ -353,6 +354,13 @@ class GraphView {
             this.selectionHandler.drawSelectionArea()
             this.requestHighFPS(HighFPSFeature.SELECTING, 90);
             // console.log(1)
+        }
+        
+        if (this.overlay) {
+            ctx.beginPath();
+            ctx.rect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#AAFA"
+            ctx.fill();
         }
     }
 

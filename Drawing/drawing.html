@@ -27,40 +27,42 @@
                     </a>
                 </div>
                 <div class="toolTrayBody" id="tool_tray">
-                    <input type="radio" name="tool" value="move" id="move_input" checked/>
-                    <label onclick="window.location='#'" for="move_input">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z"/>
-                            </svg>
-                        </div>
-                        <div>Mover</div>
-                    </label>
-                    <input type="radio" name="tool" value="connect" id="connect_input"/>
-                    <label onclick="window.location='#'" for="connect_input">
-                        <div>
-                        <span style="font-size: 2rem; margin-top: -1pt;">
-                            ⧟
-                        </span>
-                        </div>
-                        <div>Conectar</div>
-                    </label>
-                    <button onclick="window.location='#'" style="margin-left: auto;" value="disconnect_all">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
-                                <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
-                            </svg>
-                        </div>
-                        <div>Desconectar</div>
-                    </button>
-                    <button onclick="window.location='#'" value="connect_all">
-                        <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
-                            </svg>
-                        </div>
-                        <div>Conectar</div>
-                    </button>
+                    <div id="leftItems">
+                        <input type="radio" name="tool" value="move" id="move_input" checked/>
+                        <label for="move_input">
+                            <div class="icon">
+                                <span style="font-size: 25pt">•</span>
+                            </div>
+                           <p class="name">Nós</p>
+                        </label>
+                        <input type="radio" name="tool" value="connect" id="connect_input"/>
+                        <label for="connect_input">
+                            <div class="icon">
+                                <span style="font-size: 25pt; margin-top: -1pt;">⧟</span>
+                            </div>
+                            <p class="name">Arestas</p>
+                        </label>
+                    </div>
+                    <div id="rightItems">
+                        <input type="radio" name="feature" value="connect_all" id="connect_all_input"/>
+                        <label for="connect_all">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
+                                </svg>
+                            </div>
+                            <p class="name">Conectar</p>
+                        </label>
+                        <input type="radio" name="feature" value="disconnect" id="disconnect_all_input"/>
+                        <label for="disconnect_all">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
+                                    <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+                                </svg>
+                            </div>
+                            <p class="name">Apagar</p>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -119,19 +121,15 @@
                     </select>
                     <button id="run_algorithm">Run</button>
                 </p>
-                <p>Compartilhamento<br>
-                    <!-- <script type="text/javascript">
-                        function SelectAll(id)
-                        {
-                            document.getElementById(id).focus();
-                            document.getElementById(id).select();
-                        }
-                    </script> -->
-                    <textarea id="serializationText" rows=4>as asdf fdsa asdf</textarea>
-                    <br />
-                    <button id="export">Exportar</button>
-                    <button id="import">Importar</button>
+                <p>Exportar<br>
+                        <button style="margin-left: 0pt; margin-right: 2pt;" id="exportLink">Link</button>
+                        <button style="margin-right: 2pt;" id="exportFile">Arquivo</button>
+                        <button style="margin-right: 2pt;" id="exportText">Texto</button>
+                    <!-- </span> -->
                 </p>
+                <!-- <p>Importar<br>
+                    <button id="import">Importar</button>
+                </p> -->
             </div>
             <div id="NodeSettings" style="display: none;">
                 <h2>Nó</h2>
@@ -141,9 +139,6 @@
 
             <p><span id="dynamic"></span></p>
             <button id="share">Compartilhar</button>
-            <br/>
-            <br/>
-            <button id="clear">Limpar Grafo</button>
         </div>
     </div>
     <script>
