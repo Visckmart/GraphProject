@@ -1,5 +1,7 @@
 export const RequirementType = {
-    SELECT_NODE: "select_node"
+    SELECT_NODE: "select_node",
+    CREATE_NODE: "create_node",
+    CREATE_EDGE: "create_edge"
 }
 
 
@@ -20,25 +22,53 @@ export class Requirement {
         return new Promise((resolve, reject) => {
             switch (this.type) {
                 // Requisito de seleção de node
-                case RequirementType.SELECT_NODE:
+                case RequirementType.SELECT_NODE: {
                     this.inputHandler.changeCursorStyle("pointer")
                     let handler = (event) => {
                         let mousePos = this.inputHandler.getMousePos(this.inputHandler.canvas, event)
                         let clickedNodes =
                             this.inputHandler.graphView.getNodeIndexAt(mousePos)
-                        if(clickedNodes.length > 0) {
+                        if (clickedNodes.length > 0) {
                             this.inputHandler.changeCursorStyle(null)
 
                             // Remove o evento para evitar repetição
                             this.inputHandler.canvas.removeEventListener("mouseup", handler)
-                            // Chama o callback com o nó resolvido
+
+                            // Finaliza requisição
                             this.callback(clickedNodes[0])
-                            // Finaliza a Promise
                             resolve(clickedNodes[0])
                         }
                     }
-                    this.inputHandler.canvas.addEventListener("mouseup",handler)
+                    this.inputHandler.canvas.addEventListener("mouseup", handler)
                     break
+                }
+                // Requisito de criação de node
+                case RequirementType.CREATE_NODE: {
+                    this.inputHandler.changeCursorStyle("pointer")
+                    let handler = (event) => {
+                        let mousePos = this.inputHandler.getMousePos(this.inputHandler.canvas, event)
+                        let newNode = this.inputHandler.graphView.insertNewNodeAt(mousePos)
+                        if(newNode)
+                        {
+                            this.inputHandler.changeCursorStyle(null)
+
+                            // Remove o evento para evitar repetição
+                            this.inputHandler.canvas.removeEventListener("mouseup", handler)
+
+                            // Finaliza requisição
+                            this.callback(newNode)
+                            resolve(newNode)
+                        }
+                    }
+                    break
+                }
+                // Requisito de criação de aresta
+                // TODO: Implementar
+                case RequirementType.CREATE_EDGE:
+                    console.warn("REQUISITO NÃO IMPLEMENTADO")
+                    break
+                default:
+                    console.warn("REQUISITO NÃO SUPORTADO")
             }
         })
 
