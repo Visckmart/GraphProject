@@ -106,8 +106,17 @@ canvas {
   transition: all 0.2s;
 }*/
 
+body:-webkit-drag {
+    background-color:rgb(255,255,154)
+}
 
-select, textarea {
+select {
   margin-left: 0pt;
   width: 150pt;
+}
+
+textarea {
+  margin-left: 0pt;
+  width: 190pt;
+  resize: vertical;
 }
