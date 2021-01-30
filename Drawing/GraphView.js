@@ -169,6 +169,7 @@ class GraphView {
     }
 
     changeTool(tool) {
+        console.log(tool)
         this.primaryTool = tool
     }
 

@@ -6,17 +6,8 @@ import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import BFS from "../Algorithm/BFS.js";
 
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
-for(let element of document.querySelector("#tool_tray").children)
-{
-    if(element.tagName === "INPUT")
-    {
-        element.addEventListener("change", () => g.changeTool(element.value))
-    }
-
-    if(element.tagName === "BUTTON")
-    {
-        element.addEventListener("click", ToolRepository[element.value].bind(g))
-    }
+for(let element of document.querySelector("#tool_tray").getElementsByTagName("input")) {
+    element.addEventListener("change", () => g.changeTool(element.value))
 }
 
 let serialTextarea = document.getElementById("serializationText")
@@ -38,11 +29,9 @@ importButton.onclick = function () {
 function deserializeURL() {
     const urlParams = new URLSearchParams(location.search);
     if(urlParams.has("graph") && urlParams.get("graph") != "") {
-        console.log("graph", urlParams.get("graph"))
+        console.log("Deserializing graph " + urlParams.get("graph"))
         g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))   
         serialTextarea.value = urlParams.get("graph")
-    } else {
-        g.structure = new UndirectedGraph();
     }
     g.redrawGraph()
     g.updateAnimations()
@@ -58,11 +47,11 @@ share.onclick = function() {
     history.pushState(null, null, "?graph="+serialized)
 }
 
-let clearButton = document.getElementById("clear")
-clear.onclick = function() {
-    history.pushState(null, null, "?")
-    deserializeURL()
-}
+// let clearButton = document.getElementById("clear")
+// clear.onclick = function() {
+//     history.pushState(null, null, "?")
+//     deserializeURL()
+// }
 
 //DEBUG
 let runAlgorithmButton = document.getElementById("run_algorithm")
