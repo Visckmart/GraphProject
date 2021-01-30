@@ -97,7 +97,7 @@ export class Node {
         }
         
         this.highlights = highlights ?? new Set();
-        globalNodeIndex++;
+        globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
     }
 
     get color() {
@@ -127,6 +127,7 @@ export class Node {
         ctx.lineWidth = nodeBorderWidth;
         ctx.fillStyle = this.color;
         ctx.strokeStyle = nodeBorderColor;
+        ctx.setLineDash([]);
 
         ctx.beginPath();
         ctx.fillStyle = transparentLabelGradient;
@@ -160,7 +161,7 @@ export class Node {
 
                 // Raio do tracejado
                 // (A soma faz com que o tracejado fique do lado de fora do círculo)
-                let dashRadius = this.radius + ctx.lineWidth/2;
+                let dashRadius = this.radius + 4 + ctx.lineWidth/2;
                 // Circunferência do círculo (2π * r)
                 let circunference = 2*Math.PI * dashRadius;
 
@@ -179,6 +180,7 @@ export class Node {
                 // Pisca o nó
                 let twinkleTime = window.performance.now()/500
                 let whiteLayerAlpha = Math.abs(Math.sin(twinkleTime)) - 0.7
+                ctx.setLineDash([]);
                 ctx.strokeStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
                 ctx.stroke()
 
@@ -188,7 +190,6 @@ export class Node {
                 
                 // Raio do tracejado
                 let lightBorderRadius = this.radius
-                ctx.setLineDash([]);
                 if (lightBorderRadius > 0) {
                     ctx.beginPath();
                     ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);

@@ -148,10 +148,15 @@ export class UndirectedEdge extends Edge {
     }
 
     static deserialize(serializedEdge) {
-        const edgeDeserializationFormat = /([a-zA-Z]+)-?(.*)?/i;
+        const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
         let matchResult = serializedEdge.match(edgeDeserializationFormat);
-        if (matchResult == undefined) return;
+        if (matchResult == undefined) {
+            console.log("error deserializing", serializedEdge, matchResult)
+            return;
+        }
+        // console.log(1)
         const [_, label, serializedHighlights] = matchResult;
+        // console.log(label, serializedHighlights, serializedEdge)
         let highlights;
         if (serializedHighlights != null) {
             highlights = deserializeHighlights(serializedHighlights)

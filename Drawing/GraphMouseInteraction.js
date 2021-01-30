@@ -18,8 +18,10 @@ class GraphMouseHandler {
     set clickPosition(pos) {
         this._clickPosition = pos;
         this.clickedNode = this.graphView.getNodeIndexAt(this.clickPosition).pop()
+        this.clickedEdge = this.graphView.checkEdgeCollision(pos)
     }
     clickedNode = false;
+    clickedEdge = false;
     justClearedSelection = false;
     to = null;
     mostRecentNode = null;
@@ -42,6 +44,7 @@ class GraphMouseHandler {
         this.clickPosition = pos
         this.justClearedSelection = false;
         
+        // console.log(this.clickedEdge)
         // Caso um nó tenha sido clicado,
         if (this.clickedNode) {
             // console.log("Mouse down on node")
@@ -55,9 +58,18 @@ class GraphMouseHandler {
                     this.selection.selectNodeTemporarily(this.clickedNode)
                 }
             }
+        } else if (this.clickedEdge) {
+            if (this.selection.selectedEdges.includes(this.clickedEdge) == false) {
+                this.selection.clear()
+                if (this.graphView.primaryTool != Tool.MOVE) {
+                    this.selection.selectedEdges.push(this.clickedEdge)
+                    this.selection.selectedEdges = this.selection.selectedEdges
+                    this.selection.updateEdgesAppearance()
+                }
+            }
         } else {
             // console.log("Mouse down on background")
-            if (this.selection.hasSelectedNodes) {
+            if (this.selection.hasSelectedNodes || this.selection.selectedEdges.length > 0) {
                 this.justClearedSelection = true;
             }
             this.selection.clear()
@@ -80,11 +92,13 @@ class GraphMouseHandler {
         if (this.edgeColision) {
             this.edgeColision.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
         }
-        if (nodeHover.length == 0) {
-            let edgeHover = this.graphView.checkEdgeCollision(pos)
-            this.edgeColision = edgeHover
-            if (edgeHover) {
-                edgeHover.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        if (this.graphView.primaryTool == Tool.CONNECT) {
+            if (nodeHover.length == 0) {
+                let edgeHover = this.graphView.checkEdgeCollision(pos)
+                this.edgeColision = edgeHover
+                if (edgeHover) {
+                    edgeHover.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+                }
             }
         }
         // Se não for um clique do botão esquerdo, ignoramos

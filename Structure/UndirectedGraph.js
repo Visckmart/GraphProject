@@ -35,6 +35,7 @@ class UndirectedGraph extends Graph {
             return;
         }
         if (this.debug) {
+            // console.log(edge)
             debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
                 " até o nó " + nodeB.label, edge);
         }
@@ -80,7 +81,7 @@ class UndirectedGraph extends Graph {
                 graph.insertNode(node)
             }
         }
-        
+        console.log(allEdgesStr)
         if (allEdgesStr) {
             let serializedEdges = allEdgesStr.split(".")
             serializedEdges.splice(-1, 1)
@@ -89,7 +90,7 @@ class UndirectedGraph extends Graph {
                 let found = edgeStr.match(re);
                 if (found == undefined) continue;
                 const [_, nodeA, nodeB, edgeData] = found;
-
+                // console.log("graph edge", nodeA, nodeB, edgeData)
                 let ne = UndirectedEdge.deserialize(edgeData)
                 graph.insertEdge(
                     deserializedNodes.find(n => n.index === parseInt(nodeA)),

@@ -123,17 +123,19 @@ class GraphView {
 
     /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
     refreshInterfaceState() {
-        for(let element of document.querySelector("#tool_tray").children) {
+        for(let x of document.querySelector("#tool_tray").children) {
+            for (let element of x.children) {
             if(element.tagName === "INPUT" && element.value === this.primaryTool) {
                 element.click()
             }
+        }
         }
         this.interactionHandler.mouse.refreshCursorStyle()
     }
 
     // TODO: Organizar
-    refreshMenu(numberOfSelectedNodes) {
-        let settingsList = ["GraphSettings", "NodeSettings"]
+    refreshMenu(numberOfSelectedNodes, numberOfSelectedEdges) {
+        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings"]
         for (let settingsID of settingsList) {
             let s = document.getElementById(settingsID)
             s.style.display = "none"
@@ -142,6 +144,7 @@ class GraphView {
         if (numberOfSelectedNodes == 1 &&
             this.selectionHandler.temporarySelection === false &&
             !this.selectionHandler.drawingSelection) {
+            console.log("b")
             showSettings = document.getElementById("NodeSettings")
             let selectionHandler = this.selectionHandler
 
@@ -157,6 +160,17 @@ class GraphView {
             colorInput.oninput = function(input) {
                 selectionHandler.selectedNodes[0]._originalcolor = input.target.value
             }
+        } else if (numberOfSelectedEdges == 1 && !this.selectionHandler.drawingSelection) {
+            // console.log("a")
+            showSettings = document.getElementById("EdgeSettings")
+            let selectionHandler = this.selectionHandler
+
+            let labelInput = showSettings.getElementsByClassName("label")[0]
+            labelInput.value = this.selectionHandler.selectedEdges[0].label
+            labelInput.oninput = function(input) {
+                selectionHandler.selectedEdges[0].label = input.target.value
+            }
+            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
@@ -169,7 +183,6 @@ class GraphView {
     }
 
     changeTool(tool) {
-        console.log(tool)
         this.primaryTool = tool
     }
 
@@ -229,12 +242,13 @@ class GraphView {
     }
 
     getEdgesWithin(initialPos, finalPos) {
+        // console.trace()
         let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos))
 
-        let edgesWithin = new Set()
+        let edgesWithin = []
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-                edgesWithin.add(edge)
+                edgesWithin.push(edge)
                 edge.selected = true
             }
         }

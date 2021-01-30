@@ -75,7 +75,7 @@ export default class GraphSelection {
             this.temporarySelection = false;
         }
         this.updateNodesAppearance()
-        this.graphView.refreshMenu(this.selectedNodes.length)
+        this.graphView.refreshMenu(this.selectedNodes.length, this.selectedEdges.length)
     }
     /* Registra nós selecionados na última seleção múltipla */
     _selectedEdges = [];
@@ -86,7 +86,7 @@ export default class GraphSelection {
         this._selectedEdges = selectedEdges
 
         this.updateEdgesAppearance()
-        // this.graphView.refreshMenu(this.selectedNodes.length)
+        this.graphView.refreshMenu(this.selectedNodes.length, this.selectedEdges.length)
     }
     // selectedEdges = new Set()
 
@@ -116,7 +116,7 @@ export default class GraphSelection {
 
     clear() {
         this.selectedNodes = [];
-        this.selectedEdges = new Set;
+        this.selectedEdges = [];
     }
 
     get hasSelectedNodes() {
@@ -131,7 +131,7 @@ export default class GraphSelection {
     set temporarySelection(temp) {
         this._temporarySelection = temp;
         this.updateNodesAppearance()
-        this.graphView.refreshMenu(this.selectedNodes.length)
+        this.graphView.refreshMenu(this.selectedNodes.length, this.selectedEdges.length)
     }
 
     selectNodeTemporarily(node) {
@@ -158,7 +158,7 @@ export default class GraphSelection {
 
     updateEdgesAppearance() {
         for (let [edge, a, b] of this.graphView.structure.edges()) {
-            if (this.selectedEdges.has(edge)) {
+            if (this.selectedEdges.includes(edge)) {
                 edge.addHighlight(NodeHighlightType.SELECTION)
             } else {
                 edge.removeHighlight(NodeHighlightType.SELECTION)
