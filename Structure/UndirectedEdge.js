@@ -1,7 +1,9 @@
 import Edge from "./Edge.js";
 import { NodeHighlightType, prepareHighlightsForSharing, deserializeHighlights } from "../Structure/Node.js"
 import {canvas, ctx} from "../Drawing/General.js";
-
+const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+transparentLabelGradient.addColorStop(0, "#E5E0FF");
+transparentLabelGradient.addColorStop(1, "#FFE0F3");
 export class UndirectedEdge extends Edge {
     constructor(label, highlights = null) {
         super(label);
@@ -12,7 +14,7 @@ export class UndirectedEdge extends Edge {
          { x: xEnd,   y: yEnd   }) {
         if(!this.isSelected) {
             ctx.save()
-            ctx.lineWidth = 7
+            ctx.lineWidth = 8
             ctx.strokeStyle = "#888";
             ctx.setLineDash([]);
 
@@ -90,6 +92,23 @@ export class UndirectedEdge extends Edge {
 
                 ctx.restore()
                 break
+            case NodeHighlightType.FEATURE_PREVIEW:
+                ctx.save()
+
+                ctx.setLineDash([]);
+                ctx.strokeStyle = transparentLabelGradient;
+                ctx.lineWidth = 9
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+                ctx.lineWidth = 7
+                // ctx.setLineDash([8,8]);
+                ctx.strokeStyle = "#FF8080";
+                ctx.stroke();
+
+                ctx.restore()
+                break
         }
     }
 
@@ -148,10 +167,15 @@ export class UndirectedEdge extends Edge {
     }
 
     static deserialize(serializedEdge) {
-        const edgeDeserializationFormat = /([a-zA-Z]+)-?(.*)?/i;
+        const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
         let matchResult = serializedEdge.match(edgeDeserializationFormat);
-        if (matchResult == undefined) return;
+        if (matchResult == undefined) {
+            console.log("error deserializing", serializedEdge, matchResult)
+            return;
+        }
+        // console.log(1)
         const [_, label, serializedHighlights] = matchResult;
+        // console.log(label, serializedHighlights, serializedEdge)
         let highlights;
         if (serializedHighlights != null) {
             highlights = deserializeHighlights(serializedHighlights)

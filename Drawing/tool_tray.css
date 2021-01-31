@@ -106,13 +106,15 @@
   margin-right: 4pt;
 }
 
+:root {
+  --iconSize: 32.5pt;
+}
 .icon {
-  border: 2pt solid white;
-  border-radius: 5pt;
-  min-width: 40px;
-  max-width: 40px;
-  min-height: 40px;
-  max-height: 40px;
+  border-radius: 8pt;
+  min-width:  var(--iconSize);
+  max-width:  var(--iconSize);
+  min-height: var(--iconSize);
+  max-height: var(--iconSize);
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -121,14 +123,31 @@
   /*background-color: orangered;*/
 }
 
-.icon:hover {
+.tool-icon {
+  border: 2pt solid white;
+}
+
+.tool-icon:hover {
   background-color: #FFF4;
 }
 
-.icon:active, .toolTrayBody > div > input:checked+label > *:first-child {
+.tool-icon:active, .toolTrayBody > div > input:checked+label > *:first-child {
   background-color: white;
   color: black;
 }
+
+.feature-icon {
+  border: 2.5pt solid white;
+}
+
+.selected {
+  border: 2pt dashed white;
+  border-radius: 10pt;
+}
+
+/*.selected > svg {
+  fill: #5C87FF;
+}*/
 
 .name {
   margin: 0;

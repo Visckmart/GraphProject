@@ -226,6 +226,7 @@ class AlgorithmController {
 
         this.hide()
         this.graphView.structure.debug = true
+        this.playing = false
 
         // Remover os destaques
         for (let node of this.graphView.structure.nodes()) {

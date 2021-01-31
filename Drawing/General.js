@@ -38,7 +38,8 @@ export const Tool = {
     MOVE: "move",
     CONNECT: "connect",
     CONNECT_ALL: "connect_all",
-    DISCONNECT_ALL: "disconnect_all"
+    DISCONNECT_ALL: "disconnect_all",
+    DELETE_ALL: "delete_all"
 }
 export const HighFPSFeature = {
     MOVING: "moving",

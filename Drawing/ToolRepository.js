@@ -20,9 +20,20 @@ export default {
         } else {
             nodesToDisconnect = this.structure.nodes()
         }
-
+        console.group("Desconectar " + nodesToDisconnect.length + " nós")
         for (let node of nodesToDisconnect) {
             this.structure.removeAllEdgesFromNode(node)
         }
+        console.groupEnd()
+    },
+
+    [Tool.DELETE_ALL]: function () {
+        for (let node of this.selectionHandler.selectedNodes) {
+            this.structure.removeNode(node)
+        }
+        for (let edge of this.selectionHandler.selectedEdges) {
+            this.structure.removeEdge(edge)
+        }
+        this.selectionHandler.clear()
     }
 }
