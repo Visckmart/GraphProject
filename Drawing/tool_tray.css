@@ -140,6 +140,15 @@
   border: 2.5pt solid white;
 }
 
+.selected {
+  border: 2pt dashed white;
+  border-radius: 10pt;
+}
+
+/*.selected > svg {
+  fill: #5C87FF;
+}*/
+
 .name {
   margin: 0;
   margin-top: 5pt;

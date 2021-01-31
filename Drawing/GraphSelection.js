@@ -154,6 +154,18 @@ export default class GraphSelection {
                 node.removeHighlight(NodeHighlightType.SELECTION)
             }
         }
+        
+        if (this.selectedNodes.length > 0 || this.selectedEdges.length > 0) {
+            for (let f of document.getElementsByClassName("feature-icon")) {
+                f.classList.add("selected")
+            }
+        } else {
+            for (let f of document.getElementsByClassName("selected")) {
+                // console.log(f.classList.value)
+                f.classList.remove("selected")
+                // console.log(f.classList.value)
+            }
+        }
     }
 
     updateEdgesAppearance() {
