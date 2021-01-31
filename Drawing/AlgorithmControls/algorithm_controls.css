@@ -27,7 +27,7 @@
     opacity: 0.3;
 }
 
-#algorithmContainer[disabled] input, #algorithmContainer[disabled] div > a{
+#algorithmContainer[disabled] input, #algorithmContainer[disabled] div > a, #algorithmContainer[disabled] div > div > span{
     cursor: default;
 }
 
@@ -45,6 +45,29 @@
     cursor: pointer;
     margin-left: 5pt;
     margin-right: 5pt;
+}
+
+#algorithmSpeed {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#speedButtons {
+    display: flex;
+    flex-direction: column;
+    margin-right: 5px;
+}
+
+#speedButtons > span {
+    line-height: 10px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+#speedGauge {
+    width: 15px;
 }
 
 #algorithmProgress {

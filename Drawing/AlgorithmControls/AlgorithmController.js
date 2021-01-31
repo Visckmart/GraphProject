@@ -20,16 +20,19 @@ class AlgorithmController {
         this.initialGraph = graphView.structure
 
         // Capturando elementos do HTML
-        this.controls = document.querySelector("#algorithmControls")
+        this.controls = document.getElementById("algorithmControls")
         this.container = document.getElementById("algorithmContainer")
-        this.messageContainer = document.querySelector("#messageTray")
-        this.message = document.querySelector("#messageTrayText")
-        this.progressBar = document.querySelector("#algorithmProgress")
-        this.playButton = document.querySelector("#play_button")
-        this.stopButton = document.querySelector("#stop_button")
-        this.backButton = document.querySelector("#back_button")
-        this.forwardButton = document.querySelector("#forward_button")
-        this.exitButton = document.querySelector("#exit_button")
+        this.messageContainer = document.getElementById("messageTray")
+        this.message = document.getElementById("messageTrayText")
+        this.speedController = document.getElementById("speedGauge")
+        this.speedUpButton = document.getElementById("speedUp_button")
+        this.speedDownButton = document.getElementById("speedDown_button")
+        this.progressBar = document.getElementById("algorithmProgress")
+        this.playButton = document.getElementById("play_button")
+        this.stopButton = document.getElementById("stop_button")
+        this.backButton = document.getElementById("back_button")
+        this.forwardButton = document.getElementById("forward_button")
+        this.exitButton = document.getElementById("exit_button")
 
         this.progressBar.setAttribute("min", "0")
         this.progressBar.setAttribute("max", this.numberOfSteps.toString())
@@ -39,6 +42,7 @@ class AlgorithmController {
         this.inputHandler = new AlgorithmInputHandler(this)
 
         this.progress = 0
+        this.speed = 0
         this.hide()
     }
 
@@ -77,7 +81,7 @@ class AlgorithmController {
             this.message.removeAttribute("highlighted")
         }
     }
-
+    //#endregion
 
     //#region Comportamento de progresso
     // Etapa atual
@@ -88,6 +92,11 @@ class AlgorithmController {
     set progress(value) {
         if(this.isBlocked){
             return
+        }
+
+        if(value === this.numberOfSteps - 1)
+        {
+            this.playing = false
         }
 
         if(value >= 0 && value < this.numberOfSteps)
@@ -140,7 +149,7 @@ class AlgorithmController {
                     {
                         this.playing = false
                     }
-                }, 1000)
+                }, 1000 / this.speedMultiplier)
             }
         }
         else {
@@ -154,6 +163,36 @@ class AlgorithmController {
         }
 
         this._playing = value
+    }
+    //#endregion
+
+    //#region Comportamento de velocidade de reprodução
+    // Velocidade de reprodução
+    // Valor de -3 a 3. -3 implica em um multiplicador 1/(2^3) e 3 implica em um multiplicador 2^3
+    _speed = 0
+    get speed() {
+        return this._speed
+    }
+    get speedMultiplier() {
+        return 2 ** this.speed
+    }
+    set speed(value) {
+        if(this.isBlocked)
+        {
+            return
+        }
+        if(value >= -2 && value <= 2) {
+            this._speed = value
+
+            if(this.playing)
+            {
+                clearInterval(this._interval)
+                this._interval = null
+                this.playing = true
+            }
+
+            this.speedController.textContent = this.speedMultiplier
+        }
     }
     //#endregion
 
