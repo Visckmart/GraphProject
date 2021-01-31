@@ -20,9 +20,10 @@ export default {
         } else {
             nodesToDisconnect = this.structure.nodes()
         }
-
+        console.group("Desconectar " + nodesToDisconnect.length + " nós")
         for (let node of nodesToDisconnect) {
             this.structure.removeAllEdgesFromNode(node)
         }
+        console.groupEnd()
     }
 }

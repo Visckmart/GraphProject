@@ -118,6 +118,10 @@ class GraphView {
         this.refreshInterfaceState()
     }
 
+    changeTool(tool) {
+        this.primaryTool = tool
+    }
+
 
     // Interaction
 
@@ -180,10 +184,6 @@ class GraphView {
 
     selectAllNodes() {
         this.selectionHandler.selectedNodes = Array.from(this.structure.nodes())
-    }
-
-    changeTool(tool) {
-        this.primaryTool = tool
     }
 
     // Node Handling

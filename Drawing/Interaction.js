@@ -7,18 +7,28 @@ import BFS from "../Algorithm/BFS.js";
 
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 for(let element of document.querySelector("#tool_tray").getElementsByTagName("input")) {
-    element.addEventListener("change", () => g.changeTool(element.value))
+    if (element.name == "tool") {
+        element.addEventListener("change", () => g.changeTool(element.value))
+    } else if (element.name == "feature") {
+        element.addEventListener("change", ToolRepository[element.value].bind(g))
+    }
 }
 
 canvas.ondrop = function(ev) {
-    console.log("Dropped file", ev.dataTransfer.items[0]);
-    let droppedFile = ev.dataTransfer.items[0].getAsFile();
-    var reader = new FileReader();
-    reader.onload = function (evt) {
-        console.log("Read content:", evt.target.result)
-        g.structure = UndirectedGraph.deserialize(evt.target.result)  
+    console.log("Dropped", ev.dataTransfer.items[0]);
+    if (ev.dataTransfer.items[0].kind == "file") {
+        let droppedFile = ev.dataTransfer.items[0].getAsFile();
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            console.log("Read content:", evt.target.result)
+            g.structure = UndirectedGraph.deserialize(evt.target.result)  
+        }
+        reader.readAsText(droppedFile, "UTF-8");
+    } else {
+        ev.dataTransfer.items[0].getAsString(function(a) {
+            g.structure = UndirectedGraph.deserialize(a)
+        })
     }
-    reader.readAsText(droppedFile, "UTF-8");
     ev.preventDefault();
     g.overlay = false;
 };

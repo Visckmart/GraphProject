@@ -81,7 +81,7 @@ class UndirectedGraph extends Graph {
                 graph.insertNode(node)
             }
         }
-        console.log(allEdgesStr)
+        
         if (allEdgesStr) {
             let serializedEdges = allEdgesStr.split(".")
             serializedEdges.splice(-1, 1)
@@ -99,7 +99,7 @@ class UndirectedGraph extends Graph {
                 )
             }
         }
-        
+        console.info("Grafo desserializado com sucesso.")
         return graph
     }
 

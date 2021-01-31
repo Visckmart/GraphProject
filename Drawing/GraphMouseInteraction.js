@@ -46,7 +46,7 @@ class GraphMouseHandler {
         
         // console.log(this.clickedEdge)
         // Caso um nó tenha sido clicado,
-        if (this.clickedNode) {
+        if (this.clickedNode && mouseEvent.button == 0) {
             // console.log("Mouse down on node")
             // E ele NÃO está selecionado,
             if (this.selection.selectedNodes.includes(this.clickedNode) == false) {
