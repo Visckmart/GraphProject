@@ -19,10 +19,17 @@ for(let element of document.querySelector("#tool_tray").getElementsByTagName("in
 }
 for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon")) {
     x.addEventListener("mouseenter", function (e) {
-        // console.log(x.parentElement.previousElementSibling.value)
+        let nodesToDisconnect;
+        if (g.selectionHandler.selectedNodes.length > 0) {
+            nodesToDisconnect = g.selectionHandler.selectedNodes;
+        } else {
+            nodesToDisconnect = Array.from(g.structure.nodes())
+        }
         if (x.parentElement.previousElementSibling.value == "disconnect_all") {
-            for (let [edge, ,] of g.structure.uniqueEdges()) {
-                edge.addHighlight(NodeHighlightType.FEATURE_PREVIEW)
+            for (let [edge, nodeA, nodeB] of g.structure.uniqueEdges()) {
+                if (nodesToDisconnect.includes(nodeA) || nodesToDisconnect.includes(nodeB)) {
+                    edge.addHighlight(NodeHighlightType.FEATURE_PREVIEW)
+                }
             }
         }
     })
