@@ -126,7 +126,12 @@ class GraphMouseHandler {
                         this.selection.selectedNodes.length == 1,
                         "Seleção temporária deveria conter só 1 nó."
                     )
-                    // Mova o nó para o ponteiro do mouse
+                    // Considere a posição inicial para que o centro do nó
+                    // não pule para o mouse
+                    let originalNodePos = this.selection.selectedOriginalPos[0]
+                    pos.x += originalNodePos.x - this.clickPosition.x
+                    pos.y += originalNodePos.y - this.clickPosition.y
+                    // Mova o nó
                     this.graphView.moveNode(this.selection.selectedNodes[0], pos);
 
                 // Caso contrário,

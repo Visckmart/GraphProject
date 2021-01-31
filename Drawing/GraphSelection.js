@@ -155,16 +155,13 @@ export default class GraphSelection {
             }
         }
         
-        if (this.selectedNodes.length > 0 || this.selectedEdges.length > 0) {
-            for (let f of document.getElementsByClassName("feature-icon")) {
-                f.classList.add("selected")
-            }
+        if ((this.selectedNodes.length > 0 && this.temporarySelection == false)
+            || this.selectedEdges.length > 0) {
+            let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
+            featureIcons.forEach(icon => icon.classList.add("selected"))
         } else {
-            for (let f of document.getElementsByClassName("selected")) {
-                // console.log(f.classList.value)
-                f.classList.remove("selected")
-                // console.log(f.classList.value)
-            }
+            let selectedElements = Array.from(document.getElementsByClassName("selected"))
+            selectedElements.forEach(element => element.classList.remove("selected"))
         }
     }
 
