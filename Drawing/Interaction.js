@@ -4,6 +4,7 @@ import ToolRepository from "./ToolRepository.js";
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import BFS from "../Algorithm/BFS.js";
+import {NodeHighlightType} from "../Structure/Node.js";
 
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 for(let element of document.querySelector("#tool_tray").getElementsByTagName("input")) {
@@ -16,11 +17,27 @@ for(let element of document.querySelector("#tool_tray").getElementsByTagName("in
         })
     }
 }
+for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon")) {
+    x.addEventListener("mouseenter", function (e) {
+        // console.log(x.parentElement.previousElementSibling.value)
+        if (x.parentElement.previousElementSibling.value == "disconnect_all") {
+            for (let [edge, ,] of g.structure.uniqueEdges()) {
+                edge.addHighlight(NodeHighlightType.FEATURE_PREVIEW)
+            }
+        }
+    })
 
-// let importButton = document.getElementById("import")
-// importButton.onclick = function () {
-//     g.structure = UndirectedGraph.deserialize(serialTextarea.value)
-// }
+    x.addEventListener("mouseleave", function (e) {
+        // console.log(x.parentElement.previousElementSibling.value)
+        if (x.parentElement.previousElementSibling.value == "disconnect_all") {
+            for (let [edge, ,] of g.structure.uniqueEdges()) {
+                edge.removeHighlight(NodeHighlightType.FEATURE_PREVIEW)
+            }
+        }
+    })
+    // x.style.backgroundColor = "red"
+}
+
 function deserializeURL() {
     const urlParams = new URLSearchParams(location.search);
     if(urlParams.has("graph") && urlParams.get("graph") != "") {
@@ -41,12 +58,6 @@ share.onclick = function() {
     console.log(serialized, serialized.length)
     history.pushState(null, null, "?graph="+serialized)
 }
-
-// let clearButton = document.getElementById("clear")
-// clear.onclick = function() {
-//     history.pushState(null, null, "?")
-//     deserializeURL()
-// }
 
 //DEBUG
 let runAlgorithmButton = document.getElementById("run_algorithm")

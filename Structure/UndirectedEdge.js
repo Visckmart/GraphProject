@@ -1,7 +1,9 @@
 import Edge from "./Edge.js";
 import { NodeHighlightType, prepareHighlightsForSharing, deserializeHighlights } from "../Structure/Node.js"
 import {canvas, ctx} from "../Drawing/General.js";
-
+const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+transparentLabelGradient.addColorStop(0, "#E5E0FF");
+transparentLabelGradient.addColorStop(1, "#FFE0F3");
 export class UndirectedEdge extends Edge {
     constructor(label, highlights = null) {
         super(label);
@@ -86,6 +88,23 @@ export class UndirectedEdge extends Edge {
                 ctx.beginPath()
                 ctx.moveTo(xStart, yStart);
                 ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break
+            case NodeHighlightType.FEATURE_PREVIEW:
+                ctx.save()
+
+                ctx.setLineDash([]);
+                ctx.strokeStyle = transparentLabelGradient;
+                ctx.lineWidth = 9
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+                ctx.lineWidth = 7
+                // ctx.setLineDash([8,8]);
+                ctx.strokeStyle = "#FF8080";
                 ctx.stroke();
 
                 ctx.restore()

@@ -30,7 +30,8 @@ function generateNewRandomLetter() {
 export const NodeHighlightType = {
     SELECTION: "selection",
     ALGORITHM_FOCUS: "algorithm_focus",
-    ALGORITHM_FOCUS2: "algorithm_focus2"
+    ALGORITHM_FOCUS2: "algorithm_focus2",
+    FEATURE_PREVIEW: "feature_preview"
 }
 export const highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
 function colorFromComponents(r, g, b, a = 1) {
