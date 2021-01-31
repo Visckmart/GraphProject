@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="AlgorithmControls/algorithm_controls.css">
     <script type="module" src="General.js" crossorigin="anonymous"></script>
     <script type="module" src="Interaction.js" crossorigin="anonymous"></script>
+    <script type="module" src="InteractionShare.js" crossorigin="anonymous"></script>
     <script type="module" src="GraphView.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -30,14 +31,14 @@
                     <div id="leftItems">
                         <input type="radio" name="tool" value="move" id="move_input" checked/>
                         <label for="move_input">
-                            <div class="icon">
+                            <div class="tool-icon icon">
                                 <span style="font-size: 25pt">•</span>
                             </div>
                            <p class="name">Nós</p>
                         </label>
                         <input type="radio" name="tool" value="connect" id="connect_input"/>
                         <label for="connect_input">
-                            <div class="icon">
+                            <div class="tool-icon icon">
                                 <span style="font-size: 25pt; margin-top: -1pt;">⧟</span>
                             </div>
                             <p class="name">Arestas</p>
@@ -46,7 +47,7 @@
                     <div id="rightItems">
                         <input type="radio" name="feature" value="connect_all" id="connect_all_input"/>
                         <label for="connect_all_input">
-                            <div class="icon">
+                            <div class="feature-icon icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                                 </svg>
@@ -55,7 +56,7 @@
                         </label>
                         <input type="radio" name="feature" value="disconnect_all" id="disconnect_all_input"/>
                         <label for="disconnect_all_input">
-                            <div class="icon">
+                            <div class="feature-icon icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-scissors" viewBox="0 0 16 16">
                                   <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"/>
                                 </svg>
@@ -64,7 +65,7 @@
                         </label>
                         <input type="radio" name="feature" value="delete_all" id="delete_all_input"/>
                         <label for="delete_all_input">
-                            <div class="icon">
+                            <div class="feature-icon icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
                                     <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                                 </svg>
@@ -137,7 +138,7 @@
                     <!-- </span> -->
                 </p>
                 <p>Importar como...<br>
-                    <input type="file" id="attachments" accept=".gp" name="attachments" class="form-control" style="display: none;">
+                    <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
                     <button style="margin-left: 0pt; margin-right: 2pt;" id="importFile">Arquivo</button>
                     <button style="margin-right: 2pt;" id="importText">Texto</button>
                 </p>
