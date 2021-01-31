@@ -30,24 +30,10 @@ body {
 button {
   margin-top: 4pt;
 }
-/*#tool_tray {
-  background-color: blue;
-}*/
+
 canvas {
-  /*left: 30pt;*/
-  /*border: 5px solid;*/
-  /*border-image-slice: 1;*/
-  /*border-width: 5px;*/
-  /*border-image-source: linear-gradient(to right, #743ad5, #d53a9d);*/
-  /*background-color: blue;*/
-  /*width: 100%;*/
-  /*height: 100%;*/
-  /*object-fit: none;*/
-  /*border-radius: 10pt;*/
-  /*background: linear-gradient(to right, red, blue);*/
   border-radius: 10pt 0pt 0pt 10pt;
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
-  /*flex-grow:1;*/
   transition: 0.1s;
   
 }
@@ -56,29 +42,10 @@ canvas {
   position: relative;
   overflow: hidden;
 }
-
 .canvasContainer {
   margin-left: 10pt;
 }
-/*.canvasArea::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 57pt;
-  left: 15pt;
-  height: 75%;
-  width: 75%;
-  opacity: 0.65;
-  border-radius: 8pt 0pt 0pt 8pt;
-  background: linear-gradient(to right, #743ad5, #d53a9d);
 
-  -moz-filter: blur(var(--blurSize));
-  -o-filter: blur(var(--blurSize));
-  -ms-filter: blur(var(--blurSize));
-  filter: blur(var(--blurSize));
-  
-  transition: all 0.2s;
-}*/
 
 .menuArea {
   flex-grow: 1;
@@ -89,37 +56,12 @@ canvas {
   border-radius: 0pt 10pt 10pt 0pt;
   border-left: 2pt solid darkgray;
 }
-/*.menuArea::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 57pt;
-  right: 15pt;
-  height: 75%;
-  width: 22%;
-  opacity: 0.8;
-  border-radius: 0pt 8pt 8pt 0pt;
-  background: linear-gradient(to right, #888, #444);
 
-  -moz-filter: blur(var(--blurSize));
-  -o-filter: blur(var(--blurSize));
-  -ms-filter: blur(var(--blurSize));
-  filter: blur(var(--blurSize));
-  
-  transition: all 0.2s;
-}*/
-
-body:-webkit-drag {
-    background-color:rgb(255,255,154)
-}
-
-select {
+.menuArea > div > p > select {
   margin-left: 0pt;
   width: 150pt;
 }
 
-textarea {
-  margin-left: 0pt;
-  width: 190pt;
-  resize: vertical;
+body:-webkit-drag {
+    background-color:rgb(255,255,154)
 }

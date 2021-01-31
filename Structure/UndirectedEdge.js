@@ -12,7 +12,7 @@ export class UndirectedEdge extends Edge {
          { x: xEnd,   y: yEnd   }) {
         if(!this.isSelected) {
             ctx.save()
-            ctx.lineWidth = 7
+            ctx.lineWidth = 8
             ctx.strokeStyle = "#888";
             ctx.setLineDash([]);
 

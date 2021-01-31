@@ -10,7 +10,10 @@ for(let element of document.querySelector("#tool_tray").getElementsByTagName("in
     if (element.name == "tool") {
         element.addEventListener("change", () => g.changeTool(element.value))
     } else if (element.name == "feature") {
-        element.addEventListener("change", ToolRepository[element.value].bind(g))
+        element.addEventListener("change", function() {
+            element.checked = false
+            ToolRepository[element.value].bind(g)()
+        })
     }
 }
 

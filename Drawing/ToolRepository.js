@@ -25,5 +25,15 @@ export default {
             this.structure.removeAllEdgesFromNode(node)
         }
         console.groupEnd()
+    },
+
+    [Tool.DELETE_ALL]: function () {
+        for (let node of this.selectionHandler.selectedNodes) {
+            this.structure.removeNode(node)
+        }
+        for (let edge of this.selectionHandler.selectedEdges) {
+            this.structure.removeEdge(edge)
+        }
+        this.selectionHandler.clear()
     }
 }
