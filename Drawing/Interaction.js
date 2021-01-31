@@ -14,6 +14,32 @@ for(let element of document.querySelector("#tool_tray").getElementsByTagName("in
     }
 }
 
+let importFile = document.getElementById("importFile")
+let at = document.getElementById("attachments")
+importFile.onclick = function (e) {
+    console.log(e)
+    console.log(at)
+    at.click()
+}
+
+at.onchange = function(event) {
+    let file = event.target.files[0]
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            console.log("Read content:", evt.target.result)
+            g.structure = UndirectedGraph.deserialize(evt.target.result)  
+        }
+        reader.readAsText(file, "UTF-8");
+    }
+}
+
+let importText = document.getElementById("importText")
+importText.onclick = function (e) {
+    let t = prompt("Grafo em Texto")
+    g.structure = UndirectedGraph.deserialize(t)
+}
+
 canvas.ondrop = function(ev) {
     console.log("Dropped", ev.dataTransfer.items[0]);
     if (ev.dataTransfer.items[0].kind == "file") {
@@ -65,7 +91,8 @@ canvas.ondragend = function (e) {
 let exportLinkButton = document.getElementById("exportLink")
 exportLinkButton.onclick = function () {
     let shareLink = window.location.protocol + "//" + window.location.host + window.location.pathname+"?graph="+g.structure.serialize();
-    alert("Link de Compartilhamento\n\n" + shareLink)
+    // alert("Link de Compartilhamento\n\n" + shareLink)
+    history.pushState(null, null, shareLink)
 }
 
 let exportTextButton = document.getElementById("exportText")

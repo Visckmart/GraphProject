@@ -121,15 +121,17 @@
                     </select>
                     <button id="run_algorithm">Run</button>
                 </p>
-                <p>Exportar<br>
-                        <button style="margin-left: 0pt; margin-right: 2pt;" id="exportLink">Link</button>
-                        <button style="margin-right: 2pt;" id="exportFile">Arquivo</button>
+                <p>Exportar como...<br>
+                        <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
                         <button style="margin-right: 2pt;" id="exportText">Texto</button>
+                        <button style="margin-right: 2pt;" id="exportLink">Link</button>
                     <!-- </span> -->
                 </p>
-                <!-- <p>Importar<br>
-                    <button id="import">Importar</button>
-                </p> -->
+                <p>Importar como...<br>
+                    <input type="file" id="attachments" accept=".gp" name="attachments" class="form-control" style="display: none;">
+                    <button style="margin-left: 0pt; margin-right: 2pt;" id="importFile">Arquivo</button>
+                    <button style="margin-right: 2pt;" id="importText">Texto</button>
+                </p>
             </div>
             <div id="NodeSettings" style="display: none;">
                 <h2>Nó</h2>
@@ -142,7 +144,7 @@
             </div>
 
             <p><span id="dynamic"></span></p>
-            <button id="share">Compartilhar</button>
+            <button id="share" style="display: none;">Compartilhar</button>
         </div>
     </div>
     <script>
