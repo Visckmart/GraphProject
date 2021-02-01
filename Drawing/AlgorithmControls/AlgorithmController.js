@@ -222,7 +222,7 @@ class AlgorithmController {
         this.isBlocked = true
         this.messageIsHighlighted = true
         while(this.requirements.length > 0) {
-            let requirement = this.requirements.pop()
+            let requirement = this.requirements.shift()
             this.message.textContent = requirement.message
             await requirement.handle()
         }
