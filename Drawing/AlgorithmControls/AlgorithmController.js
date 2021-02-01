@@ -224,7 +224,7 @@ class AlgorithmController {
         while(this.requirements.length > 0) {
             let requirement = this.requirements.shift()
             this.message.textContent = requirement.message
-            await requirement.handle()
+            await requirement.resolve()
         }
         if(this.steps.length > 0)
         {

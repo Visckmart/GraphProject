@@ -6,19 +6,21 @@ export const RequirementType = {
 
 
 export class Requirement {
-    constructor(inputHandler, type, message, callback = () => {}) {
+    constructor(inputHandler, type, message, callback) {
         // Tipo de requisito
         this.type = type
         // Mensagem informativa sobre o requisito
         this.message = message
-        // Função de callback para quando o requisito é resolvido
-        this.callback = callback
 
         this.inputHandler = inputHandler
+
+        this.resolve = () => {
+            return this._handleRequirement().then(callback)
+        }
     }
 
     // Função de handle que retorna uma Promise que resolve quando o evento é concluído
-    async handle() {
+    async _handleRequirement() {
         return new Promise((resolve, reject) => {
             switch (this.type) {
                 // Requisito de seleção de node
@@ -35,7 +37,6 @@ export class Requirement {
                             this.inputHandler.canvas.removeEventListener("mouseup", handler)
 
                             // Finaliza requisição
-                            this.callback(clickedNodes[0])
                             resolve(clickedNodes[0])
                         }
                     }
@@ -56,7 +57,6 @@ export class Requirement {
                             this.inputHandler.canvas.removeEventListener("mouseup", handler)
 
                             // Finaliza requisição
-                            this.callback(newNode)
                             resolve(newNode)
                         }
                     }
@@ -78,7 +78,6 @@ export class Requirement {
                         if(nodesAtClick.length > 0)
                         {
                             firstNode = nodesAtClick[0]
-                            this.inputHandler.changeCursorStyle("grabbing")
 
                             // TODO: Não gosto dessas linhas
                             // Desenhando aresta temporária
@@ -108,6 +107,7 @@ export class Requirement {
 
                         let mousePos = this.inputHandler.getMousePos(this.inputHandler.canvas, event)
                         let nodesAtClick = this.inputHandler.graphView.getNodeIndexAt(mousePos)
+                        // Verificando se a criação da aresta é válida
                         if(nodesAtClick.length > 0
                             && nodesAtClick[0] !== firstNode
                             && !this.inputHandler.graphView.structure.checkEdgeBetween(nodesAtClick[0], firstNode))
@@ -117,9 +117,11 @@ export class Requirement {
                             this.inputHandler.graphView.redrawGraph()
 
                             this.inputHandler.changeCursorStyle(null)
-                            this.callback([firstNode, secondNode])
+
+                            // Finalizando requisição
                             resolve([firstNode, secondNode])
                         } else {
+                            // Criação de aresta falhou, tentar novamente
                             firstNode = null
                             secondNode = null
                             this.inputHandler.changeCursorStyle("pointer")
