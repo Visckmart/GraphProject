@@ -1,4 +1,3 @@
-import AlgorithmController from "../Drawing/AlgorithmControls/AlgorithmController.js";
 import {NodeHighlightType} from "../Structure/Node.js";
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 
@@ -8,7 +7,6 @@ export default async function BFS(controller)
     controller.addRequirement(RequirementType.SELECT_NODE,
         "Selecione o nó de inicio para a o BFS",
         (startNode) => {
-        controller.ready()
         executeBFS(controller, startNode)
     })
     await controller.resolveRequirements()
@@ -17,7 +15,6 @@ export default async function BFS(controller)
 // Executa o BFS
 function executeBFS(controller, startNode)
 {
-    controller.ready()
     let graph = controller.initialGraph
     let queue = [[startNode, null]]
 
@@ -61,4 +58,5 @@ function executeBFS(controller, startNode)
     }
     currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
     controller.addStep(graph, "Algoritmo finalizado.")
+    controller.ready()
 }
