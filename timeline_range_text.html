@@ -1,0 +1,362 @@
+<style>
+  :root {
+    --timelineMargin: 10pt;
+  }
+
+  body {
+    background-color: #DDf;
+
+    font-size: 13pt;
+    font-family: sans-serif;
+    color: white;
+  }
+
+  .container {
+    background-color: rgba(0, 0, 0, 0.4);
+    margin-left: 10pt;
+    margin-top: 15pt;
+    width: 50%;
+    border-radius: 8pt;
+    padding-top: 5pt;
+    padding-left: 15pt;
+    padding-right: 15pt;
+    /*height: 120pt;*/
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /*padding-right: 10pt;*/
+    /*margin-top: 0pt;*/
+    padding-bottom: 10pt;
+  }
+
+
+  .executionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /*width: fit-content;*/
+    width: 100%;
+    /*background-color: green;*/
+    fill: white;
+    /*margin-left: 5%;*/
+  }
+
+  .speedContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*background-color: #0004;*/
+    font-size: 14pt;
+    color: white;
+    font-family: monospace;
+    width: 20%;
+  }
+
+  .speedContainer > label {
+    /*margin-top: -10pt;*/
+    margin-bottom: -5pt;
+  }
+
+  .timelineContainer {
+    /*background-color: #00f8;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 70%;
+    /*width: fit-content;*/
+    fill: white;
+    /*margin-right: 12pt;*/
+  }
+
+  .timelineContainer > a {
+    border: 2pt solid white;
+    border-radius: 7pt;
+    min-width: 22.5pt;
+    min-height: 22.5pt;
+    padding: 0;
+    margin: 2pt;
+    vertical-align: center;
+  }
+  .timelineContainer > a:hover {
+    fill: #fff;
+    background-color: #fff4;
+  }
+  .timelineContainer > a:active {
+    fill: #000;
+    background-color: white;
+  }
+
+  .separator {
+    border: 0;
+
+    border-radius: 2pt;
+    border-top: 2pt solid #eee;
+    display: inline-block;
+    /*width: calc(100% - 20pt - 5pt);*/
+    width: 100%;
+  }
+
+  .tutorialContainer {
+    margin-top: 5pt;
+    /*background: linear-gradient(to right, #03d8 0%, #03d8 100%);*/
+    border-radius: 2pt;
+    /*border: 2pt solid blue;*/
+    /*margin-right: 10pt;*/
+    width: fit-content;
+    padding: 2pt 4pt;
+    padding-left: 0;
+  }
+  .tutorialContainer > label {
+    background: white;
+    /*background: -webkit-linear-gradient(to right, #0033DD00 0%, #0033Dd88 100%);*/
+    /*background: -moz-linear-gradient(to right, #0033DD44 0%, #0033Dd88 100%);*/
+    /*background: linear-gradient(to right, #08f 0%, #08f 100%);*/
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+  }
+
+  #timelineInput {
+    background: linear-gradient(to right, #BBB 0%, #BBB 50%, #EEE 50%, #EEE 100%);
+    border: solid 2pt white;
+    border-radius: 4pt;
+    height: 8pt;
+    width: 70%;
+    /*outline: none;*/
+    transition: background 450ms ease-in;
+    -webkit-appearance: none;
+    /*margin-left:100pt;*/
+    margin-left: var(--timelineMargin);
+    /*cursor: pointer;*/
+  }
+
+  input::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    border-radius: 4pt;
+    width: 14pt; /* Set a specific slider handle width */
+    height: 20pt; /* Slider handle height */
+    /*cursor: col-resize;*/
+    transition: 0.1s;
+    /*border: 1pt solid #08a;*/
+  }
+  input::-webkit-slider-thumb {
+    background-color: #9999FF;
+    border: 2pt solid #eee;
+  }
+  input::-webkit-slider-thumb:hover {
+    background-color: #6C6CD9;
+    /*border: 2pt solid #02a;*/
+  }
+
+  input::-webkit-slider-thumb:active {
+    background-color: #5959B3;
+    /*border: 2pt solid #04f;*/
+  }
+
+
+  #speedInput::-webkit-slider-thumb {
+    background-color: #555;
+  }
+  #speedInput::-webkit-slider-thumb:hover {
+    background-color: #444;
+  }
+
+  #speedInput::-webkit-slider-thumb:active {
+    background-color: #000;
+    /*border: 2pt solid #04f;*/
+  }
+
+  #speedInput {
+    background: linear-gradient(to right, #BBB 0%, #BBB 50%, #EEE 50%, #EEE 100%);
+    border-radius: 4pt;
+    height: 5pt;
+    width: 100%;
+    transition: background 450ms ease-in;
+    -webkit-appearance: none;
+    /*border: solid 2pt #ddd;*/
+    margin-top: 9pt;
+    margin-bottom: 9pt;
+    /*cursor: pointer;*/
+  }
+  #speedInput:active {
+  }
+  #speedInput::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    border-radius: 4pt;
+    /*border-radius: 2pt;*/
+    width: 13pt; /* Set a specific slider handle width */
+    height: 13pt; /* Slider handle height */
+    /*background-color: #BBB;*/
+    /*transition: 0.1s*/
+    /*cursor: col-resize;*/
+    /*cursor: move;*/
+  }
+/*svg:hover {
+  fill: transparent;
+  stroke: white;
+  stroke-width: 0.8pt;
+}*/
+/*#speedInput {
+  background: linear-gradient(to right, #BBB 0%, #BBB 50%, #EEE 50%, #EEE 100%);
+  border-radius: 2pt;
+  height: 7px;
+  width: 75pt;
+  transition: background 450ms ease-in;
+  -webkit-appearance: none;
+}
+#speedInput:active {
+  border: solid 1pt black;
+}
+#speedInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border-radius: 2pt;
+  width: 10pt;
+  height: 15pt;
+  background-color: #BBB;
+}
+#speedInput::-webkit-slider-thumb:hover {
+  background-color: #888;
+}
+#speedInput::-webkit-slider-thumb:active {
+  background-color: #777;
+}*/
+
+/*#speedInput {
+   width: 80pt;
+   -webkit-appearance: none;
+   background-color: #3f91e5;
+}
+  ::-moz-range-track,
+   ::-ms-track {
+   background-color: #3f91e5;
+}
+#speedInput::-webkit-slider-thumb,
+  ::-moz-range-thumb,
+   ::-ms-thumb {
+  background-color: red;
+  width: 10px;
+  height: 20px;
+}
+
+#inputNum {
+  background-color: darkgray;
+  padding: 2pt;
+  border: 0;
+  height: 20pt;
+  width: 80pt;
+}*/
+</style>
+<div class="container">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-x-circle" viewBox="0 0 16 16" style="float: right; margin-right: -10pt;">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+</svg>
+  <div class="tutorialContainer">
+  <label>Explorando as arestas P, U e C.</label>
+</div>
+<div>
+  <hr class="separator"/>
+<!--   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+  <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/> -->
+</svg>
+</div>
+<div class="controls">
+  <div class="executionContainer">
+    <div class="speedContainer">
+    <label id="speed">1x</label>
+    <input type="range" id="speedInput" min="1" max="8" step="1" value="4" list="steplist">
+  </div>
+  <div class="timelineContainer">
+    <a id="back_button">
+      <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-skip-start" viewBox="0 0 16 16">
+        <path d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L5 8.752V12a.5.5 0 0 1-1 0V4zm7.5.633L5.696 8l5.804 3.367V4.633z"/>
+      </svg>
+    </a>
+    <a id="play_button">
+      <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-play" viewBox="0 0 16 16">
+        <path d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+      </svg>
+    </a>
+    <a style="display: none;" id="stop_button">
+      <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-pause" viewBox="0 0 16 16">
+        <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
+      </svg>
+    </a>
+    <a id="forward_button">
+      <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-skip-end" viewBox="0 0 16 16">
+        <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.713 3.31 4 3.655 4 4.308v7.384c0 .653.713.998 1.233.696L11.5 8.752V12a.5.5 0 0 0 1 0V4zM5 4.633L10.804 8 5 11.367V4.633z"/>
+      </svg>
+    </a>
+    <input type="range" id="timelineInput" min="0" max="100" step="10" list="steplist">
+  </div>
+  </div>
+</div>
+  <!-- <datalist id="steplist">
+      <option>0</option>
+      <option>25</option>
+      <option>50</option>
+      <option>75</option>
+      <option>100</option>
+  </datalist> -->
+  <!-- <input type="number" id="inputNum" name="num" min="0.25" max="4" value="1" step="1">   -->
+</div>
+
+<script>
+  function x(a) {
+    var value = (a.value-a.min)/(a.max-a.min)*100
+    a.style.background = 'linear-gradient(to right, #BBB 0%, #BBB ' + value + '%, #fff ' + value + '%, #fff 100%)'
+    let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
+    featureIcons.forEach(icon => icon.classList.add("selected"))
+  }
+  document.getElementById("timelineInput").oninput = function() {
+    x(this)
+  };
+  document.getElementById("speedInput").oninput = function() {
+    x(this)
+    document.getElementById("speed").innerHTML = ["0.25", "0.5", "0.75", "1", "2", "3", "4", "8"][this.value - 1] + "x"
+  };
+  document.getElementById("speedInput").addEventListener("dblclick",  function() {
+    document.getElementById("speedInput").value = "4"
+    x(this)
+    
+    document.getElementById("speed").innerHTML = ["0.25", "0.5", "0.75", "1", "2", "3", "4", "8"][this.value - 1] + "x"
+  });
+  x(document.getElementById("timelineInput"))
+  x(document.getElementById("speedInput"))
+
+// let inputNum = document.getElementById("inputNum")
+// let oldValue = inputNum.value
+// // inputNum.oninput = function(b) {
+// //   console.log(b)
+// // }
+// inputNum.onchange = function(a) {
+//   let newValue = a.target.value
+//   // if (oldValue == 1 && newValue < 1) {
+
+//   // }
+//   // console.log(current <= 1, a.target.value < 1)
+//   // // if (current <= 1 && a.target.value < 1) {
+//   // //   a.target.step = 0.25
+//   // // } else {
+//   // //   a.target.step = 1
+//   // // }
+//   // if (current >= 1) {
+//   //   if (a.target.value > current) {
+//   //     a.target.value = Math.ceil(parseFloat(a.target.value))
+//   //   } else {
+//   //     a.target.value = Math.floor(parseFloat(a.target.value))
+//   //   }
+//   // }
+//   // if (a.target.value == 1) {
+//   //   console.log(1)
+//   //   a.target.step = 0.25
+//   // }
+//   // console.log("step", a.target.step)
+//   oldValue = a.target.value
+// }
+</script>
