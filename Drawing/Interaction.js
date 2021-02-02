@@ -5,6 +5,7 @@ import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import BFS from "../Algorithm/BFS.js";
 import {NodeHighlightType} from "../Structure/Node.js";
+import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 for(let element of document.querySelector("#tool_tray").getElementsByTagName("input")) {
@@ -71,7 +72,7 @@ let runAlgorithmButton = document.getElementById("run_algorithm")
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
 
-    await algorithmController.setup(BFS)
+    await algorithmController.setup(DijkstraShortestPath)
 }
 
 let blurTimeout = null
