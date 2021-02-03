@@ -43,11 +43,8 @@ export default class AlgorithmInputHandler {
             this._controller.progress = this._controller.progressBar.value
         })
 
-        this._controller.speedUpButton.addEventListener("click", () => {
-            this._controller.speed++
-        })
-        this._controller.speedDownButton.addEventListener("click", () => {
-            this._controller.speed--
+        this._controller.speedRange.addEventListener("input", () => {
+            this._controller.speed = this._controller.speedRange.value - 4
         })
     }
 

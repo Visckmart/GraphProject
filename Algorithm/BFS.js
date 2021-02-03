@@ -58,5 +58,4 @@ function executeBFS(controller, startNode)
     }
     currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
     controller.addStep(graph, "Algoritmo finalizado.")
-    controller.ready()
 }

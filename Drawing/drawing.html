@@ -77,47 +77,45 @@
             </div>
 
             <!--    Controle de Algoritmos    -->
-            <div id="algorithmControls" style="display: none">
-                <div id="algorithmContainer">
-                    <div id="algorithmButtons">
-                        <div id="algorithmSpeed">
-                            <div id="speedButtons">
-                                <span id="speedUp_button">+</span>
-                                <span id="speedDown_button">-</span>
-                            </div>
-                            <span id="speedGauge"></span>
-                        </div>
-                        <a id="back_button" style="margin-left: auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-skip-start" viewBox="0 0 16 16">
+            <div id="algorithmController" style="display: none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-x-circle" viewBox="0 0 16 16" id="exit_button">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+                <div id="tutorialContainer">
+                    <label><span>Selecione o nó inicial.</span></label>
+                </div>
+                <hr class="separator"/>
+
+                <div id="executionContainer">
+                    <div id="speedContainer">
+                        <label id="speedGauge"></label>
+                        <input type="range" id="speedInput" min="0" max="8" step="1" value="4">
+                    </div>
+
+                    <div id="timelineContainer">
+                        <a class="timelineButton" id="back_button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-skip-start" viewBox="0 0 16 16">
                                 <path d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L5 8.752V12a.5.5 0 0 1-1 0V4zm7.5.633L5.696 8l5.804 3.367V4.633z"/>
                             </svg>
                         </a>
-                        <a id="play_button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+                        <a class="timelineButton" id="play_button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-play" viewBox="0 0 16 16">
                                 <path d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
                             </svg>
                         </a>
-                        <a style="display: none;" id="stop_button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-pause" viewBox="0 0 16 16">
+                        <a class="timelineButton" style="display: none;" id="stop_button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-pause" viewBox="0 0 16 16">
                                 <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
                             </svg>
                         </a>
-                        <a id="forward_button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-skip-end" viewBox="0 0 16 16">
+                        <a class="timelineButton" id="forward_button">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-skip-end" viewBox="0 0 16 16">
                                 <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.713 3.31 4 3.655 4 4.308v7.384c0 .653.713.998 1.233.696L11.5 8.752V12a.5.5 0 0 0 1 0V4zM5 4.633L10.804 8 5 11.367V4.633z"/>
                             </svg>
                         </a>
-                        <a id="exit_button" style="margin-left: auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                            </svg>
-                        </a>
+                        <input type="range" id="timelineInput">
                     </div>
-                    <input id="algorithmProgress" type="range" id="range">
-                </div>
-                <div id="messageTray">
-                    <div id="messageTrayText"></div>
                 </div>
             </div>
         </div>

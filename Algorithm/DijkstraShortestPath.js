@@ -106,5 +106,4 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         currentNode = currentNode.previousNode
     }
     controller.addStep(graph, 'Caminhando pelas distâncias mais curtas para encontrar o menor caminho. Algoritmo concluído.')
-    controller.ready()
 }

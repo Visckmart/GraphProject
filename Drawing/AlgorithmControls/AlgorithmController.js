@@ -20,14 +20,13 @@ class AlgorithmController {
         this.initialGraph = graphView.structure
 
         // Capturando elementos do HTML
-        this.controls = document.getElementById("algorithmControls")
-        this.container = document.getElementById("algorithmContainer")
-        this.messageContainer = document.getElementById("messageTray")
-        this.message = document.getElementById("messageTrayText")
-        this.speedController = document.getElementById("speedGauge")
-        this.speedUpButton = document.getElementById("speedUp_button")
-        this.speedDownButton = document.getElementById("speedDown_button")
-        this.progressBar = document.getElementById("algorithmProgress")
+        this.controls = document.getElementById("algorithmController")
+        this.executionContainer = document.getElementById("executionContainer")
+        this.tutorialContainer = document.getElementById("tutorialContainer")
+        this.message = document.querySelector("#tutorialContainer > label > span")
+        this.speedGauge = document.getElementById("speedGauge")
+        this.speedRange = document.getElementById("speedInput")
+        this.progressBar = document.getElementById("timelineInput")
         this.playButton = document.getElementById("play_button")
         this.stopButton = document.getElementById("stop_button")
         this.backButton = document.getElementById("back_button")
@@ -60,11 +59,13 @@ class AlgorithmController {
     set isBlocked(value) {
         this._isBlocked = value
         if(value) {
+            this.speedRange.setAttribute("disabled", "true")
             this.progressBar.setAttribute("disabled", "true")
-            this.container.setAttribute("disabled", "true")
+            this.executionContainer.setAttribute("disabled", "true")
         } else {
+            this.speedRange.removeAttribute("disabled")
             this.progressBar.removeAttribute("disabled")
-            this.container.removeAttribute("disabled")
+            this.executionContainer.removeAttribute("disabled")
         }
     }
     //#endregion
@@ -76,9 +77,9 @@ class AlgorithmController {
     set messageIsHighlighted(value) {
         this._messageIsHighlighted = value
         if(value) {
-            this.message.setAttribute("highlighted", "true")
+            this.tutorialContainer.setAttribute("highlighted", "true")
         } else {
-            this.message.removeAttribute("highlighted")
+            this.tutorialContainer.removeAttribute("highlighted")
         }
     }
     //#endregion
@@ -109,10 +110,10 @@ class AlgorithmController {
             {
                 if(this.steps[value].message)
                 {
-                    this.messageContainer.style.display = 'block'
+                    this.tutorialContainer.style.display = 'block'
                     this.message.textContent = this.steps[value].message
                 } else {
-                    this.messageContainer.style.display = 'none'
+                    this.tutorialContainer.style.display = 'none'
                 }
                 this.graphView.structure = this.steps[value].graphState
             }
@@ -131,6 +132,7 @@ class AlgorithmController {
         if(this.isBlocked){
             return
         }
+        this._playing = value
 
         if(value) {
             this.playButton.style.display = this.playButton.style.display = 'none'
@@ -147,7 +149,7 @@ class AlgorithmController {
 
                     if(this.progress === this.numberOfSteps)
                     {
-                        this.playing = false
+                        //this.playing = false
                     }
                 }, 1000 / this.speedMultiplier)
             }
@@ -161,8 +163,6 @@ class AlgorithmController {
                 this._interval = null
             }
         }
-
-        this._playing = value
     }
     //#endregion
 
@@ -181,7 +181,8 @@ class AlgorithmController {
         {
             return
         }
-        if(value >= -2 && value <= 2) {
+        console.log(value)
+        if(value >= -4 && value <= 4) {
             this._speed = value
 
             if(this.playing)
@@ -191,7 +192,8 @@ class AlgorithmController {
                 this.playing = true
             }
 
-            this.speedController.textContent = this.speedMultiplier
+            this.speedGauge.textContent = this.speedMultiplier + "x"
+            console.log(this.speedGauge.textContent)
         }
     }
     //#endregion
@@ -203,7 +205,7 @@ class AlgorithmController {
 
     // Mostra a barra de play
     show() {
-        this.controls.style.display = 'flex'
+        this.controls.style.display = 'block'
     }
 
     // Adiciona um novo requisito
@@ -226,10 +228,6 @@ class AlgorithmController {
             this.message.textContent = requirement.message
             await requirement.resolve()
         }
-        if(this.steps.length > 0)
-        {
-            this.message.textContent = this.steps[0].message
-        }
         this.messageIsHighlighted = false
         this.isBlocked = false
     }
@@ -241,18 +239,16 @@ class AlgorithmController {
 
         document.querySelector(".toolTray").style.display = 'none'
         this.show()
-        this.playing = true
-        this.progress = 0
-
+        this.playing = false
         await algorithm(this)
+        this.ready()
     }
 
     // Inicializa a demonstração do algoritmo
     ready() {
+        this.graphView.redrawGraph()
         this.playing = true
         this.progress = 0
-        this.progressBar.value = 0
-        this.graphView.redrawGraph()
     }
 
 

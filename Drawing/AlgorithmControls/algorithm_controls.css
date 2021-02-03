@@ -1,161 +1,91 @@
-#algorithmControls {
+:root {
+    --timelineMargin: 10pt;
+}
+
+#algorithmController {
     position: absolute;
     bottom: 0;
-    background-color: rgba(0,0,0, 0.4);
     left:0;
-    margin: 0 auto;
     right: 0;
-    width:fit-content;
-    color:white;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    display: flex;
-    flex-direction: row;
-    z-index: 0;
+    width: 50%;
+    border-radius: 8pt;
+    margin: 15pt auto 0;
+    padding: 10pt 15pt 5pt;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
-#algorithmContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 13pt;
-    min-width: 300pt;
-}
-
-#algorithmContainer[disabled] {
-    cursor: default;
-    opacity: 0.3;
-}
-
-#algorithmContainer[disabled] input, #algorithmContainer[disabled] div > a, #algorithmContainer[disabled] div > div > span{
-    cursor: default;
-}
-
-#algorithmButtons {
-    flex: 1 1 auto;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding: 10pt 20pt 0;
-}
-
-#algorithmButtons > a {
+#exit_button {
+    float: right;
+    margin-top: -5pt;
+    margin-right: -9pt;
     cursor: pointer;
-    margin-left: 5pt;
-    margin-right: 5pt;
-}
-
-#algorithmSpeed {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-#speedButtons {
-    display: flex;
-    flex-direction: column;
-    margin-right: 5px;
-}
-
-#speedButtons > span {
-    line-height: 10px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-}
-
-#speedGauge {
-    width: 15px;
-}
-
-#algorithmProgress {
-    border-radius: 50pt;
-    -webkit-appearance: none;  /* Override default CSS styles */
-    appearance: none;
-    width: 40%; /* Full-width */
-    height: 5pt; /* Specified height */
-    background: #d3d3d3A0; /* Grey background */
-    outline: none; /* Remove outline */
-    -webkit-transition: .1s; /* 0#2 seconds transition on hover */
-    transition: background .1s;
-    margin-top: 5pt;
-}
-
-/* Mouse-over effects */
-#algorithmProgress:hover {
-    opacity: 1; /* Fully shown on mouse-over */
-    background: #d3d3d3FF; /* Grey background */
-}
-  
-  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
-#algorithmProgress::-webkit-slider-thumb {
-    border-radius: 50pt;
-    -webkit-appearance: none; /* Override default look */
-    appearance: none;
-    width: 15pt; /* Set a specific slider handle width */
-    height: 15pt; /* Slider handle height */
-    background-color: #2121C8;
-    cursor: pointer; /* Cursor on hover */
-    transition: .1s;
-}
-
-#algorithmProgress::-webkit-slider-thumb:hover {
-    -webkit-appearance: none; /* Override default look */
-    appearance: none;
-    width: 20pt; /* Set a specific slider handle width */
-    height: 20pt; /* Slider handle height */
-    cursor: pointer; /* Cursor on hover */
-}
-
-#algorithmProgress::-moz-range-thumb {
-  width: 20px; /* Set a specific slider handle width */
-  height: 20px; /* Slider handle height */
-  background: #4CAF50; /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-
-#messageTray {
-    min-width: 250pt;
-    max-width: 250pt;
-    padding: 10pt;
-    border-top-right-radius: 5px;
-}
-
-#messageTrayText {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0, 0.1);
-    padding: 5pt;
-    text-wrap: normal;
-    text-overflow: ellipsis;
-}
-
-#messageTrayText[highlighted="true"] {
-    border: 3px solid red;
 }
 
 
-:root {
---timelineMargin: 10pt;
-}
-
-  input {
+input[type="range"] {
     -webkit-appearance: none;
     border-radius: 4pt;
-  }
-  input::-webkit-slider-thumb {
+}
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    
+
     border-radius: 4pt;
 
     transition: 0.1s;
     border: 2pt solid #eee;
-  }
+}
 
-  /* Velocidade */
-  .speedContainer {
+
+/* TUTORIAL */
+#tutorialContainer {
+    margin-right: 10pt;
+
+    /*
+      Verde: #00FA9A
+      Laranja: #FF4500
+      Sem borda: transparent
+    */
+    border: 2pt solid transparent;
+    border-radius: 4pt;
+
+    padding: 2pt;
+    /*background-color: #FF04;*/
+}
+#tutorialContainer[highlighted="true"] {
+    border: 2pt solid #00FA9A;
+}
+
+#tutorialContainer[warning="true"] {
+    border: 2pt solid #FF4500;
+}
+
+#tutorialContainer > label {
+    color: white;
+    font-weight: bold;
+}
+
+.separator {
+    width: 100%;
+    display: inline-block;
+
+    border: 0;
+    border-radius: 4pt;
+    border-top: 2pt solid #eee;
+}
+
+
+/* CONTROLES */
+#executionContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    /*background-color: #0F08;*/
+}
+
+/* Velocidade */
+#speedContainer {
     width: 20%;
 
     display: flex;
@@ -165,30 +95,86 @@
     font-family: monospace;
     font-size: 14pt;
     color: white;
-    
+
     /*background-color: #F008;*/
-  }
-  .speedContainer > label {
+}
+#speedContainer > label {
     margin-bottom: -5pt;
-  }
-  #speedInput {
+}
+
+/* Timeline */
+#timelineContainer {
+    width: 70%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    /*background-color: #00F8;*/
+}
+
+.timelineButton {
+    min-width: 22.5pt;
+    min-height: 22.5pt;
+
+    border: 2pt solid white;
+    border-radius: 7pt;
+
+    margin: 2pt;
+    fill: #FFF;
+    background-color: transparent;
+}
+.timelineButton:hover {
+    fill: #FFF;
+    background-color: #FFF4;
+}
+.timelineButton:active {
+    fill: #000;
+    background-color: #FFF;
+}
+
+
+#timelineInput {
+    width: 70%;
+    height: 8pt;
+
+    border: solid 2pt white;
+
+    margin-left: var(--timelineMargin);
+}
+#timelineInput::-webkit-slider-thumb {
+    width: 14pt;
+    height: 20pt;
+
+    background-color: #9999FF;
+}
+#timelineInput::-webkit-slider-thumb:hover {
+    background-color: #6C6CD9;
+}
+#timelineInput::-webkit-slider-thumb:active {
+    background-color: #5959B3;
+}
+
+
+#speedInput {
     width: 100%;
     height: 5pt;
-    
+
     border: solid 1pt white;
 
     margin-top: 9pt;
     margin-bottom: 9pt;
-  }
-  #speedInput::-webkit-slider-thumb {
+}
+#speedInput::-webkit-slider-thumb {
     width: 13pt;
     height: 13pt;
 
     background-color: #555;
-  }
-  #speedInput::-webkit-slider-thumb:hover {
+}
+#speedInput::-webkit-slider-thumb:hover {
     background-color: #444;
-  }
-  #speedInput::-webkit-slider-thumb:active {
+}
+#speedInput::-webkit-slider-thumb:active {
     background-color: #000;
-  }
+}
