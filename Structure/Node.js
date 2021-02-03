@@ -70,6 +70,21 @@ const c = Array.from({length: 10}, (_, i) => String.fromCharCode(48+i));
 
 const positionAlphabet = up.concat(low.concat(c))
 
+function roundRect(ctx, x, y, width, height, radius) {
+  let r = x + width;
+  let b = y + height;
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(r - radius, y);
+  ctx.quadraticCurveTo(r, y, r, y + radius);
+  ctx.lineTo(r, y + height - radius);
+  ctx.quadraticCurveTo(r, b, r - radius, b);
+  ctx.lineTo(x + radius, b);
+  ctx.quadraticCurveTo(x, b, x, b - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.stroke();
+}
 export class Node {
 
     constructor(x, y, label, index = null, oColor = null, highlights = null) {
@@ -95,6 +110,12 @@ export class Node {
             this.label = label;
         } else {
             this.label = newRandomLabel;
+        }
+
+        this.auxLabelText = ""
+        // DEBUG
+        if (Math.random() > 0.5) {
+            this.auxLabelText = Math.floor(Math.random() * 50)
         }
         
         this.highlights = highlights ?? new Set();
@@ -147,8 +168,31 @@ export class Node {
 
         // Draw label
         this._drawLabel(nodeLabeling, this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) ? "#528FFF" : this.color)
+        if (this.auxLabelText) {
+            this._drawAuxLabel(this.auxLabelText)
+        }
 
         return maxFPSRequest;
+    }
+    _drawAuxLabel(text) {
+        ctx.font = "bold 15pt Arial";
+        ctx.strokeStyle = this._originalcolor;
+        ctx.setLineDash([])
+        ctx.lineWidth = 4
+        ctx.textAlign = "center";
+        ctx.textBaseline = 'middle';
+        let m = ctx.measureText(text)
+        let boxWidth = m.width + 5
+        let boxHeight = 20
+        let boxOffset = 45
+        ctx.beginPath();
+        roundRect(ctx,
+                  this.pos.x - boxWidth/2,
+                  this.pos.y - boxOffset - boxHeight/2,
+                  boxWidth, boxHeight, 5)
+        ctx.fill();
+        ctx.fillStyle = "white"
+        ctx.fillText(text, this.pos.x, this.pos.y - boxOffset);
     }
 
     _drawHighlight(highlight) {
