@@ -15,7 +15,7 @@ export default async function BFS(controller)
 // Executa o BFS
 function executeBFS(controller, startNode)
 {
-    let graph = controller.initialGraph
+    let graph = controller.graph
     let queue = [[startNode, null]]
 
     let currentNode, currentEdge

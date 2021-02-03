@@ -18,7 +18,7 @@ export default async function DijkstraShortestPath(controller) {
 }
 
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
-    let graph = controller.initialGraph
+    let graph = controller.graph
 
     let unvisitedNodes = []
     for(let node of graph.nodes())

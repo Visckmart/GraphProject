@@ -17,7 +17,8 @@ class AlgorithmController {
         this.requirements = []
 
         this.graphView = graphView
-        this.initialGraph = graphView.structure
+        this.initialGraph = graphView.structure.clone()
+        this.graph = graphView.structure
 
 
 
@@ -245,19 +246,11 @@ class AlgorithmController {
         document.querySelector(".toolTray").style.display = 'unset'
 
         this.hide()
-        this.graphView.structure.debug = true
         this.playing = false
 
-        // Remover os destaques
-        for (let node of this.graphView.structure.nodes()) {
-            node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-            node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
-        }
+        // Restaurando grafo ao estado inicial
+        this.graphView.structure = this.initialGraph
 
-        for (let [edge, , ] of this.graphView.structure.uniqueEdges()) {
-            edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-            edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
-        }
     }
 }
 
