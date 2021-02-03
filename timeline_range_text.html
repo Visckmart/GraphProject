@@ -1,3 +1,4 @@
+<meta charset="UTF-8">
 <style>
   :root {
     --timelineMargin: 10pt;
@@ -20,7 +21,7 @@
     margin-top: 15pt;
     margin-left: 10pt;
     
-    padding-top: 15pt;
+    padding-top: 10pt;
     padding-bottom: 5pt;
     padding-right: 15pt;
     padding-left: 15pt;
@@ -30,7 +31,7 @@
 
   #closeButton {
     float: right;
-    margin-top: -10pt;
+    margin-top: -5pt;
     margin-right: -9pt;
   }
 
@@ -53,6 +54,15 @@
   .tutorialContainer {
     margin-right: 10pt;
 
+    /*
+      Verde: #00FA9A
+      Laranja: #FF4500
+      Sem borda: transparent
+    */
+    border: 2pt solid #00FA9A;
+    border-radius: 4pt;
+    
+    padding: 2pt;
     /*background-color: #FF04;*/
   }
   .tutorialContainer > label {
@@ -174,16 +184,14 @@
   #speedInput::-webkit-slider-thumb:active {
     background-color: #000;
   }
-
 </style>
 <div class="container">
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-x-circle" viewBox="0 0 16 16" id="closeButton">
     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
   </svg>
-
   <div class="tutorialContainer">
-    <label>Explorando as arestas P, U e C.</label>
+    <label><span>Selecione o nó inicial.</span></label>
   </div>
   <hr class="separator"/>
 
@@ -216,48 +224,45 @@
       </a>
       <input type="range" id="timelineInput" min="0" max="100" step="10" list="steplist">
     </div>
-
   </div>
 </div>
 
 <script>
-  let timelineInput = document.getElementById("timelineInput")
-  let speedInput = document.getElementById("speedInput")
+  let timelineInput = document.getElementById("timelineInput");
+  let speedInput = document.getElementById("speedInput");
 
-  let speedLabel = document.getElementById("speed")
-  
-  function generateGradient(leftColor, transitionPoint, rightColor) {
-    return 
-  }
+  let speedLabel = document.getElementById("speed");
+
+  redrawSliderBackground(timelineInput);
+  redrawSliderBackground(speedInput);
 
   function redrawSliderBackground(inputElement) {
-    let inputRange = inputElement.max - inputElement.min
-    let percentage = (inputElement.value - inputElement.min)/inputRange * 100
+    let inputRange = inputElement.max - inputElement.min;
+    let percentage = (inputElement.value - inputElement.min)/inputRange * 100;
     let gradient = `linear-gradient(to right,`
                  + `#BBB 0%, `
                  + `#BBB ${percentage}%, `
                  + `#FFF ${percentage}%, `
                  + `#FFF 100%`
                  + `)`
-    inputElement.style.background = gradient
+    inputElement.style.background = gradient;
   }
-  timelineInput.oninput = function() {
-    redrawSliderBackground(this)
-  };
   
+  const speedValues = ["0.25", "0.5", "0.75", "1", "2", "3", "4", "8"];
   function updateSpeedLabel(speedIndex) {
-    speedLabel.innerHTML = ["0.25", "0.5", "0.75", "1", "2", "3", "4", "8"][speedIndex - 1] + "x"
+    speedLabel.innerHTML = speedValues[speedIndex - 1] + "x";
   }
-  speedInput.oninput = function() {
-    redrawSliderBackground(this)
-    updateSpeedLabel(speedInput.value)
+
+  timelineInput.oninput = function() {
+    redrawSliderBackground(this);
   };
-  speedInput.addEventListener("dblclick",  function() {
+  speedInput.oninput = function() {
+    redrawSliderBackground(this);
+    updateSpeedLabel(speedInput.value);
+  };
+  speedInput.ondblclick = function() {
     speedInput.value = "4";
     redrawSliderBackground(this);
     updateSpeedLabel(speedInput.value);
-  });
-
-  redrawSliderBackground(timelineInput)
-  redrawSliderBackground(speedInput)
+  };
 </script>
