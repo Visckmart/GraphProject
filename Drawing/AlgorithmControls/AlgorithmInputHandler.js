@@ -4,6 +4,20 @@ export default class AlgorithmInputHandler {
         this.graphView = controller.graphView
         this.canvas = controller.graphView.canvas
 
+        // Capturando elementos do HTML
+        this.controls = document.getElementById("algorithmController")
+        this.executionContainer = document.getElementById("executionContainer")
+        this.tutorialContainer = document.getElementById("tutorialContainer")
+        this.message = document.querySelector("#tutorialContainer > label > span")
+        this.speedGauge = document.getElementById("speedGauge")
+        this.speedRange = document.getElementById("speedInput")
+        this.progressBar = document.getElementById("timelineInput")
+        this.playButton = document.getElementById("play_button")
+        this.stopButton = document.getElementById("stop_button")
+        this.backButton = document.getElementById("back_button")
+        this.forwardButton = document.getElementById("forward_button")
+        this.exitButton = document.getElementById("exit_button")
+
         // Requisitos
         this._requirements = []
 
@@ -15,36 +29,32 @@ export default class AlgorithmInputHandler {
 
     // Inicializa as funcionalidades dos elementos HTML dos controles
     initializeControls() {
-        this._controller.playButton.addEventListener("click", () => {
+        this.playButton.addEventListener("click", () => {
             this._controller.playing = true
         })
-        this._controller.stopButton.addEventListener("click", () => {
+        this.stopButton.addEventListener("click", () => {
             this._controller.playing = false
         })
 
-        this._controller.forwardButton.addEventListener("click", () => {
+        this.forwardButton.addEventListener("click", () => {
             this._controller.playing = false
             this._controller.progress += 1
         })
 
-        this._controller.backButton.addEventListener("click", () => {
+        this.backButton.addEventListener("click", () => {
             this._controller.playing = false
             this._controller.progress -= 1
         })
 
-        this._controller.exitButton.addEventListener("click", () => this._controller.finish())
+        this.exitButton.addEventListener("click", () => this._controller.finish())
 
-        this._controller.progressBar.addEventListener("change", () => {
+        this.progressBar.addEventListener("input", () => {
             this._controller.playing = false
-            this._controller.progress = this._controller.progressBar.value
-        })
-        this._controller.progressBar.addEventListener("input", () => {
-            this._controller.playing = false
-            this._controller.progress = this._controller.progressBar.value
+            this._controller.progress = this.progressBar.value
         })
 
-        this._controller.speedRange.addEventListener("input", () => {
-            this._controller.speed = this._controller.speedRange.value - 4
+        this.speedRange.addEventListener("input", () => {
+            this._controller.speed = this.speedRange.value
         })
     }
 

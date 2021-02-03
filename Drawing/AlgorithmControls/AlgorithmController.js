@@ -13,32 +13,19 @@ class Step {
 
 class AlgorithmController {
     constructor(graphView, steps = []) {
-        this.steps = []
+        this.steps = steps
         this.requirements = []
 
         this.graphView = graphView
         this.initialGraph = graphView.structure
 
-        // Capturando elementos do HTML
-        this.controls = document.getElementById("algorithmController")
-        this.executionContainer = document.getElementById("executionContainer")
-        this.tutorialContainer = document.getElementById("tutorialContainer")
-        this.message = document.querySelector("#tutorialContainer > label > span")
-        this.speedGauge = document.getElementById("speedGauge")
-        this.speedRange = document.getElementById("speedInput")
-        this.progressBar = document.getElementById("timelineInput")
-        this.playButton = document.getElementById("play_button")
-        this.stopButton = document.getElementById("stop_button")
-        this.backButton = document.getElementById("back_button")
-        this.forwardButton = document.getElementById("forward_button")
-        this.exitButton = document.getElementById("exit_button")
-
-        this.progressBar.setAttribute("min", "0")
-        this.progressBar.setAttribute("max", this.numberOfSteps.toString())
 
 
         // Instanciando handler de inputs
         this.inputHandler = new AlgorithmInputHandler(this)
+
+        this.inputHandler.progressBar.setAttribute("min", "0")
+        this.inputHandler.progressBar.setAttribute("max", this.numberOfSteps.toString())
 
         this.progress = 0
         this.speed = 0
@@ -59,13 +46,13 @@ class AlgorithmController {
     set isBlocked(value) {
         this._isBlocked = value
         if(value) {
-            this.speedRange.setAttribute("disabled", "true")
-            this.progressBar.setAttribute("disabled", "true")
-            this.executionContainer.setAttribute("disabled", "true")
+            this.inputHandler.speedRange.setAttribute("disabled", "true")
+            this.inputHandler.progressBar.setAttribute("disabled", "true")
+            this.inputHandler.executionContainer.setAttribute("disabled", "true")
         } else {
-            this.speedRange.removeAttribute("disabled")
-            this.progressBar.removeAttribute("disabled")
-            this.executionContainer.removeAttribute("disabled")
+            this.inputHandler.speedRange.removeAttribute("disabled")
+            this.inputHandler.progressBar.removeAttribute("disabled")
+            this.inputHandler.executionContainer.removeAttribute("disabled")
         }
     }
     //#endregion
@@ -77,9 +64,9 @@ class AlgorithmController {
     set messageIsHighlighted(value) {
         this._messageIsHighlighted = value
         if(value) {
-            this.tutorialContainer.setAttribute("highlighted", "true")
+            this.inputHandler.tutorialContainer.setAttribute("highlighted", "true")
         } else {
-            this.tutorialContainer.removeAttribute("highlighted")
+            this.inputHandler.tutorialContainer.removeAttribute("highlighted")
         }
     }
     //#endregion
@@ -103,17 +90,17 @@ class AlgorithmController {
         if(value >= 0 && value < this.numberOfSteps)
         {
             this._progress = value
-            this.progressBar.value = value
+            this.inputHandler.progressBar.value = value
 
             // Se a etapa atual é válida atualiza o grafo sendo mostrado
             if(this.steps[value])
             {
                 if(this.steps[value].message)
                 {
-                    this.tutorialContainer.style.display = 'block'
-                    this.message.textContent = this.steps[value].message
+                    this.inputHandler.tutorialContainer.style.display = 'block'
+                    this.inputHandler.message.textContent = this.steps[value].message
                 } else {
-                    this.tutorialContainer.style.display = 'none'
+                    this.inputHandler.tutorialContainer.style.display = 'none'
                 }
                 this.graphView.structure = this.steps[value].graphState
             }
@@ -135,8 +122,8 @@ class AlgorithmController {
         this._playing = value
 
         if(value) {
-            this.playButton.style.display = this.playButton.style.display = 'none'
-            this.stopButton.style.display = this.stopButton.style.display = 'block'
+            this.inputHandler.playButton.style.display = 'none'
+            this.inputHandler.stopButton.style.display = 'block'
 
             if(this.progress === this.numberOfSteps) {
                 this.progress = 0
@@ -155,8 +142,8 @@ class AlgorithmController {
             }
         }
         else {
-            this.playButton.style.display = this.playButton.style.display = 'block'
-            this.stopButton.style.display = this.stopButton.style.display = 'none'
+            this.inputHandler.playButton.style.display = 'block'
+            this.inputHandler.stopButton.style.display = 'none'
             if(this._interval)
             {
                 clearInterval(this._interval)
@@ -181,10 +168,9 @@ class AlgorithmController {
         {
             return
         }
-        console.log(value)
         if(value >= -4 && value <= 4) {
             this._speed = value
-
+            this.inputHandler.speedRange.value = value
             if(this.playing)
             {
                 clearInterval(this._interval)
@@ -192,20 +178,19 @@ class AlgorithmController {
                 this.playing = true
             }
 
-            this.speedGauge.textContent = this.speedMultiplier + "x"
-            console.log(this.speedGauge.textContent)
+            this.inputHandler.speedGauge.textContent = this.speedMultiplier + "x"
         }
     }
     //#endregion
 
     // Esconde a barra de play
     hide() {
-        this.controls.style.display = 'none'
+        this.inputHandler.controls.style.display = 'none'
     }
 
     // Mostra a barra de play
     show() {
-        this.controls.style.display = 'block'
+        this.inputHandler.controls.style.display = 'block'
     }
 
     // Adiciona um novo requisito
@@ -217,7 +202,7 @@ class AlgorithmController {
     // Adiciona uma nova etapa
     addStep(graph, message) {
         this.steps.push(new Step(graph, message))
-        this.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
+        this.inputHandler.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
     }
 
     async resolveRequirements() {
@@ -225,7 +210,7 @@ class AlgorithmController {
         this.messageIsHighlighted = true
         while(this.requirements.length > 0) {
             let requirement = this.requirements.shift()
-            this.message.textContent = requirement.message
+            this.inputHandler.message.textContent = requirement.message
             await requirement.resolve()
         }
         this.messageIsHighlighted = false
@@ -268,7 +253,7 @@ class AlgorithmController {
             node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
             node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
         }
-        
+
         for (let [edge, , ] of this.graphView.structure.uniqueEdges()) {
             edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
             edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
