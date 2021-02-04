@@ -22,40 +22,48 @@ export default class AlgorithmInputHandler {
         this._requirements = []
 
         // Eventos de input
-        document.addEventListener("keydown", (event) => this.handleKeydown(event))
+        document.addEventListener("keydown", this.handleKeydown)
 
         this.initializeControls()
     }
 
     // Inicializa as funcionalidades dos elementos HTML dos controles
     initializeControls() {
-        this.playButton.addEventListener("click", () => {
+        this._playButtonHandler = () => {
             this._controller.playing = true
-        })
-        this.stopButton.addEventListener("click", () => {
-            this._controller.playing = false
-        })
+        }
+        this.playButton.addEventListener("click", this._playButtonHandler)
 
-        this.forwardButton.addEventListener("click", () => {
+        this._stopButtonHandler = () => {
+            this._controller.playing = false
+        }
+        this.stopButton.addEventListener("click", this._stopButtonHandler)
+
+        this._forwardButtonHandler = () => {
             this._controller.playing = false
             this._controller.progress += 1
-        })
+        }
+        this.forwardButton.addEventListener("click", this._forwardButtonHandler)
 
-        this.backButton.addEventListener("click", () => {
+        this._backButtonHandler = () => {
             this._controller.playing = false
             this._controller.progress -= 1
-        })
+        }
+        this.backButton.addEventListener("click", this._backButtonHandler)
 
-        this.exitButton.addEventListener("click", () => this._controller.finish())
+        this._exitButtonHandler = () => this._controller.finish()
+        this.exitButton.addEventListener("click", this._exitButtonHandler)
 
-        this.progressBar.addEventListener("input", () => {
+        this._progressBarHandler = () => {
             this._controller.playing = false
             this._controller.progress = this.progressBar.value
-        })
+        }
+        this.progressBar.addEventListener("input",  this._progressBarHandler)
 
-        this.speedRange.addEventListener("input", () => {
+        this._speedHandler = () => {
             this._controller.speed = this.speedRange.value
-        })
+        }
+        this.speedRange.addEventListener("input", this._speedHandler)
     }
 
     // Funções helpers
@@ -72,7 +80,7 @@ export default class AlgorithmInputHandler {
         this.canvas.style.cursor = style;
     }
 
-    handleKeydown(event) {
+    handleKeydown = (event) => {
         let keyPressed = event.key
         console.log(keyPressed)
 
@@ -90,6 +98,19 @@ export default class AlgorithmInputHandler {
             case ' ':
                 this._controller.playing = !this._controller.playing
         }
+    }
+
+    finish() {
+        // Removendo handlers
+        document.removeEventListener("keydown", this.handleKeydown)
+
+        this.playButton.removeEventListener("click", this._playButtonHandler)
+        this.stopButton.removeEventListener("click", this._stopButtonHandler)
+        this.forwardButton.removeEventListener("click", this._forwardButtonHandler)
+        this.backButton.removeEventListener("click", this._backButtonHandler)
+        this.exitButton.removeEventListener("click", this._exitButtonHandler)
+        this.progressBar.removeEventListener("input",  this._progressBarHandler)
+        this.speedRange.removeEventListener("input", this._speedHandler)
     }
 
 }
