@@ -39,6 +39,11 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         }
     }
     console.log(graph.serialize())
+    // console.log(graph)
+    for (let [edge, , ] of graph.uniqueEdges()) {
+        edge.addHighlight(NodeHighlightType.ALGORITHM_NOTVISITED)
+        console.log("e", edge)
+    }
     controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞. O nó inicial é marcado com distância 0.`)
     let currentNode
 
@@ -81,6 +86,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             }
             node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
             edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            edge.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
         }
         currentNode.visited = true
         currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)

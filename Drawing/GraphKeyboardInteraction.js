@@ -1,4 +1,6 @@
 import { Tool } from "./General.js"
+import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
+import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 
 class GraphKeyboardHandler {
 
@@ -88,6 +90,10 @@ class GraphKeyboardHandler {
         if (metaPressed == false && this.graphView.lastToolChoice == Tool.MOVE) {
             this.graphView.primaryTool = Tool.MOVE;
             this.graphView.lastToolChoice = null;
+        }
+        if (keyboardEvent.key == "d") {
+            let algorithmController = new AlgorithmController(this.graphView)
+            algorithmController.setup(DijkstraShortestPath)
         }
         if (document.activeElement.tagName == "BODY") {
             if (this.isDeletionKey(keyboardEvent)) {

@@ -16,7 +16,10 @@ const edgeWidth = 3;
 
 const IDLE_MAX_FPS = 10;
 const INTERACTION_MAX_FPS = 90;
-
+let s = "0-0-AFF.1-1-BaF.2-2-CFa.3-3-Ddd.12-4-SmR.13-5-Plf.14-0-WrX.15-1-EvI.16-2-B1d.17-3-Tho.18-4-Ral.19-5-NSn.20-0-MVS.21-1-GfM.22-2-XKR.~0_1-M.0_2-P.1_3-N.2_3-O.3_12-Z.3_21-D.3_20-Q.12_13-T.12_14-T.13_14-W.14_15-W.14_16-B.18_20-Z.18_19-H.20_21-L."
+console.log(s.length)
+let s2 = LZString.compress(s)
+console.log(s2, s2.length)
 const NodeLabeling = {
     NUMBERS: "numbers",
     LETTERS_RAND: "letters_randomized",

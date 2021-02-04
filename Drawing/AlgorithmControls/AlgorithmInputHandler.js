@@ -74,7 +74,7 @@ export default class AlgorithmInputHandler {
 
     handleKeydown(event) {
         let keyPressed = event.key
-        console.log(keyPressed)
+        // console.log(keyPressed)
 
         switch (keyPressed) {
             case 'Left':
