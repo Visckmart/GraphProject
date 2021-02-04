@@ -86,15 +86,17 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             let newDistance = currentNode.distance + (edge?.weight ?? 1)
             // Se a distância atual é menor que a registrada
             if(newDistance < node.distance) {
+                let oldDistance = node.distance
+
                 node.distance = newDistance
                 node.previousEdge = edge
                 node.previousNode = currentNode
 
-                controller.addStep(graph, `Visitando o nó ${node.label.split(' ')[0]} a partir da aresta ${edge.label}, atualizando sua distância para ${newDistance} e salvando a aresta ${edge.label} como a aresta anterior no caminho.`)
+                controller.addStep(graph, `Analisando a distância do nó ${currentNode.label} até ${node.label}, atualizando sua distância para ${newDistance}, que é menor que a distância atual ${oldDistance === Infinity ? '∞' : oldDistance}, e salvando a aresta destacada como a aresta anterior no caminho.`)
 
             // Se a distância atual NÃO é menor que a registrada
             } else {
-                controller.addStep(graph, `Visitando o nó ${node.label.split(' ')[0]} a partir da aresta ${edge.label}, sua distância já é menor portanto não será atualizada.`)
+                controller.addStep(graph, `Analisando a distância do nó ${currentNode.label} até ${node.label}, sua distância ${node.distance} é menor ou igual a nova distância ${newDistance} e portanto não será atualizada.`)
             }
             // node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
             edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
