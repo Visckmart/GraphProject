@@ -29,12 +29,14 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             node.previousEdge = null
             node.previousNode = null
             node.visited = false
+            node.auxLabelText = `d=${node.distance}`
             unvisitedNodes.push(node)
         } else {
             node.distance = Infinity
             node.previousEdge = null
             node.previousNode = null
             node.visited = false
+            node.auxLabelText = `d=∞`
             unvisitedNodes.push(node)
         }
     }
@@ -72,6 +74,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             let newDistance = currentNode.distance + (edge?.weight ?? 1)
             if(newDistance < node.distance) {
                 node.distance = newDistance
+                node.auxLabelText = `d=${node.distance}`
                 node.previousEdge = edge
                 node.previousNode = currentNode
 
@@ -98,7 +101,6 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     while(currentNode !== null)
     {
         currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        console.log(currentNode)
         if(currentNode.previousEdge)
         {
             currentNode.previousEdge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
