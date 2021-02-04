@@ -72,6 +72,20 @@ class AlgorithmController {
     }
     //#endregion
 
+    //#region Comportamento de destaque de mensagem
+    //Status de destaque
+    _messageIsWarning = false
+
+    set messageIsWarning(value) {
+        this._messageIsHighlighted = value
+        if(value) {
+            this.inputHandler.tutorialContainer.setAttribute("warning", "true")
+        } else {
+            this.inputHandler.tutorialContainer.removeAttribute("warning")
+        }
+    }
+    //#endregion
+
     //#region Comportamento de progresso
     // Etapa atual
     _progress = 0
@@ -208,13 +222,16 @@ class AlgorithmController {
 
     async resolveRequirements() {
         this.isBlocked = true
-        this.messageIsHighlighted = true
+        this.messageIsWarning = true
         while(this.requirements.length > 0) {
             let requirement = this.requirements.shift()
             this.inputHandler.message.textContent = requirement.message
             await requirement.resolve()
+        this.messageIsWarning = false
+            this.messageIsHighlighted = true
         }
         this.messageIsHighlighted = false
+        this.messageIsWarning = false
         this.isBlocked = false
     }
 

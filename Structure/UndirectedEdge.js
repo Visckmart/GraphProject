@@ -15,14 +15,24 @@ export class UndirectedEdge extends Edge {
         if(!this.isSelected) {
             ctx.save()
             ctx.lineWidth = 8
-            ctx.strokeStyle = "#888";
+            ctx.strokeStyle = "#aaa";
             ctx.setLineDash([]);
 
+            if (!(this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2) || this.highlights.has(NodeHighlightType.ALGORITHM_VISITED))) {
+        if (this.highlights.has(NodeHighlightType.ALGORITHM_NOTVISITED)) {
+        // ctx.lineWidth = nodeBorderWidth/2;
+            ctx.setLineDash([10, 5]);
+            ctx.lineWidth = 5
+        } else {
+        // ctx.lineWidth = nodeBorderWidth;
+            ctx.setLineDash([]);
+        }
 
-            ctx.beginPath()
-            ctx.moveTo(xStart, yStart);
-            ctx.lineTo(xEnd, yEnd);
-            ctx.stroke();
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+            }
 
             ctx.restore()
         }
@@ -33,8 +43,10 @@ export class UndirectedEdge extends Edge {
 
         ctx.save();
 
-        this._drawText({ x: xStart, y: yStart },
-                       { x: xEnd,   y: yEnd   })
+        // this._drawText({ x: xStart, y: yStart },
+        //                { x: xEnd,   y: yEnd   })
+        
+        ctx.restore();
     }
 
     _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
@@ -56,7 +68,7 @@ export class UndirectedEdge extends Edge {
             case NodeHighlightType.ALGORITHM_FOCUS:
                 ctx.save()
                 ctx.lineWidth = 9
-                ctx.strokeStyle = "#2121C8";
+                ctx.strokeStyle = "#777";
                 ctx.setLineDash([]);
 
                 ctx.beginPath()
@@ -82,6 +94,36 @@ export class UndirectedEdge extends Edge {
                 ctx.save()
                 ctx.lineWidth = 9
                 ctx.strokeStyle = "#528FFF";
+                ctx.setLineDash([]);
+
+
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break
+
+            case NodeHighlightType.ALGORITHM_VISITED:
+                ctx.save()
+                ctx.lineWidth = 9
+                ctx.strokeStyle = "#bbb";
+                ctx.setLineDash([]);
+
+
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break
+
+            case NodeHighlightType.ALGORITHM_RESULT:
+                ctx.save()
+                ctx.lineWidth = 9
+                ctx.strokeStyle = "blue";
                 ctx.setLineDash([]);
 
 
@@ -140,8 +182,6 @@ export class UndirectedEdge extends Edge {
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
         ctx.fillText(this.label, 0, 0);
-        
-        ctx.restore();
     }
 
     // HIGHLIGHTS

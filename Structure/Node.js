@@ -31,6 +31,9 @@ export const NodeHighlightType = {
     SELECTION: "selection",
     ALGORITHM_FOCUS: "algorithm_focus",
     ALGORITHM_FOCUS2: "algorithm_focus2",
+    ALGORITHM_VISITED: "algorithm_visited",
+    ALGORITHM_NOTVISITED: "algorithm_notvisited",
+    ALGORITHM_RESULT: "algorithm_result",
     FEATURE_PREVIEW: "feature_preview"
 }
 export const highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
@@ -89,7 +92,7 @@ export class Node {
 
     constructor(x, y, label, index = null, oColor = null, highlights = null) {
 
-        this._initialTime = window.performance.now();
+        this._initialTime = window.performance.now() + Math.random()*1000;
         this.index = index ?? globalNodeIndex;
         let nextColor = getColorRotation()
         this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
@@ -114,9 +117,9 @@ export class Node {
 
         this.auxLabelText = ""
         // DEBUG
-        if (Math.random() > 0.5) {
-            this.auxLabelText = Math.floor(Math.random() * 50)
-        }
+        // if (Math.random() > 0.5) {
+        //     this.auxLabelText = Math.floor(Math.random() * 50)
+        // }
         
         this.highlights = highlights ?? new Set();
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
@@ -149,12 +152,29 @@ export class Node {
         ctx.lineWidth = nodeBorderWidth;
         ctx.fillStyle = this.color;
         ctx.strokeStyle = nodeBorderColor;
-        ctx.setLineDash([]);
+        // if (this.highlights.has(NodeHighlightType.ALGORITHM_NOTVISITED)) {
+        // // ctx.lineWidth = nodeBorderWidth/2;
+        //     ctx.setLineDash([10, 10]);
+        // } else {
+        // // ctx.lineWidth = nodeBorderWidth;
+        //     ctx.setLineDash([]);
+        // }
 
+            ctx.setLineDash([]);
         ctx.beginPath();
         ctx.fillStyle = transparentLabelGradient;
         ctx.strokeStyle = this.color;
         ctx.lineWidth = 8;
+        if (this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2)) {
+            ctx.lineWidth = 8;
+        } else {
+            ctx.lineWidth = 8;
+        }
+        // if (this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2)) {
+        //     ctx.lineWidth = 8;
+        // } else {
+        //     ctx.lineWidth = 4;
+        // }
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2*Math.PI);
         ctx.fill();
         ctx.stroke();
@@ -167,32 +187,14 @@ export class Node {
         }
 
         // Draw label
-        this._drawLabel(nodeLabeling, this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) ? "#528FFF" : this.color)
+        let z = this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || (!this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2) && this.highlights.has(NodeHighlightType.ALGORITHM_VISITED))
+        // let z = false
+        this._drawLabel(nodeLabeling, z ? transparentLabelGradient : this.color)
         if (this.auxLabelText) {
             this._drawAuxLabel(this.auxLabelText)
         }
 
         return maxFPSRequest;
-    }
-    _drawAuxLabel(text) {
-        ctx.font = "bold 15pt Arial";
-        ctx.strokeStyle = this._originalcolor;
-        ctx.setLineDash([])
-        ctx.lineWidth = 4
-        ctx.textAlign = "center";
-        ctx.textBaseline = 'middle';
-        let m = ctx.measureText(text)
-        let boxWidth = m.width + 5
-        let boxHeight = 20
-        let boxOffset = 45
-        ctx.beginPath();
-        roundRect(ctx,
-                  this.pos.x - boxWidth/2,
-                  this.pos.y - boxOffset - boxHeight/2,
-                  boxWidth, boxHeight, 5)
-        ctx.fill();
-        ctx.fillStyle = "white"
-        ctx.fillText(text, this.pos.x, this.pos.y - boxOffset);
     }
 
     _drawHighlight(highlight) {
@@ -220,26 +222,116 @@ export class Node {
                 ctx.stroke();
                 return 20;
             }
-            case NodeHighlightType.ALGORITHM_FOCUS2:
             case NodeHighlightType.ALGORITHM_FOCUS: {
                 // Pisca o nó
-                let twinkleTime = window.performance.now()/500
-                let whiteLayerAlpha = Math.abs(Math.sin(twinkleTime)) - 0.7
-                ctx.setLineDash([]);
-                ctx.strokeStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
-                ctx.stroke()
+                let twinkleTime = window.performance.now()/300
+                let whiteLayerAlpha = Math.sin(twinkleTime)*0.3 - 0.3
+                // ctx.setLineDash([]);
+                // ctx.strokeStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
+                // ctx.stroke()
 
                 // Borda clara
-                ctx.strokeStyle = "#528FFF"
-                ctx.lineWidth = 10
+                let r = 150
+                let g = 200
+                let b = 150
+                ctx.fillStyle = this._originalcolor
+                // ctx.lineWidth = 10
                 
                 // Raio do tracejado
-                let lightBorderRadius = this.radius
+                let lightBorderRadius = this.radius - nodeBorderWidth
                 if (lightBorderRadius > 0) {
                     ctx.beginPath();
                     ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);
-                    ctx.stroke();
+                    ctx.fill();
                 }
+                return 20;
+            }
+            case NodeHighlightType.ALGORITHM_FOCUS2: {
+                // Pisca o nó
+                let twinkleTime = window.performance.now()/300
+                let whiteLayerAlpha = Math.sin(twinkleTime)*0.3 - 0.3
+                // ctx.setLineDash([]);
+                // ctx.strokeStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
+                // ctx.stroke()
+
+                // Borda clara
+                let r = 150
+                let g = 200
+                let b = 150
+                ctx.fillStyle = this._originalcolor
+                // ctx.lineWidth = 10
+                
+                // Raio do tracejado
+                let lightBorderRadius = this.radius - nodeBorderWidth
+                if (lightBorderRadius > 0) {
+                    ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);
+                    ctx.fill();
+                }
+                // Borda clara
+                ctx.fillStyle = colorFromComponents(255, 255, 255, 0.7)
+                // ctx.lineWidth = 10
+                
+                // Raio do tracejado
+                lightBorderRadius = this.radius - nodeBorderWidth
+                if (lightBorderRadius > 0) {
+                    ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);
+                    ctx.fill();
+                }
+                return 20;
+            }
+            case NodeHighlightType.ALGORITHM_VISITED: {
+                // Pisca o nó
+                let twinkleTime = window.performance.now()/1000
+                let whiteLayerAlpha = Math.sin(twinkleTime)*0.3 + 0.3 + 0.75
+                // ctx.setLineDash([]);
+                // ctx.strokeStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
+                // ctx.stroke()
+
+                // Borda clara
+                ctx.fillStyle = this._originalcolor
+                // ctx.lineWidth = 10
+                
+                // Raio do tracejado
+                let lightBorderRadius = this.radius - nodeBorderWidth
+                if (lightBorderRadius > 0) {
+                    ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);
+                    ctx.fill();
+                }
+                // Borda clara
+                ctx.fillStyle = colorFromComponents(50, 50, 50, 0.5)
+                // ctx.lineWidth = 10
+                
+                // Raio do tracejado
+                lightBorderRadius = this.radius - nodeBorderWidth
+                if (lightBorderRadius > 0) {
+                    ctx.beginPath();
+                    ctx.arc(this.pos.x, this.pos.y, lightBorderRadius, 0, 2*Math.PI);
+                    ctx.fill();
+                }
+                return 20;
+            }
+            case NodeHighlightType.ALGORITHM_RESULT: {
+                
+                ctx.strokeStyle = "blue"
+                ctx.lineWidth = 8
+
+                /// Para mantermos o mesmo número de traços independente
+                /// do raio do círculo, fazemos os passos seguintes.
+
+                // Raio do tracejado
+                // (A soma faz com que o tracejado fique do lado de fora do círculo)
+                let dashRadius = this.radius + ctx.lineWidth/2;
+                // Circunferência do círculo (2π * r)
+                let circunference = 2*Math.PI * dashRadius;
+
+                ctx.setLineDash([]);
+                // Desenhamos a borda tracejada
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, dashRadius, 0, 2*Math.PI);
+                ctx.stroke();
                 return 20;
             }
         }
@@ -265,6 +357,26 @@ export class Node {
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
 
+    _drawAuxLabel(text) {
+        ctx.font = "bold 15pt Arial";
+        ctx.strokeStyle = this._originalcolor;
+        ctx.setLineDash([])
+        ctx.lineWidth = 4
+        ctx.textAlign = "center";
+        ctx.textBaseline = 'middle';
+        let m = ctx.measureText(text)
+        let boxWidth = m.width + 5
+        let boxHeight = 20
+        let boxOffset = 45
+        ctx.beginPath();
+        roundRect(ctx,
+                  this.pos.x - boxWidth/2,
+                  this.pos.y - boxOffset - boxHeight/2,
+                  boxWidth, boxHeight, 5)
+        ctx.fill();
+        ctx.fillStyle = "white"
+        ctx.fillText(text, this.pos.x, this.pos.y - boxOffset);
+    }
     // HIGHLIGHTS
     
     addHighlight(type) {
