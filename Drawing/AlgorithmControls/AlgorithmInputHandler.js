@@ -96,6 +96,14 @@ export default class AlgorithmInputHandler {
                 this._controller.playing = false
                 this._controller.progress += 1
                 break
+            case 'Up':
+            case 'ArrowUp':
+                this._controller.speed++
+                break
+            case 'Down':
+            case 'ArrowDown':
+                this._controller.speed--
+                break
             case ' ':
                 this._controller.playing = !this._controller.playing
         }
