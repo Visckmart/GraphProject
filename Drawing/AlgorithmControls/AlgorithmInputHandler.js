@@ -56,12 +56,12 @@ export default class AlgorithmInputHandler {
 
         this._progressBarHandler = () => {
             this._controller.playing = false
-            this._controller.progress = this.progressBar.value
+            this._controller.progress = Number.parseInt(this.progressBar.value)
         }
         this.progressBar.addEventListener("input",  this._progressBarHandler)
 
         this._speedHandler = () => {
-            this._controller.speed = this.speedRange.value
+            this._controller.speed = Number.parseInt(this.speedRange.value)
         }
         this.speedRange.addEventListener("input", this._speedHandler)
     }
