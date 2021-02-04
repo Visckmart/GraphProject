@@ -98,7 +98,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     }
 
     currentNode = finalNode
-    while(currentNode !== null)
+    while(currentNode !== initialNode)
     {
         currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         if(currentNode.previousEdge)
@@ -106,6 +106,14 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             currentNode.previousEdge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
         }
         currentNode = currentNode.previousNode
+        if(currentNode === null) {
+            break
+        }
     }
-    controller.addStep(graph, 'Caminhando pelas distâncias mais curtas para encontrar o menor caminho. Algoritmo concluído.')
+    if(currentNode === initialNode)
+    {
+        controller.addStep(graph, 'Caminhando pelas distâncias mais curtas para encontrar o menor caminho. Algoritmo concluído.')
+    } else {
+        controller.addStep(graph, 'Um caminho não foi encontrado. Algoritmo concluído.')
+    }
 }
