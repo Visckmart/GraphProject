@@ -106,7 +106,7 @@ class AlgorithmController {
         {
             this._progress = value
             this.inputHandler.progressBar.value = value
-
+            this.inputHandler.redrawSliderBackground(this.inputHandler.progressBar)
             // Se a etapa atual é válida atualiza o grafo sendo mostrado
             if(this.steps[value])
             {
@@ -186,6 +186,7 @@ class AlgorithmController {
         if(value >= -4 && value <= 4) {
             this._speed = value
             this.inputHandler.speedRange.value = value
+            this.inputHandler.redrawSliderBackground(this.inputHandler.speedRange)
             if(this.playing)
             {
                 clearInterval(this._interval)
