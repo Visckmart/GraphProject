@@ -3,8 +3,6 @@ import {Node, NodeHighlightType} from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 
-import LZString from '../libs/lz-string/libs/lz-string.js'
-
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
