@@ -43,8 +43,10 @@ export class UndirectedEdge extends Edge {
 
         ctx.save();
 
-        this._drawText({ x: xStart, y: yStart },
-                       { x: xEnd,   y: yEnd   })
+        // this._drawText({ x: xStart, y: yStart },
+        //                { x: xEnd,   y: yEnd   })
+        
+        ctx.restore();
     }
 
     _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
@@ -66,7 +68,7 @@ export class UndirectedEdge extends Edge {
             case NodeHighlightType.ALGORITHM_FOCUS:
                 ctx.save()
                 ctx.lineWidth = 9
-                ctx.strokeStyle = "#2121C8";
+                ctx.strokeStyle = "#777";
                 ctx.setLineDash([]);
 
                 ctx.beginPath()
@@ -106,7 +108,22 @@ export class UndirectedEdge extends Edge {
             case NodeHighlightType.ALGORITHM_VISITED:
                 ctx.save()
                 ctx.lineWidth = 9
-                ctx.strokeStyle = "#777";
+                ctx.strokeStyle = "#bbb";
+                ctx.setLineDash([]);
+
+
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break
+
+            case NodeHighlightType.ALGORITHM_RESULT:
+                ctx.save()
+                ctx.lineWidth = 9
+                ctx.strokeStyle = "blue";
                 ctx.setLineDash([]);
 
 
@@ -165,8 +182,6 @@ export class UndirectedEdge extends Edge {
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
         ctx.fillText(this.label, 0, 0);
-        
-        ctx.restore();
     }
 
     // HIGHLIGHTS

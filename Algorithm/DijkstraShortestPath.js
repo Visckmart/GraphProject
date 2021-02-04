@@ -21,16 +21,15 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graph
 
     let unvisitedNodes = []
-    for(let node of graph.nodes())
-    {
-        if(node === initialNode)
-        {
-            node.distance = 0
-            node.previousEdge = null
-            node.previousNode = null
-            node.visited = false
-            unvisitedNodes.push(node)
-        } else {
+    
+    initialNode.distance = 0
+    initialNode.previousEdge = null
+    initialNode.previousNode = null
+    initialNode.visited = false
+    unvisitedNodes.push(initialNode)
+    
+    for (let node of graph.nodes()) {
+        if (node !== initialNode) {
             node.distance = Infinity
             node.previousEdge = null
             node.previousNode = null
@@ -38,63 +37,78 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             unvisitedNodes.push(node)
         }
     }
-    console.log(graph.serialize())
+    // console.log(graph.serialize())
     // console.log(graph)
+    // Adiciona um efeito de tracejado em todas as arestas
     for (let [edge, , ] of graph.uniqueEdges()) {
         edge.addHighlight(NodeHighlightType.ALGORITHM_NOTVISITED)
-        console.log("e", edge)
+        // console.log("e", edge)
     }
     controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞. O nó inicial é marcado com distância 0.`)
-    let currentNode
+    let currentNode;
 
-    while(currentNode !== finalNode && unvisitedNodes.length > 0) {
-        currentNode = null
+    while (currentNode !== finalNode && unvisitedNodes.length > 0) {
+        currentNode = null;
 
-        for(let node of unvisitedNodes)
-        {
-            if(node.distance < (currentNode?.distance ?? Infinity) && !node.visited)
-            {
-                currentNode = node
+        for(let node of unvisitedNodes) {
+            let currentNodeDistance = currentNode?.distance ?? Infinity
+            if (!node.visited && node.distance < currentNodeDistance) {
+                currentNode = node;
             }
         }
-        if(!currentNode) {
-            break
+        if (!currentNode) {
+            break;
+        }
+        currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        
+        // Código muito confuso e possivelmente com problema que não cria um
+        // passo visitando um nó se ele não tem pra onde ir.
+        // Pode ser que valha a pena visitar pra dizer que tentou ir pra algum lugar.
+        let connectedEdges = graph.edgesFrom(currentNode)
+        if (!(connectedEdges.next() != currentNode.previousNode && connectedEdges.next().done)) {
+            controller.addStep(graph, `Começando a visitação do nó ${currentNode.label}.`)
         }
 
-        currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        controller.addStep(graph, `Visitando o nó ${currentNode.label}.`)
 
-
+        // Passa por todos os nós conectados ao atual
         for(let [edge, node] of graph.edgesFrom(currentNode)) {
-            if(node === currentNode.previousNode)
-            {
+            // Ignora o nó anterior
+            if(node === currentNode.previousNode) {
                 continue
             }
 
-            node.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            node.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
             edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
 
+            console.log(currentNode.label + "->" + node.label, currentNode.highlights)
+            
             let newDistance = currentNode.distance + (edge?.weight ?? 1)
+            // Se a distância atual é menor que a registrada
             if(newDistance < node.distance) {
                 node.distance = newDistance
                 node.previousEdge = edge
                 node.previousNode = currentNode
 
                 controller.addStep(graph, `Visitando o nó ${node.label.split(' ')[0]} a partir da aresta ${edge.label}, atualizando sua distância para ${newDistance} e salvando a aresta ${edge.label} como a aresta anterior no caminho.`)
+
+            // Se a distância atual NÃO é menor que a registrada
             } else {
                 controller.addStep(graph, `Visitando o nó ${node.label.split(' ')[0]} a partir da aresta ${edge.label}, sua distância já é menor portanto não será atualizada.`)
             }
-            node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            // node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
             edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
             edge.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
         }
+
         currentNode.visited = true
+
         currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
-        controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
+        currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        currentNode.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+        // controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
     }
-    if(currentNode === finalNode)
-    {
+    if(currentNode === finalNode) {
         controller.addStep(graph, 'Nó final foi visitado portanto as visitações estão concluídas.')
     } else {
         controller.addStep(graph, 'Não sobrou nenhum nó com distância menor que ∞ e portanto a visitação foi concluída.')
@@ -104,10 +118,11 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     while(currentNode !== null)
     {
         currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        currentNode.addHighlight(NodeHighlightType.ALGORITHM_RESULT)
         console.log(currentNode)
         if(currentNode.previousEdge)
         {
-            currentNode.previousEdge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+            currentNode.previousEdge.addHighlight(NodeHighlightType.ALGORITHM_RESULT)
         }
         currentNode = currentNode.previousNode
     }
