@@ -41,7 +41,7 @@ let loadFavorite = function() {
         console.log("Nao tem favorito")
         return;
     }
-    g.structure = UndirectedGraph.deserialize(ser) 
+    g.structure = Graph.deserialize(ser) 
 }
 updateFavorites()
 for (let loadFavBtn of loadFavButtons) {
