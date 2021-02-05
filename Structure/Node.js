@@ -76,7 +76,7 @@ const positionAlphabet = up.concat(low.concat(c))
 
 export class Node {
 
-    constructor(x, y, label, index = null, oColor = null, highlights = null) {
+    constructor({x, y, label, index = null, oColor = null, highlights = null}) {
 
         this._initialTime = window.performance.now();
         this.index = index ?? globalNodeIndex;
@@ -397,11 +397,17 @@ export class Node {
         xPos *= canvas.width/61;
         yPos *= canvas.height/61;
         
-        let node = new Node(xPos, yPos, label, index, color, highlights)
+        let node = new Node({x:xPos, y:yPos, label, index, color, highlights})
         
         return node;
     }
 
+    // Clona o nó a partir da instância atual
+    clone() {
+        return new this.constructor(this._args)
+    }
+
+    // Instancia a classe atual a partir de um nó existente
     static from(node) {
         return new this(node._args)
     }
