@@ -13,7 +13,9 @@ function roundRect(ctx, x, y, width, height, radius) {
     ctx.quadraticCurveTo(x, b, x, b - radius);
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.stroke();
+}
+function colorFromComponents(r, g, b, a = 1) {
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")"
 }
 
 let NodeAssignedValueMixin = (superclass) => {
@@ -39,6 +41,9 @@ let NodeAssignedValueMixin = (superclass) => {
             }
             ctx.save()
             ctx.font = "bold 15pt Arial";
+            if (this.assignedValue == "∞") {
+                ctx.font = "bold 20pt Arial";
+            }
             ctx.strokeStyle = this._originalcolor;
             ctx.setLineDash([])
             ctx.lineWidth = 4
@@ -54,10 +59,24 @@ let NodeAssignedValueMixin = (superclass) => {
                 this.pos.y - boxOffset - boxHeight/2,
                 boxWidth, boxHeight, 5)
             ctx.fillStyle = this._originalcolor
+            if (this.assignedValue != "∞") {
             ctx.fill();
+        }
+            ctx.fillStyle = "#888"
+            if (this.assignedValue != "∞") {
             ctx.fillStyle = "white"
+        }
+            // ctx.stroke()
+            // ctx.fillStyle = this._originalcolor
             ctx.fillText(this.assignedValue, this.pos.x, this.pos.y - boxOffset);
+            
+            ctx.fillStyle = "white"
+            if (this.assignedValue == "∞") {
+                ctx.fillStyle = colorFromComponents(180, 180, 180, 0.5)
+                ctx.fill();
+            }
             ctx.restore()
+            return 0;
         }
     }
 }

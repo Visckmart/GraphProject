@@ -268,8 +268,8 @@ class Graph {
     }
 
     clone () {
-        let newGraph = new Graph()
-
+        let newGraph = new this.constructor()
+        newGraph.debug = false;
         let newNodeMap = new Map()
         for(let node of this.nodes()) {
             let newNode = node.clone()
@@ -288,7 +288,7 @@ class Graph {
 
     cloneAndTransform (EdgeConstructor = null, NodeConstructor = null) {
         let newGraph = new this.constructor()
-
+        newGraph.debug = false;
         let newNodeMap = new Map()
         for(let node of this.nodes()) {
             let newNode = NodeConstructor ? NodeConstructor.from(node) : node.clone()

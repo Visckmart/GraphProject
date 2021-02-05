@@ -7,6 +7,46 @@ import BFS from "../Algorithm/BFS.js";
 import { HighlightType } from "../Structure/Highlights.js"
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 
+function updateFavorites() {
+    for (let loadFavBtn of loadFavButtons) {
+        if (window.localStorage.getItem("fav"+loadFavBtn.name) == undefined) {
+            loadFavBtn.disabled = true;
+        } else {
+            loadFavBtn.disabled = false;
+        }
+    }
+}
+let saveFavButtons = document.getElementsByClassName("saveFavorite")
+// console.log(saveFavButtons)
+let saveFavorite = function() {
+    console.log("Salvando", "fav"+this.name)
+    window.localStorage.setItem("fav"+this.name, g.structure.serialize())
+    updateFavorites()
+    // g.structure = UndirectedGraph.deserialize(urlParams.get("graph")) 
+}
+for (let saveFavBtn of saveFavButtons) {
+    saveFavBtn.onclick = saveFavorite
+}
+
+let clearFavBtn = document.getElementById("clearFavorites")
+clearFavBtn.onclick = function() {
+    window.localStorage.clear()
+    updateFavorites()
+}
+let loadFavButtons = document.getElementsByClassName("loadFavorite")
+let loadFavorite = function() {
+    let ser = window.localStorage.getItem("fav"+this.name)
+    console.log("Lendo", "fav"+this.name, ser)
+    if (!ser) {
+        console.log("Nao tem favorito")
+        return;
+    }
+    g.structure = UndirectedGraph.deserialize(ser) 
+}
+updateFavorites()
+for (let loadFavBtn of loadFavButtons) {
+    loadFavBtn.onclick = loadFavorite
+}
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 for(let element of document.querySelector("#tool_tray").getElementsByTagName("input")) {
     if (element.name == "tool") {

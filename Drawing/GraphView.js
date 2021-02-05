@@ -176,7 +176,7 @@ class GraphView {
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
-        showSettings.style.display = "initial"
+        showSettings.style.display = "block"
 
     }
 
