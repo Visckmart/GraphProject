@@ -1,5 +1,6 @@
 // Node Definition
 import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
+import { HighlightType, HighlightsHandler } from "./Highlights.js"
 
 export const regularNodeRadius = 28;
 const nodeColorList = [
@@ -27,17 +28,7 @@ function generateNewRandomLetter() {
     return newRandomLetter;
 }
 
-export const NodeHighlightType = {
-    SELECTION: "selection",
-    ALGORITHM_FOCUS: "algorithm_focus",
-    ALGORITHM_FOCUS2: "algorithm_focus2",
-    ALGORITHM_VISITING: "algorithm_visiting",
-    ALGORITHM_VISITED: "algorithm_visited",
-    ALGORITHM_NOTVISITED: "algorithm_notvisited",
-    ALGORITHM_RESULT: "algorithm_result",
-    FEATURE_PREVIEW: "feature_preview"
-}
-export const highlightNames = Object.entries(NodeHighlightType).map(entry => entry[1]).flat()
+
 function colorFromComponents(r, g, b, a = 1) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")"
 }
@@ -45,28 +36,6 @@ function colorFromComponents(r, g, b, a = 1) {
 const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
 transparentLabelGradient.addColorStop(0, "#E5E0FF");
 transparentLabelGradient.addColorStop(1, "#FFE0F3");
-const filteredOutHighlights = [
-    NodeHighlightType.SELECTION,
-]
-
-export function prepareHighlightsForSharing(highlights) {
-    let highlightsCopy = new Set(highlights)
-    for (let highlight of filteredOutHighlights) {
-        highlightsCopy.delete(highlight)
-    }
-    let serializedHighlights = Array.from(highlightsCopy)
-                                .map(hName => highlightNames.indexOf(hName))
-                                .filter(hNum => hNum != -1)
-                                .join("_")
-    return serializedHighlights
-}
-export function deserializeHighlights(serializedHighlights) {
-    if (serializedHighlights.length > 0) {
-        let namedHighlights = serializedHighlights.split("_").map(hNum => highlightNames[hNum])
-        return new Set(namedHighlights)
-    }
-    return null
-}
 
 const up = Array.from({length: 26}, (_, i) => String.fromCharCode(65+i));
 const low = Array.from({length: 26}, (_, i) => String.fromCharCode(97+i));
@@ -101,7 +70,7 @@ export class Node {
             this.label = newRandomLabel;
         }
         
-        this.highlights = highlights ?? new Set();
+        this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
 
         // Adicionando procedure de draw
@@ -129,7 +98,7 @@ export class Node {
         let speed  = this._breatheSettings.speed
         let mult   = this._breatheSettings.amplitude
         let offset = this._breatheSettings.offset
-        if (this.highlight & NodeHighlightType.ALGORITHM_FOCUS) {
+        if (this.highlight & HighlightType.ALGORITHM_FOCUS) {
             speed = 0.4;
             mult = 2.5;
         }
@@ -161,7 +130,7 @@ export class Node {
         ctx.lineWidth = nodeBorderWidth;
         ctx.fillStyle = this.color;
         ctx.strokeStyle = nodeBorderColor;
-        // if (this.highlights.has(NodeHighlightType.ALGORITHM_NOTVISITED)) {
+        // if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
         // // ctx.lineWidth = nodeBorderWidth/2;
         //     ctx.setLineDash([10, 10]);
         // } else {
@@ -174,12 +143,12 @@ export class Node {
         ctx.fillStyle = transparentLabelGradient;
         ctx.strokeStyle = this.color;
         ctx.lineWidth = 8;
-        if (this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2)) {
+        if (this.highlights.has(HighlightType.ALGORITHM_FOCUS) || this.highlights.has(HighlightType.ALGORITHM_FOCUS2)) {
             ctx.lineWidth = 8;
         } else {
             ctx.lineWidth = 8;
         }
-        // if (this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2)) {
+        // if (this.highlights.has(HighlightType.ALGORITHM_FOCUS2)) {
         //     ctx.lineWidth = 8;
         // } else {
         //     ctx.lineWidth = 4;
@@ -190,13 +159,13 @@ export class Node {
 
         // Draw highlights
         let maxFPSRequest = 0;
-        for (let h of this.highlights) {
+        for (let h of this.highlights.list()) {
             let fpsRequest = this._drawHighlight(h)
             maxFPSRequest = Math.max(maxFPSRequest, fpsRequest)
         }
 
         // Draw label
-        let z = this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || (!this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2) && this.highlights.has(NodeHighlightType.ALGORITHM_VISITED))
+        let z = this.highlights.has(HighlightType.ALGORITHM_FOCUS) || (!this.highlights.has(HighlightType.ALGORITHM_FOCUS2) && this.highlights.has(HighlightType.ALGORITHM_VISITED))
         // let z = false
         this._drawLabel(nodeLabeling, z ? transparentLabelGradient : this.color)
 
@@ -205,7 +174,7 @@ export class Node {
 
     _drawHighlight(highlight) {
         switch (highlight) {
-            case NodeHighlightType.SELECTION: {
+            case HighlightType.SELECTION: {
                 /* Borda pontilhada */
                 ctx.strokeStyle = "#1050FF"
                 ctx.lineWidth = 4
@@ -229,7 +198,7 @@ export class Node {
                 ctx.stroke();
                 return 20;
             }
-            case NodeHighlightType.ALGORITHM_FOCUS: {
+            case HighlightType.ALGORITHM_FOCUS: {
                 /* Fundo cinza escuro */
 
                 ctx.fillStyle = colorFromComponents(50, 50, 50, 0.8)
@@ -241,7 +210,7 @@ export class Node {
 
                 return 0;
             }
-            case NodeHighlightType.ALGORITHM_FOCUS2: {
+            case HighlightType.ALGORITHM_FOCUS2: {
                 /* Fundo colorido mas claro */
 
                 // Colorir o fundo
@@ -259,7 +228,7 @@ export class Node {
                 return 0;
             }
 
-            case NodeHighlightType.ALGORITHM_VISITED: {
+            case HighlightType.ALGORITHM_VISITED: {
                 /* Fundo colorido mas escurecido */
 
                 // Colorir o fundo
@@ -276,7 +245,7 @@ export class Node {
 
                 return 0;
             }
-            case NodeHighlightType.ALGORITHM_RESULT: {
+            case HighlightType.ALGORITHM_RESULT: {
                 /* Borda de cor forte e fundo piscando claro */
 
                 // Configuramos a borda
@@ -322,20 +291,9 @@ export class Node {
     }
 
     // HIGHLIGHTS
-    
-    addHighlight(type) {
-        this.highlights.add(type)
-    }
-
-    removeHighlight(type) {
-        if (this.highlights.has(type) == false) {
-            console.log("Não", type)
-        }
-        this.highlights.delete(type)
-    }
 
     get isSelected() {
-        return this.highlights.has(NodeHighlightType.SELECTION);
+        return this.highlights.has(HighlightType.SELECTION);
     }
 
     serialize() {
@@ -354,7 +312,7 @@ export class Node {
         let serializedPosition = `${positionAlphabet[percX]}${positionAlphabet[percY]}`
 
         // Highlights
-        let serializedHighlights = prepareHighlightsForSharing(this.highlights)
+        let serializedHighlights = this.highlights.prepareForSharing()
         if (serializedHighlights != "") {
             serializedHighlights = "-" + serializedHighlights
         }
@@ -388,7 +346,7 @@ export class Node {
         // console.log("pos", serializedPos)
         let highlights;
         if (serializedHighlights != null) {
-            highlights = deserializeHighlights(serializedHighlights)
+            highlights = HighlightsHandler.deserialize(serializedHighlights)
         }
 
         let xPos = positionAlphabet.indexOf(serializedPos.charAt(0))

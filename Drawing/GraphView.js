@@ -1,5 +1,5 @@
 import { canvas, ctx, Tool, HighFPSFeature } from "./General.js"
-import {Node, NodeHighlightType} from "../Structure/Node.js"
+import { Node } from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 
@@ -146,7 +146,7 @@ class GraphView {
         if (numberOfSelectedNodes == 1 &&
             this.selectionHandler.temporarySelection === false &&
             !this.selectionHandler.drawingSelection) {
-            console.log("b")
+            // console.log("b")
             showSettings = document.getElementById("NodeSettings")
             let selectionHandler = this.selectionHandler
 

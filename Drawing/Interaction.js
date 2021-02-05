@@ -4,7 +4,7 @@ import ToolRepository from "./ToolRepository.js";
 import UndirectedGraph from "../Structure/UndirectedGraph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import BFS from "../Algorithm/BFS.js";
-import {NodeHighlightType} from "../Structure/Node.js";
+import { HighlightType } from "../Structure/Highlights.js"
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 
 nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
@@ -29,7 +29,7 @@ for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon"
         if (x.parentElement.previousElementSibling.value == "disconnect_all") {
             for (let [edge, nodeA, nodeB] of g.structure.uniqueEdges()) {
                 if (nodesToDisconnect.includes(nodeA) || nodesToDisconnect.includes(nodeB)) {
-                    edge.addHighlight(NodeHighlightType.FEATURE_PREVIEW)
+                    edge.addHighlight(HighlightType.FEATURE_PREVIEW)
                 }
             }
         }
@@ -39,7 +39,7 @@ for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon"
         // console.log(x.parentElement.previousElementSibling.value)
         if (x.parentElement.previousElementSibling.value == "disconnect_all") {
             for (let [edge, ,] of g.structure.uniqueEdges()) {
-                edge.removeHighlight(NodeHighlightType.FEATURE_PREVIEW)
+                edge.removeHighlight(HighlightType.FEATURE_PREVIEW)
             }
         }
     })

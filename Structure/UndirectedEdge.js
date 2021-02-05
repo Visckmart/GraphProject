@@ -1,13 +1,14 @@
 import Edge from "./Edge.js";
-import { NodeHighlightType, prepareHighlightsForSharing, deserializeHighlights } from "../Structure/Node.js"
+import { HighlightType, HighlightsHandler } from "../Structure/Highlights.js"
 import {canvas, ctx} from "../Drawing/General.js";
+
 const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
 transparentLabelGradient.addColorStop(0, "#E5E0FF");
 transparentLabelGradient.addColorStop(1, "#FFE0F3");
 export class UndirectedEdge extends Edge {
     constructor(label, highlights = null) {
         super(label);
-        this.highlights = highlights ?? new Set();
+        this.highlights = new HighlightsHandler(highlights)
     }
 
     draw({ x: xStart, y: yStart },
@@ -18,8 +19,8 @@ export class UndirectedEdge extends Edge {
             ctx.strokeStyle = "#aaa";
             ctx.setLineDash([]);
 
-            if (!(this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2) || this.highlights.has(NodeHighlightType.ALGORITHM_VISITED))) {
-        if (this.highlights.has(NodeHighlightType.ALGORITHM_NOTVISITED)) {
+            if (!(this.highlights.has(HighlightType.ALGORITHM_FOCUS) || this.highlights.has(HighlightType.ALGORITHM_FOCUS2) || this.highlights.has(HighlightType.ALGORITHM_VISITED))) {
+        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
         // ctx.lineWidth = nodeBorderWidth/2;
             ctx.setLineDash([10, 5]);
             ctx.lineWidth = 5
@@ -36,8 +37,7 @@ export class UndirectedEdge extends Edge {
 
             ctx.restore()
         }
-        for(let highlight of this.highlights)
-        {
+        for(let highlight of this.highlights.list()) {
             this._drawHighlight(highlight, xStart, yStart, xEnd, yEnd)
         }
 
@@ -51,7 +51,7 @@ export class UndirectedEdge extends Edge {
 
     _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
         switch(highlight) {
-            case NodeHighlightType.SELECTION:
+            case HighlightType.SELECTION:
                 ctx.save()
 
                 ctx.setLineDash([15, 15]);
@@ -65,7 +65,7 @@ export class UndirectedEdge extends Edge {
 
                 ctx.restore()
                 break
-            case NodeHighlightType.ALGORITHM_FOCUS:
+            case HighlightType.ALGORITHM_FOCUS:
                 ctx.save()
                 ctx.lineWidth = 9
                 ctx.strokeStyle = "#777";
@@ -90,7 +90,7 @@ export class UndirectedEdge extends Edge {
                 // ctx.restore()
                 break
 
-            case NodeHighlightType.ALGORITHM_FOCUS2:
+            case HighlightType.ALGORITHM_FOCUS2:
                 ctx.save()
                 ctx.lineWidth = 9
                 ctx.strokeStyle = "#528FFF";
@@ -105,7 +105,7 @@ export class UndirectedEdge extends Edge {
                 ctx.restore()
                 break
 
-            case NodeHighlightType.ALGORITHM_VISITING:
+            case HighlightType.ALGORITHM_VISITING:
                 ctx.save()
                 ctx.lineWidth = 9
                 ctx.strokeStyle = "#777";
@@ -118,7 +118,7 @@ export class UndirectedEdge extends Edge {
 
                 ctx.restore()
                 break;
-            case NodeHighlightType.ALGORITHM_VISITED:
+            case HighlightType.ALGORITHM_VISITED:
                 ctx.save()
                 ctx.lineWidth = 9
                 ctx.strokeStyle = "#bbb";
@@ -133,7 +133,7 @@ export class UndirectedEdge extends Edge {
                 ctx.restore()
                 break
 
-            case NodeHighlightType.ALGORITHM_RESULT:
+            case HighlightType.ALGORITHM_RESULT:
                 ctx.save()
                 ctx.lineWidth = 9
                 ctx.strokeStyle = "blue";
@@ -147,7 +147,7 @@ export class UndirectedEdge extends Edge {
 
                 ctx.restore()
                 break
-            case NodeHighlightType.FEATURE_PREVIEW:
+            case HighlightType.FEATURE_PREVIEW:
                 ctx.save()
 
                 ctx.setLineDash([]);
@@ -198,24 +198,17 @@ export class UndirectedEdge extends Edge {
     }
 
     // HIGHLIGHTS
-    
-    addHighlight(type) {
-        this.highlights.add(type)
-    }
-
-    removeHighlight(type) {
-        this.highlights.delete(type)
-    }
 
     get isSelected() {
-        return this.highlights.has(NodeHighlightType.SELECTION);
+        return this.highlights.has(HighlightType.SELECTION);
     }
 
     serialize() {
-        let serializedHighlights = prepareHighlightsForSharing(this.highlights)
+        let serializedHighlights = this.highlights.prepareForSharing()
         if (serializedHighlights != "") {
             serializedHighlights = "-" + serializedHighlights
         }
+        // console.log("s", serializedHighlights)
         return `${this.label}${serializedHighlights}`
     }
 
@@ -231,7 +224,8 @@ export class UndirectedEdge extends Edge {
         // console.log(label, serializedHighlights, serializedEdge)
         let highlights;
         if (serializedHighlights != null) {
-            highlights = deserializeHighlights(serializedHighlights)
+            highlights = HighlightsHandler.deserialize(serializedHighlights)
+            // console.log("d", highlights)
         }
         let edge = new UndirectedEdge(label, highlights)
         return edge
