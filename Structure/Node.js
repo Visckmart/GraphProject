@@ -1,6 +1,7 @@
 // Node Definition
 import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
+import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 export const regularNodeRadius = 28;
 const nodeColorList = [
@@ -73,8 +74,11 @@ export class Node {
         this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
 
+        // Instanciando cadeia de responsabilidade
+        this.drawChain = new ResponsibilityChain()
+
         // Adicionando procedure de draw
-        this.addDrawProcedure(this.drawProcedure)
+        this.drawChain.addLink(this.drawProcedure)
     }
 
     // Lista de argumentos para clonagem
@@ -115,10 +119,7 @@ export class Node {
 
     // Executa a cadeia de responsabilidade
     draw(...args) {
-        let fpsRequests = []
-        for(let procedure of this._drawChain) {
-            fpsRequests.push(procedure(...args))
-        }
+        let fpsRequests = this.drawChain.call(...args)
         return Math.max(...fpsRequests)
     }
 

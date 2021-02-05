@@ -22,7 +22,7 @@ let NodeAssignedValueMixin = (superclass) => {
             super(args)
             this.assignedValue = assignedValue
 
-            this.addDrawProcedure(this.drawAuxLabel)
+            this.drawChain.addLink(this.drawAuxLabel)
         }
 
         get _args() {
