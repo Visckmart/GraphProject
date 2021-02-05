@@ -1,6 +1,6 @@
 import Graph from "./Graph.js";
-import {UndirectedEdge} from "./UndirectedEdge.js";
-import {UndirectedTemporaryEdge} from "./UndirectedTemporaryEdge.js";
+import Edge from "./Edge.js";
+import TemporaryEdgeMixin from "./Mixins/Edge/TemporaryEdgeMixin.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
 class UndirectedGraph extends Graph {
@@ -10,7 +10,7 @@ class UndirectedGraph extends Graph {
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
-        let edge = new UndirectedEdge(String.fromCharCode(Math.floor(Math.random()*26)+65))
+        let edge = new Edge({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
         // Verificação
         if (!(nodeA && nodeB && edge)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
@@ -50,7 +50,8 @@ class UndirectedGraph extends Graph {
 
     // Criando aresta temporária
     createTemporaryEdge() {
-        return new UndirectedTemporaryEdge("")
+        let TemporaryEdge = TemporaryEdgeMixin(Edge)
+        return new TemporaryEdge({label: ''})
     }
 
     // Remoção
@@ -94,7 +95,7 @@ class UndirectedGraph extends Graph {
                 if (found == undefined) continue;
                 const [_, nodeA, nodeB, edgeData] = found;
                 // console.log("graph edge", nodeA, nodeB, edgeData)
-                let ne = UndirectedEdge.deserialize(edgeData)
+                let ne = Edge.deserialize(edgeData)
                 graph.insertEdge(
                     deserializedNodes.find(n => n.index === parseInt(nodeA)),
                     deserializedNodes.find(n => n.index === parseInt(nodeB)),
