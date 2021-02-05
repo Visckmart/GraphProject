@@ -257,7 +257,7 @@ class GraphView {
         if (this.getNodeIndexAt(pos, true).length != 0) {
             return false;
         }
-        let newNode = new Node(pos.x, pos.y)
+        let newNode = new Node({x: pos.x, y:pos.y})
         this.structure.insertNode(newNode)
         this.redrawGraph();
         return newNode;
