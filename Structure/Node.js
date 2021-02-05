@@ -85,7 +85,7 @@ export class Node {
             label: this.label,
             index: this.index,
             oColor: this._originalcolor,
-            highlights: new Set(this.highlights)
+            highlights: new Set(this.highlights.list())
         }
     }
 

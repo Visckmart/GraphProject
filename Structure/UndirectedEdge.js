@@ -232,7 +232,7 @@ export class UndirectedEdge extends Edge {
     }
 
     clone() {
-        return new UndirectedEdge(this.label, new Set(this.highlights))
+        return new UndirectedEdge(this.label, new Set(this.highlights.list()))
     }
 
     static from(edge) {
