@@ -12,7 +12,7 @@ const nodeBorderColor = "transparent";
 
 const edgeWidth = 3;
 
-const IDLE_MAX_FPS = 10;
+const IDLE_MAX_FPS = 20;
 const INTERACTION_MAX_FPS = 90;
 
 const NodeLabeling = {

@@ -120,6 +120,7 @@ export class Node {
     // Executa a cadeia de responsabilidade
     draw(...args) {
         let fpsRequests = this.drawChain.call(...args)
+        fpsRequests = fpsRequests.filter(req => req != undefined)
         return Math.max(...fpsRequests)
     }
 
