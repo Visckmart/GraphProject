@@ -18,7 +18,6 @@ class AlgorithmController {
 
         this.graphView = graphView
         this.initialGraph = graphView.structure.clone()
-        this.graph = graphView.structure
 
 
 
