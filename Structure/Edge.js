@@ -16,6 +16,13 @@ export default class Edge {
         this.drawChain.addLink(this.drawProcedure)
     }
 
+    get _args() {
+        return {
+            label: this.label,
+            highlights: new Set(this.highlights.list())
+        }
+    }
+
 
     // Executa a cadeia de responsabilidade
     draw(...args) {
@@ -247,6 +254,6 @@ export default class Edge {
     }
 
     static from(edge) {
-        //TODO: Refatorar isso
+        return new this(edge._args)
     }
 }
