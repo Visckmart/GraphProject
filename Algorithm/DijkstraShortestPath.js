@@ -1,22 +1,7 @@
 import {NodeHighlightType} from "../Structure/Node.js";
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 import Edge from "../Structure/Edge.js";
-
-export default async function DijkstraShortestPath(controller) {
-    let initialNode
-
-    // Capturando nó inicial
-    controller.addRequirement(RequirementType.SELECT_NODE,
-        "Selecione o nó de inicio.",
-        node => initialNode = node)
-
-    controller.addRequirement(RequirementType.SELECT_NODE,
-        "Selecione o nó final.",
-        node => {
-            executeDijkstraShortestPath(controller, initialNode, node)
-        })
-    await controller.resolveRequirements()
-}
+import NodeAssignedValueMixin from "../Structure/Mixins/NodeAssignedValueMixin.js";
 
 function markAsActive(artifact) {
     artifact.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
@@ -42,24 +27,49 @@ function markAsVisiting(artifact) {
 // function removeVisitingMark(artifact) {
 //     .removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
 //             edge.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
-function executeDijkstraShortestPath(controller, initialNode, finalNode) {
-    let graph = controller.graph
 
-    let unvisitedNodes = []
-    
+export default async function DijkstraShortestPath(controller) {
+    let initialNode
+
+    // Pegando o primeiro nó para gerar a classe baseado no seu tipo
+    let node = controller.graphView.structure.nodes().next().value
+    // Se esse nó não tem valor assinalado transforma o grafo para um com nós com valor assinalado
+    if(!node.assignedValue)
+    {
+        controller.graphView.structure =
+            controller.graphView.structure.cloneAndTransform(null, NodeAssignedValueMixin(node.constructor))
+        controller.graphView.redrawGraph()
+    }
+
+    // Capturando nó inicial
+    controller.addRequirement(RequirementType.SELECT_NODE,
+        "Selecione o nó de inicio.",
+        node => initialNode = node)
+
+    controller.addRequirement(RequirementType.SELECT_NODE,
+        "Selecione o nó final.",
+        node => {
+            executeDijkstraShortestPath(controller, initialNode, node)
+        })
+    await controller.resolveRequirements()
+}
+
+function executeDijkstraShortestPath(controller, initialNode, finalNode) {
+    let graph = controller.graphView.structure
+
     initialNode.distance = 0
     initialNode.previousEdge = null
     initialNode.previousNode = null
     initialNode.visited = false
-    unvisitedNodes.push(initialNode)
-    
+    initialNode.assignedValue = '0'
+
     for (let node of graph.nodes()) {
         if (node !== initialNode) {
             node.distance = Infinity
             node.previousEdge = null
             node.previousNode = null
             node.visited = false
-            unvisitedNodes.push(node)
+            node.assignedValue = '∞'
         }
     }
     // console.log(graph.serialize())
@@ -73,10 +83,10 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞.\nO nó inicial é marcado com distância 0.`)
     let currentNode;
 
-    while (currentNode !== finalNode && unvisitedNodes.length > 0) {
+    while (currentNode !== finalNode) {
         currentNode = null;
 
-        for(let node of unvisitedNodes) {
+        for(let node of graph.nodes()) {
             let currentNodeDistance = currentNode?.distance ?? Infinity
             if (!node.visited && node.distance < currentNodeDistance) {
                 currentNode = node;
@@ -92,7 +102,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // passo visitando um nó se ele não tem pra onde ir.
         // Pode ser que valha a pena visitar pra dizer que tentou ir pra algum lugar.
         let connectedEdges = graph.edgesFrom(currentNode)
-        if (!(connectedEdges.next() != currentNode.previousNode && connectedEdges.next().done)) {
+        if (!(connectedEdges.next() !== currentNode.previousNode && connectedEdges.next().done)) {
             controller.addStep(graph, `Começando a visitação do nó ${currentNode.label}.`)
         }
 
@@ -116,6 +126,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                 let oldDistance = node.distance
 
                 node.distance = newDistance
+                node.assignedValue = newDistance.toString()
                 node.previousEdge = edge
                 node.previousNode = currentNode
 
@@ -131,9 +142,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         currentNode.visited = true
         markAsNotActive(currentNode)
         markAsVisited(currentNode)
-        if (currentNode == initialNode) {
+        if (currentNode === initialNode) {
             initialNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        } else if (currentNode == finalNode) {
+        } else if (currentNode === finalNode) {
             finalNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         }
         // currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
