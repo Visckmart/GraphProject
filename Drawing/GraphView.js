@@ -39,7 +39,7 @@ class GraphView {
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
-        this.selectionHandler = new GraphSelection(canvas, this.structure, this);
+        this.selectionHandler = new GraphSelection(ctx, this.structure, this);
         let mouseHandler = new GraphMouseHandler(this)
         let keyboardHandler = new GraphKeyboardHandler(this)
         this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
