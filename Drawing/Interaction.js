@@ -29,7 +29,7 @@ for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon"
         if (x.parentElement.previousElementSibling.value == "disconnect_all") {
             for (let [edge, nodeA, nodeB] of g.structure.uniqueEdges()) {
                 if (nodesToDisconnect.includes(nodeA) || nodesToDisconnect.includes(nodeB)) {
-                    edge.addHighlight(HighlightType.FEATURE_PREVIEW)
+                    edge.highlights.add(HighlightType.FEATURE_PREVIEW)
                 }
             }
         }
@@ -39,7 +39,7 @@ for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon"
         // console.log(x.parentElement.previousElementSibling.value)
         if (x.parentElement.previousElementSibling.value == "disconnect_all") {
             for (let [edge, ,] of g.structure.uniqueEdges()) {
-                edge.removeHighlight(HighlightType.FEATURE_PREVIEW)
+                edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
             }
         }
     })
