@@ -99,7 +99,9 @@ class UndirectedGraph extends Graph {
                 )
             }
         }
-        console.info("Grafo desserializado com sucesso.")
+        if (this.debug) {
+            console.info("Grafo desserializado com sucesso.");
+        }
         return graph
     }
 

@@ -1,5 +1,5 @@
 import { Tool } from "./General.js"
-import { NodeHighlightType } from "../Structure/Node.js"
+import { HighlightType } from "../Structure/Highlights.js"
 
 class GraphMouseHandler {
     
@@ -90,14 +90,14 @@ class GraphMouseHandler {
         // console.log(this.selection.temporarySelection)
         let nodeHover = this.graphView.getNodeIndexAt(pos)
         if (this.edgeColision) {
-            this.edgeColision.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+            this.edgeColision.highlights.remove(HighlightType.ALGORITHM_FOCUS2)
         }
         if (this.graphView.primaryTool == Tool.CONNECT) {
             if (nodeHover.length == 0) {
                 let edgeHover = this.graphView.checkEdgeCollision(pos)
                 this.edgeColision = edgeHover
                 if (edgeHover) {
-                    edgeHover.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+                    edgeHover.highlights.add(HighlightType.ALGORITHM_FOCUS2)
                 }
             }
         }

@@ -1,13 +1,12 @@
-import { NodeHighlightType } from "../Structure/Node.js"
+import { HighlightType } from "../Structure/Highlights.js"
 import {Tool} from "./General.js";
 
 /* Tolerância para iniciar a seleção múltipla */
 const movementTolerance = 20
 
 export default class GraphSelection {
-    constructor(canvas, structure, graphView) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext("2d");
+    constructor(canvasContext, structure, graphView) {
+        this.ctx = canvasContext;
         this.graphView = graphView;
     }
 
@@ -149,9 +148,9 @@ export default class GraphSelection {
     updateNodesAppearance() {
         for (let node of this.graphView.structure.nodes()) {
             if (this.selectedNodes.includes(node) && this.temporarySelection == false) {
-                node.addHighlight(NodeHighlightType.SELECTION)
+                node.highlights.add(HighlightType.SELECTION)
             } else {
-                node.removeHighlight(NodeHighlightType.SELECTION)
+                node.highlights.remove(HighlightType.SELECTION)
             }
         }
         
@@ -168,9 +167,9 @@ export default class GraphSelection {
     updateEdgesAppearance() {
         for (let [edge, a, b] of this.graphView.structure.edges()) {
             if (this.selectedEdges.includes(edge)) {
-                edge.addHighlight(NodeHighlightType.SELECTION)
+                edge.highlights.add(HighlightType.SELECTION)
             } else {
-                edge.removeHighlight(NodeHighlightType.SELECTION)
+                edge.highlights.remove(HighlightType.SELECTION)
             }
         }
     }

@@ -1,4 +1,4 @@
-import {NodeHighlightType} from "../Structure/Node.js";
+import { HighlightType } from "../Structure/Highlights.js"
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 import Edge from "../Structure/Edge.js";
 
@@ -19,29 +19,29 @@ export default async function DijkstraShortestPath(controller) {
 }
 
 function markAsActive(artifact) {
-    artifact.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+    artifact.highlights.add(HighlightType.ALGORITHM_FOCUS2)
 }
 function markAsNotActive(artifact) {
-    artifact.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+    artifact.highlights.remove(HighlightType.ALGORITHM_FOCUS2)
 }
 
 function markAsNotVisited(artifact) {
-    artifact.addHighlight(NodeHighlightType.ALGORITHM_NOTVISITED)
+    artifact.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
 }
 function markAsVisited(artifact) {
     if (artifact instanceof Edge) {
-        artifact.removeHighlight(NodeHighlightType.ALGORITHM_VISITING)
+        artifact.highlights.remove(HighlightType.ALGORITHM_VISITING)
     }
-    artifact.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+    artifact.highlights.add(HighlightType.ALGORITHM_VISITED)
 }
 
 function markAsVisiting(artifact) {
-    artifact.addHighlight(NodeHighlightType.ALGORITHM_VISITING)
+    artifact.highlights.add(HighlightType.ALGORITHM_VISITING)
 }
 
 // function removeVisitingMark(artifact) {
-//     .removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-//             edge.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+//     .removeHighlight(HighlightType.ALGORITHM_FOCUS)
+//             edge.addHighlight(HighlightType.ALGORITHM_VISITED)
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graph
 
@@ -85,7 +85,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         if (!currentNode) {
             break;
         }
-        // currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        // currentNode.addHighlight(HighlightType.ALGORITHM_FOCUS2)
         markAsActive(currentNode)
         
         // Código muito confuso e possivelmente com problema que não cria um
@@ -106,9 +106,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
             markAsVisited(node)
             markAsVisiting(edge)
-            // edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            // edge.addHighlight(HighlightType.ALGORITHM_FOCUS)
 
-            console.log(currentNode.label + "->" + node.label, currentNode.highlights)
+            // console.log(currentNode.label + "->" + node.label, currentNode.highlights)
             
             let newDistance = currentNode.distance + (edge?.weight ?? 1)
             // Se a distância atual é menor que a registrada
@@ -132,13 +132,13 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         markAsNotActive(currentNode)
         markAsVisited(currentNode)
         if (currentNode == initialNode) {
-            initialNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            initialNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
         } else if (currentNode == finalNode) {
-            finalNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            finalNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
         }
-        // currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        // currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
-        // currentNode.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+        // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS)
+        // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS2)
+        // currentNode.addHighlight(HighlightType.ALGORITHM_VISITED)
         // controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
     }
     if(currentNode === finalNode) {
@@ -150,12 +150,12 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     currentNode = finalNode
     while(currentNode !== null)
     {
-        // currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        currentNode.addHighlight(NodeHighlightType.ALGORITHM_RESULT)
+        // currentNode.addHighlight(HighlightType.ALGORITHM_FOCUS)
+        currentNode.highlights.add(HighlightType.ALGORITHM_RESULT)
         // console.log(currentNode)
         if(currentNode.previousEdge)
         {
-            currentNode.previousEdge.addHighlight(NodeHighlightType.ALGORITHM_RESULT)
+            currentNode.previousEdge.highlights.add(HighlightType.ALGORITHM_RESULT)
         }
         currentNode = currentNode.previousNode
     }

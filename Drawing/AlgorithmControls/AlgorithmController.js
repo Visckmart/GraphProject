@@ -1,5 +1,4 @@
 import UndirectedGraph from "../../Structure/UndirectedGraph.js";
-import { NodeHighlightType } from "../../Structure/Node.js"
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
 
@@ -238,6 +237,7 @@ class AlgorithmController {
 
     // Inicializa a preparação do algoritmo
     async setup (algorithm) {
+        // console.warn("Starting")
         this.graphView.interactionHandler.mouse.disable()
         this.graphView.interactionHandler.keyboard.disable()
 
