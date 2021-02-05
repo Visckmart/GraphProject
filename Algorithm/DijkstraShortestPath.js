@@ -31,11 +31,12 @@ function markAsVisiting(artifact) {
 export default async function DijkstraShortestPath(controller) {
     let initialNode
 
-    // Pegando o primeiro nó para gerar a classe baseado no seu tipo
+    // Pegando o primeiro nó para gerar a classe baseado no seu construtor
     let node = controller.graphView.structure.nodes().next().value
     // Se esse nó não tem valor assinalado transforma o grafo para um com nós com valor assinalado
     if(!node.assignedValue)
     {
+        // Recriando o grafo agora com nós com valor assinalado
         controller.graphView.structure =
             controller.graphView.structure.cloneAndTransform(null, NodeAssignedValueMixin(node.constructor))
         controller.graphView.redrawGraph()
@@ -118,7 +119,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             markAsVisiting(edge)
             // edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
 
-            console.log(currentNode.label + "->" + node.label, currentNode.highlights)
+            // console.log(currentNode.label + "->" + node.label, currentNode.highlights)
             
             let newDistance = currentNode.distance + (edge?.weight ?? 1)
             // Se a distância atual é menor que a registrada
