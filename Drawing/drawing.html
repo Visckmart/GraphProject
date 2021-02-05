@@ -121,7 +121,7 @@
         </div>
         <div id="blur"></div>
         <div class="menuArea">
-            <div id="GraphSettings" style="overflow: auto;height: 92.5%">
+            <div id="GraphSettings" style="overflow: auto;height: 92.5%;">
                 <h2>Grafo</h2>
                 <div class="settingsSection">
                     <h5 class="sectionTitle">Algoritmo</h5>
@@ -162,6 +162,16 @@
                     <button style="margin-left: 0pt; margin-right: 2pt;" id="importFile">Arquivo</button>
                     <button style="margin-right: 2pt;" id="importText">Texto</button>
                 </div>
+
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Favoritos</h4>
+                    <label>Favorito 1</label>
+                    <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="1">Abrir</button>
+                    <button style="margin-right: 2pt;" class="saveFavorite" name="1">Salvar</button>
+                    <br>
+                    <br>
+                    <button style="margin-left: 0pt; margin-right: 2pt;" id="clearFavorites">Limpar</button>
+                </div>
             </div>
             <div id="NodeSettings" style="display: none;">
                 <h2>Nó</h2>
@@ -173,7 +183,7 @@
                 <p>Label<input type="text" class="label" maxlength = 10 style="width: 50pt"/></p>
             </div>
 
-            <p><span id="dynamic"></span></p>
+            <p><span id="dynamic" style="display: none;"></span></p>
             <button id="share" style="display: none;">Compartilhar</button>
         </div>
     </div>
