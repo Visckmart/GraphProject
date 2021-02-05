@@ -1,7 +1,7 @@
 import { canvas, ctx, Tool, HighFPSFeature } from "./General.js"
 import { Node } from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
-import UndirectedGraph from "../Structure/UndirectedGraph.js"
+import Graph from "../Structure/Graph.js"
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
@@ -34,7 +34,7 @@ class GraphView {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
-        this.structure = new UndirectedGraph();
+        this.structure = new Graph();
         this.highlightedEdges = new Map();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 

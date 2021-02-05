@@ -1,11 +1,78 @@
+import Edge from "./Edge.js";
+import TemporaryEdgeMixin from "./Mixins/Edge/TemporaryEdgeMixin.js";
+import {Node} from "./Node.js";
+import {resetColorRotation} from "../Drawing/General.js";
 class Graph {
-    data = new Map();
-    debug = true;
+    constructor({ data = new Map() } = {}) {
+        this.data = data
+        this.debug = false
+    }
 
-    constructor() {
-        if (this.constructor == Graph) {
-            throw new Error("Abstract classes can't be instantiated.");
+    get _args() {
+        return {
+            data: this.clone().data
         }
+    }
+
+    // Inserção
+    insertEdgeBetween(nodeA, nodeB) {
+        let edge = new Edge({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
+        // Verificação
+        if (!(nodeA && nodeB && edge)) {
+            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
+            return;
+        }
+        if (nodeA === nodeB) {
+            return;
+        }
+        debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
+                   " até o nó " + nodeB.label, edge);
+        
+        // Operação
+        this.data.get(nodeA).set(nodeB, edge)
+        this.data.get(nodeB).set(nodeA, edge)
+    }
+
+    // Inserindo edge específico
+    insertEdge(nodeA, nodeB, edge) {
+        // Verificação
+        if (!(nodeA && nodeB)) {
+            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
+            return;
+        }
+        if (nodeA === nodeB) {
+            return;
+        }
+        if (this.debug) {
+            // console.log(edge)
+            debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
+                " até o nó " + nodeB.label, edge);
+        }
+
+        // Operação
+        this.data.get(nodeA).set(nodeB, edge)
+        this.data.get(nodeB).set(nodeA, edge)
+    }
+
+    // Criando aresta temporária
+    createTemporaryEdge() {
+        let TemporaryEdge = TemporaryEdgeMixin(Edge)
+        return new TemporaryEdge({label: ''})
+    }
+
+    // Remoção
+    removeEdgeBetween(nodeA, nodeB) {
+        // Verificação
+        if (!(nodeA && nodeB)) {
+            console.error("Remoção de aresta chamada incorretamente.")
+            return;
+        }
+        debugPrint("Removendo aresta que conecta os nós " + nodeA.label +
+                   " – " + nodeB.label)
+        
+        // Operação
+        this.data.get(nodeA).delete(nodeB)
+        this.data.get(nodeB).delete(nodeA)
     }
 
     insertNode(node) {
@@ -18,7 +85,7 @@ class Graph {
             debugPrint("Inserindo nó", node)
         }
         console.assert(this.data.has(node) == false, "Nó já estava no grafo.")
-        
+
         // Operação
         this.data.set(node, new Map());
     }
@@ -31,7 +98,7 @@ class Graph {
         }
         debugPrint("Removendo nó", node)
         console.assert(this.data.has(node) == true, "Nó não está no grafo.")
-        
+
         // Operação
         for (let [_, nodeA, nodeB] of this.edges()) {
             if (nodeB == node) {
@@ -41,16 +108,6 @@ class Graph {
         this.data.delete(node)
     }
 
-    insertEdge(nodeA, nodeB, edge) {
-        console.trace()
-        throw new Error("Não implementado!")
-    }
-
-    removeEdgeBetween(nodeA, nodeB) {
-        console.trace()
-        throw new Error("Não implementado!")
-    }
-
     removeAllEdgesFromNode(node) {
         for (let [edge, nodeA, nodeB] of this.edges()) {
             if (nodeA == node || nodeB == node) {
@@ -58,7 +115,7 @@ class Graph {
             }
         }
     }
-    
+
     removeEdge(edge) {
         // Validação
         if (!(edge)) {
@@ -91,7 +148,7 @@ class Graph {
         // Operação
         return connA.get(nodeB)
     }
-    
+
     checkEdgeBetween(nodeA, nodeB) {
         let connA = this.data.get(nodeA);
         if (connA == null) {
@@ -106,7 +163,7 @@ class Graph {
             console.log(this.data);
             return;
         }
-        
+
         let graphString = ""
         for (let [nodeA, connections] of this.data) {
             let connectionsString = Array.from(connections.keys()).map(nodeB => nodeB.label)
@@ -170,24 +227,87 @@ class Graph {
         return serializedNodes + "~" + serializedEdged
     }
 
-    static deserialize(string) {
-        console.warn("Can't deserialize abstract class")
-        return null
+    static deserialize(string, clone = false) {
+        resetColorRotation()
+        let graph = new Graph()
+        graph.debug = !clone;
+        let [allNodesStr, allEdgesStr] = string.split("~")
+        let deserializedNodes = []
+        if (allNodesStr) {
+            let serializedNodes = allNodesStr.split(".")
+            serializedNodes.splice(-1, 1)
+            for (let nodeStr of serializedNodes) {
+                let node = Node.deserialize(nodeStr)
+                if (node == undefined) continue;
+                deserializedNodes.push(node)
+                graph.insertNode(node)
+            }
+        }
+        
+        if (allEdgesStr) {
+            let serializedEdges = allEdgesStr.split(".")
+            serializedEdges.splice(-1, 1)
+            for (let edgeStr of serializedEdges) {
+                const re = /(\d+)_(\d+)-(.*)/i;
+                let found = edgeStr.match(re);
+                if (found == undefined) continue;
+                const [_, nodeA, nodeB, edgeData] = found;
+                // console.log("graph edge", nodeA, nodeB, edgeData)
+                let ne = Edge.deserialize(edgeData)
+                graph.insertEdge(
+                    deserializedNodes.find(n => n.index === parseInt(nodeA)),
+                    deserializedNodes.find(n => n.index === parseInt(nodeB)),
+                    ne
+                )
+            }
+        }
+        if (this.debug) {
+            console.info("Grafo desserializado com sucesso.");
+        }
+        return graph
     }
 
     clone () {
-        console.warn("Can't clone abstract class")
-        return null
+        let newGraph = new Graph()
+
+        let newNodeMap = new Map()
+        for(let node of this.nodes()) {
+            let newNode = node.clone()
+            newNodeMap.set(node, newNode)
+            newGraph.insertNode(newNode)
+        }
+
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
+        {
+            let newEdge = edge.clone()
+            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+        }
+
+        return newGraph
     }
 
     cloneAndTransform (EdgeConstructor = null, NodeConstructor = null) {
-        console.warn("Can't clone abstract class")
-        return null
+        let newGraph = new this.constructor()
+
+        let newNodeMap = new Map()
+        for(let node of this.nodes()) {
+            let newNode = NodeConstructor ? NodeConstructor.from(node) : node.clone()
+            newNodeMap.set(node, newNode)
+            newGraph.insertNode(newNode)
+        }
+
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
+        {
+            let newEdge = EdgeConstructor ? EdgeConstructor.from(edge) : edge.clone()
+            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+        }
+
+        return newGraph
     }
 
-    static from(graph) {
-        console.warn("Can't clone abstract class")
-        return null
+    static from(graph)
+    {
+        return new this(graph._args)
     }
 }
 

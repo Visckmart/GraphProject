@@ -1,6 +1,6 @@
 import { canvas } from "./General.js"
 import { g } from "./GraphView.js"
-import UndirectedGraph from "../Structure/UndirectedGraph.js"
+import Graph from "../Structure/Graph.js"
 
 // EXPORTAÇÃO
 
@@ -75,13 +75,13 @@ canvas.ondrop = function(event) {
         let reader = new FileReader();
         reader.onload = function (evt) {
             console.log("Read content:", evt.target.result)
-            g.structure = UndirectedGraph.deserialize(evt.target.result)  
+            g.structure = Graph.deserialize(evt.target.result)
         }
         reader.readAsText(droppedFile, "UTF-8");
     // Senão
     } else {
         item.getAsString(function(str) {
-            g.structure = UndirectedGraph.deserialize(str);
+            g.structure = Graph.deserialize(str);
         });
     }
     g.overlay = false;
@@ -95,7 +95,7 @@ fileInputElement.onchange = function(event) {
         var reader = new FileReader();
         reader.onload = function (evt) {
             console.log("Read content:", evt.target.result)
-            g.structure = UndirectedGraph.deserialize(evt.target.result)  
+            g.structure = Graph.deserialize(evt.target.result)
         }
         reader.readAsText(file, "UTF-8");
     }
@@ -108,5 +108,5 @@ importFile.onclick = function (e) {
 let importText = document.getElementById("importText")
 importText.onclick = function () {
     let t = prompt("Grafo em Texto")
-    g.structure = UndirectedGraph.deserialize(t)
+    g.structure = Graph.deserialize(t)
 }

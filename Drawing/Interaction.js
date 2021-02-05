@@ -1,7 +1,7 @@
 import { canvas, Tool, nodeLabelingSelector } from "./General.js"
 import { g } from "./GraphView.js"
 import ToolRepository from "./ToolRepository.js";
-import UndirectedGraph from "../Structure/UndirectedGraph.js"
+import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import BFS from "../Algorithm/BFS.js";
 import { HighlightType } from "../Structure/Highlights.js"
@@ -50,7 +50,7 @@ function deserializeURL() {
     const urlParams = new URLSearchParams(location.search);
     if(urlParams.has("graph") && urlParams.get("graph") != "") {
         console.log("Deserializing graph " + urlParams.get("graph"))
-        g.structure = UndirectedGraph.deserialize(urlParams.get("graph"))   
+        g.structure = Graph.deserialize(urlParams.get("graph"))
         // serialTextarea.value = urlParams.get("graph")
     }
     g.redrawGraph()

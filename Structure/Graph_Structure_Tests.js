@@ -1,9 +1,9 @@
 import Node from './Node.js'
-import UndirectedGraph from "./UndirectedGraph.js";
-import DirectedGraph from "./DirectedGraph.js";
+import Graph from "./Graph.js";
+import DirectedGraph from "./Mixins/Graph/DirectedGraphMixin.js";
 import Edge from "./Edge.js";
 
-let gs = new UndirectedGraph()
+let gs = new Graph()
 // gs.showGraph()
 let n1 = new Node(10, 20, "A")
 gs.insertNode(n1)

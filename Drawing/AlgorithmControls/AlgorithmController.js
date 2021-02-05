@@ -1,4 +1,4 @@
-import UndirectedGraph from "../../Structure/UndirectedGraph.js";
+import Graph from "../../Structure/Graph.js";
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
 

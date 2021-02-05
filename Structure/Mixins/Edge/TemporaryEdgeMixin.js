@@ -2,8 +2,8 @@ import {ctx} from "../../../Drawing/General.js";
 
 let TemporaryEdgeMixin = (superclass) => {
     return class TemporaryEdge extends  superclass {
-        constructor(...args) {
-            super(...args);
+        constructor(args) {
+            super(args);
 
             this.drawChain.clearChain()
             this.drawChain.addBlockingLink(this.drawTemporaryEdge)
