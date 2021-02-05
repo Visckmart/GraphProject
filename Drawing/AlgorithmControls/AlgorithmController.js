@@ -146,11 +146,6 @@ class AlgorithmController {
             {
                 this._interval = setInterval(() => {
                     this.progress++
-
-                    if(this.progress === this.numberOfSteps)
-                    {
-                        //this.playing = false
-                    }
                 }, 1000 / this.speedMultiplier)
             }
         }
@@ -177,6 +172,7 @@ class AlgorithmController {
         return 2 ** this.speed
     }
     set speed(value) {
+        console.log('alo')
         if(this.isBlocked)
         {
             return
