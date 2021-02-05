@@ -28,6 +28,16 @@ class Edge {
         console.warn("Can't deserialize abstract class")
         return null
     }
+
+    clone () {
+        console.warn("Can't clone abstract class")
+        return null
+    }
+
+    static from(edge) {
+        console.warn("Can't clone abstract class")
+        return null
+    }
 }
 
 export default Edge

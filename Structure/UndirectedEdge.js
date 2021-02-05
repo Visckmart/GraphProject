@@ -236,4 +236,12 @@ export class UndirectedEdge extends Edge {
         let edge = new UndirectedEdge(label, highlights)
         return edge
     }
+
+    clone() {
+        return new UndirectedEdge(this.label, this.highlights)
+    }
+
+    static from(edge) {
+        //TODO: Refatorar isso
+    }
 }

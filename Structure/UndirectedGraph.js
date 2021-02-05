@@ -4,6 +4,9 @@ import {UndirectedTemporaryEdge} from "./UndirectedTemporaryEdge.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
 class UndirectedGraph extends Graph {
+    constructor() {
+        super();
+    }
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
@@ -104,7 +107,46 @@ class UndirectedGraph extends Graph {
     }
 
     clone () {
-        return UndirectedGraph.deserialize(this.serialize(), true)
+        let newGraph = new this.constructor()
+
+        let newNodeMap = new Map()
+        for(let node of this.nodes()) {
+            let newNode = node.clone()
+            newNodeMap.set(node, newNode)
+            newGraph.insertNode(newNode)
+        }
+
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
+        {
+            let newEdge = edge.clone()
+            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+        }
+
+        return newGraph
+    }
+
+    cloneAndTransform (EdgeConstructor = null, NodeConstructor = null) {
+        let newGraph = new this.constructor()
+
+        let newNodeMap = new Map()
+        for(let node of this.nodes()) {
+            let newNode = NodeConstructor ? NodeConstructor.from(node) : node.clone()
+            newNodeMap.set(node, newNode)
+            newGraph.insertNode(newNode)
+        }
+
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
+        {
+            let newEdge = EdgeConstructor ? EdgeConstructor.from(edge) : edge.clone()
+            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+        }
+
+        return newGraph
+    }
+
+    static from(graph)
+    {
+        return graph.clone()
     }
 }
 

@@ -175,7 +175,17 @@ class Graph {
         return null
     }
 
-    clone (graph) {
+    clone () {
+        console.warn("Can't clone abstract class")
+        return null
+    }
+
+    cloneAndTransform (EdgeConstructor = null, NodeConstructor = null) {
+        console.warn("Can't clone abstract class")
+        return null
+    }
+
+    static from(graph) {
         console.warn("Can't clone abstract class")
         return null
     }
