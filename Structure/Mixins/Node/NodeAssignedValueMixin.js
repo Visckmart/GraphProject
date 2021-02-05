@@ -1,4 +1,4 @@
-import {ctx} from "../../Drawing/General.js";
+import {ctx} from "../../../Drawing/General.js";
 
 function roundRect(ctx, x, y, width, height, radius) {
     let r = x + width;
