@@ -73,21 +73,6 @@ const c = Array.from({length: 10}, (_, i) => String.fromCharCode(48+i));
 
 const positionAlphabet = up.concat(low.concat(c))
 
-function roundRect(ctx, x, y, width, height, radius) {
-  let r = x + width;
-  let b = y + height;
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(r - radius, y);
-  ctx.quadraticCurveTo(r, y, r, y + radius);
-  ctx.lineTo(r, y + height - radius);
-  ctx.quadraticCurveTo(r, b, r - radius, b);
-  ctx.lineTo(x + radius, b);
-  ctx.quadraticCurveTo(x, b, x, b - radius);
-  ctx.lineTo(x, y + radius);
-  ctx.quadraticCurveTo(x, y, x + radius, y);
-  ctx.stroke();
-}
 export class Node {
 
     constructor(x, y, label, index = null, oColor = null, highlights = null) {
@@ -114,15 +99,24 @@ export class Node {
         } else {
             this.label = newRandomLabel;
         }
-
-        this.auxLabelText = ""
-        // DEBUG
-        // if (Math.random() > 0.5) {
-        //     this.auxLabelText = Math.floor(Math.random() * 50)
-        // }
         
         this.highlights = highlights ?? new Set();
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
+
+        // Adicionando procedure de draw
+        this.addDrawProcedure(this.drawProcedure)
+    }
+
+    // Lista de argumentos para clonagem
+    get _args() {
+        return {
+            x: this.pos.x,
+            y: this.pos.y,
+            label: this.label,
+            index: this.index,
+            oColor: this._originalcolor,
+            highlights: new Set(this.highlights)
+        }
     }
 
     get color() {
@@ -144,10 +138,24 @@ export class Node {
 
 
     // DRAWING
+    _drawChain = []
+    addDrawProcedure(procedure) {
+        this._drawChain.push(procedure)
+    }
+
+    // Executa a cadeia de responsabilidade
+    draw(...args) {
+        let fpsRequests = []
+        for(let procedure of this._drawChain) {
+            fpsRequests.push(procedure(...args))
+        }
+        return Math.max(...fpsRequests)
+    }
+
 
     // This function draws one node. This includes the circle, the text and
     // the appropriate color (considering any animation happening).
-    draw(nodeLabeling) {
+    drawProcedure = (nodeLabeling) => {
         // Draw circle
         ctx.lineWidth = nodeBorderWidth;
         ctx.fillStyle = this.color;
@@ -190,9 +198,6 @@ export class Node {
         let z = this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS) || (!this.highlights.has(NodeHighlightType.ALGORITHM_FOCUS2) && this.highlights.has(NodeHighlightType.ALGORITHM_VISITED))
         // let z = false
         this._drawLabel(nodeLabeling, z ? transparentLabelGradient : this.color)
-        if (this.auxLabelText) {
-            this._drawAuxLabel(this.auxLabelText)
-        }
 
         return maxFPSRequest;
     }
@@ -357,26 +362,6 @@ export class Node {
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
 
-    _drawAuxLabel(text) {
-        ctx.font = "bold 15pt Arial";
-        ctx.strokeStyle = this._originalcolor;
-        ctx.setLineDash([])
-        ctx.lineWidth = 4
-        ctx.textAlign = "center";
-        ctx.textBaseline = 'middle';
-        let m = ctx.measureText(text)
-        let boxWidth = m.width + 5
-        let boxHeight = 20
-        let boxOffset = 45
-        ctx.beginPath();
-        roundRect(ctx,
-                  this.pos.x - boxWidth/2,
-                  this.pos.y - boxOffset - boxHeight/2,
-                  boxWidth, boxHeight, 5)
-        ctx.fill();
-        ctx.fillStyle = "white"
-        ctx.fillText(text, this.pos.x, this.pos.y - boxOffset);
-    }
     // HIGHLIGHTS
     
     addHighlight(type) {
@@ -453,5 +438,9 @@ export class Node {
         let node = new Node(xPos, yPos, label, index, color, highlights)
         
         return node;
+    }
+
+    static from(node) {
+        return new this(node._args)
     }
 }
