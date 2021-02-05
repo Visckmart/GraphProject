@@ -7,17 +7,19 @@
     bottom: 0;
     left:0;
     right: 0;
-    width: 50%;
-    border-radius: 8pt;
+    width: 65%;
+    /*border-radius: 8pt;*/
+    border-top-right-radius: 8pt;
+    border-top-left-radius: 8pt;
     margin: 15pt auto 0;
     padding: 10pt 15pt 5pt;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.65);
 }
 
 #exit_button {
     float: right;
     margin-top: -5pt;
-    margin-right: -9pt;
+    margin-right: -9.5pt;
     cursor: pointer;
 }
 
@@ -61,7 +63,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 #tutorialContainer > label {
     color: white;
-    font-weight: bold;
+    font-size: 13pt;
+    /*font-weight: bold;*/
 }
 
 .separator {

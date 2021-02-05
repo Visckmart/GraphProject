@@ -105,6 +105,19 @@ export class UndirectedEdge extends Edge {
                 ctx.restore()
                 break
 
+            case NodeHighlightType.ALGORITHM_VISITING:
+                ctx.save()
+                ctx.lineWidth = 9
+                ctx.strokeStyle = "#777";
+                ctx.setLineDash([]);
+
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                ctx.lineTo(xEnd, yEnd);
+                ctx.stroke();
+
+                ctx.restore()
+                break;
             case NodeHighlightType.ALGORITHM_VISITED:
                 ctx.save()
                 ctx.lineWidth = 9

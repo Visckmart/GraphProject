@@ -78,7 +78,7 @@
 
             <!--    Controle de Algoritmos    -->
             <div id="algorithmController" style="display: none">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-x-circle" viewBox="0 0 16 16" id="exit_button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-x-circle" viewBox="0 0 16 16" id="exit_button">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                 </svg>
@@ -121,33 +121,47 @@
         </div>
         <div id="blur"></div>
         <div class="menuArea">
-            <div id="GraphSettings">
+            <div id="GraphSettings" style="overflow: auto;height: 92.5%">
                 <h2>Grafo</h2>
-                <p>Nomenclatura dos nós
+                <div class="settingsSection">
+                    <h5 class="sectionTitle">Algoritmo</h5>
+                    <select id="algorithm">
+                        <option value="none">Nenhum</option>
+                        <option value="BFS" disabled>Breadth-First Search</option>
+                        <option value="DFS" disabled>Depth-First Search</option>
+                        <option value="Dijkstra" selected>Shortest Path (Dijkstra)</option>
+                    </select>
+                    <button id="run_algorithm">Run</button>
+                    <br>
+
+                    <h5>Arestas</h5>
+                    <input type="checkbox" id="directed"/><label for="directed">Direcionadas</label>
+                    <br>
+                    <input type="checkbox" id="coloredEdges" /><label for="directed">Coloridas</label>
+                    <h5>Nós</h5>
+                    <input type="checkbox" id="coloredNodes" checked /><label for="directed">Coloridos</label>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Nomenclatura dos nós</h4>
                     <select id="nodeLabeling">
                         <option value="numbers">Números (Em Ordem Crescente)</option>
                         <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
                         <option value="letters_randomized" selected>Letras (Aleatórias)</option>
                     </select>
-                </p>
-                <p>Algoritmo<br>
-                    <select id="algorithm" disabled>
-                        <option value="Dijkstra" selected>Shortest Path (Dijkstra)</option>
-                        <option value="BFS">Breadth-First Search</option>
-                    </select>
-                    <button id="run_algorithm">Run</button>
-                </p>
-                <p>Exportar como...<br>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Exportar como...</h4>
                         <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
                         <button style="margin-right: 2pt;" id="exportText">Texto</button>
                         <button style="margin-right: 2pt;" id="exportLink">Link</button>
                     <!-- </span> -->
-                </p>
-                <p>Importar como...<br>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Importar como...</h4>
                     <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
                     <button style="margin-left: 0pt; margin-right: 2pt;" id="importFile">Arquivo</button>
                     <button style="margin-right: 2pt;" id="importText">Texto</button>
-                </p>
+                </div>
             </div>
             <div id="NodeSettings" style="display: none;">
                 <h2>Nó</h2>

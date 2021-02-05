@@ -14,22 +14,65 @@ body {
   margin-left: 0pt;
   margin-right: 0pt;
 }
-.menuArea > div > p {
-  font-weight: bold;
+.settingsSection {
   color: #444;
-  margin-top: 8pt;
   margin-bottom: 0;
   padding-bottom: 8pt;
   border-bottom: 1pt solid gray;
   /*background-color: white;*/
 }
-.menuArea > div > p > input {
-  font-size: 11pt;
-  margin-left: 2ch;
- }
-button {
-  margin-top: 4pt;
+#GraphSettings {
+  margin-top: 10pt;
+  margin-bottom: 10pt;
+  /*background-color: red;*/
+  /*background: linear-gradient(to bottom, transparent 0%, transparent 95%, #D9D9D988 110%);*/
 }
+#GraphSettings > h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.settingsSection:last-of-type {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+/*.settingsSection > select {
+  margin-top: 0;
+  padding-top: 0;
+}*/
+
+.sectionTitle {
+  font-size: 13pt;
+  /*background-color: red;*/
+  margin-top: 4pt;
+  margin-bottom: 2pt;
+  margin-left: 2pt;
+}
+.settingsSection > h5 {
+  font-size: 11pt;
+  margin-top: 4pt;
+  margin-bottom: 2pt;
+  margin-left: 2pt;
+}
+.settingsSection > input {
+  font-size: 12pt;
+  /*background-color: blue;*/
+  /*padding-top: -5pt;*/
+  /*font-weight:*/
+}
+.settingsSection > label {
+  margin-left: 2pt;
+  /*background-color: blue;*/
+  font-size: 12pt;
+  /*font-weight:*/
+}
+
+.settingsSection > select, .settingsSection > select {
+  font-size: 12pt;
+  /*background-color: red;*/
+}
+/*button {
+  margin-top: 4pt;
+}*/
 
 canvas {
   border-radius: 10pt 0pt 0pt 10pt;
@@ -55,13 +98,4 @@ canvas {
   background: linear-gradient(to right, #EBEBEB, #D9D9D9);
   border-radius: 0pt 10pt 10pt 0pt;
   border-left: 2pt solid darkgray;
-}
-
-.menuArea > div > p > select {
-  margin-left: 0pt;
-  width: 150pt;
-}
-
-body:-webkit-drag {
-    background-color:rgb(255,255,154)
 }
