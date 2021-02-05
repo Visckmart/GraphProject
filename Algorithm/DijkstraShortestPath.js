@@ -1,5 +1,6 @@
 import {NodeHighlightType} from "../Structure/Node.js";
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
+import Edge from "../Structure/Edge.js";
 
 export default async function DijkstraShortestPath(controller) {
     let initialNode
@@ -17,6 +18,30 @@ export default async function DijkstraShortestPath(controller) {
     await controller.resolveRequirements()
 }
 
+function markAsActive(artifact) {
+    artifact.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+}
+function markAsNotActive(artifact) {
+    artifact.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+}
+
+function markAsNotVisited(artifact) {
+    artifact.addHighlight(NodeHighlightType.ALGORITHM_NOTVISITED)
+}
+function markAsVisited(artifact) {
+    if (artifact instanceof Edge) {
+        artifact.removeHighlight(NodeHighlightType.ALGORITHM_VISITING)
+    }
+    artifact.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+}
+
+function markAsVisiting(artifact) {
+    artifact.addHighlight(NodeHighlightType.ALGORITHM_VISITING)
+}
+
+// function removeVisitingMark(artifact) {
+//     .removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+//             edge.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graph
 
@@ -41,10 +66,11 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     // console.log(graph)
     // Adiciona um efeito de tracejado em todas as arestas
     for (let [edge, , ] of graph.uniqueEdges()) {
-        edge.addHighlight(NodeHighlightType.ALGORITHM_NOTVISITED)
+        markAsNotVisited(edge)
         // console.log("e", edge)
     }
-    controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞. O nó inicial é marcado com distância 0.`)
+
+    controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞.\nO nó inicial é marcado com distância 0.`)
     let currentNode;
 
     while (currentNode !== finalNode && unvisitedNodes.length > 0) {
@@ -59,8 +85,8 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         if (!currentNode) {
             break;
         }
-        currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        // currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        markAsActive(currentNode)
         
         // Código muito confuso e possivelmente com problema que não cria um
         // passo visitando um nó se ele não tem pra onde ir.
@@ -78,8 +104,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                 continue
             }
 
-            node.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
-            edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+            markAsVisited(node)
+            markAsVisiting(edge)
+            // edge.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
 
             console.log(currentNode.label + "->" + node.label, currentNode.highlights)
             
@@ -98,16 +125,20 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             } else {
                 controller.addStep(graph, `Analisando a distância do nó ${currentNode.label} até ${node.label}, sua distância ${node.distance} é menor ou igual a nova distância ${newDistance} e portanto não será atualizada.`)
             }
-            // node.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
-            edge.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-            edge.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+            markAsVisited(edge)
         }
 
         currentNode.visited = true
-
-        currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
-        currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
-        currentNode.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
+        markAsNotActive(currentNode)
+        markAsVisited(currentNode)
+        if (currentNode == initialNode) {
+            initialNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        } else if (currentNode == finalNode) {
+            finalNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        }
+        // currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        // currentNode.removeHighlight(NodeHighlightType.ALGORITHM_FOCUS2)
+        // currentNode.addHighlight(NodeHighlightType.ALGORITHM_VISITED)
         // controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
     }
     if(currentNode === finalNode) {
@@ -119,9 +150,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     currentNode = finalNode
     while(currentNode !== null)
     {
-        currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        // currentNode.addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
         currentNode.addHighlight(NodeHighlightType.ALGORITHM_RESULT)
-        console.log(currentNode)
+        // console.log(currentNode)
         if(currentNode.previousEdge)
         {
             currentNode.previousEdge.addHighlight(NodeHighlightType.ALGORITHM_RESULT)
