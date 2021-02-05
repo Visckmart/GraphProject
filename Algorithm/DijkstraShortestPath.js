@@ -1,7 +1,7 @@
 import { HighlightType } from "../Structure/Highlights.js"
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 import Edge from "../Structure/Edge.js";
-import NodeAssignedValueMixin from "../Structure/Mixins/NodeAssignedValueMixin.js";
+import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 
 function markAsActive(artifact) {
     artifact.highlights.add(HighlightType.ALGORITHM_FOCUS2)
