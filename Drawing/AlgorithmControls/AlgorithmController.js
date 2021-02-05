@@ -172,7 +172,6 @@ class AlgorithmController {
         return 2 ** this.speed
     }
     set speed(value) {
-        console.log('alo')
         if(this.isBlocked)
         {
             return
