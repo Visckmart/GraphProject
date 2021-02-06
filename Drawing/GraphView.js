@@ -127,10 +127,10 @@ class GraphView {
     refreshInterfaceState() {
         for(let x of document.querySelector("#tool_tray").children) {
             for (let element of x.children) {
-            if(element.tagName === "INPUT" && element.value === this.primaryTool) {
-                element.click()
+                if(element.tagName === "INPUT" && element.value === this.primaryTool) {
+                    element.click()
+                }
             }
-        }
         }
         this.interactionHandler.mouse.refreshCursorStyle()
     }
