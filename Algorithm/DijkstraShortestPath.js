@@ -141,8 +141,6 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         markAsVisited(currentNode)
         if (currentNode === initialNode) {
             initialNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
-        } else if (currentNode == finalNode) {
-            finalNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
         }
         // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS)
         // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS2)
@@ -150,20 +148,20 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
     }
     let textoPassoFinal;
+    finalNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
     if(currentNode === finalNode) {
         textoPassoFinal = 'Nó final foi visitado portanto as visitações estão concluídas.\nCaminhando pelas distâncias mais curtas para encontrar o menor caminho.'
+        currentNode = finalNode
+        while(currentNode !== null)
+        {
+            currentNode.highlights.add(HighlightType.ALGORITHM_RESULT)
+            if(currentNode.previousEdge) {
+                currentNode.previousEdge.highlights.add(HighlightType.ALGORITHM_RESULT)
+            }
+            currentNode = currentNode.previousNode
+        }
     } else {
         textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância menor que ∞, portanto a visitação foi concluída.'
-    }
-
-    currentNode = finalNode
-    while(currentNode !== null)
-    {
-        currentNode.highlights.add(HighlightType.ALGORITHM_RESULT)
-        if(currentNode.previousEdge) {
-            currentNode.previousEdge.highlights.add(HighlightType.ALGORITHM_RESULT)
-        }
-        currentNode = currentNode.previousNode
     }
     controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.')
 }

@@ -28,6 +28,20 @@ function generateNewRandomLetter() {
     }
     return newRandomLetter;
 }
+function roundRect(ctx, x, y, width, height, radius) {
+    let r = x + width;
+    let b = y + height;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(r - radius, y);
+    ctx.quadraticCurveTo(r, y, r, y + radius);
+    ctx.lineTo(r, y + height - radius);
+    ctx.quadraticCurveTo(r, b, r - radius, b);
+    ctx.lineTo(x + radius, b);
+    ctx.quadraticCurveTo(x, b, x, b - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+}
 
 
 function colorFromComponents(r, g, b, a = 1) {
@@ -73,7 +87,16 @@ export class Node {
         
         this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
-
+        // let roun = 5
+        // let m = ctx.measureText("1")
+        // let width = m.width + 10
+        // let height = 20
+        // this.s = `
+        // l${width-roun},0     q${roun},0  ${roun},${roun}
+        // l0,${height-roun}    q0,${roun}  -${roun},${roun}
+        // l-${width-roun},0    q-${roun},0 -${roun},-${roun}
+        // l0,-${height-roun}   q0,-${roun} ${roun},-${roun}`
+        
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
 
@@ -131,51 +154,45 @@ export class Node {
     // This function draws one node. This includes the circle, the text and
     // the appropriate color (considering any animation happening).
     drawProcedure = (nodeLabeling) => {
-        // Draw circle
-        ctx.lineWidth = nodeBorderWidth;
-        ctx.fillStyle = this.color;
-        ctx.strokeStyle = nodeBorderColor;
-        // if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
-        // // ctx.lineWidth = nodeBorderWidth/2;
-        //     ctx.setLineDash([10, 10]);
-        // } else {
-        // // ctx.lineWidth = nodeBorderWidth;
-        //     ctx.setLineDash([]);
-        // }
-
-            ctx.setLineDash([]);
-        ctx.beginPath();
-        ctx.fillStyle = transparentLabelGradient;
-        ctx.strokeStyle = this.color;
+        // Draw circle border
         ctx.lineWidth = 8;
-        if (this.highlights.has(HighlightType.ALGORITHM_FOCUS) || this.highlights.has(HighlightType.ALGORITHM_FOCUS2)) {
-            ctx.lineWidth = 8;
-        } else {
-            ctx.lineWidth = 8;
-        }
-        // if (this.highlights.has(HighlightType.ALGORITHM_FOCUS2)) {
-        //     ctx.lineWidth = 8;
-        // } else {
-        //     ctx.lineWidth = 4;
-        // }
+        ctx.strokeStyle = this.color;
+        
+        ctx.beginPath();
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2*Math.PI);
+
+        let hasHighlightWithBG = this.highlights.has(HighlightType.ALGORITHM_FOCUS)
+                                 || this.highlights.has(HighlightType.ALGORITHM_FOCUS2)
+                                 || this.highlights.has(HighlightType.ALGORITHM_VISITED)
+                                 || this.highlights.has(HighlightType.ALGORITHM_RESULT)
+        if (!hasHighlightWithBG) {
+            ctx.fillStyle = transparentLabelGradient;
+        } else {
+            ctx.fillStyle = this._originalcolor;
+        }
         ctx.fill();
         ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(this.pos.x, this.pos.y, this.radius - ctx.lineWidth/2, 0, 2*Math.PI);
 
         // Draw highlights
         let maxFPSRequest = 0;
         for (let h of this.highlights.list()) {
+            ctx.save()
             let fpsRequest = this._drawHighlight(h)
+            ctx.restore()
             maxFPSRequest = Math.max(maxFPSRequest, fpsRequest)
         }
 
         // Draw label
-        let z = this.highlights.has(HighlightType.ALGORITHM_FOCUS) || (!this.highlights.has(HighlightType.ALGORITHM_FOCUS2) && this.highlights.has(HighlightType.ALGORITHM_VISITED))
-        // let z = false
-        this._drawLabel(nodeLabeling, z ? transparentLabelGradient : this.color)
-
+        let transparentText = !this.highlights.has(HighlightType.ALGORITHM_FOCUS2)
+                               && this.highlights.has(HighlightType.ALGORITHM_VISITED)
+        this._drawLabel(nodeLabeling, transparentText ? transparentLabelGradient : this.color)
         return maxFPSRequest;
     }
+
+    // HIGHLIGHTS
 
     _drawHighlight(highlight) {
         switch (highlight) {
@@ -184,18 +201,18 @@ export class Node {
                 ctx.strokeStyle = "#1050FF"
                 ctx.lineWidth = 4
 
-                /// Para mantermos o mesmo número de traços independente
-                /// do raio do círculo, fazemos os passos seguintes.
-
                 // Raio do tracejado
                 // (A soma faz com que o tracejado fique do lado de fora do círculo)
                 let dashRadius = this.radius + 4 + ctx.lineWidth/2;
+
+                /// Para mantermos o mesmo número de traços independente
+                /// do raio do círculo, fazemos os passos seguintes.
                 // Circunferência do círculo (2π * r)
                 let circunference = 2*Math.PI * dashRadius;
 
                 ctx.setLineDash([circunference/12.5, circunference/22]);
 
-                let rotationOffset = window.performance.now()/2000;
+                let rotationOffset = window.performance.now()/3000;
                 // Desenhamos a borda tracejada
                 ctx.beginPath();
                 ctx.arc(this.pos.x, this.pos.y, dashRadius,
@@ -203,30 +220,27 @@ export class Node {
                 ctx.stroke();
                 return 20;
             }
+
             case HighlightType.ALGORITHM_FOCUS: {
                 /* Fundo cinza escuro */
 
+                let requestFPS = 0;
+                if (this.highlights.has(HighlightType.ALGORITHM_RESULT)) {
+                    let twinkleTime = window.performance.now()/500
+                    let whiteLayerAlpha = -(Math.sin(twinkleTime) - 0.85)
+                    ctx.globalAlpha = whiteLayerAlpha < 0 ? 0 : whiteLayerAlpha
+                    requestFPS = 20;
+                }
+
                 ctx.fillStyle = colorFromComponents(50, 50, 50, 0.8)
-                
-                let circleRadius = this.radius - nodeBorderWidth
-                ctx.beginPath();
-                ctx.arc(this.pos.x, this.pos.y, circleRadius, 0, 2*Math.PI);
                 ctx.fill();
 
-                return 0;
+                return requestFPS;
             }
+
             case HighlightType.ALGORITHM_FOCUS2: {
                 /* Fundo colorido mas claro */
 
-                // Colorir o fundo
-                ctx.fillStyle = this._originalcolor
-                
-                let circleRadius = this.radius - nodeBorderWidth
-                ctx.beginPath();
-                ctx.arc(this.pos.x, this.pos.y, circleRadius, 0, 2*Math.PI);
-                ctx.fill();
-
-                // Clarear o fundo
                 ctx.fillStyle = colorFromComponents(255, 255, 255, 0.7)
                 ctx.fill();
 
@@ -235,14 +249,9 @@ export class Node {
 
             case HighlightType.ALGORITHM_VISITED: {
                 /* Fundo colorido mas escurecido */
-
-                // Colorir o fundo
-                ctx.fillStyle = this._originalcolor
-                
-                let circleRadius = this.radius - nodeBorderWidth
-                ctx.beginPath();
-                ctx.arc(this.pos.x, this.pos.y, circleRadius, 0, 2*Math.PI);
-                ctx.fill();
+                if (this.highlights.has(HighlightType.ALGORITHM_FOCUS2)) {
+                    break;
+                }
 
                 // Clarear o fundo
                 ctx.fillStyle = colorFromComponents(50, 50, 50, 0.5)
@@ -255,22 +264,13 @@ export class Node {
 
                 // Configuramos a borda
                 ctx.strokeStyle = colorFromComponents(0, 0, 255, 1)
-                ctx.lineWidth = 5
-
-                let borderRadius = this.radius + 8 - ctx.lineWidth/2;
-                ctx.setLineDash([]);
+                ctx.lineWidth = 8
 
                 // Desenhamos a borda
                 ctx.beginPath();
-                ctx.arc(this.pos.x, this.pos.y, borderRadius, 0, 2*Math.PI);
+                ctx.arc(this.pos.x, this.pos.y, this.radius + ctx.lineWidth/2, 0, 2*Math.PI);
                 ctx.stroke();
-
-                // Pisca o fundo
-                let twinkleTime = window.performance.now()/450
-                let whiteLayerAlpha = Math.sin(twinkleTime) - 0.65
-                ctx.fillStyle = colorFromComponents(255, 255, 255, whiteLayerAlpha)
-                ctx.fill()
-                return 20;
+                return 0;
             }
         }
     }
@@ -293,12 +293,6 @@ export class Node {
                 break;
         }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
-    }
-
-    // HIGHLIGHTS
-
-    get isSelected() {
-        return this.highlights.has(HighlightType.SELECTION);
     }
 
     serialize() {
