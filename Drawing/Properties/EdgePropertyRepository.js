@@ -5,7 +5,8 @@ export default {
     Dijkstra: {
         assignedValue: {
             label: 'Peso',
-            type: 'number'
+            type: 'number',
+            selected: true
         }
     }
 }

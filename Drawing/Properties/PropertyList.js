@@ -30,7 +30,7 @@ class PropertyList extends HTMLElement {
         }
     }
 
-    _appendProperty(artifact, property, { label, type}) {
+    _appendProperty(artifact, property, { label, type, selected = false}) {
         let pElement = document.createElement('p')
 
         let lElement = document.createElement('label')
@@ -50,6 +50,12 @@ class PropertyList extends HTMLElement {
             artifact[property] = event.target.value
         })
         this.container.appendChild(pElement)
+        if(selected) {
+            // Focando num timeout por que navegadores são estranhos
+            setTimeout(() => {
+                iElement.focus()
+            }, 0)
+        }
     }
 
     updateProperties(edge, selectedAlgorithm = '') {

@@ -3,7 +3,8 @@ export default {
     default: {
         label: {
             label: 'Label',
-            type: 'text'
+            type: 'text',
+            selected: true
         },
         color: {
             label: 'Cor',
