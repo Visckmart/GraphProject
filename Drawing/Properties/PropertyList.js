@@ -5,6 +5,15 @@ class PropertyList extends HTMLElement {
     constructor() {
         super()
         this.attachShadow({mode: 'open'})
+        /* Aplicando style na shadow root */
+        let style = document.createElement('style');
+        style.textContent = `
+            .property-input {
+                width: 50pt;
+            }
+        `
+
+        this.shadowRoot.appendChild(style)
 
         this.container = this.shadowRoot.appendChild(document.createElement('div'))
         this.container.innerHTML = 'Nenhuma propriedade editável'
@@ -46,13 +55,13 @@ class PropertyList extends HTMLElement {
     updateProperties(edge, selectedAlgorithm = '') {
         this.container.innerHTML = ''
 
-        for(let property of Object.keys(this.repository.default)) {
+        for(let property of Object.keys(this.repository.default ?? {})) {
             if(edge[property]) {
                 this._appendProperty(edge, property, this.repository.default[property])
             }
         }
 
-        for(let property of Object.keys(this.repository[selectedAlgorithm])) {
+        for(let property of Object.keys(this.repository[selectedAlgorithm] ?? {})) {
             if(edge[property]) {
                 this._appendProperty(edge, property, this.repository[selectedAlgorithm][property])
             }
