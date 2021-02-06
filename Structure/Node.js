@@ -184,7 +184,7 @@ export class Node {
 
         // Draw label
         let transparentText = !this.highlights.has(HighlightType.ALGORITHM_FOCUS2)
-                              && this.highlights.has(HighlightType.ALGORITHM_VISITED)
+                               && this.highlights.has(HighlightType.ALGORITHM_VISITED)
         this._drawLabel(nodeLabeling, transparentText ? transparentLabelGradient : this.color)
         return maxFPSRequest;
     }
@@ -231,7 +231,7 @@ export class Node {
 
                 ctx.fillStyle = colorFromComponents(50, 50, 50, 0.8)
                 ctx.fill();
-                
+
                 return requestFPS;
             }
 
