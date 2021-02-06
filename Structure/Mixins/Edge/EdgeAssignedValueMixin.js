@@ -2,7 +2,7 @@ import {ctx} from "../../../Drawing/General";
 
 let EdgeAssignedValueMixin = (superclass) => {
     return class EdgeAssignedValue extends superclass {
-        constructor({assignedValue = '', ...args}) {
+        constructor({assignedValue = 1, ...args}) {
             super(args);
 
             this.assignedValue = assignedValue
