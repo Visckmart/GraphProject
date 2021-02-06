@@ -8,6 +8,7 @@ import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
 import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
+import {createEdgeProperties} from "./Properties/PropertyFactory.js";
 
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
@@ -191,14 +192,20 @@ class GraphView {
         } else if (numberOfSelectedEdges == 1 && !this.selectionHandler.drawingSelection) {
             // console.log("a")
             showSettings = document.getElementById("EdgeSettings")
-            let selectionHandler = this.selectionHandler
+            /*let selectionHandler = this.selectionHandler
 
             let labelInput = showSettings.getElementsByClassName("label")[0]
             labelInput.value = this.selectionHandler.selectedEdges[0].label
             labelInput.oninput = function(input) {
                 selectionHandler.selectedEdges[0].label = input.target.value
             }
-            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
+            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);*/
+
+            let selectedEdge = this.selectionHandler.selectedEdges[0]
+            let properties = createEdgeProperties(selectedEdge, 'Dijkstra')
+            let propertyContainer = document.getElementById("EdgeProperties")
+            propertyContainer.innerHTML = ''
+            propertyContainer.append(...properties)
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
