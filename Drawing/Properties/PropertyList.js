@@ -1,32 +1,44 @@
 import EdgePropertyRepository from "./EdgePropertyRepository.js";
+import NodePropertyRepository from "./NodePropertyRepository.js";
 
-class EdgePropertyList extends HTMLElement {
+class PropertyList extends HTMLElement {
     constructor() {
         super()
         this.attachShadow({mode: 'open'})
 
         this.container = this.shadowRoot.appendChild(document.createElement('div'))
         this.container.innerHTML = 'Nenhuma propriedade editável'
+
+        this.artifactType = this.getAttribute('artifact')
+
+        switch (this.artifactType) {
+            case 'edge':
+                this.repository = EdgePropertyRepository
+                break
+            case 'node':
+                this.repository = NodePropertyRepository
+                break
+        }
     }
 
-    _appendProperty(edge, property, { label, type}) {
+    _appendProperty(artifact, property, { label, type}) {
         let pElement = document.createElement('p')
 
         let lElement = document.createElement('label')
-        lElement.setAttribute('for', `edge${property}`)
+        lElement.setAttribute('for', `${this.artifactType}${property}`)
         lElement.textContent = label + ':'
 
         let iElement = document.createElement('input')
-        iElement.value = edge[property]
+        iElement.value = artifact[property]
         iElement.setAttribute('type', type)
         iElement.setAttribute('class', 'property-input')
-        iElement.setAttribute('id', `edge${property}`)
+        iElement.setAttribute('id', `${this.artifactType}${property}`)
 
         pElement.appendChild(lElement)
         pElement.appendChild(iElement)
 
         iElement.addEventListener('input', (event) => {
-            edge[property] = event.target.value
+            artifact[property] = event.target.value
         })
         this.container.appendChild(pElement)
     }
@@ -34,15 +46,15 @@ class EdgePropertyList extends HTMLElement {
     updateProperties(edge, selectedAlgorithm = '') {
         this.container.innerHTML = ''
 
-        for(let property of Object.keys(EdgePropertyRepository.default)) {
+        for(let property of Object.keys(this.repository.default)) {
             if(edge[property]) {
-                this._appendProperty(edge, property, EdgePropertyRepository.default[property])
+                this._appendProperty(edge, property, this.repository.default[property])
             }
         }
 
-        for(let property of Object.keys(EdgePropertyRepository[selectedAlgorithm])) {
+        for(let property of Object.keys(this.repository[selectedAlgorithm])) {
             if(edge[property]) {
-                this._appendProperty(edge, property, EdgePropertyRepository[selectedAlgorithm][property])
+                this._appendProperty(edge, property, this.repository[selectedAlgorithm][property])
             }
         }
 
@@ -52,4 +64,4 @@ class EdgePropertyList extends HTMLElement {
     }
 }
 
-export default EdgePropertyList
+export default PropertyList

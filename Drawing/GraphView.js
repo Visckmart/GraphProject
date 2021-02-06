@@ -10,9 +10,9 @@ import GraphSelection from "./GraphSelection.js"
 import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
 
 
-import EdgePropertyList from "./Properties/EdgePropertyList.js";
+import PropertyList from "./Properties/PropertyList.js";
 // Registrando componente custom
-customElements.define('edge-property-list', EdgePropertyList)
+customElements.define('property-list', PropertyList)
 
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
@@ -207,7 +207,6 @@ class GraphView {
 
             let selectedEdge = this.selectionHandler.selectedEdges[0]
             let element = document.getElementById('EdgeProperties')
-            console.log(element)
             element.updateProperties(selectedEdge, 'Dijkstra')
         } else {
             showSettings = document.getElementById("GraphSettings")
