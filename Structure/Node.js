@@ -96,6 +96,9 @@ export class Node {
     get color() {
         return this._originalcolor
     }
+    set color(value) {
+        this._originalcolor = value
+    }
 
     get radius() {
         let elapsedTime = window.performance.now() - this._initialTime;

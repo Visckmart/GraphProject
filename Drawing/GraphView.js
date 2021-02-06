@@ -177,8 +177,9 @@ class GraphView {
         if (numberOfSelectedNodes == 1 &&
             this.selectionHandler.temporarySelection === false &&
             !this.selectionHandler.drawingSelection) {
-            // console.log("b")
             showSettings = document.getElementById("NodeSettings")
+            /*
+            // console.log("b")
             let selectionHandler = this.selectionHandler
 
             let labelInput = document.getElementById("label")
@@ -192,18 +193,14 @@ class GraphView {
             colorInput.value = this.selectionHandler.selectedNodes[0].color
             colorInput.oninput = function(input) {
                 selectionHandler.selectedNodes[0]._originalcolor = input.target.value
-            }
+            } */
+            let selectedNode = this.selectionHandler.selectedNodes[0]
+            let element = document.getElementById('NodeProperties')
+            // TODO: Pegar algoritmo correto
+            element.updateProperties(selectedNode, 'Dijkstra')
         } else if (numberOfSelectedEdges == 1 && !this.selectionHandler.drawingSelection) {
             // console.log("a")
             showSettings = document.getElementById("EdgeSettings")
-            /*let selectionHandler = this.selectionHandler
-
-            let labelInput = showSettings.getElementsByClassName("label")[0]
-            labelInput.value = this.selectionHandler.selectedEdges[0].label
-            labelInput.oninput = function(input) {
-                selectionHandler.selectedEdges[0].label = input.target.value
-            }
-            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);*/
 
             let selectedEdge = this.selectionHandler.selectedEdges[0]
             let element = document.getElementById('EdgeProperties')
