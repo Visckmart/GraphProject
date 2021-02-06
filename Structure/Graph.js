@@ -14,9 +14,19 @@ class Graph {
         }
     }
 
+    /* Getters para construtores de aresta e vértice para garantir a criação de artefatos consistentes */
+    get EdgeConstructor() {
+        return this.uniqueEdges().next().value[0].constructor || Edge
+    }
+    get NodeConstructor() {
+        return this.nodes().next().value.constructor || Node
+    }
+
+
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
-        let edge = new Edge({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
+        console.log(this.EdgeConstructor)
+        let edge = new this.EdgeConstructor({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
         // Verificação
         if (!(nodeA && nodeB && edge)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
