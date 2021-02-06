@@ -1,6 +1,6 @@
 import {ctx} from "../../../Drawing/General.js";
 
-let TemporaryEdgeMixin = (superclass) => {
+let EdgeTemporaryMixin = (superclass) => {
     return class TemporaryEdge extends  superclass {
         constructor(args) {
             super(args);
@@ -27,4 +27,4 @@ let TemporaryEdgeMixin = (superclass) => {
 }
 
 
-export default TemporaryEdgeMixin
+export default EdgeTemporaryMixin

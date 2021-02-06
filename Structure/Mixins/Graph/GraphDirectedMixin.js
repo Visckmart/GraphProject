@@ -1,4 +1,4 @@
-let DirectedGraphMixin = (superclass) => {
+let GraphDirectedMixin = (superclass) => {
     return class DirectedGraph extends  superclass {
         constructor(args) {
             super(args);
@@ -28,4 +28,4 @@ let DirectedGraphMixin = (superclass) => {
     }
 }
 
-export default DirectedGraphMixin
+export default GraphDirectedMixin

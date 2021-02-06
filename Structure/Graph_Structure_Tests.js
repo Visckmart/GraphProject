@@ -1,6 +1,6 @@
 import Node from './Node.js'
 import Graph from "./Graph.js";
-import DirectedGraph from "./Mixins/Graph/DirectedGraphMixin.js";
+import DirectedGraph from "./Mixins/Graph/GraphDirectedMixin.js";
 import Edge from "./Edge.js";
 
 let gs = new Graph()

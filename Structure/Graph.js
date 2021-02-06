@@ -1,5 +1,5 @@
 import Edge from "./Edge.js";
-import TemporaryEdgeMixin from "./Mixins/Edge/TemporaryEdgeMixin.js";
+import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
 class Graph {
@@ -56,7 +56,7 @@ class Graph {
 
     // Criando aresta temporária
     createTemporaryEdge() {
-        let TemporaryEdge = TemporaryEdgeMixin(Edge)
+        let TemporaryEdge = EdgeTemporaryMixin(Edge)
         return new TemporaryEdge({label: ''})
     }
 
