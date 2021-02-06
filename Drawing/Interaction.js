@@ -3,7 +3,6 @@ import { g } from "./GraphView.js"
 import ToolRepository from "./ToolRepository.js";
 import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
-import BFS from "../Algorithm/BFS.js";
 import { HighlightType } from "../Structure/Highlights.js"
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 
@@ -140,6 +139,16 @@ document.body.onblur = function(e) {
     }
     g.refreshInterfaceState()
 }
+
+function updateEdge() {
+    g.updateEdgeType(
+        document.getElementById('weighedEdges').checked,
+        document.getElementById('coloredEdges').checked,
+        document.getElementById('directedEdges').checked
+    )
+}
+//Opções de formato de grafo
+document.getElementById('weighedEdges').addEventListener('change', updateEdge)
 
 // Executa a primeira vez
 g.refreshInterfaceState();

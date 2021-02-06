@@ -7,6 +7,8 @@ import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
+import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
+
 const nodeBorderWidth = 2;
 const nodeBorderColor = "transparent";
 
@@ -122,6 +124,30 @@ class GraphView {
 
 
     // Interaction
+    /* Atualiza o tipo de grafo sendo exibido */
+    updateGraphType() {
+
+    }
+    /* Atualiza o tipo de aresta exibida */
+    updateEdgeType(weighed = false, colored = false, directed = false) {
+        let EdgeType = Edge
+        if(weighed) {
+            EdgeType = EdgeAssignedValueMixin(EdgeType)
+        }
+        if(colored) {
+            //TODO: Mixin de edge colorido
+        }
+        if(directed) {
+            //TODO: Mixin de edge direcionado
+        }
+
+        g.structure = g.structure.cloneAndTransform(EdgeType)
+    }
+
+    /* Atualiza o tipo de nó exibido */
+    updateNodeType() {
+
+    }
 
     /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
     refreshInterfaceState() {
