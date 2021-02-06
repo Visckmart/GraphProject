@@ -3,7 +3,7 @@ export default {
     default: {
         label: {
             label: 'Label',
-            type: 'number'
+            type: 'text'
         },
         color: {
             label: 'Cor',
