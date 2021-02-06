@@ -117,7 +117,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
             // console.log(currentNode.label + "->" + node.label, currentNode.highlights)
             
-            let newDistance = currentNode.distance + (edge?.weight ?? 1)
+            let newDistance = currentNode.distance + (edge?.assignedValue ?? 1)
             // Se a distância atual é menor que a registrada
             if(newDistance < node.distance) {
                 let oldDistance = node.distance

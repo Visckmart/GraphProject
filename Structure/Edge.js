@@ -220,7 +220,7 @@ export default class Edge {
     }
 
     clone() {
-        return new Edge({ label: this.label, highlights: new Set(this.highlights.list()) })
+        return new this.constructor(this._args)
     }
 
     static from(edge) {
