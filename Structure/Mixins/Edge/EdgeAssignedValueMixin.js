@@ -1,4 +1,4 @@
-import {ctx} from "../../../Drawing/General";
+import {ctx} from "../../../Drawing/General.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
     return class EdgeAssignedValue extends superclass {
@@ -26,6 +26,7 @@ let EdgeAssignedValueMixin = (superclass) => {
             let midX = (xEnd - xStart)/2
             let midY = (yEnd - yStart)/2
 
+            ctx.save()
             ctx.translate(xStart + midX, yStart + midY);
 
             // Calcula o ângulo do texto
@@ -44,7 +45,10 @@ let EdgeAssignedValueMixin = (superclass) => {
             ctx.font = "bold 15pt Arial";
             ctx.fillStyle = "black";
             ctx.textAlign = "center";
-            ctx.fillText(this.assignedValue, 0, 0);
+            ctx.fillText(this.assignedValue.toString(), 0, 0);
+            ctx.restore()
         }
     }
 }
+
+export default EdgeAssignedValueMixin
