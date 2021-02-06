@@ -87,16 +87,15 @@ export class Node {
         
         this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
-        let roun = 5
-        let m = ctx.measureText("1")
-        let width = m.width + 10
-        // let width = 20
-        let height = 20
-        this.s = `
-        l${width-roun},0     q${roun},0  ${roun},${roun}
-        l0,${height-roun}    q0,${roun}  -${roun},${roun}
-        l-${width-roun},0    q-${roun},0 -${roun},-${roun}
-        l0,-${height-roun}   q0,-${roun} ${roun},-${roun}`
+        // let roun = 5
+        // let m = ctx.measureText("1")
+        // let width = m.width + 10
+        // let height = 20
+        // this.s = `
+        // l${width-roun},0     q${roun},0  ${roun},${roun}
+        // l0,${height-roun}    q0,${roun}  -${roun},${roun}
+        // l-${width-roun},0    q-${roun},0 -${roun},-${roun}
+        // l0,-${height-roun}   q0,-${roun} ${roun},-${roun}`
         
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
