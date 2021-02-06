@@ -25,6 +25,8 @@ let NodeAssignedValueMixin = (superclass) => {
             this.assignedValue = assignedValue
 
             this.drawChain.addLink(this.drawAuxLabel)
+            this.tx = 0;
+            this.ty = 0;
         }
 
         get _args() {
@@ -42,7 +44,7 @@ let NodeAssignedValueMixin = (superclass) => {
             ctx.save()
             ctx.font = "bold 15pt Arial";
             if (this.assignedValue == "∞") {
-                ctx.font = "bold 20pt Arial";
+                ctx.font = "bold 25pt Arial";
             }
             ctx.strokeStyle = this._originalcolor;
             ctx.setLineDash([])
@@ -54,27 +56,27 @@ let NodeAssignedValueMixin = (superclass) => {
             let boxHeight = 20
             let boxOffset = 45
             ctx.beginPath();
-            roundRect(ctx,
-                this.pos.x - boxWidth/2,
-                this.pos.y - boxOffset - boxHeight/2,
-                boxWidth, boxHeight, 5)
-            ctx.fillStyle = this._originalcolor
-            if (this.assignedValue != "∞") {
-            ctx.fill();
-        }
-            ctx.fillStyle = "#888"
-            if (this.assignedValue != "∞") {
-            ctx.fillStyle = "white"
-        }
-            // ctx.stroke()
-            // ctx.fillStyle = this._originalcolor
-            ctx.fillText(this.assignedValue, this.pos.x, this.pos.y - boxOffset);
-            
-            ctx.fillStyle = "white"
-            if (this.assignedValue == "∞") {
-                ctx.fillStyle = colorFromComponents(180, 180, 180, 0.5)
-                ctx.fill();
+            let tx = Math.floor(this.pos.x)
+            let ty = Math.floor(this.pos.y)
+            let zz = `m${tx - 7},${ty - 57}` + this.s
+        // ctx.save()
+            ctx.lineWidth = 3
+            if (this.tx != tx || this.ty != ty) {
+                this.p = new Path2D(zz);
             }
+            // ctx.fill(this.p)
+            ctx.fillStyle = "#888"
+            ctx.globalAlpha = 0.35
+            if (this.assignedValue != "∞") {
+                ctx.fillStyle = this._originalcolor
+                ctx.globalAlpha = 1
+            }
+            ctx.fill(this.p);
+            ctx.globalAlpha = 1
+            if (this.assignedValue != "∞") {
+                ctx.fillStyle = "white"
+            }
+            ctx.fillText(this.assignedValue, this.pos.x, this.pos.y - boxOffset);
             ctx.restore()
             return 0;
         }

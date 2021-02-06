@@ -28,6 +28,20 @@ function generateNewRandomLetter() {
     }
     return newRandomLetter;
 }
+function roundRect(ctx, x, y, width, height, radius) {
+    let r = x + width;
+    let b = y + height;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(r - radius, y);
+    ctx.quadraticCurveTo(r, y, r, y + radius);
+    ctx.lineTo(r, y + height - radius);
+    ctx.quadraticCurveTo(r, b, r - radius, b);
+    ctx.lineTo(x + radius, b);
+    ctx.quadraticCurveTo(x, b, x, b - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+}
 
 
 function colorFromComponents(r, g, b, a = 1) {
@@ -73,7 +87,17 @@ export class Node {
         
         this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
-
+        let roun = 5
+        let m = ctx.measureText("1")
+        let width = m.width + 10
+        // let width = 20
+        let height = 20
+        this.s = `
+        l${width-roun},0     q${roun},0  ${roun},${roun}
+        l0,${height-roun}    q0,${roun}  -${roun},${roun}
+        l-${width-roun},0    q-${roun},0 -${roun},-${roun}
+        l0,-${height-roun}   q0,-${roun} ${roun},-${roun}`
+        
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
 
@@ -170,7 +194,31 @@ export class Node {
         let z = this.highlights.has(HighlightType.ALGORITHM_FOCUS) || (!this.highlights.has(HighlightType.ALGORITHM_FOCUS2) && this.highlights.has(HighlightType.ALGORITHM_VISITED))
         // let z = false
         this._drawLabel(nodeLabeling, z ? transparentLabelGradient : this.color)
-
+        // let tx = Math.floor(this.pos.x)
+        // let ty = Math.floor(this.pos.y)
+        // let zz = `m${tx - 5},${ty - 55}` + this.s
+        // // ctx.save()
+        // ctx.lineWidth = 3
+        // ctx.scale(0.5, 0.5)
+        // ctx.translate(this.pos.x, this.pos.y)
+        // for (let x = 0; x < 30; x++) {
+            // roundRect(ctx,
+            //         this.pos.x-10,
+            //         this.pos.y-50,
+            //         20, 20, 5)
+            // ctx.fill()
+            // this.p = new Path2D(zz);
+            // ctx.fill(this.p)
+        // }
+        // ctx.restore()
+        // ctx.fillStyle = "white"
+        // ctx.font = "bold 15px Arial";
+        // ctx.fillText("1", tx, ty - 45);
+        // let m = ctx.measureText("1")
+        //     let boxWidth = m.width + 5
+        // ctx.rect(this.pos.x + boxWidth/2, this.pos.y - 70, boxWidth, 20)
+        // ctx.fillStyle = "#0004"
+        // ctx.fill()
         return maxFPSRequest;
     }
 
