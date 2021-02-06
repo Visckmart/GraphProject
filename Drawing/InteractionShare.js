@@ -47,6 +47,22 @@ exportLinkButton.onclick = function () {
     history.pushState(null, null, shareLink)
 }
 
+let exportImageButton = document.getElementById("exportImage")
+exportImageButton.onclick = function () {
+    // get canvas data  
+    var image = canvas.toDataURL();  
+  
+    // create temporary link  
+    var tmpLink = document.createElement( 'a' );  
+    tmpLink.download = 'image.png'; // set the name of the download file 
+    tmpLink.href = image;  
+  
+    // temporarily add link to body and initiate the download  
+    document.body.appendChild( tmpLink );  
+    tmpLink.click();  
+    document.body.removeChild( tmpLink );  
+}
+
 
 
 // IMPORTAÇÃO

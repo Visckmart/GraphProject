@@ -30,6 +30,10 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+transparentLabelGradient.addColorStop(0, "#E5E0FF");
+transparentLabelGradient.addColorStop(1, "#FFE0F3");
+
 // Graph
 class GraphView {
     overlay = false;
@@ -383,6 +387,10 @@ class GraphView {
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        ctx.fillStyle = transparentLabelGradient;
+        ctx.rect(0, 0, canvas.width, canvas.height);
+        ctx.fill()
         
         this.drawEdges()
         
