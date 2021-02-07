@@ -2,6 +2,7 @@ import Edge from "./Edge.js";
 import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
+
 class Graph {
     constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
         this.data = data
@@ -14,7 +15,7 @@ class Graph {
 
     get _args() {
         return {
-            data: this.clone().data,
+            data: this._cloneData(),
             EdgeConstructor: this.EdgeConstructor,
             NodeConstructor: this.NodeConstructor
         }
@@ -274,23 +275,26 @@ class Graph {
         return graph
     }
 
-    clone () {
-        let newGraph = new this.constructor()
-        newGraph.debug = false;
+    _cloneData() {
+        let tempGraph = new this.constructor()
+        tempGraph.debug = false;
         let newNodeMap = new Map()
         for(let node of this.nodes()) {
             let newNode = node.clone()
             newNodeMap.set(node, newNode)
-            newGraph.insertNode(newNode)
+            tempGraph.insertNode(newNode)
         }
 
         for(let [edge, nodeA, nodeB] of this.uniqueEdges())
         {
             let newEdge = edge.clone()
-            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+            tempGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
         }
+        return tempGraph.data
+    }
 
-        return newGraph
+    clone () {
+        return new this.constructor(this._args)
     }
 
     cloneAndTransform ({EdgeConstructor = this.EdgeConstructor, NodeConstructor = this.NodeConstructor}) {
