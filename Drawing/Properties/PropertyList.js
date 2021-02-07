@@ -54,6 +54,7 @@ class PropertyList extends HTMLElement {
             // Focando num timeout por que navegadores são estranhos
             setTimeout(() => {
                 iElement.focus()
+                iElement.select()
             }, 0)
         }
     }
