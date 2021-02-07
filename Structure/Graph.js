@@ -16,10 +16,14 @@ class Graph {
 
     /* Getters para construtores de aresta e vértice para garantir a criação de artefatos consistentes */
     get EdgeConstructor() {
-        return this.uniqueEdges().next().value[0].constructor || Edge
+        let anyEdge = this.uniqueEdges().next()?.value
+        if (anyEdge) {
+            return anyEdge[0]?.constructor || Edge
+        }
+        return Edge
     }
     get NodeConstructor() {
-        return this.nodes().next().value.constructor || Node
+        return this.nodes().next()?.value?.constructor || Node
     }
 
 
