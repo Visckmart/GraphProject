@@ -23,7 +23,6 @@ class Graph {
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
-        console.log(this.EdgeConstructor)
         let edge = new this.EdgeConstructor({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
         // Verificação
         if (!(nodeA && nodeB && edge)) {
