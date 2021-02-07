@@ -34,7 +34,7 @@ export default async function DijkstraShortestPath(controller) {
     {
         // Recriando o grafo agora com nós com valor assinalado
         controller.graphView.structure =
-            controller.graphView.structure.cloneAndTransform(null, NodeAssignedValueMixin(node.constructor))
+            controller.graphView.structure.cloneAndTransform({NodeConstructor: NodeAssignedValueMixin(node.constructor)})
         controller.graphView.redrawGraph()
     }
 

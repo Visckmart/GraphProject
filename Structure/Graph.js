@@ -3,27 +3,21 @@ import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
 class Graph {
-    constructor({ data = new Map() } = {}) {
+    constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
         this.data = data
         this.debug = false
+
+        // Guardando construtores de elementos do grafo
+        this.EdgeConstructor = EdgeConstructor
+        this.NodeConstructor = NodeConstructor
     }
 
     get _args() {
         return {
-            data: this.clone().data
+            data: this.clone().data,
+            EdgeConstructor: this.EdgeConstructor,
+            NodeConstructor: this.NodeConstructor
         }
-    }
-
-    /* Getters para construtores de aresta e vértice para garantir a criação de artefatos consistentes */
-    get EdgeConstructor() {
-        let anyEdge = this.uniqueEdges().next()?.value
-        if (anyEdge) {
-            return anyEdge[0]?.constructor || Edge
-        }
-        return Edge
-    }
-    get NodeConstructor() {
-        return this.nodes().next()?.value?.constructor || Node
     }
 
 
@@ -243,7 +237,7 @@ class Graph {
 
     static deserialize(string, clone = false) {
         resetColorRotation()
-        let graph = new Graph()
+        let graph = new this()
         graph.debug = !clone;
         let [allNodesStr, allEdgesStr] = string.split("~")
         let deserializedNodes = []
@@ -300,20 +294,20 @@ class Graph {
         return newGraph
     }
 
-    cloneAndTransform (EdgeConstructor = null, NodeConstructor = null) {
-        let newGraph = new this.constructor()
+    cloneAndTransform ({EdgeConstructor = this.EdgeConstructor, NodeConstructor = this.NodeConstructor}) {
+        let newGraph = new this.constructor({EdgeConstructor: EdgeConstructor, NodeConstructor: NodeConstructor})
         newGraph.debug = false;
         let newNodeMap = new Map()
         for(let node of this.nodes()) {
-            let newNode = NodeConstructor ? NodeConstructor.from(node) : node.clone()
+            let newNode = NodeConstructor.from(node)
             newNodeMap.set(node, newNode)
             newGraph.insertNode(newNode)
         }
 
         for(let [edge, nodeA, nodeB] of this.uniqueEdges())
         {
-            let newEdge = EdgeConstructor ? EdgeConstructor.from(edge) : edge.clone()
-            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+            let newEdge = EdgeConstructor.from(edge)
+            newGraph.insertEdgeBetween(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
         }
 
         return newGraph

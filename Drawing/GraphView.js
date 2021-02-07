@@ -150,7 +150,7 @@ class GraphView {
             //TODO: Mixin de edge direcionado
         }
 
-        g.structure = g.structure.cloneAndTransform(EdgeType)
+        g.structure = g.structure.cloneAndTransform({EdgeConstructor: EdgeType})
     }
 
     /* Atualiza o tipo de nó exibido */
