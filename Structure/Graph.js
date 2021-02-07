@@ -306,7 +306,7 @@ class Graph {
         for(let [edge, nodeA, nodeB] of this.uniqueEdges())
         {
             let newEdge = EdgeConstructor.from(edge)
-            newGraph.insertEdgeBetween(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
+            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
         }
 
         return newGraph
