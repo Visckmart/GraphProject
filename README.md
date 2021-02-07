@@ -20,7 +20,7 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
     - [ ] Direcionado
 - Valor Associado
     - [X] **Nada**
-    - [ ] Um em cada aresta (peso/custo)
+    - [X] Um em cada aresta (peso/custo)
     - [ ] Um em cada nó (peso/custo)
     - [ ] Dois em cada aresta (fluxo e capacidade máxima)
     - [ ] Dois em acada nó (fluxo e capacidade máxima)
@@ -43,13 +43,13 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
 - [X] Criar nó
 - [X] Criar aresta
 - [X] Apagar nó
-- [ ] Apagar aresta
+- [X] Apagar aresta
 - [X] Mover nó
 - [X] Alterar informações de um nó
-- [ ] Alterar informações de uma aresta
+- [X] Alterar informações de uma aresta
 - [X] Completar o grafo (conectar todos os nós em todos os outros nós)
 - [X] Apagar todas as arestas
-- [ ] Limpar o grafo
+- [X] Limpar o grafo
 - Selecionar nós
     - [X] Mover múltiplos nós simultaneamente
     - [ ] Alterar informações de várias arestas simultaneamente
@@ -59,9 +59,16 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
 - [ ] Desfazer última ação
 - [ ] Refazer última ação
 - [ ] Incluir como parte de grupo (nó inicial, nó final, etc.)
-- [ ] Executar algoritmo
-- [ ] Executar passo do algoritmo
-- [ ] Compartilhar
+- Execução dos Algoritmos
+  - [X] Executar e parar execução
+  - [X] Avançar passo
+  - [X] Retroceder passo
+  - [X] Explicações de cada passo
+- Compartilhar
+  - [X] Como arquivo codificado
+  - [X] Como texto
+  - [X] Como imagem
+  - [X] Como link
 
 ## Algoritmos
 - Busca
