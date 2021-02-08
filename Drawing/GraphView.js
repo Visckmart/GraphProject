@@ -1,5 +1,4 @@
 import { canvas, ctx, Tool, HighFPSFeature } from "./General.js"
-import { Node } from "../Structure/Node.js"
 import Edge from "../Structure/Edge.js"
 import Graph from "../Structure/Graph.js"
 
@@ -11,21 +10,17 @@ import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMi
 
 
 import PropertyList from "./Properties/PropertyList.js";
+import {backgroundGradient} from "../Structure/Utilities";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
 const IDLE_MAX_FPS = 10;
-const INTERACTION_MAX_FPS = 90;
 
 const NodeLabeling = {
     NUMBERS: "numbers",
     LETTERS_RAND: "letters_randomized",
     LETTERS_ORD: "letters_ordered"
 }
-
-const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-transparentLabelGradient.addColorStop(0, "#E5E0FF");
-transparentLabelGradient.addColorStop(1, "#FFE0F3");
 
 // Graph
 class GraphView {
@@ -349,7 +344,7 @@ class GraphView {
     redrawGraph() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        ctx.fillStyle = transparentLabelGradient;
+        ctx.fillStyle = backgroundGradient;
         ctx.rect(0, 0, canvas.width, canvas.height);
         ctx.fill()
         

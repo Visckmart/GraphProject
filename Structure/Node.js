@@ -1,6 +1,7 @@
 // Node Definition
 import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
+import { generateNewRandomLetter, backgroundGradient, positionAlphabet, colorFromComponents } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 export const regularNodeRadius = 28;
@@ -9,43 +10,7 @@ const nodeColorList = [
     "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
 ]
 
-var globalNodeIndex = 0
-
-var usedLabels = new Set()
-
-function generateNewRandomLetter() {
-    let newRandomLetter;
-    if (usedLabels.size < 26) {
-        do {
-            let randomCharCode = Math.floor(Math.random()*26)+65
-            newRandomLetter = String.fromCharCode(randomCharCode)
-        } while (usedLabels.has(newRandomLetter));
-    } else {
-        let randomCharCode = Math.floor(Math.random()*26)+65
-        newRandomLetter = String.fromCharCode(randomCharCode)
-    }
-    return newRandomLetter;
-}
-
-// function drawPreservingState(ctx, drawingOperations) {
-//     ctx.save()
-//     drawingOperations()
-//     ctx.restore()
-// }
-
-function colorFromComponents(r, g, b, a = 1) {
-    return "rgba(" + r + "," + g + "," + b + "," + a + ")"
-}
-
-const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-transparentLabelGradient.addColorStop(0, "#E5E0FF");
-transparentLabelGradient.addColorStop(1, "#FFE0F3");
-
-const up = Array.from({length: 26}, (_, i) => String.fromCharCode(65+i));
-const low = Array.from({length: 26}, (_, i) => String.fromCharCode(97+i));
-const c = Array.from({length: 10}, (_, i) => String.fromCharCode(48+i));
-
-const positionAlphabet = up.concat(low.concat(c))
+let globalNodeIndex = 0
 
 export class Node {
 
@@ -65,13 +30,10 @@ export class Node {
         this.pos = {x: x, y: y};
 
         // Informações de label
-        let newRandomLabel = generateNewRandomLetter()
-        usedLabels.add(newRandomLabel)
-
         if (label != null) {
             this.label = label;
         } else {
-            this.label = newRandomLabel;
+            this.label = generateNewRandomLetter();
         }
         
         this.highlights = new HighlightsHandler(highlights)
@@ -114,14 +76,10 @@ export class Node {
 
     get radius() {
         let elapsedTime = window.performance.now() - this._initialTime;
-        let speed  = this._breatheSettings.speed
-        let mult   = this._breatheSettings.amplitude
-        let offset = this._breatheSettings.offset
-        // if (this.highlight & HighlightType.ALGORITHM_FOCUS) {
-        //     speed = 0.4;
-        //     mult = 2.5;
-        // }
-        let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset
+        let speed  = this._breatheSettings.speed;
+        let mult   = this._breatheSettings.amplitude;
+        let offset = this._breatheSettings.offset;
+        let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset;
         return regularNodeRadius + expansion;
     }
 
@@ -135,7 +93,7 @@ export class Node {
     // Executa a cadeia de responsabilidade
     draw(...args) {
         let fpsRequests = this.drawChain.call(...args)
-        fpsRequests = fpsRequests.filter(req => req != undefined)
+        fpsRequests = fpsRequests.filter(req => req !== undefined)
         return Math.max(...fpsRequests)
     }
 
@@ -155,7 +113,7 @@ export class Node {
                                  || this.highlights.has(HighlightType.DARKEN)
                                  || this.highlights.has(HighlightType.COLORED_BORDER)
         if (!hasHighlightWithBG) {
-            ctx.fillStyle = transparentLabelGradient;
+            ctx.fillStyle = backgroundGradient;
         } else {
             ctx.fillStyle = this._originalcolor;
         }
@@ -174,7 +132,7 @@ export class Node {
         // Draw label
         let transparentText = !this.highlights.has(HighlightType.LIGHTEN)
                                && this.highlights.has(HighlightType.DARKEN)
-        this._drawLabel(nodeLabeling, transparentText ? transparentLabelGradient : this.color)
+        this._drawLabel(nodeLabeling, transparentText ? backgroundGradient : this.color)
 
         return maxFPSRequest;
     }
@@ -288,7 +246,7 @@ export class Node {
         // Colors
         let serializedColors;
         let indexOfColor = nodeColorList.indexOf(this._originalcolor)
-        if (indexOfColor == -1) {
+        if (indexOfColor) {
             serializedColors = this._originalcolor.slice(1)
         } else {
             serializedColors = indexOfColor;
@@ -301,7 +259,7 @@ export class Node {
 
         // Highlights
         let serializedHighlights = this.highlights.prepareForSharing()
-        if (serializedHighlights != "") {
+        if (serializedHighlights) {
             serializedHighlights = "-" + serializedHighlights
         }
         
@@ -312,20 +270,20 @@ export class Node {
         const nodeSerializationFormat = /(\d+)-(.+?)-(.+)?/i;
         let matchResult = serializedNode.match(nodeSerializationFormat);
         // console.log(serializedNode, matchResult)
-        if (matchResult == undefined) return;
+        if (!matchResult) return;
         let [, index, serializedColor, moreInfo] = matchResult;
         index = parseInt(index)
         // console.log("index", index)
         
         let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
-        if (colorMatchResult == undefined) return;
+        if (!colorMatchResult) return;
         let [, customColor, colorIndex] = colorMatchResult;
         let color = customColor ?? nodeColorList[colorIndex % nodeColorList.length];
         // console.log("color", color)
 
         const moreInfoFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))(-(?<highlights>.+))?/i
         let moreInfoResult = moreInfo.match(moreInfoFormat);
-        if (moreInfoResult == undefined) return;
+        if (!moreInfoResult) return;
 
         let label = moreInfoResult.groups.label
         let serializedPos = moreInfoResult.groups.pos
@@ -342,10 +300,10 @@ export class Node {
         if (xPos == null || yPos == null) return;
         xPos *= canvas.width/61;
         yPos *= canvas.height/61;
-        
-        let node = new Node({x:xPos, y:yPos, label, index, color, highlights})
-        
-        return node;
+
+        return new Node({
+            x: xPos, y: yPos, label, index, color, highlights
+        });
     }
 
     // Clona o nó a partir da instância atual

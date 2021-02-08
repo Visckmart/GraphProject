@@ -1,10 +1,8 @@
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
-import {canvas, ctx} from "../Drawing/General.js";
+import { ctx } from "../Drawing/General.js";
+import { backgroundGradient } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
-const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-transparentLabelGradient.addColorStop(0, "#E5E0FF");
-transparentLabelGradient.addColorStop(1, "#FFE0F3");
 export default class Edge {
     constructor({ label, highlights = null }) {
         this.label = label
@@ -172,7 +170,7 @@ export default class Edge {
                 ctx.save()
 
                 ctx.setLineDash([]);
-                ctx.strokeStyle = transparentLabelGradient;
+                ctx.strokeStyle = backgroundGradient;
                 ctx.lineWidth = 9
                 ctx.beginPath()
                 ctx.moveTo(xStart, yStart);
@@ -196,7 +194,7 @@ export default class Edge {
 
     serialize() {
         let serializedHighlights = this.highlights.prepareForSharing()
-        if (serializedHighlights != "") {
+        if (serializedHighlights) {
             serializedHighlights = "-" + serializedHighlights
         }
         // console.log("s", serializedHighlights)
@@ -206,8 +204,8 @@ export default class Edge {
     static deserialize(serializedEdge) {
         const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
         let matchResult = serializedEdge.match(edgeDeserializationFormat);
-        if (matchResult == undefined) {
-            console.log("error deserializing", serializedEdge, matchResult)
+        if (!matchResult) {
+            console.error("Erro na deserialização: ", serializedEdge, matchResult)
             return;
         }
         // console.log(1)
@@ -218,8 +216,10 @@ export default class Edge {
             highlights = HighlightsHandler.deserialize(serializedHighlights)
             // console.log("d", highlights)
         }
-        let edge = new Edge({ label, highlights })
-        return edge
+
+        return new Edge({
+            label, highlights
+        })
     }
 
     clone() {
