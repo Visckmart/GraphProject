@@ -56,18 +56,6 @@ function contextMenuOpened(e) {
     e.preventDefault();
 }
 
-// Auxiliary Functions
-
-// Finds the first empty space on an array.
-// Empty spaces are a result of `delete array[index]` statements.
-function indexOfEmptySpace(array) {
-    for (i = 0; i < array.length + 1; i++) {
-        if (typeof array[i] == 'undefined') {
-            return i;
-        }
-    }
-}
-
 canvas.addEventListener("mousedown", mouseDown);
 canvas.addEventListener("contextmenu", contextMenuOpened);
 canvas.addEventListener("mouseup", mouseUp);

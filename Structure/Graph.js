@@ -108,7 +108,7 @@ class Graph {
         console.assert(this.data.has(node) == true, "Nó não está no grafo.")
 
         // Operação
-        for (let [_, nodeA, nodeB] of this.edges()) {
+        for (let [, nodeA, nodeB] of this.edges()) {
             if (nodeB == node) {
                 this.removeEdgeBetween(nodeA, nodeB)
             }
@@ -259,7 +259,7 @@ class Graph {
                 const re = /(\d+)_(\d+)-(.*)/i;
                 let found = edgeStr.match(re);
                 if (found == undefined) continue;
-                const [_, nodeA, nodeB, edgeData] = found;
+                const [, nodeA, nodeB, edgeData] = found;
                 // console.log("graph edge", nodeA, nodeB, edgeData)
                 let ne = Edge.deserialize(edgeData)
                 graph.insertEdge(

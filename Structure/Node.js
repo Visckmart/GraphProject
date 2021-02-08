@@ -10,8 +10,6 @@ const nodeColorList = [
 ]
 
 var globalNodeIndex = 0
-const nodeBorderWidth = 2;
-const nodeBorderColor = "transparent";
 
 var usedLabels = new Set()
 
@@ -28,26 +26,12 @@ function generateNewRandomLetter() {
     }
     return newRandomLetter;
 }
-function roundRect(ctx, x, y, width, height, radius) {
-    let r = x + width;
-    let b = y + height;
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(r - radius, y);
-    ctx.quadraticCurveTo(r, y, r, y + radius);
-    ctx.lineTo(r, y + height - radius);
-    ctx.quadraticCurveTo(r, b, r - radius, b);
-    ctx.lineTo(x + radius, b);
-    ctx.quadraticCurveTo(x, b, x, b - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-}
 
-function drawPreservingState(ctx, drawingOperations) {
-    ctx.save()
-    drawingOperations()
-    ctx.restore()
-}
+// function drawPreservingState(ctx, drawingOperations) {
+//     ctx.save()
+//     drawingOperations()
+//     ctx.restore()
+// }
 
 function colorFromComponents(r, g, b, a = 1) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")"

@@ -165,7 +165,7 @@ export default class GraphSelection {
     }
 
     updateEdgesAppearance() {
-        for (let [edge, a, b] of this.graphView.structure.edges()) {
+        for (let [edge, ,] of this.graphView.structure.edges()) {
             if (this.selectedEdges.includes(edge)) {
                 edge.highlights.add(HighlightType.SELECTION)
             } else {

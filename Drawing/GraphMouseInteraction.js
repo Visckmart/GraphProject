@@ -23,7 +23,6 @@ class GraphMouseHandler {
     clickedNode = false;
     clickedEdge = false;
     justClearedSelection = false;
-    to = null;
     mostRecentNode = null;
     mouseDownEvent(mouseEvent) {
         // Eventos de mouse desabilitados

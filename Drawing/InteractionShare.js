@@ -117,7 +117,7 @@ fileInputElement.onchange = function(event) {
     }
 }
 let importFile = document.getElementById("importFile")
-importFile.onclick = function (e) {
+importFile.onclick = function () {
     fileInputElement.click()
 }
 

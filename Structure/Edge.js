@@ -211,7 +211,7 @@ export default class Edge {
             return;
         }
         // console.log(1)
-        const [_, label, serializedHighlights] = matchResult;
+        const [, label, serializedHighlights] = matchResult;
         // console.log(label, serializedHighlights, serializedEdge)
         let highlights;
         if (serializedHighlights != null) {

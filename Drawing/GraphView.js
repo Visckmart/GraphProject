@@ -14,11 +14,6 @@ import PropertyList from "./Properties/PropertyList.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
-const nodeBorderWidth = 2;
-const nodeBorderColor = "transparent";
-
-const edgeWidth = 3;
-
 const IDLE_MAX_FPS = 10;
 const INTERACTION_MAX_FPS = 90;
 
@@ -26,12 +21,6 @@ const NodeLabeling = {
     NUMBERS: "numbers",
     LETTERS_RAND: "letters_randomized",
     LETTERS_ORD: "letters_ordered"
-}
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 const transparentLabelGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
@@ -46,7 +35,6 @@ class GraphView {
         this.ctx = canvas.getContext("2d");
 
         this.structure = new Graph();
-        this.highlightedEdges = new Map();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
@@ -322,32 +310,6 @@ class GraphView {
         }
         this.structure.removeNode(frontmostNode)
         this.selectionHandler.removeSelectionFrom(frontmostNode)
-    }
-
-
-    // Debugging function
-    sourceNodeCounter = 0;
-    targetNodeCounter = 0;
-
-    getNextEdge() {
-        let sourceList = Array.from(this.edges.keys())
-        if (sourceList.length == 0) { return }
-        
-        let sourceListIndex = this.sourceNodeCounter % sourceList.length
-        let sourceNodeIndex = sourceList[sourceListIndex]
-        
-        let targetList = Array.from(this.edges.get(sourceNodeIndex))
-        let targetListIndex = this.targetNodeCounter % targetList.length
-        let targetNodeIndex = targetList[targetListIndex]
-
-        this.targetNodeCounter += 1
-        
-        if (this.targetNodeCounter % targetList.length == 0) {
-            this.sourceNodeCounter += 1
-            this.targetNodeCounter = 0
-        }
-
-        return [sourceNodeIndex, targetNodeIndex]
     }
     
     // s1 = 10
