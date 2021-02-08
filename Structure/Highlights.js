@@ -1,11 +1,11 @@
 export const HighlightType = {
     SELECTION:            "selection",
-    ALGORITHM_FOCUS:      "algorithm_focus",
-    ALGORITHM_FOCUS2:     "algorithm_focus2",
+    DARK_WITH_BLINK:      "algorithm_focus",
+    LIGHTEN:     "algorithm_focus2",
     ALGORITHM_VISITING:   "algorithm_visiting",
-    ALGORITHM_VISITED:    "algorithm_visited",
+    DARKEN:    "algorithm_visited",
     ALGORITHM_NOTVISITED: "algorithm_notvisited",
-    ALGORITHM_RESULT:     "algorithm_result",
+    COLORED_BORDER:     "algorithm_result",
     FEATURE_PREVIEW:      "feature_preview"
 }
 

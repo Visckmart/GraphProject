@@ -21,12 +21,12 @@ function executeBFS(controller, startNode)
     let currentNode, currentEdge
     while(queue.length > 0){
         [currentNode, currentEdge] = queue.shift()
-        currentNode.addHighlight(HighlightType.ALGORITHM_FOCUS)
+        currentNode.addHighlight(HighlightType.DARK_WITH_BLINK)
         currentNode.visited = true
 
         if(currentEdge)
         {
-            currentEdge.addHighlight(HighlightType.ALGORITHM_FOCUS2)
+            currentEdge.addHighlight(HighlightType.LIGHTEN)
             controller.addStep(graph, `Visitando o nó ${currentNode.label} a partir da aresta ${currentEdge.label}.`)
         } else {
             controller.addStep(graph, `Visitando o nó ${currentNode.label}.`)
@@ -45,7 +45,7 @@ function executeBFS(controller, startNode)
             {
                 queue.push([node, edge])
                 node.visited = true
-                edge.addHighlight(HighlightType.ALGORITHM_FOCUS)
+                edge.addHighlight(HighlightType.DARK_WITH_BLINK)
                 visitedEdges.push(edge)
             }
         }
@@ -54,8 +54,8 @@ function executeBFS(controller, startNode)
             controller.addStep(graph, `Explorando as arestas ${visitedEdges.map(e => e.label).join(', ')}.`)
         }
 
-        currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS)
+        currentNode.removeHighlight(HighlightType.DARK_WITH_BLINK)
     }
-    currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS)
+    currentNode.removeHighlight(HighlightType.DARK_WITH_BLINK)
     controller.addStep(graph, "Algoritmo finalizado.")
 }

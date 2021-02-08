@@ -8,11 +8,9 @@ import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
-        if (window.localStorage.getItem("fav"+loadFavBtn.name) == undefined) {
-            loadFavBtn.disabled = true;
-        } else {
-            loadFavBtn.disabled = false;
-        }
+        let favName = "fav"+loadFavBtn.name;
+        let hasFavAssociated = window.localStorage.getItem(favName);
+        loadFavBtn.disabled = hasFavAssociated == null;
     }
 }
 let saveFavButtons = document.getElementsByClassName("saveFavorite")

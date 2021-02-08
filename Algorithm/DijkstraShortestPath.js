@@ -4,10 +4,10 @@ import Edge from "../Structure/Edge.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 
 function markAsActive(artifact) {
-    artifact.highlights.add(HighlightType.ALGORITHM_FOCUS2)
+    artifact.highlights.add(HighlightType.LIGHTEN)
 }
 function markAsNotActive(artifact) {
-    artifact.highlights.remove(HighlightType.ALGORITHM_FOCUS2)
+    artifact.highlights.remove(HighlightType.LIGHTEN)
 }
 
 function markAsNotVisited(artifact) {
@@ -17,7 +17,7 @@ function markAsVisited(artifact) {
     if (artifact instanceof Edge) {
         artifact.highlights.remove(HighlightType.ALGORITHM_VISITING)
     }
-    artifact.highlights.add(HighlightType.ALGORITHM_VISITED)
+    artifact.highlights.add(HighlightType.DARKEN)
 }
 
 function markAsVisiting(artifact) {
@@ -140,7 +140,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         markAsNotActive(currentNode)
         markAsVisited(currentNode)
         if (currentNode === initialNode) {
-            initialNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
+            initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
         }
         // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS)
         // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS2)
@@ -148,15 +148,15 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
     }
     let textoPassoFinal;
-    finalNode.highlights.add(HighlightType.ALGORITHM_FOCUS)
+    finalNode.highlights.add(HighlightType.DARK_WITH_BLINK)
     if(currentNode === finalNode) {
         textoPassoFinal = 'Nó final foi visitado portanto as visitações estão concluídas.\nCaminhando pelas distâncias mais curtas para encontrar o menor caminho.'
         currentNode = finalNode
         while(currentNode !== null)
         {
-            currentNode.highlights.add(HighlightType.ALGORITHM_RESULT)
+            currentNode.highlights.add(HighlightType.COLORED_BORDER)
             if(currentNode.previousEdge) {
-                currentNode.previousEdge.highlights.add(HighlightType.ALGORITHM_RESULT)
+                currentNode.previousEdge.highlights.add(HighlightType.COLORED_BORDER)
             }
             currentNode = currentNode.previousNode
         }

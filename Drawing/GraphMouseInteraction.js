@@ -90,14 +90,14 @@ class GraphMouseHandler {
         // console.log(this.selection.temporarySelection)
         let nodeHover = this.graphView.getNodeIndexAt(pos)
         if (this.edgeColision) {
-            this.edgeColision.highlights.remove(HighlightType.ALGORITHM_FOCUS2)
+            this.edgeColision.highlights.remove(HighlightType.LIGHTEN)
         }
         if (this.graphView.primaryTool == Tool.CONNECT) {
             if (nodeHover.length == 0) {
                 let edgeHover = this.graphView.checkEdgeCollision(pos)
                 this.edgeColision = edgeHover
                 if (edgeHover) {
-                    edgeHover.highlights.add(HighlightType.ALGORITHM_FOCUS2)
+                    edgeHover.highlights.add(HighlightType.LIGHTEN)
                 }
             }
         }
