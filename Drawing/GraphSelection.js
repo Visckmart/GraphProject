@@ -13,7 +13,7 @@ export default class GraphSelection {
 
     _additionOnlyMode = false;
     get additionOnlyMode() {
-        return this.shouldDrawSelection ?? this._additionOnlyMode;
+        return this.shouldDrawSelection || this._additionOnlyMode;
     }
     set additionOnlyMode(s) {
         this._additionOnlyMode = s;
@@ -26,14 +26,14 @@ export default class GraphSelection {
     invertSelection(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
-            if (nodeIndex >= 0 && this.additionOnlyMode == false) {
+            if (nodeIndex >= 0 && this.shouldDrawSelection == false) {
                 this.selected.nodes.splice(nodeIndex, 1);
             } else {
                 this.selected.nodes.push(element);
             }
         } else if (element instanceof Edge) { // Caso seja uma aresta
             let edgeIndex = this.selected.nodes.indexOf(element);
-            if (edgeIndex >= 0 && this.additionOnlyMode == false) {
+            if (edgeIndex >= 0 && this.shouldDrawSelection == false) {
                 this.selected.edges.splice(edgeIndex, 1);
             } else {
                 this.selected.edges.push(element);

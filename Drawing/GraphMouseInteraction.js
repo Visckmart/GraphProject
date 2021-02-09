@@ -1,6 +1,6 @@
 import { Tool } from "./General.js"
 import { HighlightType } from "../Structure/Highlights.js"
-import {getDistanceOf} from "../Structure/Utilities.js";
+import { getDistanceOf } from "../Structure/Utilities.js";
 
 class GraphMouseHandler {
     
@@ -8,6 +8,14 @@ class GraphMouseHandler {
         this.graphView = graphView;
         this.selection = graphView.selectionHandler;
         this._enabled = true
+    }
+
+    getMousePos(mouseEvent) {
+        var canvasRect = this.graphView.canvas.getBoundingClientRect();
+        return {
+            x: mouseEvent.clientX - canvasRect.left,
+            y: mouseEvent.clientY - canvasRect.top
+        };
     }
 
     /* Registra a ultima posição em que o mousedown ocorreu para
@@ -27,15 +35,7 @@ class GraphMouseHandler {
     justClearedSelection = false;
     mouseDownEvent(mouseEvent) {
         // Eventos de mouse desabilitados
-        if(!this._enabled)
-        {
-            return
-        }
-
-        // Somente o botão esquerdo nos interessa
-        // if (mouseEvent.button != 0) return;
-        // console.log(this)
-        // console.info("Mouse down event")
+        if(!this._enabled) { return; }
 
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
@@ -130,7 +130,8 @@ class GraphMouseHandler {
         let pos = this.getMousePos(mouseEvent);
 
         // Se o botão direito foi o levantado
-        if (mouseEvent.button == 2 && this.selection.shouldDrawSelection == false) {
+        if (mouseEvent.button == 2
+            && this.selection.shouldDrawSelection == false) {
             // Tente remover um nó, se o mouse estiver sobre algum
             this.graphView.removeNodeAt(pos);
             return;
@@ -139,7 +140,8 @@ class GraphMouseHandler {
         // SELEÇÃO
         let distanceMoved = getDistanceOf(this.clickPosition, pos);
         if (distanceMoved < 5) {
-            if (this.selection.shouldDrawSelection == false) {
+            console.log(this.selection.additionOnlyMode)
+            if (this.selection.additionOnlyMode == false) {
                 this.selection.clear();
             }
 
@@ -147,27 +149,24 @@ class GraphMouseHandler {
                 || (this.clickedEdge && Tool.CONNECT == this.graphView.primaryTool)) {
                 this.selection.invertSelection(this.clickedNode ?? this.clickedEdge);
             }
-        } else {
-            if (this.selection.isQuickSelection) {
-                this.selection.clear();
-            }
+        }
+        if (this.selection.isQuickSelection) {
+            this.selection.clear();
         }
 
         // Atualiza a posição dos nós selecionados, para que o próximo
         // gesto de mover esses nós tenha as posições adequadas.
         this.selection.registerNodePositions();
 
-        // let wasDrawingSelection = this.selection.shouldDrawSelection;
         // Se o botão esquerdo foi o levantado,
         switch (this.graphView.primaryTool) {
         // A ferramenta MOVE for a escolhida,
         case Tool.MOVE: {
-             if (this.selection.shouldDrawSelection == false) { // Senão
-                // Caso não tenha acabado de limpar uma seleção
-                if (this.justClearedSelection == false) {
-                    // Insira um nó novo
-                    this.graphView.insertNewNodeAt(pos);
-                }
+            // Caso não tenha acabado de limpar uma seleção
+             if (this.selection.shouldDrawSelection == false
+                 && this.justClearedSelection == false) {
+                // Insira um nó novo
+                this.graphView.insertNewNodeAt(pos);
             }
             break;
         }
@@ -178,7 +177,6 @@ class GraphMouseHandler {
             if (this.clickedNode == null) {
                 break;
             }
-
             // Nó abaixo do ponteiro do mouse atualmente
             let releasedOverNode = this.graphView.getNodeIndexAt(pos).pop()
                                 ?? this.graphView.insertNewNodeAt(pos);
@@ -189,6 +187,7 @@ class GraphMouseHandler {
             break;
         }
         }
+
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
             // Para de desenhar
@@ -198,14 +197,6 @@ class GraphMouseHandler {
     }
 
 
-    getMousePos(mouseEvent) {
-        var canvasRect = this.graphView.canvas.getBoundingClientRect();
-        return {
-            x: mouseEvent.clientX - canvasRect.left,
-            y: mouseEvent.clientY - canvasRect.top
-        };
-    }
-
     refreshCursorStyle() {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
@@ -214,14 +205,13 @@ class GraphMouseHandler {
         let cursorStyle = null;
         // Se não sabemos a posição (acontece antes do primeiro movimento)
         if (this.currentMousePos == null) { return; }
-
         let isHoveringNode = this.graphView.getNodeIndexAt(this.currentMousePos).length > 0;
         // Checa se a ferramenta MOVE está selecionada
         let moveToolSelected = this.graphView.primaryTool == Tool.MOVE;
         
         // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
         if (moveToolSelected && isHoveringNode) {
-            if (this.selection.hasSelectedNodes && this.clickPosition == this.currentMousePos) {
+            if (this.selection.hasSelectedNodes && getDistanceOf(this.clickPosition, this.currentMousePos) < 5) {
                 cursorStyle = "grabbing";
             } else {
                 cursorStyle = "grab";
@@ -230,7 +220,6 @@ class GraphMouseHandler {
         if (this.selection.shouldDrawSelection == true) {
             cursorStyle = "crosshair";
         }
-        // console.log(isHoveringNode, moveToolSelected, this.selection.hasSelectedNodes, this.clickPosition == this.currentMousePos)
         // Atualize o estilo apropriadamente
         this.graphView.canvas.style.cursor = cursorStyle;
     }
