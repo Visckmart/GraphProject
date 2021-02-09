@@ -6,8 +6,8 @@ import Edge from "../Structure/Edge.js";
 const movementTolerance = 20
 
 export default class GraphSelection {
-    constructor(canvasContext, graphView) {
-        this.ctx = canvasContext;
+
+    constructor(graphView) {
         this.graphView = graphView;
     }
 
@@ -19,8 +19,6 @@ export default class GraphSelection {
         nodes: [],
         edges: []
     }
-
-    selectedNodePositions = [];
 
     invertSelection(element) {
         if (element instanceof Node) { // Caso seja um nó
@@ -39,15 +37,14 @@ export default class GraphSelection {
             }
         } else { // Se não é nem um nó, nem uma aresta, algo de errado aconteceu
             console.warn(`Inversão de seleção chamada para ${element}.`);
+            console.trace();
             return;
         }
-        this.registerNodePositions();
         this.graphView.selectionChanged();
+        this.refreshMenu();
     }
 
-    registerNodePositions() {
-        this.selectedNodePositions = Array.from(this.selected.nodes.map(node => node.pos));
-    }
+    //region Add and Remove Selection Methods
     select(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
@@ -79,9 +76,17 @@ export default class GraphSelection {
             console.error(`Remoção de seleção chamada para ${element}.`);
         }
     }
-    updateOriginalPositions() {
+    //endregion
+
+    selectedNodePositions = [];
+
+    registerNodePositions() {
+        this.selectedNodePositions = Array.from(
+            this.selected.nodes.map(node => node.pos)
+        );
     }
 
+    //region Checando seleção
     isSelected(element) {
         if (element instanceof Node) { // Caso seja um nó
             return this.selected.nodes.indexOf(element) >= 0;
@@ -95,12 +100,26 @@ export default class GraphSelection {
         }
     }
 
+    get hasSelectedNodes() {
+        return this.selected.nodes.length > 0;
+    }
+
+    get hasSelectedEdges() {
+        return this.selected.edges.length > 0;
+    }
+
+    get selectionIsEmpty() {
+        return this.selected.nodes.length == 0 && this.selected.edges.length == 0;
+    }
+    //endregion
+
     clear() {
-        // console.trace()
         this.selected.nodes = [];
         this.selected.edges = [];
+        this.isQuickSelection = false;
         this.graphView.selectionChanged();
     }
+
 
 
     // SELECTION AREA
@@ -111,12 +130,23 @@ export default class GraphSelection {
     }
 
     get shouldDrawSelection() {
-        return this.selectionArea.startPoint != null && this.selectionArea.endPoint != null;
+        return this.selectionArea.startPoint != null
+               && this.selectionArea.endPoint != null;
+    }
+
+    checkSelectionGesture(startingPoint, currentPoint) {
+        if (startingPoint == null || currentPoint == null) {
+            return false;
+        }
+        let horizontalMove = Math.abs(currentPoint.x - startingPoint.x);
+        let verticalMove   = Math.abs(currentPoint.y - startingPoint.y);
+
+        return (horizontalMove > movementTolerance || verticalMove > movementTolerance);
     }
 
     draggingEvent(startPoint, endPoint) {
         if (startPoint == null || endPoint == null) {
-            console.log("No selection area.")
+            console.log("No selection area.");
             this.clearSelectionArea();
             return;
         }
@@ -127,23 +157,17 @@ export default class GraphSelection {
         }
         this.selectionArea.startPoint = startPoint;
         this.selectionArea.endPoint = endPoint;
-        this.updateContainedElements()
+        this.updateContainedElements();
     }
-    lastX = false;
 
-    checkSelectionGesture(startingPoint, currentPoint) {
-        if (startingPoint == null || currentPoint == null) {
-            return false;
-        }
-        let horizontalMove = Math.abs(currentPoint.x - startingPoint.x)
-        let verticalMove   = Math.abs(currentPoint.y - startingPoint.y)
+    prepareSelectionAreaDrawing(context) {
+        let startPoint = this.selectionArea.startPoint;
+        let endPoint = this.selectionArea.endPoint;
+        let width = endPoint.x - startPoint.x;
+        let height = endPoint.y - startPoint.y;
 
-        let x = (horizontalMove > movementTolerance || verticalMove > movementTolerance)
-        if (this.lastX == false && x) {
-            this.clear()
-        }
-        this.lastX = x;
-        return x;
+        context.beginPath();
+        context.rect(startPoint.x, startPoint.y, width, height);
     }
 
     updateContainedElements() {
@@ -165,114 +189,38 @@ export default class GraphSelection {
         this.graphView.selectionChanged();
     }
 
-    prepareSelectionAreaDrawing() {
-        let startPoint = this.selectionArea.startPoint;
-        let endPoint = this.selectionArea.endPoint;
-        let width = endPoint.x - startPoint.x;
-        let height = endPoint.y - startPoint.y;
-
-        this.ctx.beginPath()
-        this.ctx.rect(startPoint.x, startPoint.y, width, height);
-        // console.log(startPoint.x, startPoint.y);
-    }
-
     clearSelectionArea() {
         this.selectionArea.startPoint = null;
-        this.selectionArea.endPoint = null;
-        // this.updateContainedElements();
-        // this.graphView.selectionChanged();
+        this.selectionArea.endPoint   = null;
     }
 
+    isQuickSelection = false;
 
-
-
-    // /* Registra nós selecionados na última seleção múltipla */
-    // _selectedNodes = [];
-    // get selectedNodes() {
-    //     return this._selectedNodes
-    // }
-    // set selectedNodes(selectedNodes) {
-    //     let d = document.getElementById("dynamic")
-    //     if (selectedNodes.length > 0) {
-    //         d.innerHTML = selectedNodes.length + " nós selecionados"
-    //     } else {
-    //         d.innerHTML = "Nenhum nó selecionado."
-    //     }
-    //
-    //     this._selectedNodes = selectedNodes
-    //     this.updateOriginalPositions()
-    //     if (this.selectedNodes.length == 0) {
-    //         this.temporarySelection = false;
-    //     }
-    //     this.updateNodesAppearance()
-    //     this.refreshMenu()
-    // }
-    // /* Registra nós selecionados na última seleção múltipla */
-    // _selectedEdges = [];
-    // get selectedEdges() {
-    //     return this._selectedEdges
-    // }
-    // set selectedEdges(selectedEdges) {
-    //     this._selectedEdges = selectedEdges
-    //
-    //     this.updateEdgesAppearance()
-    //     this.refreshMenu()
-    // }
-    // // selectedEdges = new Set()
-
-    get hasSelectedNodes() {
-        return this.selected.nodes.length > 0;
+    quickSelect(node) {
+        this.clear();
+        this.selected.nodes = [node];
+        this.registerNodePositions();
+        this.isQuickSelection = true;
     }
 
-    get hasSelectedEdges() {
-        return this.selected.edges.length > 0;
+    get quicklySelectedNode() {
+        return this.selected.nodes[0];
     }
-
-    get selectionIsEmpty() {
-        return this.selected.nodes.length == 0 && this.selected.edges.length == 0;
-    }
-
-    // _temporarySelection = false;
-    // get temporarySelection() {
-    //     return this._temporarySelection;
-    // }
-    // set temporarySelection(temp) {
-    //     this._temporarySelection = temp;
-    //     this.updateNodesAppearance()
-    //     this.refreshMenu()
-    // }
-    //
-    // selectNodeTemporarily(node) {
-    //     this.temporarySelection = true
-    //     this.selectedNodes = [node]
-    //     // this.refreshMenu(this.selectedNodes.length, this.temporarySelection)
-    // }
-
-    // updateEdgesAppearance() {
-    //     for (let [edge, ,] of this.graphView.structure.edges()) {
-    //         if (this.selectedEdges.includes(edge)) {
-    //             edge.highlights.add(HighlightType.SELECTION)
-    //         } else {
-    //             edge.highlights.remove(HighlightType.SELECTION)
-    //         }
-    //     }
-    // }
 
 
 
     // TODO: Organizar
     refreshMenu() {
-        let numberOfSelectedNodes = this.selectedNodes.length
-        let numberOfSelectedEdges = this.selectedEdges.length
+        let numberOfSelectedNodes = this.selected.nodes.length
+        let numberOfSelectedEdges = this.selected.edges.length
         let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings"]
         for (let settingsID of settingsList) {
             let s = document.getElementById(settingsID)
             s.style.display = "none"
         }
         let showSettings;
-        if (numberOfSelectedNodes == 1 &&
-            this.temporarySelection === false &&
-            !this.drawingSelection) {
+        if (numberOfSelectedNodes == 1 && this.quicklySelectedNode !== null
+            && this.shouldDrawSelection == false) {
             showSettings = document.getElementById("NodeSettings")
             /*
             // console.log("b")
@@ -290,15 +238,15 @@ export default class GraphSelection {
             colorInput.oninput = function(input) {
                 selectionHandler.selectedNodes[0]._originalcolor = input.target.value
             } */
-            let selectedNode = this.selectedNodes[0]
+            let selectedNode = this.selected.nodes[0]
             let element = document.getElementById('NodeProperties')
             // TODO: Pegar algoritmo correto
             element.updateProperties(selectedNode, 'Dijkstra')
-        } else if (numberOfSelectedEdges == 1 && !this.drawingSelection) {
+        } else if (numberOfSelectedEdges == 1 && this.shouldDrawSelection == false) {
             // console.log("a")
             showSettings = document.getElementById("EdgeSettings")
 
-            let selectedEdge = this.selectedEdges[0]
+            let selectedEdge = this.selected.edges[0]
             let element = document.getElementById('EdgeProperties')
             element.updateProperties(selectedEdge, 'Dijkstra')
         } else {

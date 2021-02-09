@@ -42,3 +42,8 @@ const lowercaseLetters = Array.from({length: 26}, (_, i) => String.fromCharCode(
 const numbers = Array.from({length: 10}, (_, i) => String.fromCharCode(48+i));
 
 export const positionAlphabet = uppercaseLetters.concat(lowercaseLetters.concat(numbers))
+
+
+export function getDistanceOf(A, B) {
+    return Math.sqrt(Math.pow(Math.abs(B.x-A.x), 2) + Math.pow(Math.abs(B.y-A.y), 2))
+}

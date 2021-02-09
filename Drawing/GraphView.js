@@ -10,7 +10,7 @@ import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMi
 
 
 import PropertyList from "./Properties/PropertyList.js";
-import {backgroundGradient, colorFromComponents} from "../Structure/Utilities.js";
+import {backgroundGradient, colorFromComponents, getDistanceOf} from "../Structure/Utilities.js";
 import {HighlightType} from "../Structure/Highlights.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -34,7 +34,7 @@ class GraphView {
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
-        this.selectionHandler = new GraphSelection(ctx, this);
+        this.selectionHandler = new GraphSelection(this);
         let mouseHandler = new GraphMouseHandler(this)
         let keyboardHandler = new GraphKeyboardHandler(this)
         this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
@@ -193,8 +193,7 @@ class GraphView {
         this.ctx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
         this.ctx.lineWidth = 3;
 
-        this.selectionHandler.prepareSelectionAreaDrawing();
-        // this.ctx.rect(400, 250, 100, 80);
+        this.selectionHandler.prepareSelectionAreaDrawing(this.ctx);
 
         this.ctx.fill();
         this.ctx.stroke();
@@ -221,17 +220,15 @@ class GraphView {
         }
         return detectedNodes;
     }
-    getDistanceOf(A, B) {
-        return Math.sqrt(Math.pow(Math.abs(B.x-A.x), 2) + Math.pow(Math.abs(B.y-A.y), 2))
-    }
+
     checkEdgeCollision(pos) {
         // console.log(pos)
         const eps = 1
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             // console.log("e", edge)
-            let lineLength = this.getDistanceOf(nodeA.pos, nodeB.pos)
-            let distA = this.getDistanceOf(pos, nodeA.pos)
-            let distB = this.getDistanceOf(pos, nodeB.pos)
+            let lineLength = getDistanceOf(nodeA.pos, nodeB.pos)
+            let distA = getDistanceOf(pos, nodeA.pos)
+            let distB = getDistanceOf(pos, nodeB.pos)
             if (distA + distB >= lineLength-eps && distA + distB <= lineLength + eps) {
                 return edge
             }
