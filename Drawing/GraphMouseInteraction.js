@@ -20,10 +20,9 @@ class GraphMouseHandler {
         this.clickedNode = this.graphView.getNodeIndexAt(this.clickPosition).pop()
         this.clickedEdge = this.graphView.checkEdgeCollision(pos)
     }
-    clickedNode = false;
-    clickedEdge = false;
+    clickedNode = null;
+    clickedEdge = null;
     justClearedSelection = false;
-    mostRecentNode = null;
     mouseDownEvent(mouseEvent) {
         // Eventos de mouse desabilitados
         if(!this._enabled)
@@ -35,6 +34,7 @@ class GraphMouseHandler {
         // if (mouseEvent.button != 0) return;
         // console.log(this)
         // console.info("Mouse down event")
+
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos
         this.refreshCursorStyle();
@@ -44,35 +44,36 @@ class GraphMouseHandler {
         this.justClearedSelection = false;
         
         // console.log(this.clickedEdge)
-        // Caso um nó tenha sido clicado,
-        if (this.clickedNode && mouseEvent.button == 0) {
-            // console.log("Mouse down on node")
-            // E ele NÃO está selecionado,
-            if (this.selection.selectedNodes.includes(this.clickedNode) == false) {
-                // Limpe a seleção
-                this.selection.clear()
-                if (this.graphView.primaryTool == Tool.MOVE) {
-                    // E coloque o nó temporariamente
-                    // (Para não mostrar pontilhado e mover imediatamente)
-                    this.selection.selectNodeTemporarily(this.clickedNode)
-                }
-            }
-        } else if (this.clickedEdge) {
-            if (this.selection.selectedEdges.includes(this.clickedEdge) == false) {
-                this.selection.clear()
-                if (this.graphView.primaryTool != Tool.MOVE) {
-                    this.selection.selectedEdges.push(this.clickedEdge)
-                    this.selection.selectedEdges = this.selection.selectedEdges
-                    this.selection.updateEdgesAppearance()
-                }
-            }
-        } else {
-            // console.log("Mouse down on background")
-            if (this.selection.hasSelectedNodes || this.selection.selectedEdges.length > 0) {
-                this.justClearedSelection = true;
-            }
-            this.selection.clear()
+        // console.log(this.graphView.primaryTool, this.clickedNode, this.clickedEdge)
+
+        if (this.selection.selected.nodes.length > 0 || this.selection.selected.edges.length > 0) {
+            this.justClearedSelection = true;
         }
+        // // Caso um nó tenha sido clicado,
+        // if (this.clickedNode && mouseEvent.button == 0) {
+        //     // console.log("Mouse down on node")
+        //     // E ele NÃO está selecionado,
+        //     if (this.selection.selectedNodes.includes(this.clickedNode) == false) {
+        //         // Limpe a seleção
+        //         this.selection.clear()
+        //         if (this.graphView.primaryTool == Tool.MOVE) {
+        //             // E coloque o nó temporariamente
+        //             // (Para não mostrar pontilhado e mover imediatamente)
+        //             this.selection.selectNodeTemporarily(this.clickedNode)
+        //         }
+        //     }
+        // } else if (this.clickedEdge) {
+        //     if (this.selection.selectedEdges.includes(this.clickedEdge) == false) {
+        //         this.selection.clear()
+        //         if (this.graphView.primaryTool != Tool.MOVE) {
+        //             this.selection.selectedEdges.push(this.clickedEdge)
+        //             this.selection.selectedEdges = this.selection.selectedEdges
+        //             this.selection.updateEdgesAppearance()
+        //         }
+        //     }
+        // } else {
+        //     // console.log("Mouse down on background")
+        // }
         this.refreshCursorStyle()
     }
 
@@ -100,148 +101,137 @@ class GraphMouseHandler {
                 }
             }
         }
-        // Se não for um clique do botão esquerdo, ignoramos
+
         if (mouseEvent.buttons == 0 || mouseEvent.button != 0 || mouseEvent.buttons == 2) {
             this.refreshCursorStyle();
             return;
         }
+        // SOMENTE COM MOUSE ESQUERDO CLICADO
 
         // SELEÇÃO
         // Se um nó não tiver sido selecionado,
-        if (this.clickedNode == null && this.mostRecentNode == null) {
+        if (!this.clickedNode && !this.clickedEdge) {
             // Atualize a área de seleção
-            this.selection.setSelectionArea(this.clickPosition, pos);
-            this.refreshCursorStyle()
+            this.selection.draggingEvent(this.clickPosition, pos);
+            this.refreshCursorStyle();
             return;
         }
 
         // MOVER
         // Caso a ferramenta Move esteja selecionada,
         switch (this.graphView.primaryTool) {
-            case Tool.MOVE: {
-                // Se há uma seleção temporária,
-                if (this.selection.temporarySelection) {
-                    console.assert(
-                        this.selection.selectedNodes.length == 1,
-                        "Seleção temporária deveria conter só 1 nó."
-                    )
-                    // Considere a posição inicial para que o centro do nó
-                    // não pule para o mouse
-                    let originalNodePos = this.selection.selectedOriginalPos[0]
-                    pos.x += originalNodePos.x - this.clickPosition.x
-                    pos.y += originalNodePos.y - this.clickPosition.y
-                    // Mova o nó
-                    this.graphView.moveNode(this.selection.selectedNodes[0], pos);
+        case Tool.MOVE: {
+            // Se há uma seleção temporária,
+            if (false /*this.selection.temporarySelection*/) {
+                console.assert(
+                    this.selection.selectedNodes.length == 1,
+                    "Seleção temporária deveria conter só 1 nó."
+                )
+                // Considere a posição inicial para que o centro do nó
+                // não pule para o mouse
+                let originalNodePos = this.selection.selectedNodePositions[0]
+                pos.x += originalNodePos.x - this.clickPosition.x
+                pos.y += originalNodePos.y - this.clickPosition.y
+                // Mova o nó
+                this.graphView.moveNode(this.selection.selected.nodes[0], pos);
 
-                // Caso contrário,
-                } else {
-                    // Mova todos os nós selecionados
-                    for (let nodeIndex in this.selection.selectedNodes) {
-                        // Calcula cada nova posição levando em conta as posições
-                        // originais de cada nó.
-                        let posBeforeMove = this.selection.selectedOriginalPos[nodeIndex]
-                        let newPosition = {
-                            x: posBeforeMove.x + pos.x - this.clickPosition.x,
-                            y: posBeforeMove.y + pos.y - this.clickPosition.y
-                        }
-                        this.graphView.moveNode(this.selection.selectedNodes[nodeIndex], newPosition);
+            // Caso contrário,
+            } else {
+                // Mova todos os nós selecionados
+                for (let nodeIndex in this.selection.selected.nodes) {
+                    // console.log(nodeIndex, this.selection.selected.nodes[nodeIndex])
+                    // Calcula cada nova posição levando em conta as posições
+                    // originais de cada nó.
+                    let posBeforeMove = this.selection.selectedNodePositions[nodeIndex]
+                    let newPosition = {
+                        x: posBeforeMove.x + pos.x - this.clickPosition.x,
+                        y: posBeforeMove.y + pos.y - this.clickPosition.y
                     }
+                    this.graphView.moveNode(this.selection.selected.nodes[nodeIndex], newPosition);
                 }
-                break;
             }
+            break;
+        }
 
         // Caso a ferramenta Connect esteja selecionada
-            case Tool.CONNECT: {
-                // Registre a nova posição do mouse no grafo
-                // para que a aresta temporária seja desenhada corretamente.
-                // graphView.pointerPos = pos;
-                this.shouldDrawTemporaryEdge = true;
-                break;
-            }
+        case Tool.CONNECT: {
+            // Registre a nova posição do mouse no grafo
+            // para que a aresta temporária seja desenhada corretamente.
+            // graphView.pointerPos = pos;
+            this.shouldDrawTemporaryEdge = true;
+            break;
+        }
         }
     }
 
     mouseUpEvent(mouseEvent) {
         // Eventos de mouse desabilitados
-        if(!this._enabled)
-        {
-            return
-        }
+        if(!this._enabled) { return; }
 
         let pos = this.getMousePos(mouseEvent);
-        console.log()
+
         // Se o botão direito foi o levantado
-        if (mouseEvent.button == 2) {
-            this.selection.clearSelectionArea()
+        if (mouseEvent.button == 2 && this.selection.shouldDrawSelection == false) {
             // Tente remover um nó, se o mouse estiver sobre algum
             this.graphView.removeNodeAt(pos);
             return;
         }
-        // console.info("Mouse up event")
+
         // SELEÇÃO
-        /* Se fez uma área de seleção, finalize-a */
-        if (this.selection.drawingSelection) {
-            this.selection.drawingSelection = false
-            this.graphView.refreshMenu(this.selection.selectedNodes.length)
-            return
+        let didntMove = this.clickPosition.x == pos.x
+                        && this.clickPosition.y == pos.y;
+        if (didntMove) {
+            if (this.selection.shouldDrawSelection == false) {
+                this.selection.clear();
+            }
+
+            if ((this.clickedNode && Tool.MOVE == this.graphView.primaryTool)
+                || (this.clickedEdge && Tool.CONNECT == this.graphView.primaryTool)) {
+                this.selection.invertSelection(this.clickedNode);
+            }
         }
-       
+
+        // Atualiza a posição dos nós selecionados, para que o próximo
+        // gesto de mover esses nós tenha as posições adequadas.
+        this.selection.registerNodePositions();
+
+        // let wasDrawingSelection = this.selection.shouldDrawSelection;
         // Se o botão esquerdo foi o levantado,
         switch (this.graphView.primaryTool) {
-            // A ferramenta MOVE for a escolhida,
-            case Tool.MOVE: {
-                // console.log("...with MOVE tool")
-                /* Se soltou um único nó que estava sendo movido, limpe a seleção */
-                if (this.selection.temporarySelection) {
-                    // console.log("...with temporary selection")
-                    if (this.currentMousePos == this.clickPosition) {
-                        // console.log("...without move")
-                        this.selection.temporarySelection = false;
-                        // this.selection.updateNodesAppearance()
-                    } else {
-                        // console.log("...with move")
-                        this.selection.clear()
-                    }
-                    this.refreshCursorStyle()
-                    return;
+        // A ferramenta MOVE for a escolhida,
+        case Tool.MOVE: {
+             if (this.selection.shouldDrawSelection == false) { // Senão
+                // Caso não tenha acabado de limpar uma seleção
+                if (this.justClearedSelection == false) {
+                    // Insira um nó novo
+                    this.graphView.insertNewNodeAt(pos);
                 }
-                // console.log("...without temporary selection")
-                if (this.selection.hasSelectedNodes) {
-                    // console.log("...with selected nodes")
-                    // Atualiza a posição dos nós selecionados, para que o próximo
-                    // gesto de mover esses nós tenha as posições adequadas.
-                    this.selection.updateOriginalPositions()
-                } else {
-                    // console.log("...without selected nodes")
-                    if (!this.justClearedSelection) {
-                        // Insira um nó novo
-                        this.graphView.insertNewNodeAt(pos);
-                    }
-                }
-                break;
             }
-
-            // A ferramenta CONNECT for a escolhida
-            case Tool.CONNECT: {
-                let initialNode = this.graphView.getNodeIndexAt(this.clickPosition)[0];
-
-                // Se um nó estiver selecionado,
-                if (initialNode == null) {
-                    return;
-                }
-
-                // Nó abaixo do ponteiro do mouse atualmente
-                let releasedOverNode = this.graphView.getNodeIndexAt(pos)[0];
-                if (releasedOverNode == null) {
-                    releasedOverNode = this.graphView.insertNewNodeAt(pos)
-                }
-                this.graphView.insertEdgeBetween(initialNode, releasedOverNode)
-                // Pare de atualizar a aresta temporária
-                this.shouldDrawTemporaryEdge = false;
-                break;
-            }
+            break;
         }
-        // Remova a seleção do nó
+
+        // A ferramenta CONNECT for a escolhida
+        case Tool.CONNECT: {
+            // Se o clique não foi feito em um nó, então pare.
+            if (this.clickedNode == null) {
+                break;
+            }
+
+            // Nó abaixo do ponteiro do mouse atualmente
+            let releasedOverNode = this.graphView.getNodeIndexAt(pos).pop()
+                                ?? this.graphView.insertNewNodeAt(pos);
+
+            this.graphView.insertEdgeBetween(this.clickedNode, releasedOverNode);
+            // Pare de atualizar a aresta temporária
+            this.shouldDrawTemporaryEdge = false;
+            break;
+        }
+        }
+        // Se está desenhando a área de seleção
+        if (this.selection.shouldDrawSelection) {
+            // Para de desenhar
+            this.selection.clearSelectionArea();
+        }
         this.refreshCursorStyle()
     }
 

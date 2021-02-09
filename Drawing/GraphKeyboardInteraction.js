@@ -97,10 +97,10 @@ class GraphKeyboardHandler {
         }
         if (document.activeElement.tagName == "BODY") {
             if (this.isDeletionKey(keyboardEvent)) {
-                for (let node of this.selection.selectedNodes) {
+                for (let node of this.selection.selected.nodes) {
                     this.graphView.structure.removeNode(node)
                 }
-                for (let edge of this.selection.selectedEdges) {
+                for (let edge of this.selection.selected.edges) {
                     this.graphView.structure.removeEdge(edge)
                 }
                 this.selection.clear()

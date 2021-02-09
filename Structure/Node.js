@@ -4,7 +4,7 @@ import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLetter, backgroundGradient, positionAlphabet, colorFromComponents } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
-export const regularNodeRadius = 28;
+const regularNodeRadius = 28;
 const nodeColorList = [
     "#32CD32",
     "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
@@ -102,6 +102,7 @@ export class Node {
     // the appropriate color (considering any animation happening).
     drawProcedure = (nodeLabeling) => {
         // Draw circle border
+        ctx.save()
         ctx.lineWidth = 8;
         ctx.strokeStyle = this.color;
         
@@ -133,6 +134,8 @@ export class Node {
         let transparentText = !this.highlights.has(HighlightType.LIGHTEN)
                                && this.highlights.has(HighlightType.DARKEN)
         this._drawLabel(nodeLabeling, transparentText ? backgroundGradient : this.color)
+
+        ctx.restore();
 
         return maxFPSRequest;
     }

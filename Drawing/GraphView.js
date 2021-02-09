@@ -10,7 +10,8 @@ import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMi
 
 
 import PropertyList from "./Properties/PropertyList.js";
-import {backgroundGradient} from "../Structure/Utilities";
+import {backgroundGradient, colorFromComponents} from "../Structure/Utilities.js";
+import {HighlightType} from "../Structure/Highlights.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -33,7 +34,7 @@ class GraphView {
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
-        this.selectionHandler = new GraphSelection(ctx, this.structure, this);
+        this.selectionHandler = new GraphSelection(ctx, this);
         let mouseHandler = new GraphMouseHandler(this)
         let keyboardHandler = new GraphKeyboardHandler(this)
         this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
@@ -153,54 +154,52 @@ class GraphView {
         this.interactionHandler.mouse.refreshCursorStyle()
     }
 
-    // TODO: Organizar
-    refreshMenu(numberOfSelectedNodes, numberOfSelectedEdges) {
-        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings"]
-        for (let settingsID of settingsList) {
-            let s = document.getElementById(settingsID)
-            s.style.display = "none"
-        }
-        let showSettings;
-        if (numberOfSelectedNodes == 1 &&
-            this.selectionHandler.temporarySelection === false &&
-            !this.selectionHandler.drawingSelection) {
-            showSettings = document.getElementById("NodeSettings")
-            /*
-            // console.log("b")
-            let selectionHandler = this.selectionHandler
-
-            let labelInput = document.getElementById("label")
-            labelInput.value = this.selectionHandler.selectedNodes[0].label
-            labelInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0].label = input.target.value
-            }
-            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
-
-            let colorInput = document.getElementById("color")
-            colorInput.value = this.selectionHandler.selectedNodes[0].color
-            colorInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0]._originalcolor = input.target.value
-            } */
-            let selectedNode = this.selectionHandler.selectedNodes[0]
-            let element = document.getElementById('NodeProperties')
-            // TODO: Pegar algoritmo correto
-            element.updateProperties(selectedNode, 'Dijkstra')
-        } else if (numberOfSelectedEdges == 1 && !this.selectionHandler.drawingSelection) {
-            // console.log("a")
-            showSettings = document.getElementById("EdgeSettings")
-
-            let selectedEdge = this.selectionHandler.selectedEdges[0]
-            let element = document.getElementById('EdgeProperties')
-            element.updateProperties(selectedEdge, 'Dijkstra')
-        } else {
-            showSettings = document.getElementById("GraphSettings")
-        }
-        showSettings.style.display = "block"
-
-    }
-
     selectAllNodes() {
         this.selectionHandler.selectedNodes = Array.from(this.structure.nodes())
+    }
+
+    /* Destaca os nós selecionados */
+    selectionChanged() {
+        for (let node of this.structure.nodes()) {
+            if (this.selectionHandler.isSelected(node) /*&& this.temporarySelection == false*/) {
+                node.highlights.add(HighlightType.SELECTION)
+            } else {
+                node.highlights.remove(HighlightType.SELECTION)
+            }
+        }
+
+        for (let [edge, ,] of this.structure.edges()) {
+            if (this.selectionHandler.isSelected(edge)) {
+                edge.highlights.add(HighlightType.SELECTION)
+            } else {
+                edge.highlights.remove(HighlightType.SELECTION)
+            }
+        }
+
+        if ((this.selectionHandler.selected.nodes.length > 0 /*&& this.temporarySelection == false */)
+            || this.selectionHandler.selected.edges.length > 0) {
+            let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
+            featureIcons.forEach(icon => icon.classList.add("selected"))
+        } else {
+            let selectedElements = Array.from(document.getElementsByClassName("selected"))
+            selectedElements.forEach(element => element.classList.remove("selected"))
+        }
+    }
+
+    drawSelectionArea() {
+        this.ctx.save();
+
+        this.ctx.strokeStyle = 'blue';
+        this.ctx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
+        this.ctx.lineWidth = 3;
+
+        this.selectionHandler.prepareSelectionAreaDrawing();
+        // this.ctx.rect(400, 250, 100, 80);
+
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        this.ctx.restore();
     }
 
     // Node Handling
@@ -297,23 +296,15 @@ class GraphView {
         if (nodes.length == 0) {
             return;
         }
-        let frontmostNode = nodes[0]
+        let frontmostNode = nodes[0];
         for (let node of nodes) {
             if (node.index > frontmostNode.index) {
-                frontmostNode = node
+                frontmostNode = node;
             }
         }
-        this.structure.removeNode(frontmostNode)
-        this.selectionHandler.removeSelectionFrom(frontmostNode)
+        this.selectionHandler.deselect(frontmostNode);
+        this.structure.removeNode(frontmostNode);
     }
-    
-    // s1 = 10
-    // s2 = 10
-    // selectionPrototyping(a, b) {
-    //     // console.log(a, b)
-    //     this.s1 = a/10
-    //     this.s2 = b/10
-    // }
 
     drawEdges() {
         for (let [edge, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
@@ -342,27 +333,31 @@ class GraphView {
 
     // This function clears the canvas and redraws it.
     redrawGraph() {
+        this.ctx.save();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        ctx.fillStyle = backgroundGradient;
-        ctx.rect(0, 0, canvas.width, canvas.height);
-        ctx.fill()
+        this.ctx.fillStyle = backgroundGradient;
+        this.ctx.beginPath();
+        this.ctx.rect(0, 0, canvas.width, canvas.height);
+        this.ctx.fill();
         
-        this.drawEdges()
+        this.drawEdges();
         
-        let maxFPSRequest = 0;
+        let nodeFPSRequests = [];
         for (let node of this.structure.nodes()) {
             let fpsRequest = node.draw(this.nodeLabeling);
-            maxFPSRequest = Math.max(maxFPSRequest, fpsRequest)
+            nodeFPSRequests.push(fpsRequest)
         }
+        let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
             this.requestHighFPS(HighFPSFeature.NODE_HIGHLIGHT, maxFPSRequest);
         }
-
-        if (this.selectionHandler.drawingSelection) {
-            this.selectionHandler.drawSelectionArea()
+        // console.log(this.selectionHandler.shouldDrawSelection)
+        if (this.selectionHandler.shouldDrawSelection) {
+            this.ctx.save();
             this.requestHighFPS(HighFPSFeature.SELECTING, 90);
-            // console.log(1)
+            this.drawSelectionArea();
+            this.ctx.restore()
         }
         
         if (this.overlay) {
@@ -371,6 +366,7 @@ class GraphView {
             ctx.fillStyle = "#AAFA"
             ctx.fill();
         }
+        this.ctx.restore()
     }
 
 

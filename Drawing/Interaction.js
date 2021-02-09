@@ -58,8 +58,8 @@ for(let element of document.querySelector("#tool_tray").getElementsByTagName("in
 for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon")) {
     x.addEventListener("mouseenter", function (e) {
         let nodesToDisconnect;
-        if (g.selectionHandler.selectedNodes.length > 0) {
-            nodesToDisconnect = g.selectionHandler.selectedNodes;
+        if (g.selectionHandler.selected.nodes.length > 0) {
+            nodesToDisconnect = g.selectionHandler.selected.nodes;
         } else {
             nodesToDisconnect = Array.from(g.structure.nodes())
         }
