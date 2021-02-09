@@ -55,31 +55,6 @@ class GraphMouseHandler {
         } else {
             this.justClearedSelection = true;
         }
-        // // Caso um nó tenha sido clicado,
-        // if (this.clickedNode && mouseEvent.button == 0) {
-        //     // console.log("Mouse down on node")
-        //     // E ele NÃO está selecionado,
-        //     if (this.selection.selectedNodes.includes(this.clickedNode) == false) {
-        //         // Limpe a seleção
-        //         this.selection.clear()
-        //         if (this.graphView.primaryTool == Tool.MOVE) {
-        //             // E coloque o nó temporariamente
-        //             // (Para não mostrar pontilhado e mover imediatamente)
-        //             this.selection.selectNodeTemporarily(this.clickedNode)
-        //         }
-        //     }
-        // } else if (this.clickedEdge) {
-        //     if (this.selection.selectedEdges.includes(this.clickedEdge) == false) {
-        //         this.selection.clear()
-        //         if (this.graphView.primaryTool != Tool.MOVE) {
-        //             this.selection.selectedEdges.push(this.clickedEdge)
-        //             this.selection.selectedEdges = this.selection.selectedEdges
-        //             this.selection.updateEdgesAppearance()
-        //         }
-        //     }
-        // } else {
-        //     // console.log("Mouse down on background")
-        // }
         this.refreshCursorStyle();
     }
 

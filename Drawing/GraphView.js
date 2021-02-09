@@ -161,7 +161,8 @@ class GraphView {
     /* Destaca os nós selecionados */
     selectionChanged() {
         for (let node of this.structure.nodes()) {
-            if (this.selectionHandler.isSelected(node) /*&& this.temporarySelection == false*/) {
+            if (this.selectionHandler.isSelected(node)
+                && this.selectionHandler.isQuickSelection == false) {
                 node.highlights.add(HighlightType.SELECTION)
             } else {
                 node.highlights.remove(HighlightType.SELECTION)
@@ -176,8 +177,8 @@ class GraphView {
             }
         }
 
-        if ((this.selectionHandler.selected.nodes.length > 0 /*&& this.temporarySelection == false */)
-            || this.selectionHandler.selected.edges.length > 0) {
+        if ((this.selectionHandler.hasSelectedNodes > 0 && this.selectionHandler.isQuickSelection == false)
+            || this.selectionHandler.hasSelectedEdges > 0) {
             let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
             featureIcons.forEach(icon => icon.classList.add("selected"))
         } else {

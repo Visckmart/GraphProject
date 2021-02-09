@@ -118,6 +118,7 @@ export default class GraphSelection {
         this.selected.edges = [];
         this.isQuickSelection = false;
         this.graphView.selectionChanged();
+        this.refreshMenu();
     }
 
 
@@ -201,6 +202,8 @@ export default class GraphSelection {
         this.selected.nodes = [node];
         this.registerNodePositions();
         this.isQuickSelection = true;
+        this.graphView.selectionChanged();
+        this.refreshMenu();
     }
 
     get quicklySelectedNode() {
@@ -219,7 +222,7 @@ export default class GraphSelection {
             s.style.display = "none"
         }
         let showSettings;
-        if (numberOfSelectedNodes == 1 && this.quicklySelectedNode !== null
+        if (numberOfSelectedNodes == 1 && this.isQuickSelection == false
             && this.shouldDrawSelection == false) {
             showSettings = document.getElementById("NodeSettings")
             /*
