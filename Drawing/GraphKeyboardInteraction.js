@@ -34,15 +34,11 @@ class GraphKeyboardHandler {
 
     keyPressed(keyboardEvent) {
         // Eventos de teclado desabilitados
-        if(!this._enabled)
-        {
-            return
-        }
+        if(!this._enabled) { return }
 
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
-        if(this.selection.drawingSelection)
-        {
-            return
+        if(this.selection.shouldDrawSelection) {
+            return;
         }
 
         let metaPressed = this.isMetaKey(keyboardEvent)
@@ -60,6 +56,10 @@ class GraphKeyboardHandler {
         }
         // Tratamento da seleção da ferramenta Connect ao pressionar a tecla "meta".
         // No caso do Mac a tecla em questão é Command
+        // console.log(keyboardEvent.key)
+        if (keyboardEvent.key == "Shift") {
+            this.selection.additionOnlyMode = true;
+        }
         if (metaPressed) {
             if(this.graphView.lastToolChoice == null) {
                 this.graphView.lastToolChoice = this.graphView.primaryTool;
@@ -78,6 +78,9 @@ class GraphKeyboardHandler {
         if(!this._enabled)
         {
             return
+        }
+        if (keyboardEvent.key == "Shift") {
+            this.selection.additionOnlyMode = false;
         }
 
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa

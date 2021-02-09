@@ -52,6 +52,7 @@ export class HighlightsHandler {
         for (let highlight of filteredOutHighlights) {
             highlightsCopy.delete(highlight)
         }
+        // noinspection UnnecessaryLocalVariableJS
         let serializedHighlights = Array.from(highlightsCopy)
                                     .map(hName => highlightNames.indexOf(hName))
                                     .filter(hNum => hNum != -1)

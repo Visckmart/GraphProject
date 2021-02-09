@@ -11,10 +11,13 @@ export default class GraphSelection {
         this.graphView = graphView;
     }
 
+    _additionOnlyMode = false;
     get additionOnlyMode() {
-        return this.shouldDrawSelection;
+        return this.shouldDrawSelection ?? this._additionOnlyMode;
     }
-
+    set additionOnlyMode(s) {
+        this._additionOnlyMode = s;
+    }
     selected = {
         nodes: [],
         edges: []
@@ -178,7 +181,13 @@ export default class GraphSelection {
         switch (this.graphView.primaryTool) {
         // A ferramenta MOVE for a escolhida,
         case Tool.MOVE: {
-            this.selected.nodes = this.graphView.getNodesWithin(startPoint, endPoint);
+            let containedNodes = this.graphView.getNodesWithin(startPoint, endPoint);
+            // console.log(containedNodes, this._additionOnlyMode)
+            if (this._additionOnlyMode) {
+                this.selected.nodes = this.selected.nodes.concat(...containedNodes);
+            } else {
+                this.selected.nodes = containedNodes;
+            }
             break;
         }
         case Tool.CONNECT: {
@@ -206,9 +215,9 @@ export default class GraphSelection {
         this.refreshMenu();
     }
 
-    get quicklySelectedNode() {
-        return this.selected.nodes[0];
-    }
+    // get quicklySelectedNode() {
+    //     return this.selected.nodes[0];
+    // }
 
 
 

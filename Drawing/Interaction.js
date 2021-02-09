@@ -113,7 +113,7 @@ runAlgorithmButton.onclick = async () => {
 }
 
 let blurTimeout = null
-window.onresize = function (a) {
+window.onresize = function () {
     let wr = (window.innerWidth*0.75)/canvas.width
     let wh = (window.innerHeight*0.95)/canvas.height
     canvas.width = window.innerWidth*0.75;
@@ -131,7 +131,7 @@ window.onresize = function (a) {
 }
 
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
-document.body.onblur = function(e) {
+document.body.onblur = function() {
     if (g.lastToolChoice == Tool.MOVE) {
         g.primaryTool = Tool.MOVE;
     }

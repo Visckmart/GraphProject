@@ -117,9 +117,6 @@ class GraphMouseHandler {
 
         // Caso a ferramenta Connect esteja selecionada
         case Tool.CONNECT: {
-            // Registre a nova posição do mouse no grafo
-            // para que a aresta temporária seja desenhada corretamente.
-            // graphView.pointerPos = pos;
             this.shouldDrawTemporaryEdge = true;
             break;
         }
