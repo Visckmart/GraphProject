@@ -28,8 +28,8 @@ class GraphMouseHandler {
     }
     set clickPosition(pos) {
         this._clickPosition = pos;
-        this.clickedNode = this.graphView.getNodeIndexAt(this.clickPosition).pop();
-        this.clickedEdge = this.graphView.checkEdgeCollision(pos);
+        this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
+        this.clickedEdge = this.graphView.getEdgesAt(pos);
     }
 
     justClearedSelection = false;
@@ -58,7 +58,7 @@ class GraphMouseHandler {
         this.refreshCursorStyle();
     }
 
-    edgeColision = null;
+    lastHoveredEdge = null;
     mouseDragEvent(mouseEvent) {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
@@ -67,22 +67,18 @@ class GraphMouseHandler {
         this.currentMousePos = pos;
 
         // NODE COLISION
-        let nodeHover = this.graphView.getNodeIndexAt(pos)
-        if (this.edgeColision) {
-            this.edgeColision.highlights.remove(HighlightType.LIGHTEN)
-        }
-        if (this.graphView.primaryTool == Tool.CONNECT) {
-            if (nodeHover.length == 0) {
-                let edgeHover = this.graphView.checkEdgeCollision(pos)
-                this.edgeColision = edgeHover
-                if (edgeHover) {
-                    edgeHover.highlights.add(HighlightType.LIGHTEN)
-                }
+        this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
+        let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
+        if (this.graphView.primaryTool == Tool.CONNECT && isHoveringNode == false) {
+            let edgeHover = this.graphView.getEdgesAt(pos)
+            this.lastHoveredEdge = edgeHover
+            if (edgeHover) {
+                edgeHover.highlights.add(HighlightType.LIGHTEN)
             }
         }
 
-        if (mouseEvent.buttons == 0 || mouseEvent.button != 0
-            || mouseEvent.buttons == 2) {
+        if (mouseEvent.buttons == 0|| mouseEvent.buttons == 2
+            || mouseEvent.button != 0) {
             this.refreshCursorStyle();
             return;
         }
@@ -140,7 +136,6 @@ class GraphMouseHandler {
         // SELEÇÃO
         let distanceMoved = getDistanceOf(this.clickPosition, pos);
         if (distanceMoved < 5) {
-            console.log(this.selection.additionOnlyMode)
             if (this.selection.additionOnlyMode == false) {
                 this.selection.clear();
             }
@@ -178,7 +173,7 @@ class GraphMouseHandler {
                 break;
             }
             // Nó abaixo do ponteiro do mouse atualmente
-            let releasedOverNode = this.graphView.getNodeIndexAt(pos).pop()
+            let releasedOverNode = this.graphView.getNodesAt(pos).pop()
                                 ?? this.graphView.insertNewNodeAt(pos);
 
             this.graphView.insertEdgeBetween(this.clickedNode, releasedOverNode);
@@ -205,7 +200,8 @@ class GraphMouseHandler {
         let cursorStyle = null;
         // Se não sabemos a posição (acontece antes do primeiro movimento)
         if (this.currentMousePos == null) { return; }
-        let isHoveringNode = this.graphView.getNodeIndexAt(this.currentMousePos).length > 0;
+
+        let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
         // Checa se a ferramenta MOVE está selecionada
         let moveToolSelected = this.graphView.primaryTool == Tool.MOVE;
         

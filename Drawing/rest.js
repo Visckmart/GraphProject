@@ -16,7 +16,7 @@ function mouseDown(e) {
 
     // Prepare dragging
     let pos = getMousePos(e);
-    selectedNodeIndex = g.getNodeIndexAt(pos)[0];
+    selectedNodeIndex = g.getNodesAt(pos)[0];
     movedNode = false;
 }
 

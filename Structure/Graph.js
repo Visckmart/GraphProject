@@ -63,10 +63,11 @@ class Graph {
     }
 
     // Criando aresta temporária
-    createTemporaryEdge() {
-        let TemporaryEdge = EdgeTemporaryMixin(Edge)
-        return new TemporaryEdge({label: ''})
-    }
+    // createTemporaryEdge() {
+    //     let TemporaryEdge = EdgeTemporaryMixin(Edge);
+    //     return new TemporaryEdge({label: ''})
+    // }
+    temporaryEdge = new (EdgeTemporaryMixin(Edge))({});
 
     // Remoção
     removeEdgeBetween(nodeA, nodeB) {

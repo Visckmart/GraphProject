@@ -30,6 +30,7 @@ export default class GraphSelection {
                 this.selected.nodes.splice(nodeIndex, 1);
             } else {
                 this.selected.nodes.push(element);
+                this.isQuickSelection = false;
             }
         } else if (element instanceof Edge) { // Caso seja uma aresta
             let edgeIndex = this.selected.nodes.indexOf(element);
@@ -64,6 +65,13 @@ export default class GraphSelection {
         }
     }
 
+    selectMultiple(elements) {
+        this.selected.nodes = elements.filter(e => e instanceof Node);
+        this.selected.edges = elements.filter(e => e instanceof Edge);
+        this.registerNodePositions();
+        this.graphView.selectionChanged();
+    }
+
     deselect(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
@@ -71,7 +79,7 @@ export default class GraphSelection {
                 this.selected.nodes.splice(nodeIndex, 1);
             }
         } else if (element instanceof Edge) { // Caso seja uma aresta
-            let edgeIndex = this.selected.nodes.indexOf(element);
+            let edgeIndex = this.selected.edges.indexOf(element);
             if (edgeIndex >= 0) {
                 this.selected.edges.splice(edgeIndex, 1);
             }

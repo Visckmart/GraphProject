@@ -77,7 +77,7 @@ class GraphView {
             let y = Math.random()*20+5
             x *= 10
             y *= 10
-            if (this.getNodeIndexAt({x: x, y: y}, true)[0] == null) {
+            if (this.getNodesAt({x: x, y: y}, true)[0] == null) {
                 i++;
                 this.insertNewNodeAt({x: x, y: y})
             }
@@ -155,7 +155,7 @@ class GraphView {
     }
 
     selectAllNodes() {
-        this.selectionHandler.selectedNodes = Array.from(this.structure.nodes())
+        this.selectionHandler.selectMultiple(Array.from(this.structure.nodes()));
     }
 
     /* Destaca os nós selecionados */
@@ -187,27 +187,12 @@ class GraphView {
         }
     }
 
-    drawSelectionArea() {
-        this.ctx.save();
-
-        this.ctx.strokeStyle = 'blue';
-        this.ctx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
-        this.ctx.lineWidth = 3;
-
-        this.selectionHandler.prepareSelectionAreaDrawing(this.ctx);
-
-        this.ctx.fill();
-        this.ctx.stroke();
-
-        this.ctx.restore();
-    }
-
-    // Node Handling
+    //region Deteção de Nós e Arestas
 
     // Searches for nodes that contain the point `pos`
     // The lookup is done from the last node to the first, the inverse of the
     // drawing lookup in order to return the frontmost node.
-    getNodeIndexAt(pos, checkForConflict = false) {
+    getNodesAt(pos, checkForConflict = false) {
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
             let radiusCheck;
@@ -222,16 +207,14 @@ class GraphView {
         return detectedNodes;
     }
 
-    checkEdgeCollision(pos) {
-        // console.log(pos)
-        const eps = 1
+    getEdgesAt(pos) {
+        const eps = 1;
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            // console.log("e", edge)
             let lineLength = getDistanceOf(nodeA.pos, nodeB.pos)
             let distA = getDistanceOf(pos, nodeA.pos)
             let distB = getDistanceOf(pos, nodeB.pos)
             if (distA + distB >= lineLength-eps && distA + distB <= lineLength + eps) {
-                return edge
+                return edge;
             }
         }
     }
@@ -256,32 +239,33 @@ class GraphView {
     }
 
     getEdgesWithin(initialPos, finalPos) {
-        // console.trace()
-        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos))
+        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
+        let edgesWithin = [];
 
-        let edgesWithin = []
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-                edgesWithin.push(edge)
-                edge.selected = true
+                edgesWithin.push(edge);
+                edge.selected = true;
             }
         }
-        return edgesWithin
+        return edgesWithin;
     }
+    //endregion
+
+    //region Manipulação do Grafo
 
     insertNewNodeAt(pos) {
-        if (this.getNodeIndexAt(pos, true).length != 0) {
+        if (this.getNodesAt(pos, true).length != 0) {
             return false;
         }
         let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y})
-        this.structure.insertNode(newNode)
+        this.structure.insertNode(newNode);
         this.redrawGraph();
         return newNode;
     }
 
     moveNode(node, pos) {
-        this.requestHighFPS(HighFPSFeature.MOVING, 90)
-        // console.log(node, pos)
+        this.requestHighFPS(HighFPSFeature.MOVING, 90);
         node.pos = pos;
     }
 
@@ -290,7 +274,7 @@ class GraphView {
     }
 
     removeNodeAt(pos) {
-        let nodes = this.getNodeIndexAt(pos)
+        let nodes = this.getNodesAt(pos)
         if (nodes.length == 0) {
             return;
         }
@@ -303,30 +287,41 @@ class GraphView {
         this.selectionHandler.deselect(frontmostNode);
         this.structure.removeNode(frontmostNode);
     }
+    //endregion
+
+    //region Desenho do Grafo
+    drawSelectionArea() {
+        this.ctx.save();
+
+        this.ctx.strokeStyle = 'blue';
+        this.ctx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
+        this.ctx.lineWidth = 3;
+
+        this.selectionHandler.prepareSelectionAreaDrawing(this.ctx);
+
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        this.ctx.restore();
+    }
 
     drawEdges() {
-        for (let [edge, nodeIndexA, nodeIndexB] of this.structure.uniqueEdges()) {
-            edge.draw(nodeIndexA.pos, nodeIndexB.pos)
+        // Desenhar arestas do grafo
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            edge.draw(nodeA.pos, nodeB.pos)
         }
+        // Desenhar aresta temporária
         if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
-            let a = this.getNodeIndexAt(this.interactionHandler.mouse.clickPosition)[0]
-            let b = this.interactionHandler.mouse.currentMousePos
-            if (a == null || b == null) {
-                console.warn("Situação estranha.")
+            let startPos = this.interactionHandler.mouse.clickedNode?.pos;
+            let endPos   = this.interactionHandler.mouse.currentMousePos;
+            if (startPos == null || endPos == null) {
+                console.warn("Situação estranha.");
                 this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
                 return;
             }
-            this.requestHighFPS(HighFPSFeature.CONNECTING, 90)
-            this.structure.createTemporaryEdge().draw(a.pos, b);
+            this.requestHighFPS(HighFPSFeature.CONNECTING, 90);
+            this.structure.temporaryEdge.draw(startPos, endPos);
         }
-    }
-
-    drawCurrentMaxFPS(fps) {
-        ctx.fillStyle = "#AAA8";
-        ctx.font = "12pt Arial";
-        let content = fps + " FPS"
-        let textMeasurement = ctx.measureText(content)
-        ctx.fillText(content, canvas.width-textMeasurement.width/2 - 15, 20)
     }
 
     // This function clears the canvas and redraws it.
@@ -344,13 +339,13 @@ class GraphView {
         let nodeFPSRequests = [];
         for (let node of this.structure.nodes()) {
             let fpsRequest = node.draw(this.nodeLabeling);
-            nodeFPSRequests.push(fpsRequest)
+            nodeFPSRequests.push(fpsRequest);
         }
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
             this.requestHighFPS(HighFPSFeature.NODE_HIGHLIGHT, maxFPSRequest);
         }
-        // console.log(this.selectionHandler.shouldDrawSelection)
+
         if (this.selectionHandler.shouldDrawSelection) {
             this.ctx.save();
             this.requestHighFPS(HighFPSFeature.SELECTING, 90);
@@ -359,16 +354,29 @@ class GraphView {
         }
         
         if (this.overlay) {
-            ctx.beginPath();
-            ctx.rect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#AAFA"
-            ctx.fill();
+            this.ctx.beginPath();
+            this.ctx.rect(0, 0, canvas.width, canvas.height);
+            this.ctx.fillStyle = "#AAFA";
+            this.ctx.fill();
         }
         this.ctx.restore()
     }
 
+    drawCurrentMaxFPS(fps) {
+        this.ctx.save()
+        this.ctx.fillStyle = "#AAA8";
+        this.ctx.font = "12pt Arial";
+        let content = fps + " FPS";
+        let textMeasurement = this.ctx.measureText(content);
+        this.ctx.fillText(content,
+                     canvas.width - textMeasurement.width - 10,
+                     25);
+        this.ctx.restore()
+    }
 
-    // Animations
+    //endregion
+
+    //region Animações
 
     lastFrameTimestamp = window.performance.now()
     frameRateRequests = new Map()
@@ -380,14 +388,14 @@ class GraphView {
         }
         this.frameRateRequests.set(feature, FPS)
     }
-    
+
     getCurrentFPS() {
-        let highestFPS = Math.max(...Array.from(this.frameRateRequests.values()))
+        let requestValues = this.frameRateRequests.values()
+        let highestFPS = Math.max(...requestValues)
 
         if (highestFPS < IDLE_MAX_FPS) {
             highestFPS = IDLE_MAX_FPS
         }
-
         return highestFPS;
     }
 
@@ -407,7 +415,8 @@ class GraphView {
         this.redrawGraph();
         this.drawCurrentMaxFPS(currentFPS)
     }
-    
+
+    //endregion
 }
 
 export let g = new GraphView(canvas);

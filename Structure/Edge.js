@@ -5,8 +5,8 @@ import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 export default class Edge {
     constructor({ label, highlights = null }) {
-        this.label = label
-        this.highlights = new HighlightsHandler(highlights)
+        this.label = label;
+        this.highlights = new HighlightsHandler(highlights);
 
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
