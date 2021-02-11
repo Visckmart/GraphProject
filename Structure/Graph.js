@@ -48,6 +48,9 @@ class Graph {
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
+        if (this.checkEdgeBetween(nodeA, nodeB)) {
+            return;
+        }
         let edge = new this.EdgeConstructor()
         // Verificação
         if (!(nodeA && nodeB && edge)) {
