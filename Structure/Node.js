@@ -1,7 +1,7 @@
 // Node Definition
 import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
-import { generateNewRandomLetter, backgroundGradient, positionAlphabet, colorFromComponents } from "./Utilities.js";
+import { generateNewRandomLabel, backgroundGradient, positionAlphabet, colorFromComponents } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 const regularNodeRadius = 28;
@@ -30,14 +30,11 @@ export class Node {
         this.pos = {x: x, y: y};
 
         // Informações de label
-        if (label != null) {
-            this.label = label;
-        } else {
-            this.label = generateNewRandomLetter();
-        }
+        this.label = label ?? generateNewRandomLabel();
         
         this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
+
         // let roun = 5
         // let m = ctx.measureText("1")
         // let width = m.width + 10
@@ -90,7 +87,7 @@ export class Node {
         this._drawChain.push(procedure)
     }
 
-    // Executa a cadeia de responsabilidade
+    // Executa a cadeia de desenhos
     draw(...args) {
         let fpsRequests = this.drawChain.call(...args)
         fpsRequests = fpsRequests.filter(req => req !== undefined)

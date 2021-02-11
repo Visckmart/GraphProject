@@ -98,6 +98,9 @@ class GraphKeyboardHandler {
             let algorithmController = new AlgorithmController(this.graphView)
             algorithmController.setup(DijkstraShortestPath)
         }
+        if (keyboardEvent.key == "s") {
+            console.log(this.graphView.structure.serialize())
+        }
         if (document.activeElement.tagName == "BODY") {
             if (this.isDeletionKey(keyboardEvent)) {
                 for (let node of this.selection.selected.nodes) {

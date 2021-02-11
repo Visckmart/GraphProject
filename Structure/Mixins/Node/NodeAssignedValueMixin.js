@@ -1,4 +1,5 @@
-import {ctx} from "../../../Drawing/General.js";
+import { ctx } from "../../../Drawing/General.js";
+import {colorFromComponents} from "../../Utilities.js";
 
 function roundRect(ctx, x, y, width, height, radius) {
     let r = x + width;
@@ -14,9 +15,7 @@ function roundRect(ctx, x, y, width, height, radius) {
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
 }
-function colorFromComponents(r, g, b, a = 1) {
-    return "rgba(" + r + "," + g + "," + b + "," + a + ")"
-}
+
 
 let NodeAssignedValueMixin = (superclass) => {
     return class NodeAssignedValue extends  superclass {

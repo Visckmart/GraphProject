@@ -2,6 +2,8 @@ import Edge from "./Edge.js";
 import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
+import {HighlightType} from "./Highlights.js";
+import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
 
 class Graph {
     constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
@@ -24,7 +26,7 @@ class Graph {
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
-        let edge = new this.EdgeConstructor({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
+        let edge = new this.EdgeConstructor()
         // Verificação
         if (!(nodeA && nodeB && edge)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
@@ -220,6 +222,16 @@ class Graph {
     }
 
     serialize() {
+        let graphType = "";
+
+        // console.log(this.EdgeConstructor instanceof EdgeAssignedValue, this.EdgeConstructor.constructor)
+        // if (this.EdgeConstructor.constructor instanceof EdgeAssignedValueMixin) {
+        //     console.log('aaa')
+        // }
+        // console.log(document.getElementById('weighedEdges').checked)
+        if (document.getElementById('weighedEdges').checked) {
+            graphType = "W"
+        }
         let serializedNodes = ""
         for(let node of this.nodes())
         {
@@ -227,18 +239,24 @@ class Graph {
         }
 
         let serializedEdged = ""
-        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
-        {
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
             serializedEdged += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`
             // pairs.push([nodeA.index,nodeB.index])
         }
 
-        return serializedNodes + "~" + serializedEdged
+        return graphType + serializedNodes + "~" + serializedEdged
     }
 
     static deserialize(string, clone = false) {
         resetColorRotation()
-        let graph = new this()
+        let typeChar = string.charAt(0)
+        if (typeChar == "W") {
+            // string = string.substr(1)
+            document.getElementById('weighedEdges').checked = true;
+        }
+        let graph = new this({
+                                 EdgeConstructor: typeChar == "W" ? EdgeAssignedValueMixin(Edge) : Edge}
+                                 )
         graph.debug = !clone;
         let [allNodesStr, allEdgesStr] = string.split("~")
         let deserializedNodes = []
@@ -262,7 +280,7 @@ class Graph {
                 if (found == undefined) continue;
                 const [, nodeA, nodeB, edgeData] = found;
                 // console.log("graph edge", nodeA, nodeB, edgeData)
-                let ne = Edge.deserialize(edgeData)
+                let ne = graph.EdgeConstructor.deserialize(edgeData)
                 graph.insertEdge(
                     deserializedNodes.find(n => n.index === parseInt(nodeA)),
                     deserializedNodes.find(n => n.index === parseInt(nodeB)),

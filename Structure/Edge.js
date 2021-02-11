@@ -2,16 +2,21 @@ import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { ctx } from "../Drawing/General.js";
 import { backgroundGradient } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
+import { deserializeEdge } from "./EdgeSerialization.js";
+// import {serializeAssignedValueEdge} from "./Mixins/Edge/EdgeAssignedValueMixin.js";
 
 export default class Edge {
-    constructor({ label, highlights = null }) {
-        this.label = label;
+    constructor({ label, highlights = null } = {}) {
+        this.label = label ?? String.fromCharCode(Math.floor(Math.random()*26)+65);
         this.highlights = new HighlightsHandler(highlights);
 
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
-
         this.drawChain.addLink(this.drawProcedure)
+        this.draw = this.drawChain.call.bind(this.drawChain)
+
+        this.serializationChain = new ResponsibilityChain();
+        this.serializationChain.addLink(this.serializeEdge.bind(this));
     }
 
     get _args() {
@@ -21,11 +26,8 @@ export default class Edge {
         }
     }
 
-
     // Executa a cadeia de responsabilidade
-    draw(...args) {
-        this.drawChain.call(...args)
-    }
+    // draw(...args) { this.drawChain.call(...args) }
 
     drawProcedure = ({ x: xStart, y: yStart },
          { x: xEnd,   y: yEnd   }) => {
@@ -70,157 +72,140 @@ export default class Edge {
 
     _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
         switch(highlight) {
-            case HighlightType.SELECTION:
-                ctx.save()
+        case HighlightType.SELECTION:
+            ctx.save()
 
-                ctx.setLineDash([15, 15]);
-                ctx.strokeStyle = "blue";
-                ctx.lineWidth = 5
-                ctx.lineDashOffset = window.performance.now()/50
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
+            ctx.setLineDash([15, 15]);
+            ctx.strokeStyle = "blue";
+            ctx.lineWidth = 5
+            ctx.lineDashOffset = window.performance.now()/50
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
 
-                ctx.restore()
-                break
-            case HighlightType.DARK_WITH_BLINK:
-                ctx.save()
-                ctx.lineWidth = 9
-                ctx.strokeStyle = "#777";
-                ctx.setLineDash([]);
+            ctx.restore()
+            break
+        case HighlightType.DARK_WITH_BLINK:
+            ctx.save()
+            ctx.lineWidth = 9
+            ctx.strokeStyle = "#777";
+            ctx.setLineDash([]);
 
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
 
-                ctx.restore()
-                // ctx.save()
-                // ctx.lineWidth = 2
-                // ctx.strokeStyle = "#119E51";
-                // ctx.setLineDash([]);
+            ctx.restore()
+            break
 
-                // ctx.beginPath()
-                // ctx.moveTo(xStart, yStart);
-                // ctx.lineTo(xEnd, yEnd);
-                // ctx.stroke();
-
-                // ctx.restore()
-                break
-
-            case HighlightType.LIGHTEN:
-                ctx.save()
-                ctx.lineWidth = 9
-                ctx.strokeStyle = "#528FFF";
-                ctx.setLineDash([]);
+        case HighlightType.LIGHTEN:
+            ctx.save()
+            ctx.lineWidth = 9
+            ctx.strokeStyle = "#528FFF";
+            ctx.setLineDash([]);
 
 
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
 
-                ctx.restore()
-                break
+            ctx.restore()
+            break
 
-            case HighlightType.ALGORITHM_VISITING:
-                ctx.save()
-                ctx.lineWidth = 9
-                ctx.strokeStyle = "#777";
-                ctx.setLineDash([]);
+        case HighlightType.ALGORITHM_VISITING:
+            ctx.save()
+            ctx.lineWidth = 9
+            ctx.strokeStyle = "#777";
+            ctx.setLineDash([]);
 
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
 
-                ctx.restore()
-                break;
-            case HighlightType.DARKEN:
-                ctx.save()
-                ctx.lineWidth = 9
-                ctx.strokeStyle = "#bbb";
-                ctx.setLineDash([]);
-
-
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
-
-                ctx.restore()
-                break
-
-            case HighlightType.COLORED_BORDER:
-                ctx.save()
-                ctx.lineWidth = 9
-                ctx.strokeStyle = "blue";
-                ctx.setLineDash([]);
+            ctx.restore()
+            break;
+        case HighlightType.DARKEN:
+            ctx.save()
+            ctx.lineWidth = 9
+            ctx.strokeStyle = "#bbb";
+            ctx.setLineDash([]);
 
 
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
 
-                ctx.restore()
-                break
-            case HighlightType.FEATURE_PREVIEW:
-                ctx.save()
+            ctx.restore()
+            break
 
-                ctx.setLineDash([]);
-                ctx.strokeStyle = backgroundGradient;
-                ctx.lineWidth = 9
-                ctx.beginPath()
-                ctx.moveTo(xStart, yStart);
-                ctx.lineTo(xEnd, yEnd);
-                ctx.stroke();
-                ctx.lineWidth = 7
-                // ctx.setLineDash([8,8]);
-                ctx.strokeStyle = "#FF8080";
-                ctx.stroke();
+        case HighlightType.COLORED_BORDER:
+            ctx.save()
+            ctx.lineWidth = 9
+            ctx.strokeStyle = "blue";
+            ctx.setLineDash([]);
 
-                ctx.restore()
-                break
+
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
+
+            ctx.restore()
+            break
+        case HighlightType.FEATURE_PREVIEW:
+            ctx.save()
+
+            ctx.setLineDash([]);
+            ctx.strokeStyle = backgroundGradient;
+            ctx.lineWidth = 9
+            ctx.beginPath()
+            ctx.moveTo(xStart, yStart);
+            ctx.lineTo(xEnd, yEnd);
+            ctx.stroke();
+            ctx.lineWidth = 7
+            // ctx.setLineDash([8,8]);
+            ctx.strokeStyle = "#FF8080";
+            ctx.stroke();
+
+            ctx.restore()
+            break
         }
     }
-
-    // HIGHLIGHTS
 
     get isSelected() {
         return this.highlights.has(HighlightType.SELECTION);
     }
-
+    // cc = 0;
+    // Serialização
     serialize() {
-        let serializedHighlights = this.highlights.prepareForSharing()
-        if (serializedHighlights) {
-            serializedHighlights = "-" + serializedHighlights
-        }
-        // console.log("s", serializedHighlights)
-        return `${this.label}${serializedHighlights}`
+        // console.log(2)
+        // console.trace()
+        // this.cc++;
+        // if (this.cc > 10) {
+        //     return;
+        // }
+        // let serializedEdge = this.label;
+        // for (let x of this.serializationChain) {
+        //     console.log(x)
+        // }
+        // // let serialization = serializedEdge + serializeAssignedValueEdge();
+        // return serialization;
+        let serialized = this.serializationChain.call()
+        // console.log(serialized)
+        serialized = serialized.join("")
+        // console.log("zz", zz)
+        return serialized
+    }
+    serializeEdge() {
+        return this.label;
     }
 
-    static deserialize(serializedEdge) {
-        const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
-        let matchResult = serializedEdge.match(edgeDeserializationFormat);
-        if (!matchResult) {
-            console.error("Erro na deserialização: ", serializedEdge, matchResult)
-            return;
-        }
-        // console.log(1)
-        const [, label, serializedHighlights] = matchResult;
-        // console.log(label, serializedHighlights, serializedEdge)
-        let highlights;
-        if (serializedHighlights != null) {
-            highlights = HighlightsHandler.deserialize(serializedHighlights)
-            // console.log("d", highlights)
-        }
-
-        return new Edge({
-            label, highlights
-        })
-    }
+    static deserialize = deserializeEdge;
 
     clone() {
         return new this.constructor(this._args)

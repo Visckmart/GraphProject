@@ -13,19 +13,18 @@ backgroundGradient.addColorStop(1, "#FFE0F3");
 // Gerando letras aleatórias
 let usedLabels = new Set()
 
-export function generateNewRandomLetter() {
-    let newRandomLetter;
-    if (usedLabels.size < 26) {
-        do {
-            let randomCharCode = Math.floor(Math.random()*26)+65
-            newRandomLetter = String.fromCharCode(randomCharCode)
-        } while (usedLabels.has(newRandomLetter));
-    } else {
-        let randomCharCode = Math.floor(Math.random()*26)+65
-        newRandomLetter = String.fromCharCode(randomCharCode)
-    }
-    usedLabels.add(newRandomLetter);
-    return newRandomLetter;
+function generateRandomLetter() {
+    return String.fromCharCode(Math.floor(Math.random()*26)+65);
+}
+
+export function generateNewRandomLabel() {
+    let newRandomLabel;
+    do {
+        newRandomLabel = generateRandomLetter();
+    } while (usedLabels.size < 26 && usedLabels.has(newRandomLabel));
+
+    usedLabels.add(newRandomLabel);
+    return newRandomLabel;
 }
 
 // function drawPreservingState(ctx, drawingOperations) {

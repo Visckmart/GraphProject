@@ -1,13 +1,21 @@
-import {ctx} from "../../../Drawing/General.js";
+import { ctx } from "../../../Drawing/General.js";
+import Edge from "../../Edge.js";
+import {deserializeAssignedValue, serializeAssignedValue} from "../../EdgeSerialization.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
-    return class EdgeAssignedValue extends superclass {
-        constructor({assignedValue = 1, ...args}) {
+    // console.log(superclass)
+    if (!(superclass instanceof Edge || superclass == Edge)) {
+        return;
+    }
+
+    class EdgeAssignedValue extends superclass {
+        constructor({assignedValue = 9, ...args}) {
             super(args);
 
-            this.assignedValue = assignedValue
+            this.assignedValue = assignedValue;
 
             this.drawChain.addLink(this.drawText)
+            this.serializationChain.addLink(serializeAssignedValue.bind(this))
         }
 
         get _args() {
@@ -18,37 +26,46 @@ let EdgeAssignedValueMixin = (superclass) => {
         }
 
         drawText = ({ x: xStart, y: yStart },
-                  { x: xEnd,   y: yEnd   }) => {
-
-            // yEnd -= vertOffset
-            // yStart -= vertOffset
+                    { x: xEnd,   y: yEnd   }) => {
             // Calcula o meio da linha
             let midX = (xEnd - xStart)/2
             let midY = (yEnd - yStart)/2
 
             ctx.save()
-            ctx.translate(xStart + midX, yStart + midY);
+            ctx.translate(xStart + midX,
+                          yStart + midY);
 
-            // Calcula o ângulo do texto
-            let angle = Math.atan2(midY, midX)
+            // Gira a label
+            let angle = Math.atan2(midY, midX);
             // Não permite que o texto fique de cabeça para baixo
             if (Math.abs(angle) > Math.PI/2) {
                 angle = Math.atan2(-midY, -midX)
             }
             ctx.rotate(angle);
 
-            // Deslocamento vertical faz com que o texto não seja desenhado
-            // por cima da linha
-            let vertOffset = 15
-            ctx.translate(0, -vertOffset);
+            // Levanta a label
+            ctx.translate(0, -15);
 
             ctx.font = "bold 15pt Arial";
-            ctx.fillStyle = "black";
+            ctx.fillStyle = "red";
             ctx.textAlign = "center";
             ctx.fillText(this.assignedValue.toString(), 0, 0);
             ctx.restore()
         }
+
+        // serialize = serializeAssignedValue.bind(this);
+
+        static deserialize(serializedEdge) {
+            let [superEdge, rest] = superclass.deserialize(serializedEdge, true);
+            let assignedValueProperties = deserializeAssignedValue(rest);
+            return new EdgeAssignedValue({
+                                ...superEdge._args,
+                                ...assignedValueProperties
+                            })
+        }
     }
+
+    return EdgeAssignedValue;
 }
 
 export default EdgeAssignedValueMixin
