@@ -9,10 +9,10 @@ let EdgeAssignedValueMixin = (superclass) => {
     }
 
     class EdgeAssignedValue extends superclass {
-        constructor({assignedValue = 9, ...args}) {
+        constructor({assignedValue, ...args} = {}) {
             super(args);
 
-            this.assignedValue = assignedValue;
+            this.assignedValue = assignedValue ?? Math.floor(Math.random()*100);
 
             this.drawChain.addLink(this.drawText)
             this.serializationChain.addLink(serializeAssignedValue.bind(this))
