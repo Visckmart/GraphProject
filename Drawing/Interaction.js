@@ -45,43 +45,12 @@ updateFavorites()
 for (let loadFavBtn of loadFavButtons) {
     loadFavBtn.onclick = loadFavorite
 }
-nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
-for(let element of document.querySelector("#tool_tray").getElementsByTagName("input")) {
-    if (element.name == "tool") {
-        element.addEventListener("change", () => g.changeTool(element.value))
-    } else if (element.name == "feature") {
-        element.addEventListener("change", function() {
-            element.checked = false
-            ToolRepository[element.value].bind(g)()
-        })
-    }
-}
-for (let x of document.querySelector("#tool_tray").getElementsByClassName("icon")) {
-    x.addEventListener("mouseenter", function (e) {
-        let nodesToDisconnect;
-        if (g.selectionHandler.selected.nodes.length > 0) {
-            nodesToDisconnect = g.selectionHandler.selected.nodes;
-        } else {
-            nodesToDisconnect = Array.from(g.structure.nodes())
-        }
-        if (x.parentElement.previousElementSibling.value == "disconnect_all") {
-            for (let [edge, nodeA, nodeB] of g.structure.uniqueEdges()) {
-                if (nodesToDisconnect.includes(nodeA) || nodesToDisconnect.includes(nodeB)) {
-                    edge.highlights.add(HighlightType.FEATURE_PREVIEW)
-                }
-            }
-        }
-    })
 
-    x.addEventListener("mouseleave", function (e) {
-        // console.log(x.parentElement.previousElementSibling.value)
-        if (x.parentElement.previousElementSibling.value == "disconnect_all") {
-            for (let [edge, ,] of g.structure.uniqueEdges()) {
-                edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
-            }
-        }
-    })
-    // x.style.backgroundColor = "red"
+function refreshInterfaceCategories() {
+    let categoriesState = g.structure.getCategories()
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        checkbox.checked = categoriesState[category];
+    }
 }
 
 function deserializeURL() {
@@ -89,24 +58,10 @@ function deserializeURL() {
     if(urlParams.has("graph") && urlParams.get("graph") != "") {
         console.log("Deserializing graph " + urlParams.get("graph"))
         g.structure = Graph.deserialize(urlParams.get("graph"))
-        let cat = g.structure.getCategories()
-        // console.log(typeof(categoryCheckboxes))
-        for (let [key, value] of Object.entries(categoryCheckboxes)) {
-            // console.log(key, categoryCheckboxes[key])
-            value.checked = cat[key];
-            console.log(key)
-        }
-        // let categories = categoryCheckboxes.map(cb => cb.checked);
-        // console.log(categories)
-        // let [nodeType, edgeType] = Graph.getConstructorsFromCategories(categories)
-        // TODO: Melhorar e implementar em todas as importações
-        // if (g.EdgeConstructor != Edge) {
-        //     categoryCheckboxes.weightedEdges.checked = true;
-        // }
-        // serialTextarea.value = urlParams.get("graph")
+        refreshInterfaceCategories()
     }
-    g.redrawGraph()
-    g.updateAnimations()
+    // g.redrawGraph()
+    // g.updateAnimations()
 }
 window.addEventListener("load", deserializeURL);
 window.onpopstate = deserializeURL;
@@ -127,22 +82,29 @@ runAlgorithmButton.onclick = async () => {
     await algorithmController.setup(DijkstraShortestPath)
 }
 
-let blurTimeout = null
+// Window Resizing
+let blurTimeout = null;
 window.onresize = function () {
-    let wr = (window.innerWidth*0.75)/canvas.width
-    let wh = (window.innerHeight*0.95)/canvas.height
+    // Ajustar posição dos nós
+    let widthMult = (window.innerWidth*0.75)/canvas.width;
+    let heightMult = (window.innerHeight*0.95)/canvas.height;
+
+    for (let node of g.structure.nodes()) {
+        node.pos.x *= widthMult;
+        node.pos.y *= heightMult;
+    }
+
+    // Ajustar tamanho
     canvas.width = window.innerWidth*0.75;
     canvas.height = window.innerHeight*0.95;
-    for (let node of g.structure.nodes()) {
-        node.pos.x *= wr
-        node.pos.y *= wh
-    }
+
+    // Blue
     canvas.style.filter = "blur(15pt)"
-    if (blurTimeout) { clearTimeout(blurTimeout) }
+    if (blurTimeout) { clearTimeout(blurTimeout); }
     blurTimeout = setTimeout(function() {
-        canvas.style.filter = null
-    }, 250)
-    g.redrawGraph()
+        canvas.style.filter = null;
+    }, 250);
+    g.redrawGraph();
 }
 
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
