@@ -5,6 +5,7 @@ import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import { HighlightType } from "../Structure/Highlights.js"
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
+import Edge from "../Structure/Edge.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
@@ -88,6 +89,20 @@ function deserializeURL() {
     if(urlParams.has("graph") && urlParams.get("graph") != "") {
         console.log("Deserializing graph " + urlParams.get("graph"))
         g.structure = Graph.deserialize(urlParams.get("graph"))
+        let cat = g.structure.getCategories()
+        // console.log(typeof(categoryCheckboxes))
+        for (let [key, value] of Object.entries(categoryCheckboxes)) {
+            // console.log(key, categoryCheckboxes[key])
+            value.checked = cat[key];
+            console.log(key)
+        }
+        // let categories = categoryCheckboxes.map(cb => cb.checked);
+        // console.log(categories)
+        // let [nodeType, edgeType] = Graph.getConstructorsFromCategories(categories)
+        // TODO: Melhorar e implementar em todas as importações
+        // if (g.EdgeConstructor != Edge) {
+        //     categoryCheckboxes.weightedEdges.checked = true;
+        // }
         // serialTextarea.value = urlParams.get("graph")
     }
     g.redrawGraph()
@@ -138,15 +153,20 @@ document.body.onblur = function() {
     g.refreshInterfaceState()
 }
 
+export let categoryCheckboxes = {
+    weightedEdges: document.getElementById('weighedEdges'),
+    coloredEdges:  document.getElementById('coloredEdges'),
+    directedEdges: document.getElementById('directedEdges')
+}
 function updateEdge() {
     g.updateEdgeType(
-        document.getElementById('weighedEdges').checked,
-        document.getElementById('coloredEdges').checked,
-        document.getElementById('directedEdges').checked
+        categoryCheckboxes.weightedEdges.checked,
+        categoryCheckboxes.coloredEdges.checked,
+        categoryCheckboxes.directedEdges.checked
     )
 }
 //Opções de formato de grafo
-document.getElementById('weighedEdges').addEventListener('change', updateEdge)
+categoryCheckboxes.weightedEdges.addEventListener('change', updateEdge)
 
 // Executa a primeira vez
 g.refreshInterfaceState();

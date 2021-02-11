@@ -180,27 +180,14 @@ export default class Edge {
     get isSelected() {
         return this.highlights.has(HighlightType.SELECTION);
     }
-    // cc = 0;
+
     // Serialização
     serialize() {
-        // console.log(2)
-        // console.trace()
-        // this.cc++;
-        // if (this.cc > 10) {
-        //     return;
-        // }
-        // let serializedEdge = this.label;
-        // for (let x of this.serializationChain) {
-        //     console.log(x)
-        // }
-        // // let serialization = serializedEdge + serializeAssignedValueEdge();
-        // return serialization;
-        let serialized = this.serializationChain.call()
-        // console.log(serialized)
-        serialized = serialized.join("")
-        // console.log("zz", zz)
-        return serialized
+        let serialized = this.serializationChain.call();
+        serialized = serialized.join("");
+        return serialized;
     }
+
     serializeEdge() {
         return this.label;
     }
