@@ -47,7 +47,7 @@ let EdgeAssignedValueMixin = (superclass) => {
             ctx.translate(0, -15);
 
             ctx.font = "bold 15pt Arial";
-            ctx.fillStyle = "red";
+            ctx.fillStyle = "#444";
             ctx.textAlign = "center";
             ctx.fillText(this.assignedValue.toString(), 0, 0);
             ctx.restore()
