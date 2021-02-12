@@ -187,6 +187,7 @@ class GraphMouseHandler {
         if (this.selection.shouldDrawSelection) {
             // Para de desenhar
             this.selection.clearSelectionArea();
+            this.selection.refreshMenu()
         }
         this.refreshCursorStyle()
     }

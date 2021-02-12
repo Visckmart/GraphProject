@@ -205,6 +205,7 @@ export default class GraphSelection {
         }
 
         this.graphView.selectionChanged();
+        this.refreshMenu()
     }
 
     clearSelectionArea() {
@@ -233,42 +234,30 @@ export default class GraphSelection {
     refreshMenu() {
         let numberOfSelectedNodes = this.selected.nodes.length
         let numberOfSelectedEdges = this.selected.edges.length
-        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings"]
+        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings", "NodeEdgeSettings"]
         for (let settingsID of settingsList) {
             let s = document.getElementById(settingsID)
             s.style.display = "none"
         }
         let showSettings;
-        if (numberOfSelectedNodes == 1 && this.isQuickSelection == false
-            && this.shouldDrawSelection == false) {
+        if(numberOfSelectedEdges >= 1 && numberOfSelectedNodes >= 1)
+        {
+            showSettings = document.getElementById("NodeEdgeSettings")
+
+            let element = document.getElementById('NodeEdgeProperties')
+            element.updateProperties('Dijkstra',  ...this.selected.nodes, ...this.selected.edges)
+        } else if (numberOfSelectedNodes >= 1 && this.isQuickSelection === false
+            && this.shouldDrawSelection === false) {
             showSettings = document.getElementById("NodeSettings")
-            /*
-            // console.log("b")
-            let selectionHandler = this.selectionHandler
 
-            let labelInput = document.getElementById("label")
-            labelInput.value = this.selectionHandler.selectedNodes[0].label
-            labelInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0].label = input.target.value
-            }
-            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
-
-            let colorInput = document.getElementById("color")
-            colorInput.value = this.selectionHandler.selectedNodes[0].color
-            colorInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0]._originalcolor = input.target.value
-            } */
-            let selectedNode = this.selected.nodes[0]
             let element = document.getElementById('NodeProperties')
             // TODO: Pegar algoritmo correto
-            element.updateProperties(selectedNode, 'Dijkstra')
-        } else if (numberOfSelectedEdges == 1 && this.shouldDrawSelection == false) {
-            // console.log("a")
+            element.updateProperties('Dijkstra',  ...this.selected.nodes)
+        } else if (numberOfSelectedEdges >= 1 && this.shouldDrawSelection === false) {
             showSettings = document.getElementById("EdgeSettings")
 
-            let selectedEdge = this.selected.edges[0]
             let element = document.getElementById('EdgeProperties')
-            element.updateProperties(selectedEdge, 'Dijkstra')
+            element.updateProperties('Dijkstra',  ...this.selected.edges)
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
