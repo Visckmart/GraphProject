@@ -11,16 +11,21 @@ export default class GraphSelection {
         this.graphView = graphView;
     }
 
+    selected = {
+        nodes: [],
+        edges: []
+    }
+
+    /**
+     * O modo additionOnly faz com que a inversão de seleção só adicione,
+     * caso a situação resultasse na remoção de uma seleção ela não acontece.
+     */
     _additionOnlyMode = false;
     get additionOnlyMode() {
         return this.shouldDrawSelection || this._additionOnlyMode;
     }
-    set additionOnlyMode(s) {
-        this._additionOnlyMode = s;
-    }
-    selected = {
-        nodes: [],
-        edges: []
+    set additionOnlyMode(newState) {
+        this._additionOnlyMode = newState;
     }
 
     invertSelection(element) {
@@ -32,6 +37,7 @@ export default class GraphSelection {
                 this.selected.nodes.push(element);
                 this.isQuickSelection = false;
             }
+
         } else if (element instanceof Edge) { // Caso seja uma aresta
             let edgeIndex = this.selected.nodes.indexOf(element);
             if (edgeIndex >= 0 && this.shouldDrawSelection == false) {
@@ -39,6 +45,7 @@ export default class GraphSelection {
             } else {
                 this.selected.edges.push(element);
             }
+
         } else { // Se não é nem um nó, nem uma aresta, algo de errado aconteceu
             console.warn(`Inversão de seleção chamada para ${element}.`);
             console.trace();
@@ -87,8 +94,31 @@ export default class GraphSelection {
             console.error(`Remoção de seleção chamada para ${element}.`);
         }
     }
+
+    isQuickSelection = false;
+
+    quickSelect(node) {
+        this.clear();
+        this.selected.nodes = [node];
+        this.registerNodePositions();
+        this.isQuickSelection = true;
+        this.graphView.selectionChanged();
+        this.refreshMenu();
+    }
+
+    clear() {
+        this.selected.nodes = [];
+        this.selected.edges = [];
+        this.isQuickSelection = false;
+        this.graphView.selectionChanged();
+        this.refreshMenu();
+    }
     //endregion
 
+    /**
+     * Armazenamento das posições para possibilitar que múltiplos nós sejam
+     * movidos ao mesmo tempo.
+     */
     selectedNodePositions = [];
 
     registerNodePositions() {
@@ -98,6 +128,7 @@ export default class GraphSelection {
     }
 
     //region Checando seleção
+
     isSelected(element) {
         if (element instanceof Node) { // Caso seja um nó
             return this.selected.nodes.indexOf(element) >= 0;
@@ -124,17 +155,9 @@ export default class GraphSelection {
     }
     //endregion
 
-    clear() {
-        this.selected.nodes = [];
-        this.selected.edges = [];
-        this.isQuickSelection = false;
-        this.graphView.selectionChanged();
-        this.refreshMenu();
-    }
 
 
-
-    // SELECTION AREA
+    //region Área de Seleção
 
     selectionArea = {
         startPoint: null,
@@ -212,67 +235,44 @@ export default class GraphSelection {
         this.selectionArea.endPoint   = null;
     }
 
-    isQuickSelection = false;
-
-    quickSelect(node) {
-        this.clear();
-        this.selected.nodes = [node];
-        this.registerNodePositions();
-        this.isQuickSelection = true;
-        this.graphView.selectionChanged();
-        this.refreshMenu();
-    }
-
-    // get quicklySelectedNode() {
-    //     return this.selected.nodes[0];
-    // }
+    //endregion
 
 
 
-    // TODO: Organizar
     refreshMenu() {
-        let numberOfSelectedNodes = this.selected.nodes.length
-        let numberOfSelectedEdges = this.selected.edges.length
+        // Escondendo todas as configurações
         let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings"]
-        for (let settingsID of settingsList) {
-            let s = document.getElementById(settingsID)
-            s.style.display = "none"
+                            .map(id => document.getElementById(id))
+        for (let settings of settingsList) {
+            settings.style.display = "none";
         }
+
         let showSettings;
-        if (numberOfSelectedNodes == 1 && this.isQuickSelection == false
+        // Configurações de Nó
+        if (this.selected.nodes.length == 1
+            && this.isQuickSelection == false
             && this.shouldDrawSelection == false) {
-            showSettings = document.getElementById("NodeSettings")
-            /*
-            // console.log("b")
-            let selectionHandler = this.selectionHandler
 
-            let labelInput = document.getElementById("label")
-            labelInput.value = this.selectionHandler.selectedNodes[0].label
-            labelInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0].label = input.target.value
-            }
-            setTimeout(function () { labelInput.focus(); labelInput.select() }, 0);
-
-            let colorInput = document.getElementById("color")
-            colorInput.value = this.selectionHandler.selectedNodes[0].color
-            colorInput.oninput = function(input) {
-                selectionHandler.selectedNodes[0]._originalcolor = input.target.value
-            } */
+            showSettings = document.getElementById("NodeSettings");
             let selectedNode = this.selected.nodes[0]
-            let element = document.getElementById('NodeProperties')
+            let element = document.getElementById('NodeProperties');
             // TODO: Pegar algoritmo correto
-            element.updateProperties(selectedNode, 'Dijkstra')
-        } else if (numberOfSelectedEdges == 1 && this.shouldDrawSelection == false) {
-            // console.log("a")
-            showSettings = document.getElementById("EdgeSettings")
+            element.updateProperties(selectedNode, 'Dijkstra');
 
-            let selectedEdge = this.selected.edges[0]
-            let element = document.getElementById('EdgeProperties')
-            element.updateProperties(selectedEdge, 'Dijkstra')
+        // Configurações de Aresta
+        } else if (this.selected.edges.length == 1
+                   && this.shouldDrawSelection == false) {
+            showSettings = document.getElementById("EdgeSettings");
+
+            let selectedEdge = this.selected.edges[0];
+            let element = document.getElementById('EdgeProperties');
+            element.updateProperties(selectedEdge, 'Dijkstra');
+        // Configurações de Grafo
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
-        showSettings.style.display = "block"
+
+        showSettings.style.display = "block";
 
     }
 }
