@@ -1,11 +1,11 @@
 export const HighlightType = {
     SELECTION:            "selection",
     DARK_WITH_BLINK:      "algorithm_focus",
-    LIGHTEN:     "algorithm_focus2",
+    LIGHTEN:              "algorithm_focus2",
     ALGORITHM_VISITING:   "algorithm_visiting",
-    DARKEN:    "algorithm_visited",
+    DARKEN:               "algorithm_visited",
     ALGORITHM_NOTVISITED: "algorithm_notvisited",
-    COLORED_BORDER:     "algorithm_result",
+    COLORED_BORDER:       "algorithm_result",
     FEATURE_PREVIEW:      "feature_preview"
 }
 
@@ -18,30 +18,30 @@ const filteredOutHighlights = [
 ]
 
 export class HighlightsHandler {
+
     constructor(highlights = null) {
         this.highlights = highlights == null ? new Set() : highlights;
+        this.debug = false;
     }
 
-    debug = false;
-    
-    has(highlight) {
-        return this.highlights.has(highlight);
-    }
+    //region Manipulação dos Destaques
 
     add(highlight) {
-        if (this.debug && this.has(highlight) && highlight != HighlightType.SELECTION) {
-            console.warn(`Destaque ${highlight} já está presente.`)
-            // console.trace()
+        if (this.has(highlight) && highlight != HighlightType.SELECTION) {
+            if (this.debug) console.warn(`Destaque ${highlight} já está presente.`)
         }
         this.highlights.add(highlight);
     }
 
     remove(highlight) {
-        if (this.debug && this.has(highlight) == false && highlight != HighlightType.SELECTION) {
-            console.warn(`Destaque ${highlight} já não está presente.`)
-            // console.trace()
+        if (this.has(highlight) == false && highlight != HighlightType.SELECTION) {
+            if (this.debug) console.warn(`Destaque ${highlight} já não está presente.`)
         }
         this.highlights.delete(highlight)
+    }
+
+    has(highlight) {
+        return this.highlights.has(highlight);
     }
 
     *list() {
@@ -49,17 +49,20 @@ export class HighlightsHandler {
             yield highlight;
         }
     }
+    //endregion
+
+    //region Serialização
 
     prepareForSharing() {
         let highlightsCopy = new Set(this.highlights);
         for (let highlight of filteredOutHighlights) {
             highlightsCopy.delete(highlight)
         }
-        // noinspection UnnecessaryLocalVariableJS
+
         let serializedHighlights = Array.from(highlightsCopy)
                                     .map(hName => highlightNames.indexOf(hName))
                                     .filter(hNum => hNum != -1)
-                                    .join("_")
+                                    .join("_");
         return serializedHighlights;
     }
 
@@ -73,4 +76,5 @@ export class HighlightsHandler {
                                 .map(hNum => highlightNames[hNum]);
         return new Set(namedHighlights);
     }
+    //endregion
 }

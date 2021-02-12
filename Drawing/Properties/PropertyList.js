@@ -47,6 +47,7 @@ class PropertyList extends HTMLElement {
 
         let lElement = document.createElement('label')
         lElement.setAttribute('for', `${this.artifactType}${property}`)
+        lElement.setAttribute('style', `margin-right: 8pt`)
         lElement.textContent = label + ':'
 
         let iElement = document.createElement('input')

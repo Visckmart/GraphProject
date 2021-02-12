@@ -1,8 +1,8 @@
 // Node Definition
-import {canvas, ctx, getColorRotation, nodeColorList} from "../Drawing/General.js";
+import {ctx, getColorRotation, nodeColorList} from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
-import { generateNewRandomLabel, backgroundGradient, positionAlphabet, colorFromComponents } from "./Utilities.js";
+import { generateNewRandomLabel, backgroundGradient, colorFromComponents } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 import { deserializeNode, serializeNode } from "./NodeSerialization.js";
@@ -234,7 +234,9 @@ export default class Node {
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
 
-    // Serialização
+
+    //region Serialização
+
     serialize() {
         let serialized = this.serializationChain.call();
         serialized = serialized.join("");
@@ -243,13 +245,15 @@ export default class Node {
 
     static deserialize(...arg) { return deserializeNode(...arg) };
 
+    //endregion
+
     // Clona o nó a partir da instância atual
     clone() {
-        return new this.constructor(this._args)
+        return new this.constructor(this._args);
     }
 
     // Instancia a classe atual a partir de um nó existente
     static from(node) {
-        return new this(node._args)
+        return new this(node._args);
     }
 }

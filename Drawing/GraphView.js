@@ -112,7 +112,7 @@ class GraphView {
     }
 
     changeTool(tool) {
-        this.primaryTool = tool
+        this.primaryTool = tool;
     }
 
 

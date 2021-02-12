@@ -60,7 +60,6 @@ class Graph {
 
     // Inserindo edge específico
     insertEdge(nodeA, nodeB, edge) {
-        console.log("Inserting edge", nodeA.label, nodeB.label, edge)
         // Verificação
         if (!(nodeA && nodeB)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
@@ -70,22 +69,17 @@ class Graph {
             return;
         }
         if (this.debug) {
-            // console.log(edge)
             debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
                        " até o nó " + nodeB.label, edge);
         }
 
         // Operação
-        this.data.get(nodeA).set(nodeB, edge)
-        this.data.get(nodeB).set(nodeA, edge)
+        this.data.get(nodeA).set(nodeB, edge);
+        this.data.get(nodeB).set(nodeA, edge);
     }
 
     // Criando aresta temporária
-    // createTemporaryEdge() {
-    //     let TemporaryEdge = EdgeTemporaryMixin(Edge);
-    //     return new TemporaryEdge({label: ''})
-    // }
-    temporaryEdge = new (EdgeTemporaryMixin(Edge))({});
+    temporaryEdge = new (EdgeTemporaryMixin(Edge))();
 
     // Remoção
     removeEdgeBetween(nodeA, nodeB) {
@@ -235,7 +229,6 @@ class Graph {
             for (let nodeStr of serializedNodesList) {
                 let node = Node.deserialize(nodeStr)
                 if (node == undefined) continue;
-
                 deserializedNodes.push(node)
                 graph.insertNode(node)
             }
@@ -251,6 +244,7 @@ class Graph {
 
                 const [, nodeA, nodeB, edgeData] = found;
                 let deserializedEdge = graph.EdgeConstructor.deserialize(edgeData)
+
                 graph.insertEdge(
                     deserializedNodes.find(n => n.index === parseInt(nodeA)),
                     deserializedNodes.find(n => n.index === parseInt(nodeB)),

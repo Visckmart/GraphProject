@@ -1,6 +1,6 @@
 import { ctx } from "../Drawing/General.js";
 
-import { backgroundGradient } from "./Utilities.js";
+import { backgroundGradient, generateNewRandomLabel } from "./Utilities.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
@@ -8,7 +8,8 @@ import { deserializeEdge } from "./EdgeSerialization.js";
 
 export default class Edge {
     constructor({ label, highlights = null } = {}) {
-        this.label = label ?? String.fromCharCode(Math.floor(Math.random()*26)+65);
+
+        this.label = label ?? generateNewRandomLabel();
         this.highlights = new HighlightsHandler(highlights);
 
         // Instanciando cadeias de responsabilidade
@@ -26,6 +27,8 @@ export default class Edge {
             highlights: new Set(this.highlights.list())
         }
     }
+
+    //region Desenho do Nó
 
     // Executa a cadeia de responsabilidade
     // draw(...args) { this.drawChain.call(...args) }
@@ -56,21 +59,15 @@ export default class Edge {
             }
             ctx.restore()
         }
-        for(let highlight of this.highlights.list()) {
+
+        for (let highlight of this.highlights.list()) {
             ctx.save()
-            // ctx.globalAlpha = 0.5
-            this._drawHighlight(highlight, xStart, yStart, xEnd, yEnd)
+            this._drawHighlight(highlight, xStart, yStart, xEnd, yEnd);
             ctx.restore()
         }
-
-        ctx.save();
-
-        // this._drawText({ x: xStart, y: yStart },
-        //                { x: xEnd,   y: yEnd   })
-        
-        ctx.restore();
     }
 
+    // TODO: Transformar em ifs como nos highlights dos nós
     _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
         switch(highlight) {
         case HighlightType.SELECTION:
@@ -177,12 +174,13 @@ export default class Edge {
             break
         }
     }
+    //endregion
 
     get isSelected() {
         return this.highlights.has(HighlightType.SELECTION);
     }
 
-    // Serialização
+    //region Serialização
     serialize() {
         let serialized = this.serializationChain.call();
         serialized = serialized.join("");
@@ -194,6 +192,8 @@ export default class Edge {
     }
 
     static deserialize(...arg) { return deserializeEdge(...arg) };
+
+    //endregion
 
     clone() {
         return new this.constructor(this._args)
