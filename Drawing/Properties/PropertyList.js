@@ -27,10 +27,22 @@ class PropertyList extends HTMLElement {
             case 'node':
                 this.repository = NodePropertyRepository
                 break
+            case 'all':
+                this.repository = EdgePropertyRepository
+                // Unindo os dois repositórios
+                for(let algorithm of Object.keys(this.repository))
+                {
+                    for(let property of Object.keys(NodePropertyRepository[algorithm] ?? {}))
+                    {
+                        if(!this.repository[algorithm][property]) {
+                            this.repository[algorithm][property] = NodePropertyRepository[algorithm][property]
+                        }
+                    }
+                }
         }
     }
 
-    _appendProperty(artifact, property, { label, type, selected = false}) {
+    _appendProperty(artifacts, property, { label, type, selected = false}) {
         let pElement = document.createElement('p')
 
         let lElement = document.createElement('label')
@@ -38,16 +50,22 @@ class PropertyList extends HTMLElement {
         lElement.textContent = label + ':'
 
         let iElement = document.createElement('input')
-        iElement.value = artifact[property]
+        if(artifacts.length === 1)
+        {
+            iElement.value = artifacts[0][property]
+        } else {
+            iElement.value = ''
+        }
         iElement.setAttribute('type', type)
         iElement.setAttribute('class', 'property-input')
         iElement.setAttribute('id', `${this.artifactType}${property}`)
+        iElement.setAttribute('placeholder', 'Valor')
 
         pElement.appendChild(lElement)
         pElement.appendChild(iElement)
 
         iElement.addEventListener('input', (event) => {
-            artifact[property] = event.target.value
+            artifacts.map(a => a[property] = event.target.value)
         })
         this.container.appendChild(pElement)
         if(selected) {
@@ -59,18 +77,18 @@ class PropertyList extends HTMLElement {
         }
     }
 
-    updateProperties(edge, selectedAlgorithm = '') {
+    updateProperties(selectedAlgorithm = '', ...artifacts) {
         this.container.innerHTML = ''
 
         for(let property of Object.keys(this.repository.default ?? {})) {
-            if(edge[property]) {
-                this._appendProperty(edge, property, this.repository.default[property])
+            if(!artifacts.some(e => !e[property])) {
+                this._appendProperty(artifacts, property, this.repository.default[property])
             }
         }
 
         for(let property of Object.keys(this.repository[selectedAlgorithm] ?? {})) {
-            if(edge[property]) {
-                this._appendProperty(edge, property, this.repository[selectedAlgorithm][property])
+            if(!artifacts.some(e => !e[property])) {
+                this._appendProperty(artifacts, property, this.repository[selectedAlgorithm][property])
             }
         }
 

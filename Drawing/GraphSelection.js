@@ -228,6 +228,7 @@ export default class GraphSelection {
         }
 
         this.graphView.selectionChanged();
+        this.refreshMenu()
     }
 
     clearSelectionArea() {
@@ -240,34 +241,32 @@ export default class GraphSelection {
 
 
     refreshMenu() {
-        // Escondendo todas as configurações
-        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings"]
-                            .map(id => document.getElementById(id))
-        for (let settings of settingsList) {
-            settings.style.display = "none";
+        let numberOfSelectedNodes = this.selected.nodes.length
+        let numberOfSelectedEdges = this.selected.edges.length
+        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings", "NodeEdgeSettings"]
+        for (let settingsID of settingsList) {
+            let s = document.getElementById(settingsID)
+            s.style.display = "none"
         }
-
         let showSettings;
-        // Configurações de Nó
-        if (this.selected.nodes.length == 1
-            && this.isQuickSelection == false
-            && this.shouldDrawSelection == false) {
+        if(numberOfSelectedEdges >= 1 && numberOfSelectedNodes >= 1)
+        {
+            showSettings = document.getElementById("NodeEdgeSettings")
 
-            showSettings = document.getElementById("NodeSettings");
-            let selectedNode = this.selected.nodes[0]
-            let element = document.getElementById('NodeProperties');
+            let element = document.getElementById('NodeEdgeProperties')
+            element.updateProperties('Dijkstra',  ...this.selected.nodes, ...this.selected.edges)
+        } else if (numberOfSelectedNodes >= 1 && this.isQuickSelection === false
+            && this.shouldDrawSelection === false) {
+            showSettings = document.getElementById("NodeSettings")
+
+            let element = document.getElementById('NodeProperties')
             // TODO: Pegar algoritmo correto
-            element.updateProperties(selectedNode, 'Dijkstra');
+            element.updateProperties('Dijkstra',  ...this.selected.nodes)
+        } else if (numberOfSelectedEdges >= 1 && this.shouldDrawSelection === false) {
+            showSettings = document.getElementById("EdgeSettings")
 
-        // Configurações de Aresta
-        } else if (this.selected.edges.length == 1
-                   && this.shouldDrawSelection == false) {
-            showSettings = document.getElementById("EdgeSettings");
-
-            let selectedEdge = this.selected.edges[0];
-            let element = document.getElementById('EdgeProperties');
-            element.updateProperties(selectedEdge, 'Dijkstra');
-        // Configurações de Grafo
+            let element = document.getElementById('EdgeProperties')
+            element.updateProperties('Dijkstra',  ...this.selected.edges)
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
