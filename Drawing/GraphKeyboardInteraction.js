@@ -8,18 +8,18 @@ class GraphKeyboardHandler {
         this.graphView = graphView;
         this.selection = graphView.selectionHandler;
 
+        /* Variável para relembrar a ferramenta escolhida depois da tecla
+           especial ser levantada. */
+        this.lastToolChoice = this.graphView.primaryTool;
+
         // Começa habilitado
         this._enabled = true
     }
 
-    /* Variável para relembrar a ferramenta escolhida depois da tecla
-       especial ser levantada. */
-    lastToolChoice = Tool.MOVE;
-
     isMetaKey(keyboardEvent) {
-        let metaPressed = event.metaKey;
+        let metaPressed = keyboardEvent.metaKey;
         if (navigator.platform.includes("Mac") == false) {
-            metaPressed = event.ctrlKey;
+            metaPressed = keyboardEvent.ctrlKey;
         }
         return metaPressed;
     }
@@ -32,40 +32,38 @@ class GraphKeyboardHandler {
         return pressed;
     }
 
+
+    // Key Pressed
+
     keyPressed(keyboardEvent) {
         // Eventos de teclado desabilitados
         if(!this._enabled) { return }
 
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
-        if(this.selection.shouldDrawSelection) {
-            return;
-        }
+        if(this.selection.shouldDrawSelection) { return; }
+
 
         let metaPressed = this.isMetaKey(keyboardEvent)
-        // console.log(keyboardEvent)
+
         if (document.activeElement.tagName == "BODY") {
             if (keyboardEvent.key == "e") { // E
                 this.graphView.structure.showGraph()
             }
             // console.log(keyboardEvent.key)
             if (keyboardEvent.key == "a") { // A
-                console.log(document.activeElement.tagName)
                 this.graphView.selectAllNodes()
                 keyboardEvent.preventDefault()
             }
         }
-        // Tratamento da seleção da ferramenta Connect ao pressionar a tecla "meta".
-        // No caso do Mac a tecla em questão é Command
-        // console.log(keyboardEvent.key)
+
         if (keyboardEvent.key == "Shift") {
             this.selection.additionOnlyMode = true;
         }
         if (metaPressed) {
-            if(this.graphView.lastToolChoice == null) {
-                this.graphView.lastToolChoice = this.graphView.primaryTool;
-            }
+            this.lastToolChoice = this.graphView.primaryTool;
             this.graphView.primaryTool = Tool.CONNECT;
         }
+
         if (keyboardEvent.key == 1) {
             this.graphView.primaryTool = Tool.MOVE;
         } else if (keyboardEvent.key == 2) {
@@ -73,37 +71,39 @@ class GraphKeyboardHandler {
         }
     }
 
+
+    // Key Released
+
     keyReleased(keyboardEvent) {
         // Eventos de teclado desabilitados
-        if(!this._enabled)
-        {
-            return
-        }
+        if(!this._enabled) { return; }
+
         if (keyboardEvent.key == "Shift") {
             this.selection.additionOnlyMode = false;
         }
 
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
-        if(this.selection.drawingSelection)
-        {
-            return
-        }
+        if(this.selection.drawingSelection) { return; }
 
         let metaPressed = this.isMetaKey(keyboardEvent)
-        if (metaPressed == false && this.graphView.lastToolChoice == Tool.MOVE) {
+        if (metaPressed == false && this.lastToolChoice == Tool.MOVE) {
             this.graphView.primaryTool = Tool.MOVE;
-            this.graphView.lastToolChoice = null;
+            this.lastToolChoice = null;
         }
-        if (keyboardEvent.key == "d") {
-            let algorithmController = new AlgorithmController(this.graphView)
-            algorithmController.setup(DijkstraShortestPath)
+
+        switch (keyboardEvent.key) {
+        case "d":
+            let algorithmController = new AlgorithmController(this.graphView);
+            algorithmController.setup(DijkstraShortestPath);
+            break;
+        case "s":
+            console.log(this.graphView.structure.serialize());
+            break;
+        case "Escape":
+            this.graphView.selectionHandler.clear();
+            break;
         }
-        if (keyboardEvent.key == "s") {
-            console.log(this.graphView.structure.serialize())
-        }
-        if (keyboardEvent.key == "Escape") {
-            this.graphView.selectionHandler.clear()
-        }
+
         if (document.activeElement.tagName == "BODY") {
             if (this.isDeletionKey(keyboardEvent)) {
                 for (let node of this.selection.selected.nodes) {
