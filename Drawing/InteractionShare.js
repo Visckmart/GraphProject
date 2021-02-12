@@ -49,18 +49,15 @@ exportLinkButton.onclick = function () {
 
 let exportImageButton = document.getElementById("exportImage")
 exportImageButton.onclick = function () {
-    // get canvas data  
-    var image = canvas.toDataURL();  
-  
-    // create temporary link  
-    var tmpLink = document.createElement( 'a' );  
-    tmpLink.download = 'image.png'; // set the name of the download file 
+    let image = canvas.toDataURL();
+
+    let tmpLink = document.createElement('a');
+    tmpLink.download = `Grafo ${getTimeForFilename()}.png`;
     tmpLink.href = image;  
-  
-    // temporarily add link to body and initiate the download  
-    document.body.appendChild( tmpLink );  
+
+    document.body.appendChild(tmpLink);
     tmpLink.click();  
-    document.body.removeChild( tmpLink );  
+    document.body.removeChild(tmpLink);
 }
 
 

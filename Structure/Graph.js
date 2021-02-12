@@ -48,6 +48,9 @@ class Graph {
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
+        if (this.checkEdgeBetween(nodeA, nodeB)) {
+            return;
+        }
         let edge = new this.EdgeConstructor()
         // Verificação
         if (!(nodeA && nodeB && edge)) {
@@ -59,7 +62,7 @@ class Graph {
         }
         debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
                    " até o nó " + nodeB.label, edge);
-        
+
         // Operação
         this.data.get(nodeA).set(nodeB, edge)
         this.data.get(nodeB).set(nodeA, edge)
@@ -67,6 +70,7 @@ class Graph {
 
     // Inserindo edge específico
     insertEdge(nodeA, nodeB, edge) {
+        console.log("Inserting edge", nodeA.label, nodeB.label, edge)
         // Verificação
         if (!(nodeA && nodeB)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
@@ -78,7 +82,7 @@ class Graph {
         if (this.debug) {
             // console.log(edge)
             debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
-                " até o nó " + nodeB.label, edge);
+                       " até o nó " + nodeB.label, edge);
         }
 
         // Operação
@@ -102,7 +106,7 @@ class Graph {
         }
         debugPrint("Removendo aresta que conecta os nós " + nodeA.label +
                    " – " + nodeB.label)
-        
+
         // Operação
         this.data.get(nodeA).delete(nodeB)
         this.data.get(nodeB).delete(nodeA)
@@ -223,8 +227,8 @@ class Graph {
         resetColorRotation();
         let typeChar = string.charAt(0);
         let edgeConstructor = typeChar == "W"
-                            ? EdgeAssignedValueMixin(Edge)
-                            : Edge
+            ? EdgeAssignedValueMixin(Edge)
+            : Edge
         // console.log(edgeConstructor)
         let graph = new this({ EdgeConstructor: edgeConstructor });
         graph.debug = !clone;

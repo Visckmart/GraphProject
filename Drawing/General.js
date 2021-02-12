@@ -7,6 +7,7 @@ export function resetColorRotation() {
 export function getColorRotation() {
   return colorRotation++
 }
+
 // Canvas
 export var canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth*0.75;

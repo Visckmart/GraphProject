@@ -192,7 +192,7 @@ export default class Edge {
         return this.label;
     }
 
-    static deserialize = deserializeEdge;
+    static deserialize(...arg) { return deserializeEdge(...arg) };
 
     clone() {
         return new this.constructor(this._args)

@@ -18,7 +18,7 @@ export default {
         if (this.selectionHandler.selected.nodes.length > 0) {
             nodesToDisconnect = this.selectionHandler.selected.nodes;
         } else {
-            nodesToDisconnect = this.structure.nodes()
+            nodesToDisconnect = Array.from(this.structure.nodes());
         }
         console.group("Desconectar " + nodesToDisconnect.length + " nós")
         for (let node of nodesToDisconnect) {
