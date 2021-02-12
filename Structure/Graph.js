@@ -2,6 +2,9 @@ import Edge from "./Edge.js";
 import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import {Node} from "./Node.js";
 import {resetColorRotation} from "../Drawing/General.js";
+import {HighlightType} from "./Highlights.js";
+import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
+// import {weightedEdgesCheckbox} from "../Drawing/Interaction.js";
 
 class Graph {
     constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
@@ -21,10 +24,34 @@ class Graph {
         }
     }
 
+    // static getConstructorsFromCategories(categories) {
+    //     let EdgeType = Edge;
+    //     if(categories.weightedEdges) {
+    //         EdgeType = EdgeAssignedValueMixin(EdgeType);
+    //     }
+    //     if(colored) {
+    //         //TODO: Mixin de edge colorido
+    //     }
+    //     if(directed) {
+    //         //TODO: Mixin de edge direcionado
+    //     }
+    //     return { NodeType: Node, EdgeType: EdgeType };
+    // }
+    getCategories() {
+        return {
+            weightedEdges: this.EdgeConstructor != Edge,
+            coloredEdges:  false,
+            directedEdges: false
+        }
+    }
+    //region Manipulação do Grafo
 
     // Inserção
     insertEdgeBetween(nodeA, nodeB) {
-        let edge = new this.EdgeConstructor({ label: String.fromCharCode(Math.floor(Math.random()*26)+65) })
+        if (this.checkEdgeBetween(nodeA, nodeB)) {
+            return;
+        }
+        let edge = new this.EdgeConstructor()
         // Verificação
         if (!(nodeA && nodeB && edge)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
@@ -43,6 +70,7 @@ class Graph {
 
     // Inserindo edge específico
     insertEdge(nodeA, nodeB, edge) {
+        console.log("Inserting edge", nodeA.label, nodeB.label, edge)
         // Verificação
         if (!(nodeA && nodeB)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
@@ -54,7 +82,7 @@ class Graph {
         if (this.debug) {
             // console.log(edge)
             debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
-                " até o nó " + nodeB.label, edge);
+                       " até o nó " + nodeB.label, edge);
         }
 
         // Operação
@@ -63,10 +91,11 @@ class Graph {
     }
 
     // Criando aresta temporária
-    createTemporaryEdge() {
-        let TemporaryEdge = EdgeTemporaryMixin(Edge)
-        return new TemporaryEdge({label: ''})
-    }
+    // createTemporaryEdge() {
+    //     let TemporaryEdge = EdgeTemporaryMixin(Edge);
+    //     return new TemporaryEdge({label: ''})
+    // }
+    temporaryEdge = new (EdgeTemporaryMixin(Edge))({});
 
     // Remoção
     removeEdgeBetween(nodeA, nodeB) {
@@ -144,6 +173,9 @@ class Graph {
             console.warn("A aresta a ser removida não foi encontrada.")
         }
     }
+    //endregion
+
+    //region Deteção de Nós e Arestas
 
     getEdgeBetween(nodeA, nodeB) {
         // Validação
@@ -165,25 +197,129 @@ class Graph {
         }
         return connA.get(nodeB) != null;
     }
+    //endregion
 
-    showGraph(pure = false) {
-        if (pure == true) {
-            console.log(this.data);
-            return;
+    //region Serialização
+
+    serialize() {
+        let graphType = "";
+        if (this.EdgeConstructor == Edge) {
+            // console.log("Regular edges")
+        } else {
+            graphType = "W";
+            // console.log("Weighted edges")
         }
 
-        let graphString = ""
-        for (let [nodeA, connections] of this.data) {
-            let connectionsString = Array.from(connections.keys()).map(nodeB => nodeB.label)
-            if (connectionsString.length == 0) {
-                graphString += nodeA.label + "\t–>|\n"
-            } else {
-                graphString += nodeA.label + "\t–> " + connectionsString + "\n"
-            }
+        let serializedNodes = "";
+        for(let node of this.nodes()) {
+            serializedNodes += `${node.serialize()}.`
         }
-        console.log(graphString)
+
+        let serializedEdges = "";
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
+            serializedEdges += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`
+        }
+
+        return graphType + serializedNodes + "~" + serializedEdges;
     }
 
+    static deserialize(string, clone = false) {
+        resetColorRotation();
+        let typeChar = string.charAt(0);
+        let edgeConstructor = typeChar == "W"
+            ? EdgeAssignedValueMixin(Edge)
+            : Edge
+        // console.log(edgeConstructor)
+        let graph = new this({ EdgeConstructor: edgeConstructor });
+        graph.debug = !clone;
+
+        let [serializedNodes, serializedEdges] = string.split("~")
+        let deserializedNodes = []
+        if (serializedNodes) {
+            let serializedNodesList = serializedNodes.split(".")
+            serializedNodesList.splice(-1, 1)
+            for (let nodeStr of serializedNodesList) {
+                let node = Node.deserialize(nodeStr)
+                if (node == undefined) continue;
+
+                deserializedNodes.push(node)
+                graph.insertNode(node)
+            }
+        }
+
+        if (serializedEdges) {
+            let serializedEdgesList = serializedEdges.split(".")
+            serializedEdgesList.splice(-1, 1)
+            for (let edgeStr of serializedEdgesList) {
+                const re = /(\d+)_(\d+)-(.*)/i;
+                let found = edgeStr.match(re);
+                if (found == undefined) continue;
+
+                const [, nodeA, nodeB, edgeData] = found;
+                let deserializedEdge = graph.EdgeConstructor.deserialize(edgeData)
+                graph.insertEdge(
+                    deserializedNodes.find(n => n.index === parseInt(nodeA)),
+                    deserializedNodes.find(n => n.index === parseInt(nodeB)),
+                    deserializedEdge
+                )
+            }
+        }
+        if (this.debug) {
+            console.info("Grafo desserializado com sucesso.");
+        }
+        return graph;
+    }
+
+    _cloneData() {
+        let tempGraph = new this.constructor();
+        tempGraph.debug = false;
+
+        let newNodeMap = new Map()
+        for (let node of this.nodes()) {
+            let newNode = node.clone()
+            newNodeMap.set(node, newNode)
+
+            tempGraph.insertNode(newNode)
+        }
+
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
+            let newEdge = edge.clone()
+            // TODO: aparentemente nodeA e newNodeMap.get(nodeA) é a mesma coisa
+            tempGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB),
+                                 newEdge)
+        }
+        return tempGraph.data;
+    }
+
+    clone () {
+        return new this.constructor(this._args);
+    }
+
+    cloneAndTransform ({EdgeConstructor = this.EdgeConstructor, NodeConstructor = this.NodeConstructor}) {
+        let newGraph = new this.constructor({
+                                                EdgeConstructor: EdgeConstructor,
+                                                NodeConstructor: NodeConstructor
+                                            })
+        newGraph.debug = false;
+        let newNodeMap = new Map()
+        for(let node of this.nodes()) {
+            let newNode = NodeConstructor.from(node)
+            newNodeMap.set(node, newNode)
+
+            newGraph.insertNode(newNode)
+        }
+
+        for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
+            let newEdge = EdgeConstructor.from(edge)
+            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB),
+                                newEdge)
+        }
+
+        return newGraph;
+    }
+    //endregion
+
+    //region Iteradores
     *nodes() {
         // yield* this.data.keys()
         for (let n of this.data.keys()) {
@@ -212,112 +348,31 @@ class Graph {
     }
 
     *edgesFrom(node) {
-        for(let [nodeB, edge] of this.data.get(node))
-        {
+        for(let [nodeB, edge] of this.data.get(node))  {
             yield [edge, nodeB]
         }
     }
+    //endregion
 
-    serialize() {
-        let serializedNodes = ""
-        for(let node of this.nodes())
-        {
-            serializedNodes += node.serialize() + "."
+    showGraph(pure = false) {
+        if (pure == true) {
+            console.log(this.data);
+            return;
         }
 
-        let serializedEdged = ""
-        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
-        {
-            serializedEdged += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`
-            // pairs.push([nodeA.index,nodeB.index])
-        }
-
-        return serializedNodes + "~" + serializedEdged
-    }
-
-    static deserialize(string, clone = false) {
-        resetColorRotation()
-        let graph = new this()
-        graph.debug = !clone;
-        let [allNodesStr, allEdgesStr] = string.split("~")
-        let deserializedNodes = []
-        if (allNodesStr) {
-            let serializedNodes = allNodesStr.split(".")
-            serializedNodes.splice(-1, 1)
-            for (let nodeStr of serializedNodes) {
-                let node = Node.deserialize(nodeStr)
-                if (node == undefined) continue;
-                deserializedNodes.push(node)
-                graph.insertNode(node)
+        let graphString = ""
+        for (let [nodeA, connections] of this.data) {
+            let connectionsString = Array.from(connections.keys()).map(nodeB => nodeB.label)
+            if (connectionsString.length == 0) {
+                graphString += nodeA.label + "\t–>|\n"
+            } else {
+                graphString += nodeA.label + "\t–> " + connectionsString + "\n"
             }
         }
-
-        if (allEdgesStr) {
-            let serializedEdges = allEdgesStr.split(".")
-            serializedEdges.splice(-1, 1)
-            for (let edgeStr of serializedEdges) {
-                const re = /(\d+)_(\d+)-(.*)/i;
-                let found = edgeStr.match(re);
-                if (found == undefined) continue;
-                const [, nodeA, nodeB, edgeData] = found;
-                // console.log("graph edge", nodeA, nodeB, edgeData)
-                let ne = Edge.deserialize(edgeData)
-                graph.insertEdge(
-                    deserializedNodes.find(n => n.index === parseInt(nodeA)),
-                    deserializedNodes.find(n => n.index === parseInt(nodeB)),
-                    ne
-                )
-            }
-        }
-        if (this.debug) {
-            console.info("Grafo desserializado com sucesso.");
-        }
-        return graph
+        console.log(graphString)
     }
 
-    _cloneData() {
-        let tempGraph = new this.constructor()
-        tempGraph.debug = false;
-        let newNodeMap = new Map()
-        for(let node of this.nodes()) {
-            let newNode = node.clone()
-            newNodeMap.set(node, newNode)
-            tempGraph.insertNode(newNode)
-        }
-
-        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
-        {
-            let newEdge = edge.clone()
-            tempGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
-        }
-        return tempGraph.data
-    }
-
-    clone () {
-        return new this.constructor(this._args)
-    }
-
-    cloneAndTransform ({EdgeConstructor = this.EdgeConstructor, NodeConstructor = this.NodeConstructor}) {
-        let newGraph = new this.constructor({EdgeConstructor: EdgeConstructor, NodeConstructor: NodeConstructor})
-        newGraph.debug = false;
-        let newNodeMap = new Map()
-        for(let node of this.nodes()) {
-            let newNode = NodeConstructor.from(node)
-            newNodeMap.set(node, newNode)
-            newGraph.insertNode(newNode)
-        }
-
-        for(let [edge, nodeA, nodeB] of this.uniqueEdges())
-        {
-            let newEdge = EdgeConstructor.from(edge)
-            newGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB), newEdge)
-        }
-
-        return newGraph
-    }
-
-    static from(graph)
-    {
+    static from(graph) {
         return new this(graph._args)
     }
 }

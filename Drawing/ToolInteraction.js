@@ -22,32 +22,31 @@ for (let inputElement of trayInputs) {
     }
     inputElement.addEventListener("change", eventHandler);
 }
-for (let icon of trayIcons) {
-    icon.addEventListener("mouseenter", function (e) {
-        let nodesToDisconnect;
-        if (g.selectionHandler.hasSelectedNodes > 0) {
-            nodesToDisconnect = g.selectionHandler.selected.nodes;
-        } else {
-            nodesToDisconnect = Array.from(g.structure.nodes())
-        }
-        let associatedInput = icon.parentElement.previousElementSibling;
-        if (associatedInput.value == "disconnect_all") {
-            for (let [edge, nodeA, nodeB] of g.structure.uniqueEdges()) {
-                if (nodesToDisconnect.includes(nodeA)
-                    || nodesToDisconnect.includes(nodeB)) {
-                    edge.highlights.add(HighlightType.FEATURE_PREVIEW)
-                }
-            }
-        }
-    })
 
-    icon.addEventListener("mouseleave", function (e) {
-        // console.log(x.parentElement.previousElementSibling.value)
-        if (icon.parentElement.previousElementSibling.value == "disconnect_all") {
-            for (let [edge, ,] of g.structure.uniqueEdges()) {
+function iconHover(mouseEvent) {
+    let mouseEnter = mouseEvent.type == "mouseenter";
+    let nodesToDisconnect;
+    if (g.selectionHandler.hasSelectedNodes > 0) {
+        nodesToDisconnect = g.selectionHandler.selected.nodes;
+    } else {
+        nodesToDisconnect = Array.from(g.structure.nodes())
+    }
+    let associatedInput = this.parentElement.previousElementSibling;
+    if (associatedInput.value == "disconnect_all") {
+        for (let [edge, nodeA, nodeB] of g.structure.uniqueEdges()) {
+            if (mouseEnter
+                && (nodesToDisconnect.includes(nodeA)
+                    || nodesToDisconnect.includes(nodeB))) {
+                edge.highlights.add(HighlightType.FEATURE_PREVIEW)
+            }
+            if (mouseEnter == false && associatedInput.value == "disconnect_all") {
                 edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
             }
         }
-    })
-    // x.style.backgroundColor = "red"
+    }
+
+}
+for (let icon of trayIcons) {
+    icon.addEventListener("mouseenter", iconHover.bind(icon));
+    icon.addEventListener("mouseleave", iconHover.bind(icon));
 }
