@@ -101,6 +101,9 @@ class GraphKeyboardHandler {
         if (keyboardEvent.key == "s") {
             console.log(this.graphView.structure.serialize())
         }
+        if (keyboardEvent.key == "Escape") {
+            this.graphView.selectionHandler.clear()
+        }
         if (document.activeElement.tagName == "BODY") {
             if (this.isDeletionKey(keyboardEvent)) {
                 for (let node of this.selection.selected.nodes) {

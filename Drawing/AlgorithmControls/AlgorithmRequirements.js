@@ -29,7 +29,7 @@ export class Requirement {
                     let handler = (event) => {
                         let mousePos = this.inputHandler.getMousePos(this.inputHandler.canvas, event)
                         let clickedNodes =
-                            this.inputHandler.graphView.getNodeIndexAt(mousePos)
+                            this.inputHandler.graphView.getNodesAt(mousePos)
                         if (clickedNodes.length > 0) {
                             this.inputHandler.changeCursorStyle(null)
 
@@ -74,7 +74,7 @@ export class Requirement {
                     // Handler de mousedown usado para capturar a primeira node da aresta
                     let mouseDownHandler = (event) => {
                         let mousePos = this.inputHandler.getMousePos(this.inputHandler.canvas, event)
-                        let nodesAtClick = this.inputHandler.graphView.getNodeIndexAt(mousePos)
+                        let nodesAtClick = this.inputHandler.graphView.getNodesAt(mousePos)
                         if(nodesAtClick.length > 0)
                         {
                             firstNode = nodesAtClick[0]
@@ -106,7 +106,7 @@ export class Requirement {
                         this.inputHandler.canvas.removeEventListener("mousemove", mouseMoveHandler)
 
                         let mousePos = this.inputHandler.getMousePos(this.inputHandler.canvas, event)
-                        let nodesAtClick = this.inputHandler.graphView.getNodeIndexAt(mousePos)
+                        let nodesAtClick = this.inputHandler.graphView.getNodesAt(mousePos)
                         // Verificando se a criação da aresta é válida
                         if(nodesAtClick.length > 0
                             && nodesAtClick[0] !== firstNode

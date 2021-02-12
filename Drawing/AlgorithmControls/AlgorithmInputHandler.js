@@ -106,6 +106,10 @@ export default class AlgorithmInputHandler {
                 break
             case ' ':
                 this._controller.playing = !this._controller.playing
+                break;
+            case 'Escape':
+                this._controller.finish();
+                break;
         }
     }
 
