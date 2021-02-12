@@ -40,11 +40,16 @@ exportTextButton.onclick = function () {
 
 // Link
 let exportLinkButton = document.getElementById("exportLink")
-exportLinkButton.onclick = function () {
-    let shareLink = window.location.protocol + "//" + window.location.host
-                    + window.location.pathname
-                    + "?graph=" + g.structure.serialize();
-    history.pushState(null, null, shareLink)
+exportLinkButton.onclick = function (mouseEvent) {
+    let serializedGraph = g.structure.serialize();
+    let shareLink = window.location.protocol + "//"
+                    + window.location.host + window.location.pathname
+                    + "?graph=" + serializedGraph;
+    if (mouseEvent.button == 0) {
+        history.pushState(null, null, shareLink);
+    } else {
+        console.log(serializedGraph);
+    }
 }
 
 let exportImageButton = document.getElementById("exportImage")
