@@ -16,6 +16,11 @@ canvas.height = window.innerHeight*0.95;
 export var ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
 
+export const nodeColorList = [
+    "#32CD32",
+    "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
+]
+
 export const Tool = {
     MOVE: "move",
     CONNECT: "connect",
@@ -30,3 +35,35 @@ export const HighFPSFeature = {
     BLINKING: "blinking",
     NODE_HIGHLIGHT: "node_highlight"
 }
+
+export const GraphCategory = {
+    WEIGHTED_EDGES: "weighted_edges",
+    COLORED_EDGES: "colored_edges",
+    DIRECTED_EDGES: "directed_edges"
+}
+// console.log("abcde")
+
+
+// class Original {
+//     originalMethod() {
+//         console.log("original")
+//     }
+// }
+
+// function newClass() {
+//     return class Sub extends Original {
+//         subMethod() {
+//             console.log("sub2")
+//         }
+//     }
+// }
+//
+// let og = new Original()
+// og.originalMethod()
+//
+// let type = newClass()
+// let sub = new type()
+// // let sub = new Sub()
+// sub.subMethod()
+// sub.originalMethod()
+// console.log(sub instanceof Sub)

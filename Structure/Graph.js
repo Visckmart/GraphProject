@@ -1,15 +1,17 @@
+import { GraphCategory, resetColorRotation } from "../Drawing/General.js";
+
+import Node from "./Node.js";
+
 import Edge from "./Edge.js";
 import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
-import {Node} from "./Node.js";
-import {resetColorRotation} from "../Drawing/General.js";
-import {HighlightType} from "./Highlights.js";
 import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
-// import {weightedEdgesCheckbox} from "../Drawing/Interaction.js";
+
 
 class Graph {
     constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
         this.data = data
         this.debug = false
+        this.categories = new Set();
 
         // Guardando construtores de elementos do grafo
         this.EdgeConstructor = EdgeConstructor
@@ -24,26 +26,14 @@ class Graph {
         }
     }
 
-    // static getConstructorsFromCategories(categories) {
-    //     let EdgeType = Edge;
-    //     if(categories.weightedEdges) {
-    //         EdgeType = EdgeAssignedValueMixin(EdgeType);
-    //     }
-    //     if(colored) {
-    //         //TODO: Mixin de edge colorido
-    //     }
-    //     if(directed) {
-    //         //TODO: Mixin de edge direcionado
-    //     }
-    //     return { NodeType: Node, EdgeType: EdgeType };
-    // }
     getCategories() {
         return {
-            weightedEdges: this.EdgeConstructor != Edge,
-            coloredEdges:  false,
-            directedEdges: false
+            weightedEdges: this.categories.has(GraphCategory.WEIGHTED_EDGES),
+            coloredEdges:  this.categories.has(GraphCategory.COLORED_EDGES),
+            directedEdges: this.categories.has(GraphCategory.DIRECTED_EDGES)
         }
     }
+
     //region Manipulação do Grafo
 
     // Inserção
@@ -226,12 +216,16 @@ class Graph {
     static deserialize(string, clone = false) {
         resetColorRotation();
         let typeChar = string.charAt(0);
-        let edgeConstructor = typeChar == "W"
-            ? EdgeAssignedValueMixin(Edge)
-            : Edge
+        let edgeConstructor = Edge;
+        if (typeChar == "W") {
+            edgeConstructor = EdgeAssignedValueMixin(Edge)
+        }
         // console.log(edgeConstructor)
         let graph = new this({ EdgeConstructor: edgeConstructor });
         graph.debug = !clone;
+        if (typeChar == "W") {
+            graph.categories.add(GraphCategory.WEIGHTED_EDGES);
+        }
 
         let [serializedNodes, serializedEdges] = string.split("~")
         let deserializedNodes = []

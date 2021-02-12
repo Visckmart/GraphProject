@@ -1,19 +1,20 @@
-import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { ctx } from "../Drawing/General.js";
+
 import { backgroundGradient } from "./Utilities.js";
+import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
+
 import { deserializeEdge } from "./EdgeSerialization.js";
-// import {serializeAssignedValueEdge} from "./Mixins/Edge/EdgeAssignedValueMixin.js";
 
 export default class Edge {
     constructor({ label, highlights = null } = {}) {
         this.label = label ?? String.fromCharCode(Math.floor(Math.random()*26)+65);
         this.highlights = new HighlightsHandler(highlights);
 
-        // Instanciando cadeia de responsabilidade
-        this.drawChain = new ResponsibilityChain()
-        this.drawChain.addLink(this.drawProcedure)
-        this.draw = this.drawChain.call.bind(this.drawChain)
+        // Instanciando cadeias de responsabilidade
+        this.drawChain = new ResponsibilityChain();
+        this.drawChain.addLink(this.drawProcedure);
+        this.draw = this.drawChain.call.bind(this.drawChain);
 
         this.serializationChain = new ResponsibilityChain();
         this.serializationChain.addLink(this.serializeEdge.bind(this));

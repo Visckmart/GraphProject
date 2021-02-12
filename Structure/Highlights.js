@@ -9,7 +9,10 @@ export const HighlightType = {
     FEATURE_PREVIEW:      "feature_preview"
 }
 
-const highlightNames = Object.entries(HighlightType).map(entry => entry[1]).flat()
+const highlightNames = Object.entries(HighlightType)
+                        .map(entry => entry[1])
+                        .flat()
+
 const filteredOutHighlights = [
     HighlightType.SELECTION,
 ]
@@ -62,7 +65,6 @@ export class HighlightsHandler {
 
     static deserialize(serializedHighlights) {
         // console.log("Deserializing", serializedHighlights.length, serializedHighlights, serializedHighlights, serializedHighlights.split("_"));
-        // console.log("adasdas")
         if (serializedHighlights == null || serializedHighlights.length <= 0) {
             return null;
         }

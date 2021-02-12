@@ -1,5 +1,6 @@
 import { Tool } from "./General.js";
-import { Node } from "../Structure/Node.js";
+
+import Node from "../Structure/Node.js";
 import Edge from "../Structure/Edge.js";
 
 /* Tolerância para iniciar a seleção múltipla */
@@ -15,6 +16,8 @@ export default class GraphSelection {
         nodes: [],
         edges: []
     }
+
+    //region Manipulação da Seleção
 
     /**
      * O modo additionOnly faz com que a inversão de seleção só adicione,
@@ -55,7 +58,6 @@ export default class GraphSelection {
         this.refreshMenu();
     }
 
-    //region Add and Remove Selection Methods
     select(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
@@ -155,8 +157,6 @@ export default class GraphSelection {
     }
     //endregion
 
-
-
     //region Área de Seleção
 
     selectionArea = {
@@ -238,7 +238,7 @@ export default class GraphSelection {
 
     //endregion
 
-
+    // Atualizando a interface
 
     refreshMenu() {
         let numberOfSelectedNodes = this.selected.nodes.length

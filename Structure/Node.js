@@ -1,18 +1,17 @@
 // Node Definition
-import { canvas, ctx, getColorRotation} from "../Drawing/General.js";
+import {canvas, ctx, getColorRotation, nodeColorList} from "../Drawing/General.js";
+
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLabel, backgroundGradient, positionAlphabet, colorFromComponents } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
+import { deserializeNode, serializeNode } from "./NodeSerialization.js";
+
 const regularNodeRadius = 28;
-const nodeColorList = [
-    "#32CD32",
-    "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
-]
 
 let globalNodeIndex = 0
 
-export class Node {
+export default class Node {
 
     constructor({x, y, label, index = null, oColor = null, highlights = null}) {
 
@@ -34,22 +33,15 @@ export class Node {
         
         this.highlights = new HighlightsHandler(highlights)
         globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
-
-        // let roun = 5
-        // let m = ctx.measureText("1")
-        // let width = m.width + 10
-        // let height = 20
-        // this.s = `
-        // l${width-roun},0     q${roun},0  ${roun},${roun}
-        // l0,${height-roun}    q0,${roun}  -${roun},${roun}
-        // l-${width-roun},0    q-${roun},0 -${roun},-${roun}
-        // l0,-${height-roun}   q0,-${roun} ${roun},-${roun}`
         
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
 
         // Adicionando procedure de draw
         this.drawChain.addLink(this.drawProcedure)
+
+        this.serializationChain = new ResponsibilityChain();
+        this.serializationChain.addLink(serializeNode.bind(this));
     }
 
     // Lista de argumentos para clonagem
@@ -242,69 +234,14 @@ export class Node {
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
 
+    // Serialização
     serialize() {
-        // Colors
-        let serializedColors;
-        let indexOfColor = nodeColorList.indexOf(this._originalcolor)
-        if (indexOfColor) {
-            serializedColors = this._originalcolor.slice(1)
-        } else {
-            serializedColors = indexOfColor;
-        }
-        
-        // Position
-        let percX = Math.round((this.pos.x / canvas.width)*61);
-        let percY = Math.round((this.pos.y / canvas.height)*61);
-        let serializedPosition = `${positionAlphabet[percX]}${positionAlphabet[percY]}`
-
-        // Highlights
-        let serializedHighlights = this.highlights.prepareForSharing()
-        if (serializedHighlights) {
-            serializedHighlights = "-" + serializedHighlights
-        }
-        
-        return `${this.index}-${serializedColors}-${this.label}${serializedPosition}${serializedHighlights}`
+        let serialized = this.serializationChain.call();
+        serialized = serialized.join("");
+        return serialized;
     }
 
-    static deserialize(serializedNode) {
-        const nodeSerializationFormat = /(\d+)-(.+?)-(.+)?/i;
-        let matchResult = serializedNode.match(nodeSerializationFormat);
-        // console.log(serializedNode, matchResult)
-        if (!matchResult) return;
-        let [, index, serializedColor, moreInfo] = matchResult;
-        index = parseInt(index)
-        // console.log("index", index)
-        
-        let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
-        if (!colorMatchResult) return;
-        let [, customColor, colorIndex] = colorMatchResult;
-        let color = customColor ?? nodeColorList[colorIndex % nodeColorList.length];
-        // console.log("color", color)
-
-        const moreInfoFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))(-(?<highlights>.+))?/i
-        let moreInfoResult = moreInfo.match(moreInfoFormat);
-        if (!moreInfoResult) return;
-
-        let label = moreInfoResult.groups.label
-        let serializedPos = moreInfoResult.groups.pos
-        let serializedHighlights = moreInfoResult.groups.highlights
-        // console.log("label", label)
-        // console.log("pos", serializedPos)
-        let highlights;
-        if (serializedHighlights != null) {
-            highlights = HighlightsHandler.deserialize(serializedHighlights)
-        }
-
-        let xPos = positionAlphabet.indexOf(serializedPos.charAt(0))
-        let yPos = positionAlphabet.indexOf(serializedPos.charAt(1))
-        if (xPos == null || yPos == null) return;
-        xPos *= canvas.width/61;
-        yPos *= canvas.height/61;
-
-        return new Node({
-            x: xPos, y: yPos, label, index, color, highlights
-        });
-    }
+    static deserialize(...arg) { return deserializeNode(...arg) };
 
     // Clona o nó a partir da instância atual
     clone() {
