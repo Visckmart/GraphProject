@@ -4,12 +4,14 @@ import {positionAlphabet} from "./Utilities.js";
 import Node from "./Node.js"
 
 
+//region Position Encoding
 function encodePosition(relativeX, relativeY, alphabet = positionAlphabet) {
     const alphabetSize = alphabet.length - 1;
     let indexX = Math.round(relativeX * alphabetSize);
     let indexY = Math.round(relativeY * alphabetSize);
     return [alphabet[indexX], alphabet[indexY]];
 }
+
 function decodePosition(serializedPos, alphabet = positionAlphabet) {
     const alphabetSize = alphabet.length - 1;
     let indexX = alphabet.indexOf(serializedPos.charAt(0));
@@ -19,6 +21,8 @@ function decodePosition(serializedPos, alphabet = positionAlphabet) {
     let relativeY = indexY/alphabetSize;
     return [relativeX, relativeY];
 }
+//endregion
+
 export function serializeNode() {
     // Colors
     // Se for escolhida automaticamente, serialize o índice,

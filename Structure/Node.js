@@ -72,8 +72,7 @@ export default class Node {
         return regularNodeRadius + expansion;
     }
 
-
-    // DRAWING
+    //region Drawing
     _drawChain = []
     addDrawProcedure(procedure) {
         this._drawChain.push(procedure)

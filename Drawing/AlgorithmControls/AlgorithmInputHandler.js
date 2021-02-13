@@ -70,7 +70,7 @@ export default class AlgorithmInputHandler {
     // Funções helpers
     // TODO: Copiada do GraphMouseInteraction, talvez valha a pena achar um jeito de compartilhar o código entre eles
     getMousePos(canvas, mouseEvent) {
-        var canvasRect = canvas.getBoundingClientRect();
+        let canvasRect = canvas.getBoundingClientRect();
         return {
             x: mouseEvent.clientX - canvasRect.left,
             y: mouseEvent.clientY - canvasRect.top

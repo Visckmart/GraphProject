@@ -11,7 +11,7 @@ class GraphMouseHandler {
     }
 
     getMousePos(mouseEvent) {
-        var canvasRect = this.graphView.canvas.getBoundingClientRect();
+        let canvasRect = this.graphView.canvas.getBoundingClientRect();
         return {
             x: mouseEvent.clientX - canvasRect.left,
             y: mouseEvent.clientY - canvasRect.top

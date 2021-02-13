@@ -1,10 +1,11 @@
 import { ctx } from "../Drawing/General.js";
 
+import { serializeEdge, deserializeEdge } from "./EdgeSerialization.js";
+
+import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 import { backgroundGradient, generateNewRandomLabel } from "./Utilities.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
-import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
-import { deserializeEdge } from "./EdgeSerialization.js";
 
 export default class Edge {
     constructor({ label, highlights = null } = {}) {
@@ -18,7 +19,7 @@ export default class Edge {
         this.draw = this.drawChain.call.bind(this.drawChain);
 
         this.serializationChain = new ResponsibilityChain();
-        this.serializationChain.addLink(this.serializeEdge.bind(this));
+        this.serializationChain.addLink(serializeEdge.bind(this));
     }
 
     get _args() {
@@ -185,10 +186,6 @@ export default class Edge {
         let serialized = this.serializationChain.call();
         serialized = serialized.join("");
         return serialized;
-    }
-
-    serializeEdge() {
-        return this.label;
     }
 
     static deserialize(...arg) { return deserializeEdge(...arg) };

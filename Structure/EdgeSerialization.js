@@ -1,14 +1,14 @@
 import {HighlightsHandler} from "./Highlights.js";
 import Edge from "./Edge.js";
 
-// export function serializeEdge() {
-//     let serializedHighlights = this.highlights.prepareForSharing()
-//     if (serializedHighlights) {
-//         serializedHighlights = "-" + serializedHighlights
-//     }
-//     // console.log("s", serializedHighlights)
-//     return `${this.label}${serializedHighlights}`
-// }
+export function serializeEdge() {
+    let serializedHighlights = this.highlights.prepareForSharing()
+    if (serializedHighlights) {
+        serializedHighlights = "-" + serializedHighlights
+    }
+    // console.log("s", serializedHighlights)
+    return `${this.label}${serializedHighlights}`
+}
 
 export function deserializeEdge(serializedEdge, partially = false) {
     const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
