@@ -60,7 +60,9 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = true;
         }
         if (metaPressed) {
-            this.lastToolChoice = this.graphView.primaryTool;
+            if (this.lastToolChoice == null) {
+                this.lastToolChoice = this.graphView.primaryTool;
+            }
             this.graphView.primaryTool = Tool.CONNECT;
         }
 
