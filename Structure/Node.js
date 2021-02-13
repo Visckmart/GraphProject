@@ -235,6 +235,7 @@ export default class Node {
         }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
+    //endregion
 
 
     //region Serialização

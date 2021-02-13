@@ -7,19 +7,47 @@
 }
 
 body {
+  display: flex;
+
   font-family: Helvetica Neue, sans-serif;
-  overflow: hidden;
+  /*overflow: hidden;*/
   box-sizing: border-box;
   margin-top: 10pt;
   margin-left: 0pt;
   margin-right: 0pt;
 }
-.settingsSection {
-  color: #444;
-  margin-bottom: 0;
-  padding-bottom: 8pt;
-  border-bottom: 1pt solid gray;
-  /*background-color: white;*/
+
+
+/*region Canvas*/
+canvas {
+  border-radius: 10pt 0 0 10pt;
+  background: linear-gradient(to right, #E5E0FF, #FFE0F3);
+  transition: 0.1s;
+}
+.canvasArea {
+  position: relative;
+  overflow: hidden;
+}
+.canvasContainer {
+  margin-left: 10pt;
+}
+/*endregion*/
+
+/*region Menu*/
+.menuArea {
+  flex-grow: 1;
+  /*overflow: hidden;*/
+  margin-right: 10pt;
+  padding-left: 15pt;
+  padding-right: 15pt;
+  /*width: calc(20% - 30pt);*/
+  background: linear-gradient(to right, #EBEBEB, #D9D9D9);
+  border-radius: 0pt 10pt 10pt 0pt;
+  border-left: 2pt solid darkgray;
+}
+#settingsContainer {
+  /*background-color: red;*/
+  overflow: scroll;
 }
 #GraphSettings {
   margin-top: 10pt;
@@ -31,6 +59,14 @@ body {
   margin-top: 0;
   margin-bottom: 0;
 }
+
+.settingsSection {
+  color: #444;
+  margin-bottom: 0;
+  padding-bottom: 8pt;
+  border-bottom: 1pt solid gray;
+  /*background-color: white;*/
+}
 .settingsSection:last-of-type {
   padding-bottom: 0;
   border-bottom: none;
@@ -39,14 +75,6 @@ body {
   margin-top: 0;
   padding-top: 0;
 }*/
-
-.sectionTitle {
-  font-size: 13pt;
-  /*background-color: red;*/
-  margin-top: 4pt;
-  margin-bottom: 2pt;
-  margin-left: 2pt;
-}
 .settingsSection > h5 {
   font-size: 11pt;
   margin-top: 4pt;
@@ -67,35 +95,20 @@ body {
 }
 
 .settingsSection > select, .settingsSection > select {
+  width: 150pt;
   font-size: 12pt;
   /*background-color: red;*/
 }
+
+.sectionTitle {
+  font-size: 13pt;
+  /*background-color: red;*/
+  margin-top: 4pt;
+  margin-bottom: 2pt;
+  margin-left: 2pt;
+}
+/*endregion*/
 /*button {
   margin-top: 4pt;
 }*/
 
-canvas {
-  border-radius: 10pt 0pt 0pt 10pt;
-  background: linear-gradient(to right, #E5E0FF, #FFE0F3);
-  transition: 0.1s;
-  
-}
-.canvasArea {
-  display: flex;
-  position: relative;
-  overflow: hidden;
-}
-.canvasContainer {
-  margin-left: 10pt;
-}
-
-
-.menuArea {
-  flex-grow: 1;
-  margin-right: 10pt;
-  padding-left: 15pt;
-  padding-right: 15pt;
-  background: linear-gradient(to right, #EBEBEB, #D9D9D9);
-  border-radius: 0pt 10pt 10pt 0pt;
-  border-left: 2pt solid darkgray;
-}
