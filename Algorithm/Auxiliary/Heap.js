@@ -57,7 +57,7 @@ class Heap {
         let index = this._elementMap.get(element)
         if(this._heap[index]?.element === element)
         {
-            let isNewValueBetter = this._compare(value, this._heap[index].value)
+            let isNewValueBetter = this._compare(this._heap[index].value, value)
             this._heap[index].value = value
 
             if(isNewValueBetter) {
@@ -66,6 +66,7 @@ class Heap {
                 this._siftDown(index)
             }
         }
+        console.log(this._heap.map(h => h))
     }
 
     _parentIndex(index) {
