@@ -183,7 +183,7 @@ export default class Edge {
 
     //region Serialização
 
-    serialize = serializeEdge;
+    serialize() { return serializeEdge.bind(this)(); }
     static deserialize(...arg) { return deserializeEdge(...arg) };
 
     //endregion
