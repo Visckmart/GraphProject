@@ -178,7 +178,12 @@ class GraphMouseHandler {
             let releasedOverNode = this.graphView.getNodesAt(pos).pop()
                                 ?? this.graphView.insertNewNodeAt(pos);
 
-            this.graphView.insertEdgeBetween(this.clickedNode, releasedOverNode);
+            let insertedEdge = this.graphView.insertEdgeBetween(this.clickedNode,
+                                                                releasedOverNode);
+            if (insertedEdge) {
+                this.selection.clear();
+                this.selection.select(insertedEdge)
+            }
             // Pare de atualizar a aresta temporária
             this.shouldDrawTemporaryEdge = false;
             break;

@@ -59,6 +59,7 @@ class Graph {
         // Operação
         this.data.get(nodeA).set(nodeB, edge)
         this.data.get(nodeB).set(nodeA, edge)
+        return edge;
     }
 
     // Inserindo edge específico

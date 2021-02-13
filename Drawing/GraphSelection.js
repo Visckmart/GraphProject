@@ -62,16 +62,18 @@ export default class GraphSelection {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
             if (nodeIndex == -1) {
-                this.selected.nodes.push(nodeIndex, 1);
+                this.selected.nodes.push(element);
             }
         } else if (element instanceof Edge) { // Caso seja uma aresta
-            let edgeIndex = this.selected.nodes.indexOf(element);
+            let edgeIndex = this.selected.edges.indexOf(element);
             if (edgeIndex == -1) {
-                this.selected.edges.push(edgeIndex, 1);
+                this.selected.edges.push(element);
             }
         } else { // Se não é nem um nó, nem uma aresta, algo de errado aconteceu
             console.error(`Remoção de seleção chamada para ${element}.`);
         }
+        this.graphView.selectionChanged();
+        this.refreshMenu();
     }
 
     selectMultiple(elements) {
@@ -80,7 +82,7 @@ export default class GraphSelection {
         this.registerNodePositions();
         this.graphView.selectionChanged();
     }
-
+    // TODO: Consertar baseado nos bugs da função de selecionar
     deselect(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);

@@ -273,7 +273,7 @@ class GraphView {
     }
 
     insertEdgeBetween(nodeA, nodeB) {
-        this.structure.insertEdgeBetween(nodeA, nodeB)
+        return this.structure.insertEdgeBetween(nodeA, nodeB);
     }
 
     removeNodeAt(pos) {
