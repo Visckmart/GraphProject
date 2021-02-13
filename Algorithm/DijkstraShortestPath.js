@@ -2,6 +2,7 @@ import { HighlightType } from "../Structure/Highlights.js"
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 import Edge from "../Structure/Edge.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
+import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 
 function markAsActive(artifact) {
     artifact.highlights.add(HighlightType.LIGHTEN)
@@ -26,17 +27,8 @@ function markAsVisiting(artifact) {
 
 export default async function DijkstraShortestPath(controller) {
     let initialNode
-
-    // Pegando o primeiro nó para gerar a classe baseado no seu construtor
-    let node = controller.graphView.structure.nodes().next().value
-    // Se esse nó não tem valor assinalado transforma o grafo para um com nós com valor assinalado
-    if(!node.assignedValue)
-    {
-        // Recriando o grafo agora com nós com valor assinalado
-        controller.graphView.structure =
-            controller.graphView.structure.cloneAndTransform({NodeConstructor: NodeAssignedValueMixin(node.constructor)})
-        controller.graphView.redrawGraph()
-    }
+    /* Esse algoritmo usa nós com assignedValue para visualização */
+    controller.graphView.structure = cloneTransformNodes(controller.graphView.structure, NodeAssignedValueMixin)
 
     // Capturando nó inicial
     controller.addRequirement(RequirementType.SELECT_NODE,
