@@ -7,17 +7,17 @@ class Heap {
     }
 
     insert(element, value) {
-        this._heap[this._heapSize - 1]({element, value})
+        this._heap[this._heapSize] = {element, value}
         this._heapSize++
 
         this._elementMap.set(element, this._heapSize - 1)
 
-        this._siftUp(this._heap.length - 1)
+        this._siftUp(this._heapSize - 1)
     }
 
     remove() {
         // Retorna null caso não haja nenhum elemento no heap
-        if(this._heap.length === 0) {
+        if(this._heapSize === 0) {
             return null
         }
 
@@ -25,9 +25,9 @@ class Heap {
         let returnValue = this._heap[0]
 
         // Mais de um elemento no heap
-        if(this._heap.length > 1) {
-            this._heap[0] = this._heap[this._heap.length - 1]
-            this._heap[this._heap.length - 1] = null
+        if(this._heapSize > 1) {
+            this._heap[0] = this._heap[this._heapSize - 1]
+            this._heap[this._heapSize - 1] = null
             this._siftDown(0)
         } else {
             this._heap[0] = null
@@ -66,25 +66,13 @@ class Heap {
             let bestIndex = this._compare(this._heap[2*index + 1].value, this._heap[2*index + 2].value) ? 2*index + 1 : 2*index + 2
             // Se index não é melhor que a menor criança troca eles de lugar
             if(!this._compare(this._heap[index], this._heap[bestIndex])) {
-                let temp = this._heap[index]
-                this._heap[index] = this._heap[bestIndex]
-                this._heap[bestIndex] = temp
-
-                // Atualizando mapa
-                this._elementMap.set(this._heap[index].element, index)
-                this._elementMap.set(this._heap[bestIndex].element, bestIndex)
+                this._switchIndexes(index, bestIndex)
 
                 this._siftDown(bestIndex)
             }
         } else if(this._heapSize > 2 * index + 1) {
             if(!this._compare(this._heap[index].value, this._heap[2 * index + 1].value)) {
-                let temp = this._heap[index]
-                this._heap[index] = this._heap[2 * index + 1]
-                this._heap[2 * index + 1] = temp
-
-                // Atualizando mapa
-                this._elementMap.set(this._heap[index].element, index)
-                this._elementMap.set(this._heap[2 * index + 1].element, 2 * index + 1)
+                this._switchIndexes(index, 2 * index + 1)
             }
         }
     }
@@ -93,16 +81,9 @@ class Heap {
         if(index === 0) {
             return
         }
-
         let parentIndex = this._parentIndex(index)
         if(!this._compare(this._heap[index].value, this._heap[parentIndex].value)) {
-            let temp = this._heap[index]
-            this._heap[index] = this._heap[parentIndex]
-            this._heap[parentIndex] = temp
-
-            // Atualizando mapa
-            this._elementMap.set(this._heap[index].element, index)
-            this._elementMap.set(this._heap[parentIndex].element, parentIndex)
+            this._switchIndexes(index, parentIndex)
 
             this._siftUp(parentIndex)
         }
@@ -110,6 +91,17 @@ class Heap {
 
     _compare(value1, value2) {
         console.warn("HEAP GENÉRICO NÃO IMPLEMENTA COMPARAÇÃO")
+    }
+
+
+    _switchIndexes(index1, index2) {
+        let temp = this._heap[index1]
+        this._heap[index1] = this._heap[index2]
+        this._heap[index2] = temp
+
+        // Atualizando mapa
+        this._elementMap.set(this._heap[index1].element, index1)
+        this._elementMap.set(this._heap[index2].element, index2)
     }
 
 }
