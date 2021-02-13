@@ -17,9 +17,9 @@ export var ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
 
 let ma = document.getElementsByClassName("menuArea")[0];
-// console.log(ma)
 ma.style.width = window.innerWidth*0.25;
 ma.style.height = canvas.height;
+
 export const nodeColorList = [
     "#32CD32",
     "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"

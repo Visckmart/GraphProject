@@ -1,39 +1,53 @@
 import {Tool} from "./General.js";
 
+function getTargetElements(graphView) {
+    let targetNodes;
+    let selectedNodes = graphView.selectionHandler.selected.nodes;
+    if (selectedNodes.length > 0) {
+        targetNodes = selectedNodes;
+    } else {
+        targetNodes = Array.from(graphView.structure.nodes());
+    }
+
+    let targetEdges;
+    let selectedEdges = graphView.selectionHandler.selected.edges;
+    if (selectedEdges.length > 0) {
+        targetEdges = selectedEdges;
+    } else {
+        targetEdges = Array.from(graphView.structure.uniqueEdges())
+                            .map(edgeInfo => edgeInfo[0]);
+    }
+    return [targetNodes, targetEdges];
+}
+
 export default {
     [Tool.CONNECT_ALL]: function () {
-        let nodesToConnect;
-        if (this.selectionHandler.selected.nodes.length > 0) {
-            nodesToConnect = this.selectionHandler.selected.nodes;
-        }
+        let [targetNodes,] = getTargetElements(this);
 
-        for (let node of (nodesToConnect || this.structure.nodes())) {
-            for (let innerNode of (nodesToConnect || this.structure.nodes())) {
+        for (let node of targetNodes) {
+            for (let innerNode of targetNodes) {
                 this.insertEdgeBetween(node, innerNode)
             }
         }
     },
     [Tool.DISCONNECT_ALL]: function () {
-        let nodesToDisconnect;
-        if (this.selectionHandler.selected.nodes.length > 0) {
-            nodesToDisconnect = this.selectionHandler.selected.nodes;
-        } else {
-            nodesToDisconnect = Array.from(this.structure.nodes());
-        }
-        console.group("Desconectar " + nodesToDisconnect.length + " nós")
-        for (let node of nodesToDisconnect) {
+        let [targetNodes,] = getTargetElements(this);
+
+        console.group("Desconectar " + targetNodes.length + " nós")
+        for (let node of targetNodes) {
             this.structure.removeAllEdgesFromNode(node)
         }
         console.groupEnd()
     },
 
     [Tool.DELETE_ALL]: function () {
-        for (let node of this.selectionHandler.selected.nodes) {
-            this.structure.removeNode(node)
+        let [targetNodes, targetEdges] = getTargetElements(this);
+        for (let edge of targetEdges) {
+            this.structure.removeEdge(edge);
         }
-        for (let edge of this.selectionHandler.selected.edges) {
-            this.structure.removeEdge(edge)
+        for (let node of targetNodes) {
+            this.structure.removeNode(node);
         }
-        this.selectionHandler.clear()
+        this.selectionHandler.clear();
     }
 }

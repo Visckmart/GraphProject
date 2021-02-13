@@ -96,6 +96,7 @@ canvas {
 
 .settingsSection > select, .settingsSection > select {
   width: 150pt;
+  margin-left: 2pt;
   font-size: 12pt;
   /*background-color: red;*/
 }
