@@ -44,20 +44,41 @@ for (let loadFavBtn of loadFavButtons) {
     loadFavBtn.onclick = loadFavorite
 }
 
-//DEBUG
+export let categoryCheckboxes = {
+    weightedEdges: document.getElementById('weighedEdges'),
+    coloredEdges:  document.getElementById('coloredEdges'),
+    directedEdges: document.getElementById('directedEdges')
+}
+let algorithmSelector = document.getElementById("algorithm")
+algorithmSelector.onchange = function () {
+    switch (this.value) {
+    case 'Dijkstra':
+    default:
+        categoryCheckboxes.weightedEdges.disabled = false;
+        categoryCheckboxes.coloredEdges.disabled = false;
+        categoryCheckboxes.directedEdges.disabled = false;
+        break
+    case 'PrimMST':
+        categoryCheckboxes.weightedEdges.disabled = true;
+        categoryCheckboxes.weightedEdges.checked = true;
+        categoryCheckboxes.coloredEdges.disabled = false;
+        categoryCheckboxes.directedEdges.disabled = false;
+        break
+    }
+    updateEdge()
+}
 let runAlgorithmButton = document.getElementById("run_algorithm")
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
 
-    switch (document.getElementById("algorithm").value)
-    {
-        case 'Dijkstra':
-        default:
-            await algorithmController.setup(DijkstraShortestPath)
-            break
-        case 'PrimMST':
-            await  algorithmController.setup(PrimMST)
-            break
+    switch (algorithmSelector.value) {
+    case 'Dijkstra':
+    default:
+        await algorithmController.setup(DijkstraShortestPath)
+        break
+    case 'PrimMST':
+        await  algorithmController.setup(PrimMST)
+        break
     }
 }
 
@@ -94,11 +115,6 @@ document.body.onblur = function() {
     g.refreshInterfaceState()
 }
 
-export let categoryCheckboxes = {
-    weightedEdges: document.getElementById('weighedEdges'),
-    coloredEdges:  document.getElementById('coloredEdges'),
-    directedEdges: document.getElementById('directedEdges')
-}
 function updateEdge() {
     g.updateEdgeType(
         categoryCheckboxes.weightedEdges.checked,

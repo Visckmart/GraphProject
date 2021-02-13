@@ -171,9 +171,8 @@ class GraphMouseHandler {
         // A ferramenta CONNECT for a escolhida
         case Tool.CONNECT: {
             // Se o clique não foi feito em um nó, então pare.
-            if (this.clickedNode == null) {
-                break;
-            }
+            if (this.clickedNode == null) { break; }
+
             // Nó abaixo do ponteiro do mouse atualmente
             let releasedOverNode = this.graphView.getNodesAt(pos).pop()
                                 ?? this.graphView.insertNewNodeAt(pos);

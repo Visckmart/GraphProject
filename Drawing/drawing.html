@@ -131,10 +131,16 @@
                     <h5 class="sectionTitle">Algoritmo</h5>
                     <select id="algorithm">
                         <option value="none">Nenhum</option>
-                        <option value="BFS" disabled>Breadth-First Search</option>
-                        <option value="DFS" disabled>Depth-First Search</option>
-                        <option value="Dijkstra" selected>Shortest Path (Dijkstra)</option>
-                        <option value="PrimMST">Árvore mínima com Algoritmo de Prim</option>
+                        <optgroup label="Busca">
+                            <option value="BFS" disabled>Busca em Largura</option>
+                            <option value="DFS" disabled>Busca em Profundidade</option>
+                        </optgroup>
+                        <optgroup label="Menor Caminho">
+                            <option value="Dijkstra" selected>Dijkstra (Menor Caminho)</option>
+                        </optgroup>
+                        <optgroup label="Árvore Geradora Mínima">
+                            <option value="PrimMST">Prim (Árvore Geradora Mínima)</option>
+                        </optgroup>
                     </select>
                     <button id="run_algorithm">Run</button>
                     <br>
