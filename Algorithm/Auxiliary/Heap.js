@@ -66,7 +66,6 @@ class Heap {
                 this._siftDown(index)
             }
         }
-        console.log(this._heap.map(h => h))
     }
 
     _parentIndex(index) {
@@ -76,7 +75,7 @@ class Heap {
     _siftDown(index) {
         if(this._heapSize > 2 * index + 2)
         {
-            let bestIndex = this._compare(this._heap[2*index + 1].value, this._heap[2*index + 2].value) ? 2*index + 1 : 2*index + 2
+            let bestIndex = this._compare(this._heap[2*index + 1].value, this._heap[2*index + 2].value) ? 2*index + 2 : 2*index + 1
             // Se index não é melhor que a menor criança troca eles de lugar
             if(!this._compare(this._heap[index], this._heap[bestIndex])) {
                 this._switchIndexes(index, bestIndex)
