@@ -21,7 +21,7 @@ class Heap {
             return null
         }
 
-        let returnValue = this._heap[0]
+        let returnValue = this._heap[0].element
 
         // Mais de um elemento no heap
         if(this._heapSize > 1) {
@@ -33,11 +33,13 @@ class Heap {
             this._heap[0] = null
             this._heapSize--
         }
+
+        this._elementMap.delete(returnValue)
         return returnValue
     }
 
     peek() {
-        return this._heap[0]
+        return this._heap[0].element
     }
 
     clear() {
@@ -47,13 +49,16 @@ class Heap {
 
     changeValue(element, value) {
         let index = this._elementMap.get(element)
-        let isNewValueBetter = this._compare(value, this._heap[index].value)
-        this._heap[index].value = value
+        if(this._heap[index] === element)
+        {
+            let isNewValueBetter = this._compare(value, this._heap[index].value)
+            this._heap[index].value = value
 
-        if(isNewValueBetter) {
-            this._siftUp(index)
-        } else {
-            this._siftDown(index)
+            if(isNewValueBetter) {
+                this._siftUp(index)
+            } else {
+                this._siftDown(index)
+            }
         }
     }
 
