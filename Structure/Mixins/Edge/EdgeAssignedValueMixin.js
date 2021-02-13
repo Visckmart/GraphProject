@@ -1,6 +1,7 @@
 import { ctx } from "../../../Drawing/General.js";
 import Edge from "../../Edge.js";
 import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
+import {HighlightType} from "../../Highlights.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
     if (!(superclass instanceof Edge || superclass == Edge)) {
@@ -47,8 +48,16 @@ let EdgeAssignedValueMixin = (superclass) => {
 
             ctx.font = "bold 15pt Arial";
             ctx.fillStyle = "#444";
+            if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)
+            && this.highlights.length == 1) {
+                ctx.fillStyle = "#999"
+            }
             ctx.textAlign = "center";
-            ctx.fillText(this.assignedValue.toString(), 0, 0);
+
+            let text = this.assignedValue.toString()
+            if      (this.assignedValue == 6) { text = "6̲"; }
+            else if (this.assignedValue == 9) { text = "9̲"; }
+            ctx.fillText(text, 0, 0);
             ctx.restore()
         }
 

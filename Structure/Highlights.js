@@ -44,6 +44,9 @@ export class HighlightsHandler {
         return this.highlights.has(highlight);
     }
 
+    get length() {
+        return this.highlights.size;
+    }
     *list() {
         for (let highlight of this.highlights) {
             yield highlight;
