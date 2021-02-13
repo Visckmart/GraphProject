@@ -21,16 +21,17 @@ class Heap {
             return null
         }
 
-        this._heapSize--
         let returnValue = this._heap[0]
 
         // Mais de um elemento no heap
         if(this._heapSize > 1) {
             this._heap[0] = this._heap[this._heapSize - 1]
             this._heap[this._heapSize - 1] = null
+            this._heapSize--
             this._siftDown(0)
         } else {
             this._heap[0] = null
+            this._heapSize--
         }
         return returnValue
     }
@@ -95,6 +96,9 @@ class Heap {
 
 
     _switchIndexes(index1, index2) {
+        // console.log('Index1:', this._heap[index1])
+        // console.log('Index2:', this._heap[index2])
+
         let temp = this._heap[index1]
         this._heap[index1] = this._heap[index2]
         this._heap[index2] = temp
