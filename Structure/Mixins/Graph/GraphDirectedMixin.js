@@ -2,6 +2,8 @@ let GraphDirectedMixin = (superclass) => {
     return class DirectedGraph extends  superclass {
         constructor(args) {
             super(args);
+
+            this.mixins.add(GraphDirectedMixin)
         }
 
         // Inserção

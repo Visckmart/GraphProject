@@ -16,6 +16,9 @@ class Graph {
         // Guardando construtores de elementos do grafo
         this.EdgeConstructor = EdgeConstructor
         this.NodeConstructor = NodeConstructor
+
+        // Lista de mixins
+        this.mixins = new Set()
     }
 
     get _args() {

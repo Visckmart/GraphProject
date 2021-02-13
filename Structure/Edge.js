@@ -20,6 +20,9 @@ export default class Edge {
 
         this.serializationChain = new ResponsibilityChain();
         this.serializationChain.addLink(serializeEdge.bind(this));
+
+        // Lista de mixins
+        this.mixins = new Set()
     }
 
     get _args() {

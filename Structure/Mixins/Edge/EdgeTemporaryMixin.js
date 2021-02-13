@@ -7,6 +7,8 @@ let EdgeTemporaryMixin = (superclass) => {
 
             this.drawChain.clearChain()
             this.drawChain.addBlockingLink(this.drawTemporaryEdge)
+
+            this.mixins.add(EdgeTemporaryMixin)
         }
 
         drawTemporaryEdge = ({ x: xStart, y: yStart },

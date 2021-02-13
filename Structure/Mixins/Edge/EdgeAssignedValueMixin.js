@@ -14,6 +14,8 @@ let EdgeAssignedValueMixin = (superclass) => {
 
             this.drawChain.addLink(this.drawText)
             this.serializationChain.addLink(serializeAssignedValue.bind(this))
+
+            this.mixins.add(EdgeAssignedValueMixin)
         }
 
         get _args() {

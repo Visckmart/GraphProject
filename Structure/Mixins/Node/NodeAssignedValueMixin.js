@@ -24,6 +24,8 @@ let NodeAssignedValueMixin = (superclass) => {
             this.assignedValue = assignedValue
 
             this.drawChain.addLink(this.drawAuxLabel)
+
+            this.mixins.add(NodeAssignedValueMixin)
         }
 
         get _args() {

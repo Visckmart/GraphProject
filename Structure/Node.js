@@ -42,6 +42,9 @@ export default class Node {
 
         this.serializationChain = new ResponsibilityChain();
         this.serializationChain.addLink(serializeNode.bind(this));
+
+        // Lista de mixins
+        this.mixins = new Set()
     }
 
     // Lista de argumentos para clonagem
