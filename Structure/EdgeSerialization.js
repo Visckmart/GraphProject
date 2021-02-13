@@ -1,6 +1,6 @@
-import {HighlightsHandler} from "./Highlights.js";
 import Edge from "./Edge.js";
 
+// Serialização de Arestas
 export function serializeEdge() {
     let serializedHighlights = this.highlights.prepareForSharing()
     if (serializedHighlights) {
@@ -34,6 +34,7 @@ export function deserializeEdge(serializedEdge, partially = false) {
     }
 }
 
+//region Assigned Value
 export function serializeAssignedValue() {
     return `-${this.assignedValue}`;
 }
@@ -41,3 +42,4 @@ export function serializeAssignedValue() {
 export function deserializeAssignedValue(serializedValue) {
     return { assignedValue: serializedValue ? parseInt(serializedValue) : -1 }
 }
+//endregion

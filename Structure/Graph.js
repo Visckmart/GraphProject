@@ -207,9 +207,10 @@ class Graph {
         return graphType + serializedNodes + "~" + serializedEdges;
     }
 
-    static deserialize(string, clone = false) {
+    static deserialize(serialized, clone = false) {
+        if (serialized.indexOf("~") < 0) { return; }
         resetColorRotation();
-        let typeChar = string.charAt(0);
+        let typeChar = serialized.charAt(0);
         let edgeConstructor = Edge;
         if (typeChar == "W") {
             edgeConstructor = EdgeAssignedValueMixin(Edge)
@@ -221,7 +222,7 @@ class Graph {
             graph.categories.add(GraphCategory.WEIGHTED_EDGES);
         }
 
-        let [serializedNodes, serializedEdges] = string.split("~")
+        let [serializedNodes, serializedEdges] = serialized.split("~")
         let deserializedNodes = []
         if (serializedNodes) {
             let serializedNodesList = serializedNodes.split(".")

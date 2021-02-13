@@ -70,11 +70,7 @@ class GraphView {
         // }
 
     }
-    loadSerializedGraph(serialized) {
-        console.trace()
-        this.structure = Graph.deserialize(serialized);
-        refreshInterfaceCategories()
-    }
+
     generateRandomNodes(quantity) {
         let i = 0
         while (i < quantity) {
@@ -294,6 +290,15 @@ class GraphView {
         this.selectionHandler.deselect(frontmostNode);
         this.structure.removeNode(frontmostNode);
     }
+
+    loadSerializedGraph(serialized) {
+        let deserializedGraph = Graph.deserialize(serialized);
+        if (deserializedGraph) {
+            this.structure = deserializedGraph;
+        }
+        refreshInterfaceCategories();
+    }
+
     //endregion
 
     //region Desenho do Grafo
