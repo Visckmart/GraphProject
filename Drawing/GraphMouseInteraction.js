@@ -130,6 +130,8 @@ class GraphMouseHandler {
             && this.selection.shouldDrawSelection == false) {
             // Tente remover um nó, se o mouse estiver sobre algum
             this.graphView.removeNodeAt(pos);
+            // Tente remover uma arestas, se o mouse estiver sobre alguma
+            this.graphView.removeEdgeAt(pos);
             return;
         }
 

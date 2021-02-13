@@ -291,6 +291,15 @@ class GraphView {
         this.structure.removeNode(frontmostNode);
     }
 
+    removeEdgeAt(pos) {
+        let edge = this.getEdgesAt(pos);
+        if (!edge) {
+            return;
+        }
+        this.selectionHandler.deselect(edge);
+        this.structure.removeEdge(edge);
+    }
+
     loadSerializedGraph(serialized) {
         let deserializedGraph = Graph.deserialize(serialized);
         if (deserializedGraph) {

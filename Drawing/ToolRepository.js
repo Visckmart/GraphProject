@@ -1,18 +1,16 @@
-import {Tool} from "./General.js";
+import { Tool } from "./General.js";
 
 function getTargetElements(graphView) {
     let targetNodes;
-    let selectedNodes = graphView.selectionHandler.selected.nodes;
-    if (selectedNodes.length > 0) {
-        targetNodes = selectedNodes;
+    if (graphView.selectionHandler.hasSelectedNodes) {
+        targetEdges = graphView.selectionHandler.selected.nodes;
     } else {
         targetNodes = Array.from(graphView.structure.nodes());
     }
 
     let targetEdges;
-    let selectedEdges = graphView.selectionHandler.selected.edges;
-    if (selectedEdges.length > 0) {
-        targetEdges = selectedEdges;
+    if (graphView.selectionHandler.hasSelectedEdges) {
+        targetEdges = graphView.selectionHandler.selected.edges;
     } else {
         targetEdges = Array.from(graphView.structure.uniqueEdges())
                             .map(edgeInfo => edgeInfo[0]);
