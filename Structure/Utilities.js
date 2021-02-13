@@ -1,4 +1,13 @@
-import {canvas, ctx} from "../Drawing/General.js";
+import { canvas, ctx } from "../Drawing/General.js";
+import { g } from "../Drawing/GraphView.js";
+import { categoryCheckboxes } from "../Drawing/Interaction.js";
+
+export function refreshInterfaceCategories() {
+    let categoriesState = g.structure.getCategories()
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        checkbox.checked = categoriesState[category];
+    }
+}
 
 // Cores e gradientes
 export function colorFromComponents(r, g, b, a = 1) {
@@ -45,4 +54,15 @@ export const positionAlphabet = uppercaseLetters.concat(lowercaseLetters.concat(
 
 export function getDistanceOf(A, B) {
     return Math.sqrt(Math.pow(Math.abs(B.x-A.x), 2) + Math.pow(Math.abs(B.y-A.y), 2))
+}
+
+export function getFormattedTime() {
+    const hoje = new Date()
+    const ano = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(hoje);
+    const mes = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(hoje);
+    const dia = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(hoje);
+    const hora = new Intl.DateTimeFormat('en', { hour12: false, hour: '2-digit' }).format(hoje);
+    const minuto = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(hoje);
+
+    return `${dia}-${mes}-${ano} ${hora}:${minuto}`
 }

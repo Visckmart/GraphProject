@@ -1,11 +1,8 @@
-import { canvas, Tool, nodeLabelingSelector } from "./General.js"
+import { canvas, Tool } from "./General.js"
 import { g } from "./GraphView.js"
-import ToolRepository from "./ToolRepository.js";
 import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
-import { HighlightType } from "../Structure/Highlights.js"
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
-import Edge from "../Structure/Edge.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
@@ -44,34 +41,6 @@ let loadFavorite = function() {
 updateFavorites()
 for (let loadFavBtn of loadFavButtons) {
     loadFavBtn.onclick = loadFavorite
-}
-
-function refreshInterfaceCategories() {
-    let categoriesState = g.structure.getCategories()
-    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
-        checkbox.checked = categoriesState[category];
-    }
-}
-
-function deserializeURL() {
-    const urlParams = new URLSearchParams(location.search);
-    if(urlParams.has("graph") && urlParams.get("graph") != "") {
-        console.log("Deserializing graph " + urlParams.get("graph"))
-        g.structure = Graph.deserialize(urlParams.get("graph"))
-        refreshInterfaceCategories()
-    }
-    // g.redrawGraph()
-    // g.updateAnimations()
-}
-window.addEventListener("load", deserializeURL);
-window.onpopstate = deserializeURL;
-
-let share = document.getElementById("share")
-share.onclick = function() {
-    let serialized = g.structure.serialize()
-
-    console.log(serialized, serialized.length)
-    history.pushState(null, null, "?graph="+serialized)
 }
 
 //DEBUG

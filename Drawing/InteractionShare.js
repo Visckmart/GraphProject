@@ -1,74 +1,76 @@
-import { canvas } from "./General.js"
-import { g } from "./GraphView.js"
-import Graph from "../Structure/Graph.js"
+import { canvas } from "./General.js";
+import { g } from "./GraphView.js";
+import { getFormattedTime } from "../Structure/Utilities.js";
 
-// EXPORTAÇÃO
+//region Exportação
 
-// Arquivo
-let exportFileButton = document.getElementById("exportFile")
-function getTimeForFilename() {
-    const hoje = new Date()
-    const ano = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(hoje);
-    const mes = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(hoje);
-    const dia = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(hoje);
-    const hora = new Intl.DateTimeFormat('en', { hour12: false, hour: '2-digit' }).format(hoje);
-    const minuto = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(hoje);
+// Exportar Arquivo
+let exportFileButton = document.getElementById("exportFile");
+exportFileButton.onclick = function() {
+    let name = `Grafo ${getFormattedTime()}.gp`;
+    let content = g.structure.serialize();
+    let encodedContent = 'data:text/plain;charset=utf-8,'
+                         + encodeURIComponent(content);
 
-    return `${dia}-${mes}-${ano} ${hora}:${minuto}`
-}
+    let element = document.createElement('a');
+    element.download = name;
+    element.href = encodedContent;
 
-exportFileButton.onclick = function() { 
-    let content = g.structure.serialize()
-    let name = `Grafo ${getTimeForFilename()}.gp`
-
-    var element = document.createElement('a'); 
-    element.setAttribute('href',
-                         'data:text/plain;charset=utf-8,'
-                         + encodeURIComponent(content)); 
-    element.setAttribute('download', name); 
-  
-    // document.body.appendChild(element);
     element.click();
-    // document.body.removeChild(element);
 }
 
-// Texto
-let exportTextButton = document.getElementById("exportText")
+
+// Exportar Texto
+let exportTextButton = document.getElementById("exportText");
 exportTextButton.onclick = function () {
-    alert("Texto para Compartilhamento\n\n" + g.structure.serialize())
+    alert("Texto para Compartilhamento\n\n" + g.structure.serialize());
 }
 
-// Link
-let exportLinkButton = document.getElementById("exportLink")
+
+// Exportar Link
+let exportLinkButton = document.getElementById("exportLink");
 exportLinkButton.onclick = function (mouseEvent) {
     let serializedGraph = g.structure.serialize();
-    let shareLink = window.location.protocol + "//"
-                    + window.location.host + window.location.pathname
-                    + "?graph=" + serializedGraph;
-    if (mouseEvent.button == 0) {
+    if (mouseEvent.button === 0) {
+        let shareLink = window.location.protocol + "//"
+                        + window.location.host + window.location.pathname
+                        + "?graph=" + serializedGraph;
         history.pushState(null, null, shareLink);
     } else {
         console.log(serializedGraph);
     }
 }
 
-let exportImageButton = document.getElementById("exportImage")
+
+// Exportar Imagem
+let exportImageButton = document.getElementById("exportImage");
 exportImageButton.onclick = function () {
     let image = canvas.toDataURL();
 
-    let tmpLink = document.createElement('a');
-    tmpLink.download = `Grafo ${getTimeForFilename()}.png`;
-    tmpLink.href = image;  
+    let temporaryLink = document.createElement('a');
+    temporaryLink.download = `Grafo ${getFormattedTime()}.png`;
+    temporaryLink.href = image;
 
-    document.body.appendChild(tmpLink);
-    tmpLink.click();  
-    document.body.removeChild(tmpLink);
+    temporaryLink.click();
 }
+//endregion
 
 
+//region Importação
 
-// IMPORTAÇÃO
+// Importar por Link
+function deserializeURL() {
+    const urlParams = new URLSearchParams(location.search);
+    if(urlParams.has("graph") && urlParams.get("graph") !== "") {
+        console.log("Deserializing graph " + urlParams.get("graph"));
+        g.loadSerializedGraph(urlParams.get("graph"));
+    }
+}
+window.addEventListener("load", deserializeURL);
+window.onpopstate = deserializeURL;
 
+
+//region Importar por Gesto
 canvas.ondragenter = function(event) {
     event.preventDefault();
     g.overlay = true;
@@ -87,44 +89,45 @@ canvas.ondrop = function(event) {
     event.preventDefault();
     let item = event.dataTransfer.items[0];
     console.log("Dropped", item);
+
     // Se for arquivo
-    if (item.kind == "file") {
+    if (item.kind === "file") {
         let droppedFile = item.getAsFile();
         let reader = new FileReader();
         reader.onload = function (evt) {
-            console.log("Read content:", evt.target.result)
-            g.structure = Graph.deserialize(evt.target.result)
+            g.loadSerializedGraph(evt.target.result);
         }
         reader.readAsText(droppedFile, "UTF-8");
+
     // Senão
     } else {
-        item.getAsString(function(str) {
-            g.structure = Graph.deserialize(str);
-        });
+        item.getAsString(str => g.loadSerializedGraph(str));
     }
     g.overlay = false;
 };
+//endregion
 
 
-let fileInputElement = document.getElementById("inputFile")
+// Importar Arquivo
+let fileInputElement = document.getElementById("inputFile");
 fileInputElement.onchange = function(event) {
-    let file = event.target.files[0]
-    if (file) {
-        var reader = new FileReader();
-        reader.onload = function (evt) {
-            console.log("Read content:", evt.target.result)
-            g.structure = Graph.deserialize(evt.target.result)
-        }
-        reader.readAsText(file, "UTF-8");
-    }
-}
-let importFile = document.getElementById("importFile")
-importFile.onclick = function () {
-    fileInputElement.click()
-}
+    let file = event.target.files[0];
+    if (!file) { return; }
 
-let importText = document.getElementById("importText")
-importText.onclick = function () {
-    let t = prompt("Grafo em Texto")
-    g.structure = Graph.deserialize(t)
+    let reader = new FileReader();
+    reader.onload = function (evt) {
+        g.loadSerializedGraph(evt.target.result);
+    }
+    reader.readAsText(file, "UTF-8");
 }
+let importFileButton = document.getElementById("importFile");
+importFileButton.onclick = () => fileInputElement.click();
+
+
+// Importação de Texto
+let importTextButton = document.getElementById("importText");
+importTextButton.onclick = function () {
+    let serializedInput = prompt("Grafo em Texto");
+    g.loadSerializedGraph(serializedInput);
+}
+//endregion

@@ -1,17 +1,18 @@
-import { canvas, ctx, Tool, HighFPSFeature } from "./General.js"
-import Edge from "../Structure/Edge.js"
+import { canvas, Tool, HighFPSFeature } from "./General.js"
 import Graph from "../Structure/Graph.js"
+import Edge from "../Structure/Edge.js"
+import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
+import {HighlightType} from "../Structure/Highlights.js";
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
-import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
-
-
+import {
+    backgroundGradient, colorFromComponents, getDistanceOf, refreshInterfaceCategories,
+} from "../Structure/Utilities.js";
 import PropertyList from "./Properties/PropertyList.js";
-import {backgroundGradient, colorFromComponents, getDistanceOf} from "../Structure/Utilities.js";
-import {HighlightType} from "../Structure/Highlights.js";
+
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -69,7 +70,11 @@ class GraphView {
         // }
 
     }
-
+    loadSerializedGraph(serialized) {
+        console.trace()
+        this.structure = Graph.deserialize(serialized);
+        refreshInterfaceCategories()
+    }
     generateRandomNodes(quantity) {
         let i = 0
         while (i < quantity) {
@@ -104,7 +109,7 @@ class GraphView {
     }
     set primaryTool(anotherTool) {
         this._primaryTool = anotherTool;
-        if (this.primaryTool != Tool.CONNECT) {
+        if (this.primaryTool !== Tool.CONNECT) {
             // Pare de atualizar a aresta temporária
             this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
         }
@@ -123,7 +128,7 @@ class GraphView {
     }
     /* Atualiza o tipo de aresta exibida */
     updateEdgeType(weighed = false, colored = false, directed = false) {
-        let EdgeType = Edge
+        let EdgeType = Edge;
         if(weighed) {
             EdgeType = EdgeAssignedValueMixin(EdgeType)
         }
@@ -162,7 +167,7 @@ class GraphView {
     selectionChanged() {
         for (let node of this.structure.nodes()) {
             if (this.selectionHandler.isSelected(node)
-                && this.selectionHandler.isQuickSelection == false) {
+                && this.selectionHandler.isQuickSelection === false) {
                 node.highlights.add(HighlightType.SELECTION)
             } else {
                 node.highlights.remove(HighlightType.SELECTION)
@@ -177,8 +182,10 @@ class GraphView {
             }
         }
 
-        if ((this.selectionHandler.hasSelectedNodes > 0 && this.selectionHandler.isQuickSelection == false)
-            || this.selectionHandler.hasSelectedEdges > 0) {
+        // Seleção de nós NÃO temporária
+        let hasExplicitNodeSelection = this.selectionHandler.hasSelectedNodes > 0
+                                       && this.selectionHandler.isQuickSelection === false
+        if (hasExplicitNodeSelection || this.selectionHandler.hasSelectedEdges > 0) {
             let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
             featureIcons.forEach(icon => icon.classList.add("selected"))
         } else {
@@ -255,7 +262,7 @@ class GraphView {
     //region Manipulação do Grafo
 
     insertNewNodeAt(pos) {
-        if (this.getNodesAt(pos, true).length != 0) {
+        if (this.getNodesAt(pos, true).length !== 0) {
             return false;
         }
         let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y})
@@ -275,7 +282,7 @@ class GraphView {
 
     removeNodeAt(pos) {
         let nodes = this.getNodesAt(pos)
-        if (nodes.length == 0) {
+        if (nodes.length === 0) {
             return;
         }
         let frontmostNode = nodes[0];
@@ -354,10 +361,26 @@ class GraphView {
         }
         
         if (this.overlay) {
-            this.ctx.beginPath();
-            this.ctx.rect(0, 0, canvas.width, canvas.height);
+            // Preenchimento
             this.ctx.fillStyle = "#AAFA";
+
+            this.ctx.beginPath();
+            this.ctx.rect(0, 0,
+                          canvas.width,
+                          canvas.height);
             this.ctx.fill();
+
+            // Borda
+            this.ctx.strokeStyle = colorFromComponents(100, 100, 255, 0.8);
+            this.ctx.lineWidth = 15;
+            this.ctx.setLineDash([25, 25]);
+
+            this.ctx.beginPath();
+            let offset = this.ctx.lineWidth / 2;
+            this.ctx.rect(offset, offset,
+                          canvas.width - 2*offset,
+                          canvas.height - 2*offset);
+            this.ctx.stroke();
         }
         this.ctx.restore()
     }
@@ -382,7 +405,7 @@ class GraphView {
     frameRateRequests = new Map()
 
     requestHighFPS(feature, FPS) {
-        if (feature == undefined) {
+        if (!feature) {
             console.warn("Unknown High FPS feature")
             return;
         }
