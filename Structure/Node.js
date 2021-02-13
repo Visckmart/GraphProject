@@ -40,9 +40,6 @@ export default class Node {
         // Adicionando procedure de draw
         this.drawChain.addLink(this.drawProcedure)
 
-        this.serializationChain = new ResponsibilityChain();
-        this.serializationChain.addLink(serializeNode.bind(this));
-
         // Lista de mixins
         this.mixins = new Set()
     }
@@ -241,9 +238,7 @@ export default class Node {
     //region Serialização
 
     serialize() {
-        let serialized = this.serializationChain.call();
-        serialized = serialized.join("");
-        return serialized;
+        return serializeNode.bind(this)();
     }
 
     static deserialize(...arg) { return deserializeNode(...arg) };

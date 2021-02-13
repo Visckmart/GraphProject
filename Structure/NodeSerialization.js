@@ -39,13 +39,14 @@ export function serializeNode() {
     // Transforma a posição absoluta em uma posição relativa ao tamanho do
     // canvas e converte para um caractere do alfabeto escolhido para isso.
     let [encodedX, encodedY] = encodePosition(this.pos.x / canvas.width, this.pos.y / canvas.height);
-    let serializedPosition = `${encodedX}${encodedY}`
+    let serializedPosition = `${encodedX}${encodedY}`;
 
     // Highlights
-    let serializedHighlights = this.highlights.prepareForSharing()
-    if (serializedHighlights) {
-        serializedHighlights = "-" + serializedHighlights
-    }
+    // let serializedHighlights = this.highlights.prepareForSharing()
+    // if (serializedHighlights) {
+    //     serializedHighlights = "-" + serializedHighlights
+    // }
+    let serializedHighlights = "";
 
     return `${this.index}-${serializedColors}-${this.label}${serializedPosition}${serializedHighlights}`
 }
