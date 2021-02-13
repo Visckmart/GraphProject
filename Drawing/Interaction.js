@@ -3,6 +3,7 @@ import { g } from "./GraphView.js"
 import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
+import PrimMST from "../Algorithm/PrimMST.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
@@ -48,7 +49,16 @@ let runAlgorithmButton = document.getElementById("run_algorithm")
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
 
-    await algorithmController.setup(DijkstraShortestPath)
+    switch (document.getElementById("algorithm").value)
+    {
+        case 'Dijkstra':
+        default:
+            await algorithmController.setup(DijkstraShortestPath)
+            break
+        case 'PrimMST':
+            await  algorithmController.setup(PrimMST)
+            break
+    }
 }
 
 // Window Resizing
