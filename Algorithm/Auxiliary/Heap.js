@@ -16,6 +16,7 @@ class Heap {
     }
 
     remove() {
+        //console.log(this._heap.map(h => h?.value))
         // Retorna null caso não haja nenhum elemento no heap
         if(this._heapSize === 0) {
             return null
@@ -26,6 +27,10 @@ class Heap {
         // Mais de um elemento no heap
         if(this._heapSize > 1) {
             this._heap[0] = this._heap[this._heapSize - 1]
+
+            // Atualizando map
+            this._elementMap.set(this._heap[0], 0)
+
             this._heap[this._heapSize - 1] = null
             this._heapSize--
             this._siftDown(0)
@@ -45,11 +50,12 @@ class Heap {
     clear() {
         this._heap = []
         this._heapSize = 0
+        this._elementMap = new Map()
     }
 
     changeValue(element, value) {
         let index = this._elementMap.get(element)
-        if(this._heap[index] === element)
+        if(this._heap[index]?.element === element)
         {
             let isNewValueBetter = this._compare(value, this._heap[index].value)
             this._heap[index].value = value
@@ -121,7 +127,7 @@ export class MaxHeap extends Heap {
     }
 
     _compare(value1, value2) {
-        return value1 > value2
+        return value2 > value1
     }
 }
 
