@@ -75,8 +75,9 @@ export default function PrimMST(controller) {
             toggleArtifactActive(currentNode.previousEdge)
         }
 
-        controller.addStep(graph,  `Incluindo o nó ${currentNode.label}`)
         currentNode.included = true
+        currentNode.assignedValue = ''
+        controller.addStep(graph,  `Incluindo o nó ${currentNode.label}`)
 
         for(let [edge, node] of graph.edgesFrom(currentNode)) {
             if(edge === currentNode.previousEdge || node.included)
@@ -86,7 +87,10 @@ export default function PrimMST(controller) {
             toggleArtifactExploring(edge)
             toggleArtifactExploring(node)
 
-            let newDistance = edge.assignedValue
+            let newDistance = Number.parseFloat(edge.assignedValue)
+            if(Number.isNaN(newDistance)) {
+                throw  new Error("Peso inválido na aresta")
+            }
             if(newDistance < node.distance) {
                 node.assignedValue = newDistance.toString()
                 node.previousEdge = edge
