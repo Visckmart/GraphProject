@@ -3,6 +3,7 @@ import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirement
 import Edge from "../Structure/Edge.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
+import {MinHeap} from "./Auxiliary/Heap.js";
 
 function markAsActive(artifact) {
     artifact.highlights.add(HighlightType.LIGHTEN)
@@ -46,6 +47,9 @@ export default async function DijkstraShortestPath(controller) {
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graphView.structure
 
+    /* Inicializando heap secundário */
+    let heap = new MinHeap()
+
     initialNode.distance = 0
     initialNode.previousEdge = null
     initialNode.previousNode = null
@@ -60,6 +64,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             node.visited = false
             node.assignedValue = '∞'
         }
+        heap.insert(node, node.distance)
     }
     // console.log(graph.serialize())
     // console.log(graph)
@@ -70,20 +75,15 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     }
 
     controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞.\nO nó inicial é marcado com distância 0.`)
+
+
     let currentNode;
-
     while (currentNode !== finalNode) {
-        currentNode = null;
-
-        for(let node of graph.nodes()) {
-            let currentNodeDistance = currentNode?.distance ?? Infinity
-            if (!node.visited && node.distance < currentNodeDistance) {
-                currentNode = node;
-            }
-        }
-        if (!currentNode) {
+        currentNode = heap.remove();
+        if (!currentNode || currentNode.distance === Infinity) {
             break;
         }
+
         // currentNode.addHighlight(HighlightType.ALGORITHM_FOCUS2)
         markAsActive(currentNode)
         
@@ -118,6 +118,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                 node.assignedValue = newDistance.toString()
                 node.previousEdge = edge
                 node.previousNode = currentNode
+
+                // Atualizando peso
+                heap.changeValue(node, node.distance)
 
                 controller.addStep(graph, `Analisando a distância do nó ${currentNode.label} até ${node.label}, atualizando sua distância para ${newDistance}, que é menor que a distância atual ${oldDistance === Infinity ? '∞' : oldDistance}, e salvando a aresta destacada como a aresta anterior no caminho.`)
 
