@@ -18,9 +18,6 @@ export default class Edge {
         this.drawChain.addLink(this.drawProcedure);
         this.draw = this.drawChain.call.bind(this.drawChain);
 
-        this.serializationChain = new ResponsibilityChain();
-        this.serializationChain.addLink(serializeEdge.bind(this));
-
         // Lista de mixins
         this.mixins = new Set()
     }
@@ -186,9 +183,7 @@ export default class Edge {
 
     //region Serialização
     serialize() {
-        let serialized = this.serializationChain.call();
-        serialized = serialized.join("");
-        return serialized;
+        return `${this.label}`;
     }
 
     static deserialize(...arg) { return deserializeEdge(...arg) };

@@ -1,6 +1,6 @@
 import { ctx } from "../../../Drawing/General.js";
 import Edge from "../../Edge.js";
-import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
+import {deserializeAssignedValue, serializeAssignedValue} from "../../EdgeSerialization.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
     if (!(superclass instanceof Edge || superclass == Edge)) {
@@ -12,10 +12,9 @@ let EdgeAssignedValueMixin = (superclass) => {
             super(args);
             this.assignedValue = assignedValue ?? Math.floor(Math.random()*100);
 
-            this.drawChain.addLink(this.drawText)
-            this.serializationChain.addLink(serializeAssignedValue.bind(this))
+            this.drawChain.addLink(this.drawText);
 
-            this.mixins.add(EdgeAssignedValueMixin)
+            this.mixins.add(EdgeAssignedValueMixin);
         }
 
         get _args() {
@@ -53,11 +52,17 @@ let EdgeAssignedValueMixin = (superclass) => {
             ctx.restore()
         }
 
+
+        serialize() {
+            let superSerialization = super.serialize();
+            return superSerialization + serializeAssignedValue.bind(this)();
+        }
+
         static deserialize(serializedEdge) {
-            let [superEdge, rest] = superclass.deserialize(serializedEdge, true);
+            let [superProperties, rest] = superclass.deserialize(serializedEdge, true);
             let assignedValueProperties = deserializeAssignedValue(rest);
             return new EdgeAssignedValue({
-                                ...superEdge._args,
+                                ...superProperties,
                                 ...assignedValueProperties
                             })
         }
