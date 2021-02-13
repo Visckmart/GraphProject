@@ -8,18 +8,18 @@ import { HighlightType, HighlightsHandler } from "./Highlights.js"
 
 
 export default class Edge {
-    constructor({ label, highlights = null } = {}) {
 
+    constructor({ label, highlights = null } = {}) {
         this.label = label ?? generateNewRandomLabel();
         this.highlights = new HighlightsHandler(highlights);
+
+        // Lista de mixins
+        this.mixins = new Set()
 
         // Instanciando cadeias de responsabilidade
         this.drawChain = new ResponsibilityChain();
         this.drawChain.addLink(this.drawProcedure);
         this.draw = this.drawChain.call.bind(this.drawChain);
-
-        // Lista de mixins
-        this.mixins = new Set()
     }
 
     get _args() {
@@ -182,10 +182,8 @@ export default class Edge {
     }
 
     //region Serialização
-    serialize() {
-        return `${this.label}`;
-    }
 
+    serialize = serializeEdge;
     static deserialize(...arg) { return deserializeEdge(...arg) };
 
     //endregion

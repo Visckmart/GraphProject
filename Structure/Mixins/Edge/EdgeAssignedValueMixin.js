@@ -1,6 +1,6 @@
 import { ctx } from "../../../Drawing/General.js";
 import Edge from "../../Edge.js";
-import {deserializeAssignedValue, serializeAssignedValue} from "../../EdgeSerialization.js";
+import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
     if (!(superclass instanceof Edge || superclass == Edge)) {
@@ -52,7 +52,7 @@ let EdgeAssignedValueMixin = (superclass) => {
             ctx.restore()
         }
 
-
+        //region Serialização
         serialize() {
             let superSerialization = super.serialize();
             return superSerialization + serializeAssignedValue.bind(this)();
@@ -66,9 +66,10 @@ let EdgeAssignedValueMixin = (superclass) => {
                                 ...assignedValueProperties
                             })
         }
+        //endregion
     }
 
     return EdgeAssignedValue;
 }
 
-export default EdgeAssignedValueMixin
+export default EdgeAssignedValueMixin;
