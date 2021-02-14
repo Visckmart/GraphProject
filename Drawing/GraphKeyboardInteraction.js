@@ -104,6 +104,9 @@ class GraphKeyboardHandler {
         case "Escape":
             this.graphView.selectionHandler.clear();
             break;
+        case "m":
+            this.graphView.averageDistance()
+            break;
         }
 
         if (document.activeElement.tagName == "BODY") {
