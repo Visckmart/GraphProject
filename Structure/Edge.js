@@ -36,8 +36,7 @@ export default class Edge {
 
     drawProcedure = ({ x: xStart, y: yStart },
          { x: xEnd,   y: yEnd   }) => {
-        // ctx.globalAlpha = 0.8
-        if(!this.isSelected) {
+        if (!this.isSelected) {
             ctx.save()
             ctx.lineWidth = 8
             ctx.strokeStyle = "#aaa";
@@ -45,12 +44,8 @@ export default class Edge {
 
             if (!(this.highlights.has(HighlightType.DARK_WITH_BLINK) || this.highlights.has(HighlightType.LIGHTEN) || this.highlights.has(HighlightType.DARKEN))) {
                 if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
-                    // ctx.lineWidth = nodeBorderWidth/2;
                     ctx.setLineDash([10, 5]);
                     ctx.lineWidth = 5
-                } else {
-                    // ctx.lineWidth = nodeBorderWidth;
-                    ctx.setLineDash([]);
                 }
 
                 ctx.beginPath()
@@ -74,10 +69,10 @@ export default class Edge {
         case HighlightType.SELECTION:
             ctx.save()
 
-            ctx.setLineDash([15, 15]);
+            ctx.setLineDash([12, 8]);
             ctx.strokeStyle = "blue";
             ctx.lineWidth = 5
-            ctx.lineDashOffset = window.performance.now()/50
+            ctx.lineDashOffset = window.performance.now()/100
             ctx.beginPath()
             ctx.moveTo(xStart, yStart);
             ctx.lineTo(xEnd, yEnd);
