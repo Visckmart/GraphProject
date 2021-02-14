@@ -32,6 +32,7 @@ class GraphMouseHandler {
         this.clickedEdge = this.graphView.getEdgesAt(pos);
     }
 
+    // Mouse DOWN event
     justClearedSelection = false;
     mouseDownEvent(mouseEvent) {
         // Eventos de mouse desabilitados
@@ -48,16 +49,20 @@ class GraphMouseHandler {
         // console.log(this.clickedEdge)
         // console.log(this.graphView.primaryTool, this.clickedNode, this.clickedEdge)
 
-        if (this.selection.selectionIsEmpty) {
-            if (this.clickedNode != null) {
+
+        if (this.clickedNode) {
+            let clickedNotSelected = !this.selection.isSelected(this.clickedNode);
+            if (this.selection.isEmpty && clickedNotSelected) {
                 this.selection.quickSelect(this.clickedNode);
             }
-        } else {
+        }
+        if (this.selection.isEmpty == false) {
             this.justClearedSelection = true;
         }
         this.refreshCursorStyle();
     }
 
+    // Mouse DRAG event
     lastHoveredEdge = null;
     mouseDragEvent(mouseEvent) {
         // Eventos de mouse desabilitados
@@ -67,12 +72,13 @@ class GraphMouseHandler {
         this.currentMousePos = pos;
 
         // NODE COLISION
+        // TODO: Organizar destaque de arestas
         this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
         let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
         if (this.graphView.primaryTool == Tool.CONNECT && isHoveringNode == false) {
             let edgeHover = this.graphView.getEdgesAt(pos)
             this.lastHoveredEdge = edgeHover
-            if (edgeHover) {
+            if (edgeHover && !this.selection.isSelected(edgeHover)) {
                 edgeHover.highlights.add(HighlightType.LIGHTEN)
             }
         }
@@ -119,6 +125,7 @@ class GraphMouseHandler {
         }
     }
 
+    // Mouse UP event
     mouseUpEvent(mouseEvent) {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
@@ -142,13 +149,17 @@ class GraphMouseHandler {
                 this.selection.clear();
             }
 
-            if ((this.clickedNode && Tool.MOVE == this.graphView.primaryTool)
-                || (this.clickedEdge && Tool.CONNECT == this.graphView.primaryTool)) {
-                this.selection.invertSelection(this.clickedNode ?? this.clickedEdge);
+            if (this.clickedNode) {
+                if (Tool.MOVE == this.graphView.primaryTool) {
+                    this.selection.invertSelection(this.clickedNode);
+                }
+            } else if (this.clickedEdge && Tool.CONNECT == this.graphView.primaryTool) {
+                this.selection.invertSelection(this.clickedEdge);
             }
-        }
-        if (this.selection.isQuickSelection) {
-            this.selection.clear();
+        } else {
+            if (this.selection.isQuickSelection) {
+                this.selection.clear();
+            }
         }
 
         // Atualiza a posição dos nós selecionados, para que o próximo
@@ -199,6 +210,7 @@ class GraphMouseHandler {
     }
 
 
+    // Estilo do ponteiro do mouse
     refreshCursorStyle() {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }

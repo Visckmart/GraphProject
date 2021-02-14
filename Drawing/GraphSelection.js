@@ -34,15 +34,16 @@ export default class GraphSelection {
     invertSelection(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
-            if (nodeIndex >= 0 && this.shouldDrawSelection == false) {
-                this.selected.nodes.splice(nodeIndex, 1);
+            if (nodeIndex >= 0) {
+                if (!this.isQuickSelection && !this.shouldDrawSelection) {
+                    this.selected.nodes.splice(nodeIndex, 1);
+                }
             } else {
                 this.selected.nodes.push(element);
-                this.isQuickSelection = false;
             }
 
         } else if (element instanceof Edge) { // Caso seja uma aresta
-            let edgeIndex = this.selected.nodes.indexOf(element);
+            let edgeIndex = this.selected.edges.indexOf(element);
             if (edgeIndex >= 0 && this.shouldDrawSelection == false) {
                 this.selected.edges.splice(edgeIndex, 1);
             } else {
@@ -54,6 +55,7 @@ export default class GraphSelection {
             console.trace();
             return;
         }
+        this.isQuickSelection = false;
         this.graphView.selectionChanged();
         this.refreshMenu();
     }
@@ -102,6 +104,8 @@ export default class GraphSelection {
     isQuickSelection = false;
 
     quickSelect(node) {
+        if (this.additionOnlyMode) { return; }
+
         this.clear();
         this.selected.nodes = [node];
         this.registerNodePositions();
@@ -154,7 +158,7 @@ export default class GraphSelection {
         return this.selected.edges.length > 0;
     }
 
-    get selectionIsEmpty() {
+    get isEmpty() {
         return this.selected.nodes.length == 0 && this.selected.edges.length == 0;
     }
     //endregion
@@ -214,17 +218,25 @@ export default class GraphSelection {
         switch (this.graphView.primaryTool) {
         // A ferramenta MOVE for a escolhida,
         case Tool.MOVE: {
-            let containedNodes = this.graphView.getNodesWithin(startPoint, endPoint);
-            // console.log(containedNodes, this._additionOnlyMode)
+            let containedNodes = this.graphView.getNodesWithin(startPoint,
+                                                               endPoint);
             if (this._additionOnlyMode) {
                 this.selected.nodes = this.selected.nodes.concat(...containedNodes);
             } else {
+                this.clear()
                 this.selected.nodes = containedNodes;
             }
             break;
         }
         case Tool.CONNECT: {
-            this.selected.edges = this.graphView.getEdgesWithin(startPoint, endPoint);
+            let containedEdges = this.graphView.getEdgesWithin(startPoint,
+                                                               endPoint);
+            if (this._additionOnlyMode) {
+                this.selected.edges = this.selected.edges.concat(...containedEdges);
+            } else {
+                this.clear()
+                this.selected.edges = containedEdges;
+            }
             break;
         }
         }
