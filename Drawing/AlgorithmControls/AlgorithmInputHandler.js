@@ -134,50 +134,9 @@ export default class AlgorithmInputHandler {
         this.backButton.removeEventListener("click", this._backButtonHandler)
         this.exitButton.removeEventListener("click", this._exitButtonHandler)
         this.progressBar.removeEventListener("input",  this._progressBarHandler)
-        this.progressBar.removeEventListener("change",  this._progressBarRedrawHandler)
         this.speedRange.removeEventListener("input", this._speedHandler)
+
+        this.message.innerHTML = ''
     }
 
 }
-
-
-/* <script>
-  let timelineInput = document.getElementById("timelineInput");
-  let speedInput = document.getElementById("speedInput");
-
-  let speedLabel = document.getElementById("speed");
-
-  redrawSliderBackground(timelineInput);
-  redrawSliderBackground(speedInput);
-
-  function redrawSliderBackground(inputElement) {
-    let inputRange = inputElement.max - inputElement.min;
-    let percentage = (inputElement.value - inputElement.min)/inputRange * 100;
-    let gradient = `linear-gradient(to right,`
-                 + `#BBB 0%, `
-                 + `#BBB ${percentage}%, `
-                 + `#FFF ${percentage}%, `
-                 + `#FFF 100%`
-                 + `)`
-    inputElement.style.background = gradient;
-  }
-
-  const speedValues = ["0.25", "0.5", "0.75", "1", "2", "3", "4", "8"];
-  function updateSpeedLabel(speedIndex) {
-    speedLabel.innerHTML = speedValues[speedIndex - 1] + "x";
-  }
-
-  timelineInput.oninput = function() {
-    redrawSliderBackground(this);
-  };
-  speedInput.oninput = function() {
-    redrawSliderBackground(this);
-    updateSpeedLabel(speedInput.value);
-  };
-  speedInput.ondblclick = function() {
-    speedInput.value = "4";
-    redrawSliderBackground(this);
-    updateSpeedLabel(speedInput.value);
-  };
-</script>
-*/
