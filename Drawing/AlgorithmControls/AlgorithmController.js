@@ -84,6 +84,15 @@ class AlgorithmController {
     }
     //#endregion
 
+    adjustNodePositions() {
+        let widthMult = canvas.width/this.originalCanvasSize[0];
+        let heightMult = canvas.height/this.originalCanvasSize[1];
+
+        for (let node of this.graphView.structure.nodes()) {
+            node.pos.x *= widthMult;
+            node.pos.y *= heightMult;
+        }
+    }
     //#region Comportamento de progresso
     // Etapa atual
     _progress = 0
@@ -117,13 +126,7 @@ class AlgorithmController {
                 }
                 let newState = this.steps[value].graphState.clone()
                 this.graphView.structure = newState
-                let widthMult = canvas.width/this.originalCanvasSize[0];
-                let heightMult = canvas.height/this.originalCanvasSize[1];
-
-                for (let node of this.graphView.structure.nodes()) {
-                    node.pos.x *= widthMult;
-                    node.pos.y *= heightMult;
-                }
+                this.adjustNodePositions()
             }
         }
     }
@@ -270,6 +273,7 @@ class AlgorithmController {
 
         // Restaurando grafo ao estado inicial
         this.graphView.structure = this.initialGraph
+        this.adjustNodePositions()
 
         this.inputHandler.finish()
     }
