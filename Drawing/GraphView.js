@@ -299,7 +299,15 @@ class GraphView {
         this.selectionHandler.deselect(edge);
         this.structure.removeEdge(edge);
     }
+    recalculateNodePositions() {
+        let widthMult = (window.innerWidth*0.75)/canvas.width;
+        let heightMult = (window.innerHeight*0.95)/canvas.height;
 
+        for (let node of this.structure.nodes()) {
+            node.pos.x *= widthMult;
+            node.pos.y *= heightMult;
+        }
+    }
     // TODO: Organizar protótipo de recurso snap to grid
     //region
     adX = null;

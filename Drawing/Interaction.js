@@ -86,20 +86,14 @@ runAlgorithmButton.onclick = async () => {
 let blurTimeout = null;
 window.onresize = function () {
     // Ajustar posição dos nós
-    let widthMult = (window.innerWidth*0.75)/canvas.width;
-    let heightMult = (window.innerHeight*0.95)/canvas.height;
-
-    for (let node of g.structure.nodes()) {
-        node.pos.x *= widthMult;
-        node.pos.y *= heightMult;
-    }
+    g.recalculateNodePositions();
 
     // Ajustar tamanho
     canvas.width = window.innerWidth*0.75;
     canvas.height = window.innerHeight*0.95;
 
     // Blue
-    canvas.style.filter = "blur(15pt)"
+    canvas.style.filter = "blur(20pt)"
     if (blurTimeout) { clearTimeout(blurTimeout); }
     blurTimeout = setTimeout(function() {
         canvas.style.filter = null;

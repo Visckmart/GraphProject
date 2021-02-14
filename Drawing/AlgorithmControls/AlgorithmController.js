@@ -1,5 +1,6 @@
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
+import {canvas} from "../General.js";
 
 
 class Step {
@@ -17,7 +18,7 @@ class AlgorithmController {
         this.graphView = graphView
         this.initialGraph = graphView.structure.clone()
 
-
+        this.originalCanvasSize = [canvas.width, canvas.height]
 
         // Instanciando handler de inputs
         this.inputHandler = new AlgorithmInputHandler(this)
@@ -114,7 +115,15 @@ class AlgorithmController {
                 } else {
                     this.inputHandler.tutorialContainer.style.display = 'none'
                 }
-                this.graphView.structure = this.steps[value].graphState
+                let newState = this.steps[value].graphState.clone()
+                this.graphView.structure = newState
+                let widthMult = canvas.width/this.originalCanvasSize[0];
+                let heightMult = canvas.height/this.originalCanvasSize[1];
+
+                for (let node of this.graphView.structure.nodes()) {
+                    node.pos.x *= widthMult;
+                    node.pos.y *= heightMult;
+                }
             }
         }
     }
