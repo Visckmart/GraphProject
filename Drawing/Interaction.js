@@ -4,6 +4,7 @@ import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";
+import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
@@ -52,18 +53,24 @@ export let categoryCheckboxes = {
 let algorithmSelector = document.getElementById("algorithm")
 algorithmSelector.onchange = function () {
     switch (this.value) {
-    case 'Dijkstra':
-    default:
-        categoryCheckboxes.weightedEdges.disabled = false;
-        categoryCheckboxes.coloredEdges.disabled = false;
-        categoryCheckboxes.directedEdges.disabled = false;
-        break
-    case 'PrimMST':
-        categoryCheckboxes.weightedEdges.disabled = true;
-        categoryCheckboxes.weightedEdges.checked = true;
-        categoryCheckboxes.coloredEdges.disabled = false;
-        categoryCheckboxes.directedEdges.disabled = false;
-        break
+        case 'Dijkstra':
+        default:
+            categoryCheckboxes.weightedEdges.disabled = false;
+            categoryCheckboxes.coloredEdges.disabled = false;
+            categoryCheckboxes.directedEdges.disabled = false;
+            break
+        case 'PrimMST':
+            categoryCheckboxes.weightedEdges.disabled = true;
+            categoryCheckboxes.weightedEdges.checked = true;
+            categoryCheckboxes.coloredEdges.disabled = false;
+            categoryCheckboxes.directedEdges.disabled = false;
+            break
+        case 'DFSCycleDetection':
+            categoryCheckboxes.weightedEdges.disabled = false;
+            categoryCheckboxes.coloredEdges.disabled = false;
+            categoryCheckboxes.directedEdges.disabled = true;
+            categoryCheckboxes.directedEdges.checked = false;
+            break
     }
     updateEdge()
 }
@@ -72,13 +79,16 @@ runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
 
     switch (algorithmSelector.value) {
-    case 'Dijkstra':
-    default:
-        await algorithmController.setup(DijkstraShortestPath)
-        break
-    case 'PrimMST':
-        await  algorithmController.setup(PrimMST)
-        break
+        case 'Dijkstra':
+        default:
+            await algorithmController.setup(DijkstraShortestPath)
+            break
+        case 'PrimMST':
+            await algorithmController.setup(PrimMST)
+            break
+        case 'DFSCycleDetection':
+            await algorithmController.setup(DFSCycleDetection)
+            break
     }
 }
 

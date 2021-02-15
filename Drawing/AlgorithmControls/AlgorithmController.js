@@ -75,7 +75,7 @@ class AlgorithmController {
     _messageIsWarning = false
 
     set messageIsWarning(value) {
-        this._messageIsHighlighted = value
+        this._messageIsWarning = value
         if(value) {
             this.inputHandler.tutorialContainer.setAttribute("warning", "true")
         } else {
@@ -270,6 +270,8 @@ class AlgorithmController {
 
         this.hide()
         this.playing = false
+        this.messageIsHighlighted = false
+        this.messageIsWarning = false
 
         // Restaurando grafo ao estado inicial
         this.graphView.structure = this.initialGraph
