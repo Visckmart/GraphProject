@@ -18,6 +18,11 @@ export default class AlgorithmShowcase {
         this._messageElement.textContent = text
     }
 
+    // Chamada quando um step é adicionado ao algoritmo
+    addStep() {
+
+    }
+
     finish() {
         this.showcaseTitle = ''
         this.showcaseMessage = ''

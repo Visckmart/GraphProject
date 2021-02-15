@@ -205,6 +205,9 @@ class AlgorithmController {
 
     //#region Comportamento de showcase
     _showcasing = null
+    get showcasing() {
+        return this._showcasing
+    }
     set showcasing(showcase) {
         this._showcasing = showcase
         if(showcase) {
@@ -236,6 +239,8 @@ class AlgorithmController {
     addStep(graph, message) {
         this.steps.push(new Step(graph, message))
         this.inputHandler.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
+
+        this.showcasing?.addStep()
     }
 
     async resolveRequirements() {
