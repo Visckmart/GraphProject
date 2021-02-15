@@ -1,10 +1,18 @@
 import {HighlightType} from "../Structure/Highlights.js";
+import Stack from "./Auxiliary/Stack.js";
 
 
 
 export default function DFSCycleDetection(controller) {
     let graph = controller.graphView.structure
-    let stack = [graph.nodes().next().value]
+
+    let stack = new Stack()
+    controller.showcasing = stack
+
+    let firstNode = graph.nodes().next().value
+    if(firstNode) {
+        stack.push(firstNode)
+    }
 
     /* Marcando todas as arestas como não visitadas */
     for(let [edge,,] of graph.edges()) {
