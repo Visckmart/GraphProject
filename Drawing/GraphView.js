@@ -220,7 +220,7 @@ class GraphView {
     }
 
     getEdgesWithin(initialPos, finalPos) {
-        // let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
+        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
         let edgesWithin = [];
         let lines = [
             [initialPos, {x: initialPos.x, y: finalPos.y}],
@@ -243,12 +243,12 @@ class GraphView {
             }
         }
 
-        // for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-        //     if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-        //         edgesWithin.push(edge);
-        //         edge.selected = true;
-        //     }
-        // }
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
+                edgesWithin.push(edge);
+                edge.selected = true;
+            }
+        }
         return edgesWithin;
     }
     //endregion
