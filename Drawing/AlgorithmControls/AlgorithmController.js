@@ -258,6 +258,7 @@ class AlgorithmController {
         this.graphView.redrawGraph()
         this.playing = true
         this.progress = 0
+        this.isBlocked = false
     }
 
 
