@@ -3,6 +3,7 @@ import { serializeEdge, deserializeEdge } from "./EdgeSerialization.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 import { generateNewRandomLabel } from "./Utilities.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
+import { backgroundGradient } from "../Drawing/General.js";
 
 
 export default class Edge {

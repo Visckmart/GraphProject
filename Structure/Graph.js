@@ -160,19 +160,19 @@ class Graph {
     // }
 
     // TODO: Considerar remover uma vez que já existe o iterador *edgesFrom(node)
-    removeAllEdgesFromNode(node) {
-        // Validação
-        if (!(node)) {
-            console.error("Remoção de todas as arestas de nó chamada incorretamente.", node);
-            return false;
-        }
-        for (let [edge, nodeA, nodeB] of this.edges()) {
-            if (nodeA == node || nodeB == node) {
-                this.removeEdge(edge)
-            }
-        }
-        return true;
-    }
+    // removeAllEdgesFromNode(node) {
+    //     // Validação
+    //     if (!(node)) {
+    //         console.error("Remoção de todas as arestas de nó chamada incorretamente.", node);
+    //         return false;
+    //     }
+    //     for (let [edge, nodeA, nodeB] of this.edges()) {
+    //         if (nodeA == node || nodeB == node) {
+    //             this.removeEdge(edge)
+    //         }
+    //     }
+    //     return true;
+    // }
 
     //endregion
 
@@ -270,7 +270,7 @@ class Graph {
                 )
             }
         }
-        if (this.debug) {
+        if (clone == false) {
             console.info("Grafo desserializado com sucesso.");
         }
         return graph;

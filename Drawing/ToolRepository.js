@@ -3,7 +3,7 @@ import { Tool } from "./General.js";
 function getTargetElements(graphView) {
     let targetNodes;
     if (graphView.selectionHandler.hasSelectedNodes) {
-        targetEdges = graphView.selectionHandler.selected.nodes;
+        targetNodes = graphView.selectionHandler.selected.nodes;
     } else {
         targetNodes = Array.from(graphView.structure.nodes());
     }
@@ -28,14 +28,18 @@ export default {
             }
         }
     },
+
     [Tool.DISCONNECT_ALL]: function () {
+        console.log(this)
         let [targetNodes,] = getTargetElements(this);
 
-        console.group("Desconectar " + targetNodes.length + " nós")
+        console.group("Desconectar " + targetNodes.length + " nós");
         for (let node of targetNodes) {
-            this.structure.removeAllEdgesFromNode(node)
+            for (let [edge, , ] of this.structure.edgesFrom(node)) {
+                this.structure.removeEdge(edge);
+            }
         }
-        console.groupEnd()
+        console.groupEnd();
     },
 
     [Tool.DELETE_ALL]: function () {

@@ -85,7 +85,7 @@ class GraphKeyboardHandler {
         }
 
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
-        if(this.selection.drawingSelection) { return; }
+        if(this.selection.shouldDrawSelection) { return; }
 
         let metaPressed = this.isMetaKey(keyboardEvent)
         if (metaPressed == false && this.lastToolChoice == Tool.MOVE) {
