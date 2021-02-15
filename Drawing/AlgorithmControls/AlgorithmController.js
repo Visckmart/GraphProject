@@ -203,6 +203,19 @@ class AlgorithmController {
     }
     //#endregion
 
+    //#region Comportamento de showcase
+    _showcasing = null
+    set showcasing(value) {
+        this._showcasing = value
+        if(value) {
+            this.inputHandler.showcase.style.display = 'flex'
+        } else {
+            this.inputHandler.showcase.style.display = 'none'
+            this._showcasing?.finish()
+        }
+    }
+    //#endregion
+
     // Esconde a barra de play
     hide() {
         this.inputHandler.controls.style.display = 'none'
@@ -271,6 +284,7 @@ class AlgorithmController {
 
         this.hide()
         this.playing = false
+        this.isShowcasing = false
         this.messageIsHighlighted = false
         this.messageIsWarning = false
 
