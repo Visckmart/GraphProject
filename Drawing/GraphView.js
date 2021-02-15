@@ -1,4 +1,4 @@
-import { canvas, Tool, HighFPSFeature } from "./General.js"
+import {canvas, Tool, HighFPSFeature, backgroundGradient} from "./General.js"
 import Graph from "../Structure/Graph.js"
 import Edge from "../Structure/Edge.js"
 import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
@@ -9,7 +9,7 @@ import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
 import {
-    backgroundGradient, colorFromComponents, getDistanceOf, refreshInterfaceCategories,
+    colorFromComponents, getDistanceOf, refreshInterfaceCategories,
 } from "../Structure/Utilities.js";
 import PropertyList from "./Properties/PropertyList.js";
 import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
@@ -367,7 +367,7 @@ class GraphView {
     drawEdges() {
         // Desenhar arestas do grafo
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            edge.draw(nodeA.pos, nodeB.pos)
+            edge.draw(this.ctx, nodeA.pos, nodeB.pos)
         }
         // Desenhar aresta temporária
         if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
@@ -387,7 +387,7 @@ class GraphView {
             //         console.log(`Hit ${s.label} ${e.label}`)
             //     }
             // }
-            this.structure.temporaryEdge.draw(startPos, endPos);
+            this.structure.temporaryEdge.draw(this.ctx, startPos, endPos);
         }
     }
     frameCount = window.performance.now();
@@ -414,7 +414,7 @@ class GraphView {
         
         let nodeFPSRequests = [];
         for (let node of this.structure.nodes()) {
-            let fpsRequest = node.draw(this.nodeLabeling);
+            let fpsRequest = node.draw(this.ctx, this.nodeLabeling);
             nodeFPSRequests.push(fpsRequest);
         }
         let maxFPSRequest = Math.max(...nodeFPSRequests);

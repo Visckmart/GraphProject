@@ -1,8 +1,8 @@
 // Node Definition
-import {ctx, getColorRotation, nodeColorList} from "../Drawing/General.js";
+import {backgroundGradient, getColorRotation, nodeColorList} from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
-import { generateNewRandomLabel, backgroundGradient, colorFromComponents } from "./Utilities.js";
+import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 import { deserializeNode, serializeNode } from "./NodeSerialization.js";
@@ -88,7 +88,7 @@ export default class Node {
 
     // This function draws one node. This includes the circle, the text and
     // the appropriate color (considering any animation happening).
-    drawProcedure = (nodeLabeling) => {
+    drawProcedure = (ctx, nodeLabeling) => {
         // Draw circle border
         ctx.save()
         ctx.lineWidth = 8;
@@ -110,18 +110,19 @@ export default class Node {
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.arc(this.pos.x, this.pos.y, this.radius - ctx.lineWidth/2, 0, 2*Math.PI);
+        ctx.arc(this.pos.x, this.pos.y,
+                this.radius - ctx.lineWidth/2, 0, 2*Math.PI);
 
         // Draw highlights
-        ctx.save()
-        let fpsRequests = this._drawHighlights()
-        ctx.restore()
-        let maxFPSRequest = Math.max(...fpsRequests)
+        ctx.save();
+        let fpsRequests = this._drawHighlights(ctx);
+        ctx.restore();
+        let maxFPSRequest = Math.max(...fpsRequests);
 
         // Draw label
         let transparentText = !this.highlights.has(HighlightType.LIGHTEN)
                                && this.highlights.has(HighlightType.DARKEN)
-        this._drawLabel(nodeLabeling, transparentText ? backgroundGradient : this.color)
+        this._drawLabel(ctx, nodeLabeling, transparentText ? backgroundGradient : this.color)
 
         ctx.restore();
 
@@ -130,7 +131,7 @@ export default class Node {
 
     // HIGHLIGHTS
 
-    _drawHighlights() {
+    _drawHighlights = (ctx) => {
         let fpsRequests = [0]
         if (this.highlights.has(HighlightType.SELECTION)) {
             /* Borda pontilhada */
@@ -213,9 +214,9 @@ export default class Node {
         return fpsRequests;
     }
 
-    _drawLabel(nodeLabeling, color) {
+    _drawLabel = (ctx, nodeLabeling, color) => {
         ctx.font = "bold 30px Arial";
-            ctx.fillStyle = color;
+        ctx.fillStyle = color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
