@@ -9,16 +9,16 @@ import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
 
 class Graph {
     constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
-        this.data = data
-        this.debug = false
+        this.data = data;
         this.categories = new Set();
+        this.debug = true;
 
         // Guardando construtores de elementos do grafo
-        this.EdgeConstructor = EdgeConstructor
-        this.NodeConstructor = NodeConstructor
+        this.EdgeConstructor = EdgeConstructor;
+        this.NodeConstructor = NodeConstructor;
 
         // Lista de mixins
-        this.mixins = new Set()
+        this.mixins = new Set();
     }
 
     get _args() {
@@ -29,6 +29,7 @@ class Graph {
         }
     }
 
+    // TODO: Melhorar
     getCategories() {
         return {
             weightedEdges: this.categories.has(GraphCategory.WEIGHTED_EDGES),
@@ -39,118 +40,93 @@ class Graph {
 
     //region Manipulação do Grafo
 
-    // Inserção
-    insertEdgeBetween(nodeA, nodeB) {
-        if (this.checkEdgeBetween(nodeA, nodeB)) {
-            return;
-        }
-        let edge = new this.EdgeConstructor()
-        // Verificação
-        if (!(nodeA && nodeB && edge)) {
-            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
-            return;
-        }
-        if (nodeA === nodeB) {
-            return;
-        }
-        debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
-                   " até o nó " + nodeB.label, edge);
-
-        // Operação
-        this.data.get(nodeA).set(nodeB, edge)
-        this.data.get(nodeB).set(nodeA, edge)
-        return edge;
-    }
-
-    // Inserindo edge específico
-    insertEdge(nodeA, nodeB, edge) {
-        // Verificação
-        if (!(nodeA && nodeB)) {
-            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
-            return;
-        }
-        if (nodeA === nodeB) {
-            return;
-        }
-        if (this.debug) {
-            debugPrint("Inserindo aresta " + edge.label + " do nó " + nodeA.label +
-                       " até o nó " + nodeB.label, edge);
-        }
-
-        // Operação
-        this.data.get(nodeA).set(nodeB, edge);
-        this.data.get(nodeB).set(nodeA, edge);
-    }
-
-    // Criando aresta temporária
-    temporaryEdge = new (EdgeTemporaryMixin(Edge))();
-
-    // Remoção
-    removeEdgeBetween(nodeA, nodeB) {
-        // Verificação
-        if (!(nodeA && nodeB)) {
-            console.error("Remoção de aresta chamada incorretamente.")
-            return;
-        }
-        debugPrint("Removendo aresta que conecta os nós " + nodeA.label +
-                   " – " + nodeB.label)
-
-        // Operação
-        this.data.get(nodeA).delete(nodeB)
-        this.data.get(nodeB).delete(nodeA)
-    }
-
     insertNode(node) {
         // Validação
         if (!(node)) {
             console.error("Inserção de nó chamada incorretamente.");
-            return;
+            return false;
         }
-        if (this.debug) {
-            debugPrint("Inserindo nó", node)
-        }
-        console.assert(this.data.has(node) == false, "Nó já estava no grafo.")
+        if (this.debug) { console.info("Inserindo nó", node); }
+        console.assert(this.data.has(node) == false, "Nó já estava no grafo.");
 
         // Operação
         this.data.set(node, new Map());
+        return true;
     }
 
     removeNode(node) {
         // Validação
         if (!(node)) {
             console.error("Remoção de nó chamada incorretamente.");
-            return;
+            return false;
         }
-        debugPrint("Removendo nó", node)
-        console.assert(this.data.has(node) == true, "Nó não está no grafo.")
+        if (this.debug) { console.info("Removendo nó", node); }
+        console.assert(this.data.has(node) == true, "Nó não está no grafo.");
 
         // Operação
-        for (let [, nodeA, nodeB] of this.edges()) {
+        // Passa por todas as arestas que chegam no nó e as remove
+        for (let [edge, , nodeB] of this.edges()) {
             if (nodeB == node) {
-                this.removeEdgeBetween(nodeA, nodeB)
+                this.removeEdge(edge);
             }
         }
-        this.data.delete(node)
+        this.data.delete(node);
+        return true;
     }
 
-    removeAllEdgesFromNode(node) {
-        for (let [edge, nodeA, nodeB] of this.edges()) {
-            if (nodeA == node || nodeB == node) {
-                this.removeEdge(edge)
-            }
+
+    // Criando aresta temporária
+    temporaryEdge = new (EdgeTemporaryMixin(Edge))();
+
+    insertEdge(nodeA, nodeB, edge) {
+        // Validação
+        if (!(nodeA && nodeB) || nodeA === nodeB) {
+            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
+            return false;
         }
+        if (this.debug) {
+            console.info("Inserindo aresta entre os nós "
+                         + nodeA.label + " - " + nodeB.label, edge);
+        }
+
+        // Operação
+        this.data.get(nodeA).set(nodeB, edge);
+        this.data.get(nodeB).set(nodeA, edge);
+        return true;
     }
+
+    // insertEdgeBetween(nodeA, nodeB) {
+    //     // Validação
+    //     // Caso algo seja nulo, ou os nós sejam o mesmo, inserção é inválida
+    //     if (!(nodeA && nodeB) || nodeA === nodeB) {
+    //         console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
+    //         return;
+    //     }
+    //     // Caso a aresta já exista, inserção é inválida
+    //     if (this.checkEdgeBetween(nodeA, nodeB)) { return; }
+    //     if (this.debug) {
+    //         console.info("Inserindo aresta entre os nós "
+    //                      + nodeA.label + " - " + nodeB.label, edge);
+    //     }
+    //
+    //     // Operação
+    //     let edge = new this.EdgeConstructor()
+    //     this.data.get(nodeA).set(nodeB, edge)
+    //     this.data.get(nodeB).set(nodeA, edge)
+    //     return edge;
+    // }
 
     removeEdge(edge) {
         // Validação
         if (!(edge)) {
             console.error("Remoção de uma aresta específica chamada incorretamente.")
-            return;
+            return false;
         }
-        debugPrint("Removendo aresta " + edge.label)
+        if (this.debug) { console.info("Removendo aresta", edge); }
 
         // Operação
         let anyEdgeRemoved = false;
+        // TODO: Considerar usar o iterador uniqueEdges
         for (let [currentEdge, nodeA, nodeB] of this.edges()) {
             if (currentEdge == edge) {
                 this.data.get(nodeA).delete(nodeB)
@@ -158,9 +134,46 @@ class Graph {
             }
         }
         if (!anyEdgeRemoved) {
-            console.warn("A aresta a ser removida não foi encontrada.")
+            console.warn("A aresta a ser removida não foi encontrada.");
+            return false;
         }
+        return true;
     }
+
+    // Remoção
+    // TODO: Não está sendo usada, comentei para não apagar agora
+    //       Se continuar sem uso, podemos apagar sem problemas.
+    // removeEdgeBetween(nodeA, nodeB) {
+    //     // Validação
+    //     if (!(nodeA && nodeB)) {
+    //         console.error("Remoção de aresta chamada incorretamente.");
+    //         return;
+    //     }
+    //     if (this.debug) {
+    //         console.info("Removendo aresta que conecta os nós "
+    //                      + nodeA.label + " – " + nodeB.label);
+    //     }
+    //
+    //     // Operação
+    //     this.data.get(nodeA).delete(nodeB);
+    //     this.data.get(nodeB).delete(nodeA);
+    // }
+
+    // TODO: Considerar remover uma vez que já existe o iterador *edgesFrom(node)
+    removeAllEdgesFromNode(node) {
+        // Validação
+        if (!(node)) {
+            console.error("Remoção de todas as arestas de nó chamada incorretamente.", node);
+            return false;
+        }
+        for (let [edge, nodeA, nodeB] of this.edges()) {
+            if (nodeA == node || nodeB == node) {
+                this.removeEdge(edge)
+            }
+        }
+        return true;
+    }
+
     //endregion
 
     //region Deteção de Nós e Arestas

@@ -7,7 +7,7 @@ import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
 import { deserializeNode, serializeNode } from "./NodeSerialization.js";
 
-const regularNodeRadius = 28;
+export const regularNodeRadius = 28;
 
 let globalNodeIndex = 0
 

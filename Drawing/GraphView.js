@@ -12,6 +12,8 @@ import {
     backgroundGradient, colorFromComponents, getDistanceOf, refreshInterfaceCategories,
 } from "../Structure/Utilities.js";
 import PropertyList from "./Properties/PropertyList.js";
+import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
+import {regularNodeRadius} from "../Structure/Node.js";
 
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -39,18 +41,14 @@ class GraphView {
         let mouseHandler = new GraphMouseHandler(this)
         let keyboardHandler = new GraphKeyboardHandler(this)
         this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
-        // integrateComponent(this, GraphKeyboardInteraction(this))
         
         // MOUSE
         canvas.addEventListener("mousedown",
-            mouseHandler.mouseDownEvent.bind(mouseHandler)
-        );
+                                mouseHandler.mouseDownEvent.bind(mouseHandler));
         canvas.addEventListener("mousemove",
-            mouseHandler.mouseDragEvent.bind(mouseHandler)
-        );
+                                mouseHandler.mouseDragEvent.bind(mouseHandler));
         canvas.addEventListener("mouseup",
-            mouseHandler.mouseUpEvent.bind(mouseHandler)
-        );
+                                mouseHandler.mouseUpEvent.bind(mouseHandler));
 
         // KEYBOARD
         document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
@@ -62,41 +60,13 @@ class GraphView {
 
 
         // Debugging
-        // this.generateRandomNodes(4)
-        // this.generateRandomEdges(3)
+        // generateRandomNodes(this, 4)
+        // generateRandomEdges(this, 3)
         // for (let j = 0; j < getRandomInt(0, 3); j++ ) {
         //     let r = getRandomInt(0, 3)
-        //     Array.from(this.structure.nodes())[r].addHighlight(NodeHighlightType.ALGORITHM_FOCUS)
+        //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
 
-    }
-
-    generateRandomNodes(quantity) {
-        let i = 0
-        while (i < quantity) {
-            let x = Math.random()*70+5
-            let y = Math.random()*20+5
-            x *= 10
-            y *= 10
-            if (this.getNodesAt({x: x, y: y}, true)[0] == null) {
-                i++;
-                this.insertNewNodeAt({x: x, y: y})
-            }
-        }
-    }
-
-    generateRandomEdges(quantity) {
-        let i = 0
-        for (let nodeA of this.structure.nodes()) {
-            for (let nodeB of this.structure.nodes()) {
-                if (i >= quantity) return;
-                let x = Math.random() < 0.5
-                if (x) {
-                    i++
-                    this.insertEdgeBetween(nodeA, nodeB)
-                }
-            }
-        }
     }
 
     _primaryTool = Tool.MOVE;
@@ -110,10 +80,6 @@ class GraphView {
             this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
         }
         this.refreshInterfaceState()
-    }
-
-    changeTool(tool) {
-        this.primaryTool = tool;
     }
 
 
@@ -148,15 +114,26 @@ class GraphView {
         for(let x of document.querySelector("#tool_tray").children) {
             for (let element of x.children) {
                 if(element.tagName === "INPUT" && element.value === this.primaryTool) {
-                    element.click()
+                    element.click();
                 }
             }
         }
-        this.interactionHandler.mouse.refreshCursorStyle()
+        this.interactionHandler.mouse.refreshCursorStyle();
     }
 
     selectAllNodes() {
-        this.selectionHandler.selectMultiple(Array.from(this.structure.nodes()));
+        switch (this.primaryTool) {
+        case Tool.MOVE:
+            for (let node of this.structure.nodes()) {
+                this.selectionHandler.select(node);
+            }
+            break;
+        case Tool.CONNECT:
+            for (let [edge, ,] of this.structure.edges()) {
+                this.selectionHandler.select(edge);
+            }
+            break;
+        }
     }
 
     /* Destaca os nós selecionados */
@@ -198,9 +175,9 @@ class GraphView {
     getNodesAt(pos, checkForConflict = false) {
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
-            let radiusCheck;
-            if (checkForConflict) { radiusCheck = Math.max(node.radius, 28) * 2; }
-            else                  { radiusCheck = Math.max(node.radius, 28); }
+            let radiusCheck = Math.max(node.radius, regularNodeRadius);
+            if (checkForConflict) { radiusCheck *= 2; }
+
             let dx = node.pos.x - pos.x;
             let dy = node.pos.y - pos.y;
             if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck) {
@@ -213,10 +190,11 @@ class GraphView {
     getEdgesAt(pos) {
         const eps = 1;
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let lineLength = getDistanceOf(nodeA.pos, nodeB.pos)
-            let distA = getDistanceOf(pos, nodeA.pos)
-            let distB = getDistanceOf(pos, nodeB.pos)
-            if (distA + distB >= lineLength-eps && distA + distB <= lineLength + eps) {
+            let edgeLength = getDistanceOf(nodeA.pos, nodeB.pos)
+            let distSum = getDistanceOf(pos, nodeA.pos)
+                       + getDistanceOf(pos, nodeB.pos)
+            if (distSum >= edgeLength - eps
+                && distSum <= edgeLength + eps) {
                 return edge;
             }
         }
@@ -238,19 +216,39 @@ class GraphView {
             }
         }
 
-        return nodesWithin
+        return nodesWithin;
     }
 
     getEdgesWithin(initialPos, finalPos) {
-        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
+        // let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
         let edgesWithin = [];
+        let lines = [
+            [initialPos, {x: initialPos.x, y: finalPos.y}],
+            [initialPos, {x: finalPos.x, y: initialPos.y}],
+            [{x: finalPos.x, y: initialPos.y}, finalPos],
+            [{x: initialPos.x, y: finalPos.y}, finalPos],
+        ]
+        for (let [edge, s, e] of this.structure.uniqueEdges()) {
+            for (let idx in lines) {
+                let [startPos, endPos] = lines[idx];
+                let uA = ((e.pos.x - s.pos.x) * (startPos.y - s.pos.y) - (e.pos.y - s.pos.y) * (startPos.x - s.pos.x)) / ((e.pos.y - s.pos.y) * (endPos.x - startPos.x) - (e.pos.x - s.pos.x) * (endPos.y - startPos.y));
+                let uB = ((endPos.x - startPos.x) * (startPos.y - s.pos.y) - (endPos.y - startPos.y) * (startPos.x - s.pos.x)) / ((e.pos.y - s.pos.y) * (endPos.x - startPos.x) - (e.pos.x - s.pos.x) * (endPos.y - startPos.y));
 
-        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-                edgesWithin.push(edge);
-                edge.selected = true;
+                // console.log(uA, uB)
+                if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+                    // console.log(`Hit ${s.label} ${e.label} ${idx}`)
+                    edgesWithin.push(edge);
+                    break;
+                }
             }
         }
+
+        // for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+        //     if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
+        //         edgesWithin.push(edge);
+        //         edge.selected = true;
+        //     }
+        // }
         return edgesWithin;
     }
     //endregion
@@ -262,7 +260,9 @@ class GraphView {
             return false;
         }
         let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y})
-        this.structure.insertNode(newNode);
+        let inserted = this.structure.insertNode(newNode);
+        if (!inserted) { return; }
+
         this.redrawGraph();
         return newNode;
     }
@@ -270,10 +270,6 @@ class GraphView {
     moveNode(node, pos) {
         this.requestHighFPS(HighFPSFeature.MOVING, 90);
         node.pos = pos;
-    }
-
-    insertEdgeBetween(nodeA, nodeB) {
-        return this.structure.insertEdgeBetween(nodeA, nodeB);
     }
 
     removeNodeAt(pos) {
@@ -291,14 +287,6 @@ class GraphView {
         this.structure.removeNode(frontmostNode);
     }
 
-    removeEdgeAt(pos) {
-        let edge = this.getEdgesAt(pos);
-        if (!edge) {
-            return;
-        }
-        this.selectionHandler.deselect(edge);
-        this.structure.removeEdge(edge);
-    }
     recalculateNodePositions() {
         let widthMult = (window.innerWidth*0.75)/canvas.width;
         let heightMult = (window.innerHeight*0.95)/canvas.height;
@@ -307,6 +295,25 @@ class GraphView {
             node.pos.x *= widthMult;
             node.pos.y *= heightMult;
         }
+    }
+
+    // ARESTAS
+    insertEdgeBetween(nodeA, nodeB) {
+        let newEdge = new this.structure.EdgeConstructor();
+        let inserted = this.structure.insertEdge(nodeA, nodeB, newEdge);
+        if (!inserted) { return; }
+
+        this.redrawGraph();
+        return newEdge;
+    }
+
+    removeEdgeAt(pos) {
+        let edge = this.getEdgesAt(pos);
+        if (!edge) {
+            return;
+        }
+        this.selectionHandler.deselect(edge);
+        this.structure.removeEdge(edge);
     }
     // TODO: Organizar protótipo de recurso snap to grid
     //region
@@ -372,16 +379,33 @@ class GraphView {
                 return;
             }
             this.requestHighFPS(HighFPSFeature.CONNECTING, 90);
+            // for (let [, s,e] of this.structure.uniqueEdges()) {
+            //     let uA = ((e.pos.x-s.pos.x)*(startPos.y-s.pos.y) - (e.pos.y-s.pos.y)*(startPos.x-s.pos.x)) / ((e.pos.y-s.pos.y)*(endPos.x-startPos.x) - (e.pos.x-s.pos.x)*(endPos.y-startPos.y));
+            //     let uB = ((endPos.x-startPos.x)*(startPos.y-s.pos.y) - (endPos.y-startPos.y)*(startPos.x-s.pos.x)) / ((e.pos.y-s.pos.y)*(endPos.x-startPos.x) - (e.pos.x-s.pos.x)*(endPos.y-startPos.y));
+            //     if (this.interactionHandler.mouse.clickedNode == s || this.interactionHandler.mouse.clickedNode == e) continue;
+            //     if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+            //         console.log(`Hit ${s.label} ${e.label}`)
+            //     }
+            // }
             this.structure.temporaryEdge.draw(startPos, endPos);
         }
     }
-
+    frameCount = window.performance.now();
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.save();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.fillStyle = backgroundGradient;
+        // console.log(this.frameCount)
+        // if (this.frameCount >= 2000 && this.frameCount <= 3000) {
+        //     // this.ctx.fillStyle = "red";
+        //     this.selectionHandler.draggingEvent({x: 100, y: 100}, {x: 500, y: 200})
+        // }
+        // if (this.frameCount > 3000 && this.frameCount <= 3200) {
+        //     this.selectionHandler.clearSelectionArea();
+        // }
+        this.frameCount = window.performance.now();
         this.ctx.beginPath();
         this.ctx.rect(0, 0, canvas.width, canvas.height);
         this.ctx.fill();
@@ -510,7 +534,7 @@ class GraphView {
         this.frameRateRequests.clear();
         
         this.redrawGraph();
-        this.drawCurrentMaxFPS(currentFPS)
+        this.drawCurrentMaxFPS(currentFPS);
     }
 
     //endregion

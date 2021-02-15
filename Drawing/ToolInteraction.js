@@ -8,19 +8,24 @@ nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
 let tray = document.querySelector("#tool_tray");
 let trayInputs = tray.getElementsByTagName("input");
 let trayIcons = tray.getElementsByClassName("icon");
+
 for (let inputElement of trayInputs) {
     let eventHandler;
-    if ("tool" == inputElement.name) {
-        eventHandler = () => {
-            g.changeTool(inputElement.value);
+
+    switch (inputElement.name) {
+    case "tool":
+        eventHandler = function() {
+            g.primaryTool = inputElement.value;
         }
-    } else if ("feature" == inputElement.name) {
-        eventHandler = () => {
+        break;
+    case "feature":
+        eventHandler = function() {
             ToolRepository[inputElement.value].bind(g)();
             inputElement.checked = false;
         }
+        break;
     }
-    inputElement.addEventListener("change", eventHandler);
+    if (eventHandler) { inputElement.addEventListener("change", eventHandler); }
 }
 
 function iconHover(mouseEvent) {
