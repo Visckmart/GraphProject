@@ -218,7 +218,7 @@ class AlgorithmController {
             this.inputHandler.showcase.style.display = 'flex'
         } else {
             this.inputHandler.showcase.style.display = 'none'
-            this._showcasing?.finish()
+            this.showcasing?.finish?.()
         }
     }
     //#endregion
@@ -293,7 +293,7 @@ class AlgorithmController {
 
         this.hide()
         this.playing = false
-        this.isShowcasing = false
+        this.showcasing = false
         this.messageIsHighlighted = false
         this.messageIsWarning = false
 
