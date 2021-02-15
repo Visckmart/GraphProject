@@ -315,28 +315,14 @@ class GraphView {
         this.selectionHandler.deselect(edge);
         this.structure.removeEdge(edge);
     }
-    // TODO: Organizar protótipo de recurso snap to grid
-    //region
-    adX = null;
-    adY = null;
-    averageDistance() {
-        let totalX = 0;
-        let totalY = 0;
-        let count = 0;
-        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let distX = Math.abs(nodeA.pos.x - nodeB.pos.x)
-            let distY = Math.abs(nodeA.pos.y - nodeB.pos.y)
-            // console.log(`${nodeA.label} – ${Math.round(dist)} (${edge.assignedValue}) – ${nodeB.label}`)
-            totalX += distX;
-            totalY += distY;
-            count += 1;
+
+    snapNodesToGrid() {
+        let gridCellSide = 50;
+        for (let node of this.structure.nodes()) {
+            node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
+            node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
         }
-        console.log(totalX, count, totalX/count)
-        console.log(totalY, count, totalY/count)
-        this.adX = Math.min(Math.abs(totalX/count), 50);
-        this.adY = Math.abs(totalY/count)/2;
     }
-    //endregion
 
     loadSerializedGraph(serialized) {
         let deserializedGraph = Graph.deserialize(serialized);
@@ -428,34 +414,6 @@ class GraphView {
             this.drawSelectionArea();
             this.ctx.restore()
         }
-
-        // TODO: Parte do protótipo do recurso snap to grid
-        //region
-        if (this.adX && this.adY) {
-            let cols = canvas.width/this.adX
-            let rows = canvas.height/this.adY
-            console.log(cols, rows)
-            // for (let col = 0; col < cols; col++) {
-            //     this.ctx.beginPath();
-            //     this.ctx.moveTo(this.adX*col, 0);
-            //     this.ctx.lineTo(this.adX*col, canvas.height);
-            //     this.ctx.stroke();
-            // }
-            // for (let row = 0; row < rows; row++) {
-            //     this.ctx.beginPath();
-            //     this.ctx.moveTo(0, this.adY*row);
-            //     this.ctx.lineTo(canvas.width, this.adY*row);
-            //     this.ctx.stroke();
-            // }
-            // let node = this.structure.nodes().next().value
-            for (let node of this.structure.nodes()) {
-                let roundedX = Math.round(node.pos.x / this.adX)
-                let roundedY = Math.round(node.pos.y / this.adY)
-                // console.log(node.label, node.pos, roundedX, roundedY)
-                node.pos = {x: roundedX * this.adX, y: roundedY * this.adY}
-            }
-        }
-        //endregion
         
         if (this.overlay) {
             // Preenchimento

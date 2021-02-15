@@ -105,7 +105,7 @@ class GraphKeyboardHandler {
             this.graphView.selectionHandler.clear();
             break;
         case "m":
-            this.graphView.averageDistance()
+            this.graphView.snapNodesToGrid();
             break;
         }
 
