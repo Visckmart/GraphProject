@@ -221,7 +221,7 @@ input[type="range"]::-webkit-slider-thumb {
     width: 250pt;
     height: 75vh;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
-    overflow: auto;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
@@ -245,6 +245,13 @@ input[type="range"]::-webkit-slider-thumb {
 
 #showcaseMessage {
     flex: 0 1 auto;
+    height: 100pt;
+    max-height: 100pt;
+    overflow: auto;
+    margin: 10px;
+    padding: 5px;
+    border:3px solid white;
+    border-radius: 5px;
 }
 
 #showcaseBody {
@@ -252,8 +259,6 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 #showcase {
-    width: 100%;
-    height: 100%;
     border-radius: 0;
     background: none;
 }
