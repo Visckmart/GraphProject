@@ -1,5 +1,4 @@
 import AlgorithmShowcase from "../../Drawing/AlgorithmControls/AlgorithmShowcase.js";
-import {ctx} from "../../Drawing/General.js";
 
 const stackElementSize = 50
 const paddingTop = 30
