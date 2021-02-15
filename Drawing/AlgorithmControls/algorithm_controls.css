@@ -209,10 +209,10 @@ input[type="range"]::-webkit-slider-thumb {
     height: fit-content;
 }
 
-#algorithmShowcase:hover {
+#algorithmShowcase:hover, #algorithmShowcase:target{
     left: 0;
 }
-#algorithmShowcase:hover #showcaseTab {
+#algorithmShowcase:hover #showcaseTab, #algorithmShowcase:target #showcaseTab {
     width: 0;
     opacity: 0;
 }
@@ -222,10 +222,31 @@ input[type="range"]::-webkit-slider-thumb {
     height: 75vh;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
     overflow: hidden;
+    position: relative;
 
     display: flex;
     flex-direction: column;
     color:white;
+}
+#showcasePin, #showcaseUnpin {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    opacity: 0.4;
+}
+
+#showcaseUnpin {
+    display: none;
+    opacity: 1;
+}
+
+#algorithmShowcase:target #showcasePin {
+    display: none;
+}
+
+#algorithmShowcase:target #showcaseUnpin {
+    display: block;
 }
 
 #showcaseTab {
