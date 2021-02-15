@@ -205,9 +205,9 @@ class AlgorithmController {
 
     //#region Comportamento de showcase
     _showcasing = null
-    set showcasing(value) {
-        this._showcasing = value
-        if(value) {
+    set showcasing(showcase) {
+        this._showcasing = showcase
+        if(showcase) {
             this.inputHandler.showcase.style.display = 'flex'
         } else {
             this.inputHandler.showcase.style.display = 'none'

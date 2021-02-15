@@ -201,7 +201,7 @@ input[type="range"]::-webkit-slider-thumb {
     flex-direction: row;
     align-items: center;
     position: absolute;
-    left: -150pt;
+    left: -250pt;
     top: 100%;
     bottom: 100%;
     margin: auto 0;
@@ -214,14 +214,18 @@ input[type="range"]::-webkit-slider-thumb {
 }
 #algorithmShowcase:hover #showcaseTab {
     width: 0;
+    opacity: 0;
 }
 
 #showcaseContainer {
-    width: 150pt;
-    min-height: 50vh;
-    max-height: 75vh;
+    width: 250pt;
+    height: 75vh;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
     overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+    color:white;
 }
 
 #showcaseTab {
@@ -231,10 +235,26 @@ input[type="range"]::-webkit-slider-thumb {
     border-bottom-right-radius: 3pt;
     background-color: rgba(0, 0, 0, 0.7);
     margin-bottom: auto;
-    transition: width 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 #showcaseTitle {
-    color: white;
     text-align: center;
+    flex: 0 1 auto;
 }
+
+#showcaseMessage {
+    flex: 0 1 auto;
+}
+
+#showcaseBody {
+    flex: 1 1 auto;
+}
+
+#showcase {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    background: none;
+}
+
