@@ -23,6 +23,11 @@ export default class AlgorithmShowcase {
 
     }
 
+    // Chamado quando um step é carregado pelo controller
+    loadStep(number) {
+
+    }
+
     finish() {
         this.showcaseTitle = ''
         this.showcaseMessage = ''

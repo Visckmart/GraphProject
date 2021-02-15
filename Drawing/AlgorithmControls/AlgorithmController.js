@@ -114,6 +114,10 @@ class AlgorithmController {
             this._progress = value
             this.inputHandler.progressBar.value = value
             this.inputHandler.redrawSliderBackground(this.inputHandler.progressBar)
+
+            // Passando a informação do step atual para o showcase
+            this.showcasing?.loadStep(value)
+
             // Se a etapa atual é válida atualiza o grafo sendo mostrado
             if(this.steps[value])
             {
