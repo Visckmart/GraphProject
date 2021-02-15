@@ -1,15 +1,14 @@
-import { ctx } from "../Drawing/General.js";
-
 import { serializeEdge, deserializeEdge } from "./EdgeSerialization.js";
 
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
-import { backgroundGradient, generateNewRandomLabel } from "./Utilities.js";
+import { generateNewRandomLabel } from "./Utilities.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 
 
 export default class Edge {
 
     constructor({ label, highlights = null } = {}) {
+        this._initialTime = window.performance.now();
         this.label = label ?? generateNewRandomLabel();
         this.highlights = new HighlightsHandler(highlights);
 
@@ -34,8 +33,7 @@ export default class Edge {
     // Executa a cadeia de responsabilidade
     // draw(...args) { this.drawChain.call(...args) }
 
-    drawProcedure = ({ x: xStart, y: yStart },
-         { x: xEnd,   y: yEnd   }) => {
+    drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}) => {
         if (!this.isSelected) {
             ctx.save()
             ctx.lineWidth = 8
@@ -58,21 +56,21 @@ export default class Edge {
 
         for (let highlight of this.highlights.list()) {
             ctx.save()
-            this._drawHighlight(highlight, xStart, yStart, xEnd, yEnd);
+            this._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd);
             ctx.restore()
         }
     }
 
     // TODO: Transformar em ifs como nos highlights dos nós
-    _drawHighlight(highlight, xStart, yStart, xEnd, yEnd) {
+    _drawHighlight = (ctx, highlight, xStart, yStart, xEnd, yEnd) => {
         switch(highlight) {
         case HighlightType.SELECTION:
             ctx.save()
 
             ctx.setLineDash([12, 8]);
             ctx.strokeStyle = "blue";
-            ctx.lineWidth = 5
-            ctx.lineDashOffset = window.performance.now()/100
+            ctx.lineWidth = 7
+            ctx.lineDashOffset = (window.performance.now()-this._initialTime)/75
             ctx.beginPath()
             ctx.moveTo(xStart, yStart);
             ctx.lineTo(xEnd, yEnd);
@@ -95,9 +93,10 @@ export default class Edge {
             break
 
         case HighlightType.LIGHTEN:
+            if (this.highlights.has(HighlightType.SELECTION)) break;
             ctx.save()
             ctx.lineWidth = 9
-            ctx.strokeStyle = "#528FFF";
+            ctx.strokeStyle = "#266EFF";
             ctx.setLineDash([]);
 
 

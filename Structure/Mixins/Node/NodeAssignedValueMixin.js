@@ -1,4 +1,3 @@
-import { ctx } from "../../../Drawing/General.js";
 import {colorFromComponents} from "../../Utilities.js";
 
 function roundRect(ctx, x, y, width, height, radius) {
@@ -15,7 +14,6 @@ function roundRect(ctx, x, y, width, height, radius) {
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
 }
-
 
 let NodeAssignedValueMixin = (superclass) => {
     return class NodeAssignedValue extends  superclass {
@@ -35,7 +33,7 @@ let NodeAssignedValueMixin = (superclass) => {
             }
         }
 
-        drawAuxLabel = () => {
+        drawAuxLabel = (ctx) => {
             if(!this.assignedValue || this.assignedValue == "") { return; }
 
             ctx.save();

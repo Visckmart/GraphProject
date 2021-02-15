@@ -1,7 +1,6 @@
-import { ctx } from "../../../Drawing/General.js";
 import Edge from "../../Edge.js";
 import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
-import {HighlightType} from "../../Highlights.js";
+import { HighlightType } from "../../Highlights.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
     if (!(superclass instanceof Edge || superclass == Edge)) {
@@ -25,8 +24,7 @@ let EdgeAssignedValueMixin = (superclass) => {
             }
         }
 
-        drawText = ({ x: xStart, y: yStart },
-                    { x: xEnd,   y: yEnd   }) => {
+        drawText = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}) => {
             // Calcula o meio da linha
             let midX = (xEnd - xStart)/2
             let midY = (yEnd - yStart)/2

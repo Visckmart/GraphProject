@@ -1,4 +1,3 @@
-import { canvas, ctx } from "../Drawing/General.js";
 import { g } from "../Drawing/GraphView.js";
 import { categoryCheckboxes } from "../Drawing/Interaction.js";
 
@@ -13,10 +12,6 @@ export function refreshInterfaceCategories() {
 export function colorFromComponents(r, g, b, a = 1) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")"
 }
-
-export const backgroundGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-backgroundGradient.addColorStop(0, "#E5E0FF");
-backgroundGradient.addColorStop(1, "#FFE0F3");
 
 
 // Gerando letras aleatórias
