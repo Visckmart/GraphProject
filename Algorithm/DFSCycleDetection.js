@@ -1,17 +1,5 @@
 import {HighlightType} from "../Structure/Highlights.js";
 
-function toggleNodeActive(node) {
-    if(node.highlights.has(HighlightType.DARK_WITH_BLINK))
-    {
-        node.highlights.remove(HighlightType.DARK_WITH_BLINK)
-    } else {
-        node.highlights.add(HighlightType.DARK_WITH_BLINK)
-    }
-}
-
-function markEdgeAsVisited(edge) {
-    edge.highlights.add(HighlightType.DARKEN)
-}
 
 
 export default function DFSCycleDetection(controller) {
@@ -28,8 +16,11 @@ export default function DFSCycleDetection(controller) {
     mainLoop: while(stack.length > 0){
         // Retirando novo nó do topo da pilha
         currentNode = stack.pop()
+        // Destacando nó como visitado
+        currentNode.highlights.add(HighlightType.DARK_WITH_BLINK)
+        // Removendo destaque de nós na stack
+        currentNode.highlights.remove(HighlightType.LIGHTEN)
         currentNode.visited = true
-        toggleNodeActive(currentNode)
 
         // Procurando por nós não visitados
         for(let [edge, node] of graph.edgesFrom(currentNode))
@@ -41,12 +32,18 @@ export default function DFSCycleDetection(controller) {
 
                 // Salvando nó atual para verificação posterior e marcando o nó descoberto para visitação
                 node.ancestral = currentNode
+
+                // Colocando nós na stack e adicionando highlight de nós na stack
                 stack.push(currentNode)
                 stack.push(node)
-                markEdgeAsVisited(edge)
+                currentNode.highlights.add(HighlightType.LIGHTEN)
+                currentNode.highlights.add(HighlightType.LIGHTEN)
+
+                edge.highlights.add(HighlightType.DARKEN)
 
                 controller.addStep(graph, `O nó ${node.label} foi descoberto.`)
-                toggleNodeActive(currentNode)
+                // Desmarcando nó como ativo
+                currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
 
                 // Prosseguindo para o nó descoberto
                 continue mainLoop
@@ -73,7 +70,7 @@ export default function DFSCycleDetection(controller) {
         }
         // Caso nenhum nó tenha sido encontrado, mandar mensagem de nenhum nó encontrado
         controller.addStep(graph, `Verificando o nó ${currentNode.label}, nenhum nó novo encontrado.`)
-        toggleNodeActive(currentNode)
+        currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
     }
     controller.addStep(graph, "Nenhum loop encontrado. Algoritmo finalizado.")
 }
