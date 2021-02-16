@@ -99,6 +99,8 @@ export default class GraphSelection {
         } else { // Se não é nem um nó, nem uma aresta, algo de errado aconteceu
             console.error(`Remoção de seleção chamada para ${element}.`);
         }
+        this.graphView.selectionChanged();
+        this.refreshMenu();
     }
 
     isQuickSelection = false;

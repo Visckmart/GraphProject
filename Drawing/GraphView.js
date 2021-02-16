@@ -283,7 +283,7 @@ class GraphView {
                 frontmostNode = node;
             }
         }
-        this.selectionHandler.deselect(frontmostNode);
+        this.selectionHandler.clear()
         this.structure.removeNode(frontmostNode);
     }
 
