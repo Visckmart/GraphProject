@@ -186,15 +186,22 @@ class Heap extends AlgorithmShowcase{
 
     _drawElement(x, y, element) {
         let ctx = this.ctx
+        console.log(element)
         ctx.save()
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 5;
         ctx.strokeStyle = '#8b0000'
-        ctx.fillStyle = '#ff726f'
-
+        // ctx.fillStyle = '#ff726f'
+        ctx.strokeStyle = element._originalcolor
         ctx.beginPath();
         ctx.arc(x, y, elementRadius, 0, 2*Math.PI);
-        ctx.fill()
+
         ctx.stroke()
+        ctx.fillStyle = "black"
+        ctx.fill()
+        ctx.fillStyle = element._originalcolor
+        ctx.globalAlpha = 0.5
+        ctx.fill()
+        ctx.globalAlpha = 1
 
         ctx.beginPath()
         ctx.textAlign = 'center'
