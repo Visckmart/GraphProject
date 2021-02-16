@@ -169,10 +169,10 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             // Se a distância atual NÃO é menor que a registrada
             } else {
                 controller.addStep(graph,
-                                   `Analisando a distância do nó
-                                   ${currentNode.label} até ${node.label}.
-                                   Sua distância ${node.distance} é menor ou
-                                   igual a nova distância ${newDistance} e
+                                   `Analisando a distância do nó \
+                                   ${currentNode.label} até ${node.label}. \
+                                   Sua distância ${node.distance} é menor ou \
+                                   igual a nova distância ${newDistance} e \
                                    portanto não será atualizada.`)
             }
             markAsVisited(edge)
