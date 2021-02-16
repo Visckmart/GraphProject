@@ -1,6 +1,8 @@
 import { Tool } from "./General.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
+import PrimMST from "../Algorithm/PrimMST.js";
+import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 
 class GraphKeyboardHandler {
 
@@ -96,7 +98,22 @@ class GraphKeyboardHandler {
         switch (keyboardEvent.key) {
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
-            algorithmController.setup(DijkstraShortestPath);
+            let algorithmSelector = document.getElementById("algorithm")
+            let chosenAlgorithm = null;
+            switch (algorithmSelector.value) {
+            case 'Dijkstra':
+                chosenAlgorithm = DijkstraShortestPath
+                break
+            case 'PrimMST':
+                chosenAlgorithm = PrimMST
+                break
+            case 'DFSCycleDetection':
+                chosenAlgorithm = DFSCycleDetection
+                break
+            default:
+                break;
+            }
+            algorithmController.setup(chosenAlgorithm);
             break;
         case "s":
             console.log(this.graphView.structure.serialize());
