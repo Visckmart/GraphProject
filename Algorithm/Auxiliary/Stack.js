@@ -16,9 +16,14 @@ export default class Stack extends AlgorithmShowcase {
     }
 
     addStep() {
+        let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
+        for(let message of this._messages) {
+            fullMessage += message + '\n'
+        }
+
         this._steps.push({
             stack: Array.from(this._stack),
-            messages: Array.from(this._messages)
+            message: fullMessage
         })
         this._messages = []
     }
@@ -26,22 +31,16 @@ export default class Stack extends AlgorithmShowcase {
     loadStep(number) {
         if(this._steps[number]) {
             this._stack = this._steps[number].stack
-            this._messages = this._steps[number].messages
+            this.showcaseMessage = this._steps[number].message
         }
 
         this.updateShowcase()
     }
 
     updateShowcase() {
-        let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
-        for(let message of this._messages) {
-            fullMessage += message + '\n'
-        }
-        this.showcaseMessage = fullMessage
         this.resizeCanvas(this.body.clientWidth, this.length * stackElementSize + paddingTop + paddingBottom)
 
         requestAnimationFrame(this.drawStack)
-
     }
 
     drawStackElement = (element, index) => {
