@@ -46,81 +46,115 @@ export default async function DijkstraShortestPath(controller) {
 
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graphView.structure
-
+    for (let node of graph.nodes()) {
+        Object.defineProperty(node, 'distance',
+            {
+              set: function (a) {
+                  node.assignedValue = a == Infinity ? "∞" : a.toString();
+                  node._distance = a;
+              },
+              get: function () {
+                  return node._distance;
+              }
+            });
+    }
+    /* 1. create vertex set Q */
     /* Inicializando heap secundário */
     let heap = new MinHeap()
     controller.showcasing = heap
 
+    // Preparando visualmente as arestas
+    for (let [edge, , ] of graph.uniqueEdges()) {
+        markAsNotVisited(edge)
+    }
+
+    /*
+    2.
+    for each vertex v in Graph:
+        dist[v] ← INFINITY
+        prev[v] ← UNDEFINED
+        add v to Q
+    dist[source] ← 0
+    */
+
+    // Preparando nó inicial
     initialNode.distance = 0
     initialNode.previous = {edge: null, node: null}
-    initialNode.visited = false
-    initialNode.assignedValue = '0'
 
+    // Preparando os outros nós
     for (let node of graph.nodes()) {
         if (node !== initialNode) {
             node.distance = Infinity
             node.previous = {edge: null, node: null}
-            node.visited = false
-            node.assignedValue = '∞'
         }
-        heap.insert(node, node.distance)
+        heap.insert(node, node.distance);
     }
-    // console.log(graph.serialize())
-    // console.log(graph)
-    // Adiciona um efeito de tracejado em todas as arestas
-    for (let [edge, , ] of graph.uniqueEdges()) {
-        markAsNotVisited(edge)
-        // console.log("e", edge)
-    }
-
-    controller.addStep(graph, `Marcando todos os nós menos o nó inicial como não visitados e colocando suas distâncias como ∞.\nO nó inicial é marcado com distância 0.`)
+    controller.addStep(graph,
+                       `Marcando todos os nós menos o nó inicial como não \
+                       visitados e colocando suas distâncias como ∞.
+                       O nó inicial é marcado com distância 0.`)
 
 
-    let currentNode;
+    /*
+    3.
+    while Q is not empty:
+        u ← vertex in Q with min dist[u]
+        remove u from Q
+        ...
+     */
+    let currentNode = null;
     while (currentNode !== finalNode) {
         currentNode = heap.remove();
         if (!currentNode || currentNode.distance === Infinity) {
             break;
         }
-
-        // currentNode.addHighlight(HighlightType.ALGORITHM_FOCUS2)
         markAsActive(currentNode)
-        
+
+
         // Código muito confuso e possivelmente com problema que não cria um
         // passo visitando um nó se ele não tem pra onde ir.
         // Pode ser que valha a pena visitar pra dizer que tentou ir pra algum lugar.
         let connectedEdges = graph.edgesFrom(currentNode)
         if (!(connectedEdges.next() !== currentNode.previous.node && connectedEdges.next().done)) {
-            controller.addStep(graph, `Começando a visitação do nó ${currentNode.label}.`)
+            controller.addStep(graph,
+                               `Começando a visitação do nó ${currentNode.label}.`)
         }
 
-
+        /*
+        4.
+        for each neighbor v of u:           // only v that are still in Q
+            alt ← dist[u] + length(u, v)
+            if alt < dist[v]:
+                dist[v] ← alt
+                prev[v] ← u
+         */
         // Passa por todos os nós conectados ao atual
-        for(let [edge, node] of graph.edgesFrom(currentNode)) {
+        for (let [edge, node] of graph.edgesFrom(currentNode)) {
             // Ignora o nó anterior
-            if(node === currentNode.previous.node) {
-                continue
-            }
+            if(node === currentNode.previous.node) { continue; }
 
             markAsVisited(node)
             markAsVisiting(edge)
-            // edge.addHighlight(HighlightType.ALGORITHM_FOCUS)
 
-            // console.log(currentNode.label + "->" + node.label, currentNode.highlights)
-            
-            let newDistance = currentNode.distance + Number.parseFloat(edge?.assignedValue ?? 1)
+            let edgeValue = Number.parseFloat(edge?.assignedValue ?? 1)
+            let newDistance = currentNode.distance + edgeValue;
             // Se a distância atual é menor que a registrada
-            if(newDistance < node.distance) {
-                let oldDistance = node.distance
+            if (newDistance < node.distance) {
+                let oldDistance = node.distance === Infinity ? '∞' : node.distance
 
                 node.distance = newDistance
-                node.assignedValue = newDistance.toString()
                 node.previous = {edge: edge, node: currentNode}
 
                 // Atualizando peso
                 heap.changeValue(node, node.distance)
 
-                controller.addStep(graph, `Analisando a distância do nó ${currentNode.label} até ${node.label}, atualizando sua distância para ${newDistance}, que é menor que a distância atual ${oldDistance === Infinity ? '∞' : oldDistance}, e salvando a aresta destacada como a aresta anterior no caminho.`)
+                controller.addStep(graph,
+                                   `Analisando a distância do nó \
+                                   ${currentNode.label} até ${node.label}, \
+                                   atualizando sua distância para ${newDistance}, \
+                                   que é menor que a distância atual \
+                                   ${oldDistance}, e salvando a aresta destacada \
+                                   como a aresta anterior no caminho.`)
 
             // Se a distância atual NÃO é menor que a registrada
             } else {
@@ -129,24 +163,23 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             markAsVisited(edge)
         }
 
-        currentNode.visited = true
         markAsNotActive(currentNode)
         markAsVisited(currentNode)
         if (currentNode === initialNode) {
             initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
         }
-        // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS)
-        // currentNode.removeHighlight(HighlightType.ALGORITHM_FOCUS2)
-        // currentNode.addHighlight(HighlightType.ALGORITHM_VISITED)
-        // controller.addStep(graph, `Concluindo a visitação do nó ${currentNode.label.split(' ')[0]} e o marcando como visitado.`)
     }
+
     let textoPassoFinal;
     finalNode.highlights.add(HighlightType.DARK_WITH_BLINK)
     if(currentNode === finalNode) {
-        textoPassoFinal = 'Nó final foi visitado portanto as visitações estão concluídas.\nCaminhando pelas distâncias mais curtas para encontrar o menor caminho.'
+        textoPassoFinal = 'Nó final foi visitado portanto as visitações estão' +
+                          'concluídas.\nCaminhando pelas distâncias mais curtas' +
+                          'para encontrar o menor caminho.'
+
+        // Caminhe pelos nós e pelas arestas anteriores, destacando-os
         currentNode = finalNode
-        while(currentNode !== null)
-        {
+        while(currentNode !== null) {
             currentNode.highlights.add(HighlightType.COLORED_BORDER)
             if(currentNode.previous.edge) {
                 currentNode.previous.edge.highlights.add(HighlightType.COLORED_BORDER)
@@ -154,7 +187,8 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             currentNode = currentNode.previous.node
         }
     } else {
-        textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância menor que ∞, portanto a visitação foi concluída.'
+        textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância' +
+                          'menor que ∞, portanto a visitação foi concluída.'
     }
     controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.')
 }
