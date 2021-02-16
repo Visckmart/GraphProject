@@ -46,17 +46,19 @@ export default async function DijkstraShortestPath(controller) {
 
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graphView.structure
+
+    // Preparando a relação entre distance e assignedValue
     for (let node of graph.nodes()) {
-        Object.defineProperty(node, 'distance',
-            {
-              set: function (a) {
-                  node.assignedValue = a == Infinity ? "∞" : a.toString();
-                  node._distance = a;
-              },
-              get: function () {
-                  return node._distance;
-              }
-            });
+        Object.defineProperty(node, 'distance', {
+            get: function () {
+                return node._distance;
+            },
+            set: function (dist) {
+                node.assignedValue = dist == Infinity ? "∞" : dist.toString();
+                node._distance = dist;
+            },
+            configurable: true
+        });
     }
     /* 1. create vertex set Q */
     /* Inicializando heap secundário */
@@ -105,19 +107,26 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let currentNode = null;
     while (currentNode !== finalNode) {
         currentNode = heap.remove();
-        if (!currentNode || currentNode.distance === Infinity) {
-            break;
-        }
+        if (!currentNode || currentNode.distance === Infinity) { break; }
+
         markAsActive(currentNode)
 
 
-        // Código muito confuso e possivelmente com problema que não cria um
-        // passo visitando um nó se ele não tem pra onde ir.
-        // Pode ser que valha a pena visitar pra dizer que tentou ir pra algum lugar.
-        let connectedEdges = graph.edgesFrom(currentNode)
-        if (!(connectedEdges.next() !== currentNode.previous.node && connectedEdges.next().done)) {
+        // Checa se o nó tem vizinhos além do que alcançou ele
+        let hasInterestingNeighbours = false;
+        for (let [neighbourEdge, ] of graph.edgesFrom(currentNode)) {
+            if (neighbourEdge === currentNode.previous.edge) { continue; }
+            hasInterestingNeighbours = true;
+            break;
+        }
+        if (hasInterestingNeighbours) {
             controller.addStep(graph,
                                `Começando a visitação do nó ${currentNode.label}.`)
+        } else {
+            controller.addStep(graph,
+                               `Começando a visitação do nó ${currentNode.label}. \
+                               Como o nó ${currentNode.label} não tem mais \
+                               vizinhos, não há mais nada a fazer.`)
         }
 
         /*
@@ -191,4 +200,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                           'menor que ∞, portanto a visitação foi concluída.'
     }
     controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.')
+
+    // Removendo a relação entre distance e assignedValue
+    for (let node of graph.nodes()) { delete node.distance; }
 }
