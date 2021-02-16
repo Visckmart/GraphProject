@@ -49,6 +49,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
     /* Inicializando heap secundário */
     let heap = new MinHeap()
+    controller.showcasing = heap
 
     initialNode.distance = 0
     initialNode.previousEdge = null
