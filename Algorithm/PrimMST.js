@@ -124,6 +124,12 @@ export default function PrimMST(controller) {
     }
 
     if(treeCompleted) {
+        for(let [edge,,] of graph.edges()) {
+            if(!edge.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+                edge.highlights.add(HighlightType.DARK_WITH_BLINK)
+            }
+        }
+
         controller.addStep(graph, 'Árvore geradora mínima encontrada!')
     } else {
         controller.addStep(graph, 'O grafo não é conexo portanto não há árvore geradora mínima.')
