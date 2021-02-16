@@ -162,7 +162,7 @@ class Heap extends AlgorithmShowcase{
             this.showcaseMessage = this._steps[number].message
 
             this.resizeCanvas(this.body.clientWidth,
-                Math.log2(this._heapSize) * (elementRadius + distanceBetweenLevels) + paddingTop)
+                 Math.floor(Math.log2(this._heapSize)+1) * (elementRadius + distanceBetweenLevels) + paddingTop)
 
             requestAnimationFrame(this.drawHeap)
         }
