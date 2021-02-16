@@ -219,9 +219,11 @@ export default class GraphSelection {
         // A ferramenta MOVE for a escolhida,
         case Tool.MOVE: {
             let containedNodes = this.graphView.getNodesWithin(startPoint,
-                                                               endPoint);
+                                                               endPoint)
             if (this._additionOnlyMode) {
-                this.selected.nodes = this.selected.nodes.concat(...containedNodes);
+                let filteredContainedNodes = Array.from(containedNodes)
+                    .filter(node => !this.selected.nodes.includes(node))
+                this.selected.nodes = this.selected.nodes.concat(...filteredContainedNodes);
             } else {
                 this.clear()
                 this.selected.nodes = containedNodes;
@@ -232,7 +234,9 @@ export default class GraphSelection {
             let containedEdges = this.graphView.getEdgesWithin(startPoint,
                                                                endPoint);
             if (this._additionOnlyMode) {
-                this.selected.edges = this.selected.edges.concat(...containedEdges);
+                let filteredContainedEdges = Array.from(containedEdges)
+                    .filter(edge => !this.selected.edges.includes(edge))
+                this.selected.edges = this.selected.edges.concat(...filteredContainedEdges);
             } else {
                 this.clear()
                 this.selected.edges = containedEdges;
@@ -240,7 +244,6 @@ export default class GraphSelection {
             break;
         }
         }
-
         this.graphView.selectionChanged();
         this.refreshMenu()
     }
