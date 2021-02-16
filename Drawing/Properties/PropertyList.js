@@ -28,17 +28,18 @@ class PropertyList extends HTMLElement {
                 this.repository = NodePropertyRepository
                 break
             case 'all':
-                this.repository = EdgePropertyRepository
+                this.repository = {}
                 // Unindo os dois repositórios
-                for(let algorithm of Object.keys(this.repository))
+                for(let algorithm of Object.keys(EdgePropertyRepository))
                 {
-                    for(let property of Object.keys(NodePropertyRepository[algorithm] ?? {}))
+                    for(let property of Object.keys(EdgePropertyRepository[algorithm] ?? {}))
                     {
-                        if(!this.repository[algorithm][property]) {
+                        if(NodePropertyRepository?.[algorithm]?.[property]) {
                             this.repository[algorithm][property] = NodePropertyRepository[algorithm][property]
                         }
                     }
                 }
+                break
         }
     }
 
@@ -79,6 +80,7 @@ class PropertyList extends HTMLElement {
     }
 
     updateProperties(selectedAlgorithm = '', ...artifacts) {
+        console.log(this.artifactType, this.repository, artifacts)
         this.container.innerHTML = ''
 
         for(let property of Object.keys(this.repository.default ?? {})) {
