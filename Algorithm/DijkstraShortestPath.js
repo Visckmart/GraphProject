@@ -60,6 +60,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             configurable: true
         });
     }
+
     /* 1. create vertex set Q */
     /* Inicializando heap secundário */
     let heap = new MinHeap()
@@ -149,7 +150,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             let newDistance = currentNode.distance + edgeValue;
             // Se a distância atual é menor que a registrada
             if (newDistance < node.distance) {
-                let oldDistance = node.distance === Infinity ? '∞' : node.distance
+                let oldDistanceStr = node.distance === Infinity ? '∞' : node.distance
 
                 node.distance = newDistance
                 node.previous = {edge: edge, node: currentNode}
@@ -162,12 +163,17 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                                    ${currentNode.label} até ${node.label}, \
                                    atualizando sua distância para ${newDistance}, \
                                    que é menor que a distância atual \
-                                   ${oldDistance}, e salvando a aresta destacada \
-                                   como a aresta anterior no caminho.`)
+                                   ${oldDistanceStr}, e salvando a aresta
+                                   destacada como a aresta anterior no caminho.`)
 
             // Se a distância atual NÃO é menor que a registrada
             } else {
-                controller.addStep(graph, `Analisando a distância do nó ${currentNode.label} até ${node.label}, sua distância ${node.distance} é menor ou igual a nova distância ${newDistance} e portanto não será atualizada.`)
+                controller.addStep(graph,
+                                   `Analisando a distância do nó
+                                   ${currentNode.label} até ${node.label}.
+                                   Sua distância ${node.distance} é menor ou
+                                   igual a nova distância ${newDistance} e
+                                   portanto não será atualizada.`)
             }
             markAsVisited(edge)
         }
@@ -179,24 +185,22 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         }
     }
 
+    finalNode.highlights.add(HighlightType.DARK_WITH_BLINK);
     let textoPassoFinal;
-    finalNode.highlights.add(HighlightType.DARK_WITH_BLINK)
     if(currentNode === finalNode) {
-        textoPassoFinal = 'Nó final foi visitado portanto as visitações estão' +
-                          'concluídas.\nCaminhando pelas distâncias mais curtas' +
+        textoPassoFinal = 'Nó final foi visitado portanto as visitações estão ' +
+                          'concluídas.\nCaminhando pelas distâncias mais curtas ' +
                           'para encontrar o menor caminho.'
 
         // Caminhe pelos nós e pelas arestas anteriores, destacando-os
         currentNode = finalNode
         while(currentNode !== null) {
             currentNode.highlights.add(HighlightType.COLORED_BORDER)
-            if(currentNode.previous.edge) {
-                currentNode.previous.edge.highlights.add(HighlightType.COLORED_BORDER)
-            }
+            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_BORDER)
             currentNode = currentNode.previous.node
         }
     } else {
-        textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância' +
+        textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância ' +
                           'menor que ∞, portanto a visitação foi concluída.'
     }
     controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.')
