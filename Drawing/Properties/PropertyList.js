@@ -70,7 +70,7 @@ class PropertyList extends HTMLElement {
             artifacts.map(a => a[property] = event.target.value)
         })
         this.container.appendChild(pElement)
-        if(selected) {
+        if(selected && !artifacts.length > 1) {
             // Focando num timeout por que navegadores são estranhos
             setTimeout(() => {
                 iElement.focus()
