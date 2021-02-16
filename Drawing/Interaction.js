@@ -80,7 +80,6 @@ runAlgorithmButton.onclick = async () => {
 
     switch (algorithmSelector.value) {
         case 'Dijkstra':
-        default:
             await algorithmController.setup(DijkstraShortestPath)
             break
         case 'PrimMST':
@@ -89,6 +88,8 @@ runAlgorithmButton.onclick = async () => {
         case 'DFSCycleDetection':
             await algorithmController.setup(DFSCycleDetection)
             break
+    default:
+        break;
     }
 }
 

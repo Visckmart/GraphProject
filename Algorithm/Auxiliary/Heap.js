@@ -186,7 +186,6 @@ class Heap extends AlgorithmShowcase{
 
     _drawElement(x, y, element) {
         let ctx = this.ctx
-        console.log(element)
         ctx.save()
         ctx.lineWidth = 5;
         ctx.strokeStyle = '#8b0000'

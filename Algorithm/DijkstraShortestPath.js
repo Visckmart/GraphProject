@@ -52,16 +52,14 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     controller.showcasing = heap
 
     initialNode.distance = 0
-    initialNode.previousEdge = null
-    initialNode.previousNode = null
+    initialNode.previous = {edge: null, node: null}
     initialNode.visited = false
     initialNode.assignedValue = '0'
 
     for (let node of graph.nodes()) {
         if (node !== initialNode) {
             node.distance = Infinity
-            node.previousEdge = null
-            node.previousNode = null
+            node.previous = {edge: null, node: null}
             node.visited = false
             node.assignedValue = '∞'
         }
@@ -92,7 +90,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // passo visitando um nó se ele não tem pra onde ir.
         // Pode ser que valha a pena visitar pra dizer que tentou ir pra algum lugar.
         let connectedEdges = graph.edgesFrom(currentNode)
-        if (!(connectedEdges.next() !== currentNode.previousNode && connectedEdges.next().done)) {
+        if (!(connectedEdges.next() !== currentNode.previous.node && connectedEdges.next().done)) {
             controller.addStep(graph, `Começando a visitação do nó ${currentNode.label}.`)
         }
 
@@ -100,7 +98,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // Passa por todos os nós conectados ao atual
         for(let [edge, node] of graph.edgesFrom(currentNode)) {
             // Ignora o nó anterior
-            if(node === currentNode.previousNode) {
+            if(node === currentNode.previous.node) {
                 continue
             }
 
@@ -117,8 +115,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
                 node.distance = newDistance
                 node.assignedValue = newDistance.toString()
-                node.previousEdge = edge
-                node.previousNode = currentNode
+                node.previous = {edge: edge, node: currentNode}
 
                 // Atualizando peso
                 heap.changeValue(node, node.distance)
@@ -151,10 +148,10 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         while(currentNode !== null)
         {
             currentNode.highlights.add(HighlightType.COLORED_BORDER)
-            if(currentNode.previousEdge) {
-                currentNode.previousEdge.highlights.add(HighlightType.COLORED_BORDER)
+            if(currentNode.previous.edge) {
+                currentNode.previous.edge.highlights.add(HighlightType.COLORED_BORDER)
             }
-            currentNode = currentNode.previousNode
+            currentNode = currentNode.previous.node
         }
     } else {
         textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância menor que ∞, portanto a visitação foi concluída.'
