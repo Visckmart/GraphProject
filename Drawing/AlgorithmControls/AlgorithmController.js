@@ -114,6 +114,10 @@ class AlgorithmController {
             this._progress = value
             this.inputHandler.progressBar.value = value
             this.inputHandler.redrawSliderBackground(this.inputHandler.progressBar)
+
+            // Passando a informação do step atual para o showcase
+            this.showcasing?.loadStep(value)
+
             // Se a etapa atual é válida atualiza o grafo sendo mostrado
             if(this.steps[value])
             {
@@ -203,6 +207,22 @@ class AlgorithmController {
     }
     //#endregion
 
+    //#region Comportamento de showcase
+    _showcasing = null
+    get showcasing() {
+        return this._showcasing
+    }
+    set showcasing(showcase) {
+        this._showcasing = showcase
+        if(showcase) {
+            this.inputHandler.showcase.style.display = 'flex'
+        } else {
+            this.inputHandler.showcase.style.display = 'none'
+            this.showcasing?.finish?.()
+        }
+    }
+    //#endregion
+
     // Esconde a barra de play
     hide() {
         this.inputHandler.controls.style.display = 'none'
@@ -223,6 +243,8 @@ class AlgorithmController {
     addStep(graph, message) {
         this.steps.push(new Step(graph, message))
         this.inputHandler.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
+
+        this.showcasing?.addStep()
     }
 
     async resolveRequirements() {
@@ -258,6 +280,7 @@ class AlgorithmController {
         this.graphView.redrawGraph()
         this.playing = true
         this.progress = 0
+        this.isBlocked = false
     }
 
 
@@ -270,6 +293,7 @@ class AlgorithmController {
 
         this.hide()
         this.playing = false
+        this.showcasing = false
         this.messageIsHighlighted = false
         this.messageIsWarning = false
 

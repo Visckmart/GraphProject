@@ -30,6 +30,7 @@ canvas {
 }
 .canvasContainer {
   margin-left: 10pt;
+  overflow: hidden;
 }
 /*endregion*/
 

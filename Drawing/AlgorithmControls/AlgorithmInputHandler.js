@@ -17,6 +17,7 @@ export default class AlgorithmInputHandler {
         this.backButton = document.getElementById("back_button")
         this.forwardButton = document.getElementById("forward_button")
         this.exitButton = document.getElementById("exit_button")
+        this.showcase = document.getElementById("algorithmShowcase")
 
         // Requisitos
         this._requirements = []

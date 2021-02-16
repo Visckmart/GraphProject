@@ -255,4 +255,8 @@ export default class Node {
     static from(node) {
         return new this(node._args);
     }
+
+    toString() {
+        return this.label
+    }
 }
