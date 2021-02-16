@@ -9,7 +9,7 @@ export function getColorRotation() {
 }
 
 // Canvas
-export var canvas = document.querySelector("canvas");
+export var canvas = document.getElementById("mainCanvas");
 canvas.width = window.innerWidth*0.75;
 canvas.height = window.innerHeight*0.95;
 

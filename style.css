@@ -19,10 +19,14 @@ body {
 
 
 /*region Canvas*/
-canvas {
+#mainCanvas {
   border-radius: 10pt 0 0 10pt;
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
   transition: 0.1s;
+}
+#overCanvas {
+  position: absolute;
+  background-color: blue;
 }
 .canvasArea {
   position: relative;
