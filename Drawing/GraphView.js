@@ -317,7 +317,7 @@ class GraphView {
     }
 
     snapNodesToGrid() {
-        let gridCellSide = 50;
+        let gridCellSide = 2*regularNodeRadius + 10;
         for (let node of this.structure.nodes()) {
             node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
             node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
@@ -469,6 +469,9 @@ class GraphView {
     }
 
     getCurrentFPS() {
+        // Evitando processamento se o mapa estiver vazio
+        if (this.frameRateRequests.size == 0) { return IDLE_MAX_FPS }
+
         let requestValues = this.frameRateRequests.values()
         let highestFPS = Math.max(...requestValues)
 
