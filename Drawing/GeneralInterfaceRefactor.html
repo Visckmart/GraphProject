@@ -4,66 +4,145 @@
     <meta charset="UTF-8">
     <title>New Interface</title>
     <style>
+        :root {
+            --interfaceMargin: 10pt;
+            --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 15pt);
+            --menuWidth: 200pt;
+        }
         body {
-            background-color: #88F;
+            margin: 0;
+            font-family: Helvetica Neue, sans-serif;
         }
 
         #interfaceContainer {
-            /*margin: 0pt;*/
-            margin: 10pt;
-            background-color: #2F2;
             position: relative;
             display: flex;
-            align-items: stretch;
             flex-direction: row;
+            align-items: stretch;
             z-index: 0;
-            max-height: 90vh;
-        }
-        #canvasArea {
-            /*margin-top: 40pt;*/
-            position: relative;
-            background-color: #F44;
-            flex: 0 1 auto;
-            width: 75%;
-            z-index: 1;
-            /*height: 50%;*/
-        }
-        #menuArea {
-            background-color: gray;
-            flex: 1 1 auto;
-            z-index: 1;
+
+            margin: var(--interfaceMargin);
+            margin-bottom: 5pt;
+            max-height: var(--maxHeight);
+            border-radius: 8pt;
             overflow: hidden;
-            max-height: 100%;
         }
-        .menuContent {
-            overflow: auto;
-            height: 100%;
-            background-color: white;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            max-height: 100%;
-        }
-        #menuTitle {
-            flex: 0 1 auto
-        }
-        #menuBody {
-            flex: 1 1 auto;
-            overflow: auto;
+
+        /* CANVAS */
+        #canvasArea {
+            position: relative;
+            flex: 0 1 auto;
+            z-index: 1;
+            height: var(--maxHeight);
+            max-height: var(--maxHeight);
+
+            width: calc(100% - var(--menuWidth));
+            max-width: calc(100% - var(--menuWidth));
+            background: linear-gradient(to right, #E5E0FF, #FFE0F3);
         }
         #mainCanvas {
-        /*    position:absolute; top:0px; left:0px;*/
-            background-color: #FF000088;
-            max-width: 100%;
-            height: 100%;
+            background: linear-gradient(to right, #E5E0FF, #FFE0F3);
         }
         #overCanvas {
             position: absolute;
             left: 0; top: 0; right: 0; bottom: 0;
-            background-color: #00FFFF33;
             z-index: 10;
-            max-width: 100%;
-            height: 100%;
+        }
+
+        /* MENU */
+        #menuArea {
+            flex: 1 1 auto;
+            overflow: hidden;
+            z-index: 1;
+            max-height: 100%;
+
+            border-left: 2pt solid #444;
+            width: var(--menuWidth);
+            max-width: var(--menuWidth);
+            background: linear-gradient(to right, #EBEBEB, #D9D9D9);
+        }
+        .menuContent {
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+
+            margin: 10pt;
+            margin-right: 5pt;
+            height: calc(100% - 10pt);
+        }
+        .menuTitle {
+            flex: 0 1 auto;
+
+            width: fit-content;
+            margin-top: 0;
+            margin-bottom: 4pt;
+            border-bottom: 2pt solid darkgray;
+        }
+        .menuBody {
+            flex: 1 1 auto;
+            overflow: auto;
+            padding-right: 10pt;
+        }
+        .menuBodyScrolled {
+            border-top: 1pt solid lightgray;
+        }
+
+        /* SECTION */
+        .settingsSection {
+            color: #444;
+            padding-top: 5pt;
+            padding-bottom: 5pt;
+            border-bottom: 1pt solid gray;
+        }
+        .settingsSection:last-of-type {
+            border-bottom: none;
+        }
+
+        .sectionTitle {
+            margin-top: 0pt;
+            margin-bottom: 2pt;
+            margin-left: 2pt;
+            font-size: 13pt;
+            font-weight: bold;
+        }
+        .sectionSubtitle {
+            margin-top: 5pt;
+            margin-bottom: 2pt;
+            margin-left: 2pt;
+            font-size: 11pt;
+        }
+
+        .settingsSection select {
+            margin-left: 2pt;
+            width: 140pt;
+            font-size: 12pt;
+        }
+        .settingsSection input {
+            font-size: 12pt;
+        }
+        .settingsSection > label {
+            margin-left: 2pt;
+            margin-right: 4pt;
+            font-size: 11pt;
+        }
+        .settingsSection > button {
+            margin: 0;
+        }
+
+        .favorite {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 4pt;
+            padding: 2pt;
+            padding-left: 4pt;
+            border-radius: 4pt;
+            background-color: #FFFA;
+            font-family: monospace;
+        }
+        .favoriteEmpty {
+            background-color: transparent;
         }
     </style>
 </head>
@@ -74,33 +153,95 @@
         <canvas id="overCanvas"></canvas>
     </div>
     <div id="menuArea">
-        <div class="menuContent">
-            <h2 id="menuTitle">Grafo</h2>
-            <div id="menuBody">
-                a
-                <br/><br/><br/><br/><br/><br/><br/>
-                b
-                <br/><br/><br/><br/><br/><br/><br/>
-                c
-                <br/><br/><br/><br/><br/><br/><br/>
-                d
-                a
-                <br/><br/><br/><br/><br/><br/><br/>
-                b
-                <br/><br/><br/><br/><br/><br/><br/>
-                c
-                <br/><br/><br/><br/><br/><br/><br/>
-                d
-                <br/><br/><br/><br/><br/><br/><br/>
-                d
-                <br/><br/><br/><br/><br/><br/><br/>
-                d
+        <div class="menuContent" id="GraphSettings">
+            <h2 class="menuTitle">Grafo</h2>
+            <div class="menuBody">
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">
+                        <label for="algorithm">Algoritmo</label>
+                    </h4>
+                    <select id="algorithm">
+                        <option value="none">Nenhum</option>
+                        <optgroup label="Busca">
+                            <option value="BFS" disabled>Busca em Largura</option>
+                            <option value="DFS" disabled>Busca em Profundidade</option>
+                        </optgroup>
+                        <optgroup label="Menor Caminho">
+                            <option value="Dijkstra" selected>Dijkstra (Menor Caminho)</option>
+                        </optgroup>
+                        <optgroup label="Árvore Geradora Mínima">
+                            <option value="PrimMST">Prim (Árvore Geradora Mínima)</option>
+                        </optgroup>
+                        <optgroup label="Ciclos">
+                            <option value="DFSCycleDetection">DFS (Detecção de ciclo)</option>
+                        </optgroup>
+                    </select>
+                    <button id="run_algorithm">Run</button>
+                    <br>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Características</h4>
+                    <h5 class="sectionSubtitle">Nós</h5>
+                    <input type="checkbox" id="coloredNodes" checked /><label for="coloredNodes">Coloridos</label>
+                    <h5 class="sectionSubtitle">Arestas</h5>
+                    <input type="checkbox" id="directedEdges"/><label for="directedEdges">Direcionadas</label>
+                    <br>
+                    <input type="checkbox" id="weighedEdges"/><label for="weighedEdges">Pesado</label>
+                    <br>
+                    <input type="checkbox" id="coloredEdges" /><label for="coloredEdges">Coloridas</label>
+
+                        <h4 class="sectionSubtitle">
+                            <label for="nodeLabeling">Nomenclatura dos nós</label>
+                        </h4>
+                    <select id="nodeLabeling">
+                        <option value="numbers">Números (Em Ordem Crescente)</option>
+                        <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
+                        <option value="letters_randomized" selected>Letras (Aleatórias)</option>
+                    </select>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Compartilhar</h4>
+                    <h4 class="sectionSubtitle">Exportar como...</h4>
+                    <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
+                    <button style="margin-right: 2pt;" id="exportText">Texto</button>
+                    <button style="margin-right: 2pt;" id="exportLink">Link</button>
+                    <button style="margin-right: 2pt;" id="exportImage">Imagem</button>
+                    <h4 class="sectionSubtitle">Importar como...</h4>
+                    <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
+                    <button style="margin-left: 0pt; margin-right: 2pt;" id="importFile">Arquivo</button>
+                    <button style="margin-right: 2pt;" id="importText">Texto</button>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Favoritos</h4>
+                    <div class="favorite">
+                        <label>Favorito 1</label>
+                        <div>
+                            <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="1">Abrir</button>
+                            <button style="margin-right: 2pt;" class="saveFavorite" name="1">Salvar</button>
+                        </div>
+                    </div>
+                    <div class="favorite">
+                        <label>Favorito 2</label>
+                        <div>
+                            <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="1">Abrir</button>
+                            <button style="margin-right: 2pt;" class="saveFavorite" name="1">Salvar</button>
+                        </div>
+                    </div>
+                    <button style="margin-left: 0pt; margin-right: 2pt;" id="clearFavorites">Limpar</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<footer>
+    <p style="text-align: center; color: #444; margin-left: auto; margin-right: auto; margin-top: 0; margin-bottom: 0;">Desenvolvido por <strong>Thiago Lamenza</strong> e <strong>Victor Martins</strong></p>
+</footer>
+
+
 <script>
 let can = document.getElementById("mainCanvas")
+let can2 = document.getElementById("overCanvas")
+let c2 = can2.getContext("2d");
 let c = can.getContext("2d");
 // console.log(can.height, window.innerHeight)
 let m = document.getElementById("canvasArea")
@@ -111,16 +252,36 @@ function a() {
     let h = m.offsetHeight
     can.height = h;
     can.width = w;
+    can2.height = h;
+    can2.width = w;
     c.fillStyle = "lightgreen"
     c.fillRect(10, 20, 50, 90);
     c.fillStyle = "white"
     c.fillRect(can.width - 80, 20, 50, 90);
 
+    // c2.fillStyle = "#88000044"
+    // c2.fillRect(0, 0, can2.width, can2.height)
     c.fillStyle = "white"
     c.strokeRect(10, 10, can.width - 20, can.height - 20);
 }
 window.onresize = a
 a()
+can2.style.pointerEvents = "none";
+can.onclick = function (x) { console.log("1", x) }
+can2.onclick = function (x) { console.log("2", x) }
+</script>
+<script>
+updateTopBorder = function (event) {
+    let body = event.target
+    if (body.scrollTop > 0) {
+        body.classList.add("menuBodyScrolled")
+    } else {
+        body.classList.remove("menuBodyScrolled")
+    }
+}
+for (let menuBody of document.getElementsByClassName("menuBody")) {
+    menuBody.addEventListener("scroll", updateTopBorder)
+}
 </script>
 </body>
 </html>
