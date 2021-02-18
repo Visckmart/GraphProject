@@ -17,7 +17,11 @@ let saveFavButtons = document.getElementsByClassName("saveFavorite")
 // console.log(saveFavButtons)
 let saveFavorite = function() {
     console.log("Salvando", "fav"+this.name)
-    window.localStorage.setItem("fav"+this.name, g.structure.serialize())
+    if (Array.from(g.structure.nodes()).length == 0) {
+        window.localStorage.removeItem("fav"+this.name)
+    } else {
+        window.localStorage.setItem("fav" + this.name, g.structure.serialize())
+    }
     updateFavorites()
     // g.structure = UndirectedGraph.deserialize(urlParams.get("graph")) 
 }
