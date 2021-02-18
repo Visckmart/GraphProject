@@ -145,3 +145,15 @@ body {
 .favoriteEmpty {
   background-color: transparent;
 }
+@media only screen and (max-width: 650pt), only screen and (max-height: 225pt) {
+  #menuArea {
+    display: none;
+  }
+  #canvasArea {
+    width: 100%;
+    max-width: 100%;
+  }
+  #tray {
+    display: none;
+  }
+}
