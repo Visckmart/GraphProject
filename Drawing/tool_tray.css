@@ -69,7 +69,7 @@
   column-gap: 20px;
   border-top-right-radius: 8pt;
   padding: 10pt 5pt;
-  overflow: visible;
+  overflow: hidden;
   font-size: 11pt;
   -webkit-user-select: none;
   -moz-user-select: none;
