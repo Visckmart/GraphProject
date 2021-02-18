@@ -21,7 +21,7 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
 - Valor Associado
     - [X] **Nada**
     - [X] Um em cada aresta (peso/custo)
-    - [ ] Um em cada nó (peso/custo)
+    - [X] Um em cada nó (peso/custo)
     - [ ] Dois em cada aresta (fluxo e capacidade máxima)
     - [ ] Dois em acada nó (fluxo e capacidade máxima)
 - Cor
@@ -64,11 +64,13 @@ Apagar uma aresta | apaga a chave de um dos nós de dentro do dicionário intern
   - [X] Avançar passo
   - [X] Retroceder passo
   - [X] Explicações de cada passo
+  - [X] Alterar velocidade de execução
 - Compartilhar
   - [X] Como arquivo codificado
   - [X] Como texto
   - [X] Como imagem
   - [X] Como link
+- [X] Favoritos
 
 ## Algoritmos
 - Busca
