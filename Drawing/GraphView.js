@@ -1,4 +1,4 @@
-import {canvas, Tool, HighFPSFeature, backgroundGradient} from "./General.js"
+import {canvas, Tool, HighFPSFeature, backgroundGradient, overlayCanvas} from "./General.js"
 import Graph from "../Structure/Graph.js"
 import Edge from "../Structure/Edge.js"
 import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
@@ -29,9 +29,13 @@ const NodeLabeling = {
 // Graph
 class GraphView {
     overlay = false;
-    constructor (canvas) {
+    constructor (canvas, overlayCanvas) {
         this.canvas = canvas;
+        this.overlayCanvas = overlayCanvas;
+        this.overlayCanvas.style.pointerEvents = "none";
+
         this.ctx = canvas.getContext("2d");
+        this.overlayCtx = overlayCanvas.getContext("2d");
 
         this.structure = new Graph();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
@@ -287,16 +291,6 @@ class GraphView {
         this.structure.removeNode(frontmostNode);
     }
 
-    recalculateNodePositions() {
-        let widthMult = (window.innerWidth*0.75)/canvas.width;
-        let heightMult = (window.innerHeight*0.95)/canvas.height;
-
-        for (let node of this.structure.nodes()) {
-            node.pos.x *= widthMult;
-            node.pos.y *= heightMult;
-        }
-    }
-
     // ARESTAS
     insertEdgeBetween(nodeA, nodeB) {
         let newEdge = new this.structure.EdgeConstructor();
@@ -322,6 +316,43 @@ class GraphView {
             node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
             node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
         }
+    }
+
+    blurTimeout = null;
+    removeBlur = () => {
+        this.canvas.classList.remove("blurred");
+        this.blurTimeout = null;
+    }
+    recalculateLayout() {
+        let originalWidth = this.canvas.width;
+        let originalHeight = this.canvas.height;
+
+        // Ajustar tamanho
+        let canvasArea = document.getElementById("canvasArea");
+        let newWidth = canvasArea.offsetWidth;
+        let newHeight = canvasArea.offsetHeight;
+        this.canvas.width = newWidth;
+        this.canvas.height = newHeight;
+        this.overlayCanvas.width = newWidth;
+        this.overlayCanvas.height = newHeight;
+
+        // Ajustando posição dos nós
+        let widthRatio = newWidth/originalWidth;
+        let heightRatio = newHeight/originalHeight;
+        for (let node of this.structure.nodes()) {
+            node.pos.x *= widthRatio;
+            node.pos.y *= heightRatio;
+        }
+
+        // Blur
+        if (this.blurTimeout) {
+            clearTimeout(this.blurTimeout);
+        } else {
+            this.canvas.classList.add("blurred");
+        }
+        this.blurTimeout = setTimeout(this.removeBlur, 250);
+
+        this.redrawGraph()
     }
 
     loadSerializedGraph(serialized) {
@@ -376,6 +407,15 @@ class GraphView {
             this.structure.temporaryEdge.draw(this.ctx, startPos, endPos);
         }
     }
+    get width() {
+        if (this.canvas.width != this.overlayCanvas.width) {
+            console.log(this.canvas.width, this.overlayCanvas.width)
+        }
+        return this.canvas.width;
+    }
+    get height() {
+        return this.canvas.height;
+    }
     frameCount = window.performance.now();
     // This function clears the canvas and redraws it.
     redrawGraph() {
@@ -395,7 +435,7 @@ class GraphView {
         this.ctx.beginPath();
         this.ctx.rect(0, 0, canvas.width, canvas.height);
         this.ctx.fill();
-        
+
         this.drawEdges();
         
         let nodeFPSRequests = [];
@@ -501,6 +541,6 @@ class GraphView {
     //endregion
 }
 
-export let g = new GraphView(canvas);
+export let g = new GraphView(canvas, overlayCanvas);
 g.redrawGraph();
 g.updateAnimations();

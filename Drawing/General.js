@@ -10,17 +10,13 @@ export function getColorRotation() {
 
 // Canvas
 export var canvas = document.getElementById("mainCanvas");
-canvas.width = window.innerWidth*0.75;
-canvas.height = window.innerHeight*0.95;
+export var overlayCanvas = document.getElementById("overCanvas");
 
 let ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
 export const backgroundGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
 backgroundGradient.addColorStop(0, "#E5E0FF");
 backgroundGradient.addColorStop(1, "#FFE0F3");
-let ma = document.getElementsByClassName("menuArea")[0];
-ma.style.width = window.innerWidth*0.25;
-ma.style.height = canvas.height;
 
 export const nodeColorList = [
     "#32CD32",

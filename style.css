@@ -1,120 +1,147 @@
 :root {
-  --blurSize: 5pt;
+  --interfaceMargin: 10pt;
+  --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 15pt);
+  --menuWidth: 200pt;
 }
-
-* {
-  box-sizing: border-box;
-}
-
 body {
-  display: flex;
-
+  margin: 0;
   font-family: Helvetica Neue, sans-serif;
-  /*overflow: hidden;*/
-  box-sizing: border-box;
-  margin-top: 10pt;
-  margin-left: 0pt;
-  margin-right: 0pt;
 }
 
+#interfaceContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  z-index: 0;
 
-/*region Canvas*/
-#mainCanvas {
-  border-radius: 10pt 0 0 10pt;
+  margin: var(--interfaceMargin);
+  margin-bottom: 5pt;
+  height: var(--maxHeight);
+  max-height: var(--maxHeight);
+  border-radius: 8pt;
+  overflow: hidden;
+}
+
+/* CANVAS */
+#canvasArea {
+  position: relative;
+  flex: 0 1 auto;
+  z-index: 1;
+  height: var(--maxHeight);
+  max-height: var(--maxHeight);
+
+  width: calc(100% - var(--menuWidth));
+  max-width: calc(100% - var(--menuWidth));
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
+}
+#mainCanvas {
+  /*background: linear-gradient(to right, #E5E0FF, #FFE0F3);*/
   transition: 0.1s;
+  overflow: hidden;
 }
 #overCanvas {
   position: absolute;
-  background-color: blue;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 10;
 }
-.canvasArea {
-  position: relative;
-  overflow: hidden;
+.blurred {
+  filter: blur(10pt);
+  /*background-color: red;*/
 }
-.canvasContainer {
-  margin-left: 10pt;
-  overflow: hidden;
-}
-/*endregion*/
 
-/*region Menu*/
-.menuArea {
-  flex-grow: 1;
-  /*overflow: hidden;*/
-  margin-right: 10pt;
-  padding-left: 15pt;
-  padding-right: 15pt;
-  /*width: calc(20% - 30pt);*/
+/* MENU */
+#menuArea {
+  flex: 1 1 auto;
+  overflow: hidden;
+  z-index: 1;
+  max-height: 100%;
+
+  border-left: 2pt solid #444;
+  width: var(--menuWidth);
+  max-width: var(--menuWidth);
   background: linear-gradient(to right, #EBEBEB, #D9D9D9);
-  border-radius: 0pt 10pt 10pt 0pt;
-  border-left: 2pt solid darkgray;
 }
-#settingsContainer {
-  /*background-color: red;*/
-  overflow: scroll;
+.menuContent {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+  margin: 10pt;
+  margin-right: 5pt;
+  height: calc(100% - 10pt);
 }
-#GraphSettings {
-  margin-top: 10pt;
-  margin-bottom: 10pt;
-  /*background-color: red;*/
-  /*background: linear-gradient(to bottom, transparent 0%, transparent 95%, #D9D9D988 110%);*/
-}
-#GraphSettings > h2 {
+.menuTitle {
+  flex: 0 1 auto;
+
+  width: fit-content;
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 4pt;
+  border-bottom: 2pt solid darkgray;
+}
+.menuBody {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding-right: 10pt;
+}
+.menuBodyScrolled {
+  border-top: 1pt solid lightgray;
 }
 
+/* SECTION */
 .settingsSection {
   color: #444;
-  margin-bottom: 0;
-  padding-bottom: 8pt;
+  padding-top: 5pt;
+  padding-bottom: 5pt;
   border-bottom: 1pt solid gray;
-  /*background-color: white;*/
 }
 .settingsSection:last-of-type {
-  padding-bottom: 0;
   border-bottom: none;
-}
-/*.settingsSection > select {
-  margin-top: 0;
-  padding-top: 0;
-}*/
-.settingsSection > h5 {
-  font-size: 11pt;
-  margin-top: 4pt;
-  margin-bottom: 2pt;
-  margin-left: 2pt;
-}
-.settingsSection > input {
-  font-size: 12pt;
-  /*background-color: blue;*/
-  /*padding-top: -5pt;*/
-  /*font-weight:*/
-}
-.settingsSection > label {
-  margin-left: 2pt;
-  /*background-color: blue;*/
-  font-size: 12pt;
-  /*font-weight:*/
-}
-
-.settingsSection > select, .settingsSection > select {
-  width: 150pt;
-  margin-left: 2pt;
-  font-size: 12pt;
-  /*background-color: red;*/
 }
 
 .sectionTitle {
-  font-size: 13pt;
-  /*background-color: red;*/
-  margin-top: 4pt;
+  margin-top: 0pt;
   margin-bottom: 2pt;
   margin-left: 2pt;
+  font-size: 13pt;
+  font-weight: bold;
 }
-/*endregion*/
-/*button {
-  margin-top: 4pt;
-}*/
+.sectionSubtitle {
+  margin-top: 5pt;
+  margin-bottom: 2pt;
+  margin-left: 2pt;
+  font-size: 11pt;
+}
 
+.settingsSection select {
+  margin-left: 2pt;
+  width: 140pt;
+  font-size: 12pt;
+}
+.settingsSection input {
+  font-size: 12pt;
+}
+.settingsSection > label {
+  margin-left: 2pt;
+  margin-right: 4pt;
+  font-size: 11pt;
+}
+.settingsSection > button {
+  margin: 0;
+}
+
+.favorite {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 4pt;
+  padding: 2pt;
+  padding-left: 4pt;
+  border-radius: 4pt;
+  background-color: #FFFA;
+  font-family: monospace;
+}
+.favoriteEmpty {
+  background-color: transparent;
+}

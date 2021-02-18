@@ -94,24 +94,8 @@ runAlgorithmButton.onclick = async () => {
 }
 
 // Window Resizing
-let blurTimeout = null;
-window.onresize = function () {
-    // Ajustar posição dos nós
-    g.recalculateNodePositions();
-
-    // Ajustar tamanho
-    canvas.width = window.innerWidth*0.75;
-    canvas.height = window.innerHeight*0.95;
-
-    // Blue
-    canvas.style.filter = "blur(20pt)"
-    if (blurTimeout) { clearTimeout(blurTimeout); }
-    blurTimeout = setTimeout(function() {
-        canvas.style.filter = null;
-    }, 250);
-    g.redrawGraph();
-}
-
+window.onresize = g.recalculateLayout.bind(g)
+g.recalculateLayout()
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
 document.body.onblur = function() {
     if (g.lastToolChoice == Tool.MOVE) {
