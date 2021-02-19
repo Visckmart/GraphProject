@@ -1,4 +1,4 @@
-import { canvas, Tool } from "./General.js"
+import { Tool } from "./General.js"
 import { g } from "./GraphView.js"
 import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
