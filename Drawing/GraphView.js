@@ -528,38 +528,45 @@ class GraphView {
         return highestFPS;
     }
 
-    // This function updates every node and redraws the graph.
-    updateAnimations(timestamp) {
-        let currentFPS = this.getCurrentFPS();
-
-        let timeBetweenFrames = 1000/currentFPS;
-        setTimeout(() => requestAnimationFrame(this.updateAnimations.bind(this)),
-                   timeBetweenFrames);
-
-        // let hasSelection = this.selectionHandler.shouldDrawSelection
-        if ((timestamp - this.lastFrameTimestamp) >= timeBetweenFrames) {
-            // Se não há nós, pare
-            if (this.structure.nodes().next().done) { return; }
-            this.frameRateRequests.clear();
-            this.lastFrameTimestamp = window.performance.now()
-            this.redrawGraph();
-        this.drawCurrentMaxFPS(currentFPS);
-        }
+    refreshOverlay(timestamp) {
+        setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)),
+                   1000/90);
+        // this.overlayCtx.clearRect(0, 0, this.width, this.height)
+        // this.overlayCtx.fillStyle = colorFromComponents(0, 0, 255, 0.5)
+        // this.overlayCtx.fillRect(50, 120, 420+Math.sin(timestamp/100)*100, 300)
         if (this.selectionHandler.shouldDrawSelection) {
             this.overlayCtx.save();
             this.requestHighFPS(HighFPSFeature.SELECTING, 90);
             this.drawSelectionArea();
-            this.overlayCtx.restore()
+            this.overlayCtx.restore();
         } else if (this.showingArea == true) {
-            this.overlayCtx.clearRect(0, 0, this.width, this.height)
+            this.overlayCtx.clearRect(0, 0, this.width, this.height);
         }
-        this.showingArea = this.selectionHandler.shouldDrawSelection
+        this.showingArea = this.selectionHandler.shouldDrawSelection;
     }
+
+    refreshView(timestamp) {
+        let currentFPS = this.getCurrentFPS();
+        setTimeout(() => requestAnimationFrame(this.refreshView.bind(this)),
+                   1000/currentFPS);
+        // this.ctx.clearRect(0, 0, this.width, this.height)
+        // this.ctx.fillStyle = colorFromComponents(255, 0, 0, 0.5)
+        // this.ctx.fillRect(80, 200+Math.sin(timestamp/500)*50, 450, 300)
+        // Se não há nós, pare
+        if (this.structure.nodes().next().done) { return; }
+        this.frameRateRequests.clear();
+        this.lastFrameTimestamp = window.performance.now();
+        this.redrawGraph();
+        this.drawCurrentMaxFPS(currentFPS);
+    }
+    // This function updates every node and redraws the graph.
 
     //endregion
 }
 
 export let g = new GraphView(canvas, overlayCanvas);
 g.redrawGraph();
-g.updateAnimations();
+// g.updateAnimations();
+g.refreshOverlay()
+g.refreshView()
 // setInterval(() => requestAnimationFrame(g.updateAnimations.bind(g)), 1000/30);
