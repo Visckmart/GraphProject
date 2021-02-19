@@ -379,18 +379,19 @@ class GraphView {
 
     //region Desenho do Grafo
     drawSelectionArea() {
-        this.ctx.save();
+        this.overlayCtx.save();
+        this.overlayCtx.clearRect(0, 0, this.width, this.height)
 
-        this.ctx.strokeStyle = 'blue';
-        this.ctx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
-        this.ctx.lineWidth = 3;
+        this.overlayCtx.strokeStyle = 'blue';
+        this.overlayCtx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
+        this.overlayCtx.lineWidth = 3;
 
-        this.selectionHandler.prepareSelectionAreaDrawing(this.ctx);
+        this.selectionHandler.prepareSelectionAreaDrawing(this.overlayCtx);
 
-        this.ctx.fill();
-        this.ctx.stroke();
+        this.overlayCtx.fill();
+        this.overlayCtx.stroke();
 
-        this.ctx.restore();
+        this.overlayCtx.restore();
     }
 
     drawEdges() {
@@ -428,7 +429,7 @@ class GraphView {
     get height() {
         return this.canvas.height;
     }
-    frameCount = window.performance.now();
+    // frameCount = window.performance.now();
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.save();
@@ -443,7 +444,7 @@ class GraphView {
         // if (this.frameCount > 3000 && this.frameCount <= 3200) {
         //     this.selectionHandler.clearSelectionArea();
         // }
-        this.frameCount = window.performance.now();
+        // this.frameCount = window.performance.now();
         this.ctx.beginPath();
         this.ctx.rect(0, 0, canvas.width, canvas.height);
         this.ctx.fill();
@@ -458,13 +459,6 @@ class GraphView {
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
             this.requestHighFPS(HighFPSFeature.NODE_HIGHLIGHT, maxFPSRequest);
-        }
-
-        if (this.selectionHandler.shouldDrawSelection) {
-            this.ctx.save();
-            this.requestHighFPS(HighFPSFeature.SELECTING, 90);
-            this.drawSelectionArea();
-            this.ctx.restore()
         }
         
         if (this.overlay) {
@@ -530,24 +524,36 @@ class GraphView {
         if (highestFPS < IDLE_MAX_FPS) {
             highestFPS = IDLE_MAX_FPS
         }
+
         return highestFPS;
     }
 
     // This function updates every node and redraws the graph.
     updateAnimations(timestamp) {
-        requestAnimationFrame(this.updateAnimations.bind(this));
+        let currentFPS = this.getCurrentFPS();
 
-        let currentFPS = this.getCurrentFPS()
-        // console.log(currentFPS + "FPS", this.frameRateRequests)
         let timeBetweenFrames = 1000/currentFPS;
-        if ((timestamp - this.lastFrameTimestamp) < timeBetweenFrames) {
-            return;
-        }
-        this.lastFrameTimestamp = timestamp;
-        this.frameRateRequests.clear();
-        
-        this.redrawGraph();
+        setTimeout(() => requestAnimationFrame(this.updateAnimations.bind(this)),
+                   timeBetweenFrames);
+
+        // let hasSelection = this.selectionHandler.shouldDrawSelection
+        if ((timestamp - this.lastFrameTimestamp) >= timeBetweenFrames) {
+            // Se não há nós, pare
+            if (this.structure.nodes().next().done) { return; }
+            this.frameRateRequests.clear();
+            this.lastFrameTimestamp = window.performance.now()
+            this.redrawGraph();
         this.drawCurrentMaxFPS(currentFPS);
+        }
+        if (this.selectionHandler.shouldDrawSelection) {
+            this.overlayCtx.save();
+            this.requestHighFPS(HighFPSFeature.SELECTING, 90);
+            this.drawSelectionArea();
+            this.overlayCtx.restore()
+        } else if (this.showingArea == true) {
+            this.overlayCtx.clearRect(0, 0, this.width, this.height)
+        }
+        this.showingArea = this.selectionHandler.shouldDrawSelection
     }
 
     //endregion
@@ -556,3 +562,4 @@ class GraphView {
 export let g = new GraphView(canvas, overlayCanvas);
 g.redrawGraph();
 g.updateAnimations();
+// setInterval(() => requestAnimationFrame(g.updateAnimations.bind(g)), 1000/30);

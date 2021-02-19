@@ -71,15 +71,17 @@ class GraphMouseHandler {
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
 
-        // NODE COLISION
         // TODO: Organizar destaque de arestas
         this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
-        let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
-        if (this.graphView.primaryTool == Tool.CONNECT && isHoveringNode == false) {
-            let edgeHover = this.graphView.getEdgesAt(pos)
-            this.lastHoveredEdge = edgeHover
-            if (edgeHover && !this.selection.isSelected(edgeHover)) {
-                edgeHover.highlights.add(HighlightType.LIGHTEN)
+        if (this.graphView.primaryTool == Tool.CONNECT) {
+            // NODE COLISION
+            let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
+            if (this.graphView.primaryTool == Tool.CONNECT && isHoveringNode == false) {
+                let edgeHover = this.graphView.getEdgesAt(pos)
+                this.lastHoveredEdge = edgeHover
+                if (edgeHover && !this.selection.isSelected(edgeHover)) {
+                    edgeHover.highlights.add(HighlightType.LIGHTEN)
+                }
             }
         }
 
@@ -93,8 +95,12 @@ class GraphMouseHandler {
         // SELEÇÃO
         // Se um nó não tiver sido selecionado,
         if (!this.clickedNode && !this.clickedEdge) {
+            let selecting = this.selection.shouldDrawSelection
             // Atualize a área de seleção
             this.selection.draggingEvent(this.clickPosition, pos);
+            if (selecting != this.selection.shouldDrawSelection) {
+                requestAnimationFrame(this.graphView.updateAnimations.bind(this.graphView))
+            }
             this.refreshCursorStyle();
             return;
         }
@@ -226,7 +232,7 @@ class GraphMouseHandler {
         
         // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
         if (moveToolSelected && isHoveringNode) {
-            if (this.selection.hasSelectedNodes && getDistanceOf(this.clickPosition, this.currentMousePos) < 5) {
+            if (this.selection.hasSelectedNodes && this.clickPosition && getDistanceOf(this.clickPosition, this.currentMousePos) < 5) {
                 cursorStyle = "grabbing";
             } else {
                 cursorStyle = "grab";

@@ -57,6 +57,7 @@ export default class GraphSelection {
         }
         this.isQuickSelection = false;
         this.graphView.selectionChanged();
+        this.registerNodePositions();
         this.refreshMenu();
     }
 
@@ -75,6 +76,7 @@ export default class GraphSelection {
             console.error(`Remoção de seleção chamada para ${element}.`);
         }
         this.graphView.selectionChanged();
+        this.registerNodePositions();
         this.refreshMenu();
     }
 
@@ -181,6 +183,7 @@ export default class GraphSelection {
         if (startingPoint == null || currentPoint == null) {
             return false;
         }
+        if (this.shouldDrawSelection) return true;
         let horizontalMove = Math.abs(currentPoint.x - startingPoint.x);
         let verticalMove   = Math.abs(currentPoint.y - startingPoint.y);
 
