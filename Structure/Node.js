@@ -13,12 +13,16 @@ let globalNodeIndex = 0
 
 export default class Node {
 
-    constructor({x, y, label, index = null, oColor = null, highlights = null}) {
+    constructor({x, y, label, index = null, colorIndex = null, oColor = null, highlights = null}) {
 
         this._initialTime = window.performance.now();
         this.index = index ?? globalNodeIndex;
         let nextColor = getColorRotation()
-        this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
+        if (colorIndex) {
+            this._originalcolor = nodeColorList[colorIndex % nodeColorList.length];
+        } else {
+            this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
+        }
         this._breatheSettings = {
             speed: 0.15,
             amplitude: 1.5,

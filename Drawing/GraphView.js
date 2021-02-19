@@ -15,6 +15,7 @@ import PropertyList from "./Properties/PropertyList.js";
 import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
 import {regularNodeRadius} from "../Structure/Node.js";
 
+import HistoryTracker from "./HistoryTracker.js"
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -62,7 +63,8 @@ class GraphView {
         // de deletar nós.
         canvas.addEventListener("contextmenu", event => event.preventDefault());
 
-
+        this.history = new HistoryTracker();
+        this.history.registerStep(this.structure.clone())
         // Debugging
         // generateRandomNodes(this, 4)
         // generateRandomEdges(this, 3)
@@ -259,15 +261,21 @@ class GraphView {
 
     //region Manipulação do Grafo
 
+    registerStep() {
+        this.history.registerStep(this.structure.clone())
+    }
+
+    nodeColorIndex = 0;
     insertNewNodeAt(pos) {
         if (this.getNodesAt(pos, true).length !== 0) {
             return false;
         }
-        let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y})
+        let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y, colorIndex: this.nodeColorIndex++})
         let inserted = this.structure.insertNode(newNode);
         if (!inserted) { return; }
 
         this.redrawGraph();
+        this.registerStep();
         return newNode;
     }
 
@@ -289,6 +297,7 @@ class GraphView {
         }
         this.selectionHandler.clear()
         this.structure.removeNode(frontmostNode);
+        this.registerStep();
     }
 
     // ARESTAS
@@ -298,6 +307,7 @@ class GraphView {
         if (!inserted) { return; }
 
         this.redrawGraph();
+        this.registerStep();
         return newEdge;
     }
 
@@ -308,6 +318,7 @@ class GraphView {
         }
         this.selectionHandler.deselect(edge);
         this.structure.removeEdge(edge);
+        this.registerStep();
     }
 
     snapNodesToGrid() {
@@ -316,6 +327,7 @@ class GraphView {
             node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
             node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
         }
+        this.registerStep();
     }
 
     blurTimeout = null;

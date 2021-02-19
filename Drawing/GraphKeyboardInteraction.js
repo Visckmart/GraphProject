@@ -68,6 +68,23 @@ class GraphKeyboardHandler {
             this.graphView.primaryTool = Tool.CONNECT;
         }
 
+        switch (keyboardEvent.key) {
+        case "z": {
+            if (keyboardEvent.shiftKey == false) {
+                let step = this.graphView.history.goToStep(-1);
+                this.graphView.structure = step;
+                keyboardEvent.preventDefault()
+                break
+            }
+        }
+        case "Z": {
+            let step = this.graphView.history.goToStep(1);
+            this.graphView.structure = step;
+            keyboardEvent.preventDefault()
+            break
+        }
+        }
+
         if (keyboardEvent.key == 1) {
             this.graphView.primaryTool = Tool.MOVE;
         } else if (keyboardEvent.key == 2) {
