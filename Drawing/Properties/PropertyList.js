@@ -80,7 +80,6 @@ class PropertyList extends HTMLElement {
     }
 
     updateProperties(selectedAlgorithm = '', ...artifacts) {
-        console.log(this.artifactType, this.repository, artifacts)
         this.container.innerHTML = ''
 
         for(let property of Object.keys(this.repository.default ?? {})) {

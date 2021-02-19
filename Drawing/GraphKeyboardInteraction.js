@@ -34,7 +34,7 @@ class GraphKeyboardHandler {
         return pressed;
     }
 
-
+    // TODO: Organizar essas checagens
     // Key Pressed
 
     keyPressed(keyboardEvent) {

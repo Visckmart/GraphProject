@@ -80,8 +80,12 @@ class Graph {
 
     insertEdge(nodeA, nodeB, edge) {
         // Validação
-        if (!(nodeA && nodeB) || nodeA === nodeB) {
+        if (!(nodeA && nodeB)) {
             console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
+            return false;
+        }
+        if (nodeA === nodeB) {
+            console.warn("Inserção de aresta que causaria um laço.", nodeA)
             return false;
         }
         if (this.debug) {
