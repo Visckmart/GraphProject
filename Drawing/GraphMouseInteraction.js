@@ -99,7 +99,7 @@ class GraphMouseHandler {
             // Atualize a área de seleção
             this.selection.draggingEvent(this.clickPosition, pos);
             if (selecting != this.selection.shouldDrawSelection) {
-                requestAnimationFrame(this.graphView.updateAnimations.bind(this.graphView))
+                requestAnimationFrame(this.graphView.refreshOverlay.bind(this.graphView))
             }
             this.refreshCursorStyle();
             return;

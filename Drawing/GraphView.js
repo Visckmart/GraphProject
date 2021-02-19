@@ -429,22 +429,13 @@ class GraphView {
     get height() {
         return this.canvas.height;
     }
-    // frameCount = window.performance.now();
+
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.save();
         // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.fillStyle = backgroundGradient;
-        // console.log(this.frameCount)
-        // if (this.frameCount >= 2000 && this.frameCount <= 3000) {
-        //     // this.ctx.fillStyle = "red";
-        //     this.selectionHandler.draggingEvent({x: 100, y: 100}, {x: 500, y: 200})
-        // }
-        // if (this.frameCount > 3000 && this.frameCount <= 3200) {
-        //     this.selectionHandler.clearSelectionArea();
-        // }
-        // this.frameCount = window.performance.now();
         this.ctx.beginPath();
         this.ctx.rect(0, 0, canvas.width, canvas.height);
         this.ctx.fill();
@@ -529,12 +520,9 @@ class GraphView {
     }
 
     refreshOverlay(timestamp) {
-        setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)),
-                   1000/90);
-        // this.overlayCtx.clearRect(0, 0, this.width, this.height)
-        // this.overlayCtx.fillStyle = colorFromComponents(0, 0, 255, 0.5)
-        // this.overlayCtx.fillRect(50, 120, 420+Math.sin(timestamp/100)*100, 300)
         if (this.selectionHandler.shouldDrawSelection) {
+            setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)),
+                       1000/90);
             this.overlayCtx.save();
             this.requestHighFPS(HighFPSFeature.SELECTING, 90);
             this.drawSelectionArea();
@@ -549,9 +537,6 @@ class GraphView {
         let currentFPS = this.getCurrentFPS();
         setTimeout(() => requestAnimationFrame(this.refreshView.bind(this)),
                    1000/currentFPS);
-        // this.ctx.clearRect(0, 0, this.width, this.height)
-        // this.ctx.fillStyle = colorFromComponents(255, 0, 0, 0.5)
-        // this.ctx.fillRect(80, 200+Math.sin(timestamp/500)*50, 450, 300)
         // Se não há nós, pare
         if (this.structure.nodes().next().done) { return; }
         this.frameRateRequests.clear();
@@ -566,7 +551,5 @@ class GraphView {
 
 export let g = new GraphView(canvas, overlayCanvas);
 g.redrawGraph();
-// g.updateAnimations();
-g.refreshOverlay()
+// g.refreshOverlay()
 g.refreshView()
-// setInterval(() => requestAnimationFrame(g.updateAnimations.bind(g)), 1000/30);
