@@ -149,8 +149,7 @@ class GraphMouseHandler {
         }
 
         // SELEÇÃO
-        let distanceMoved = getDistanceOf(this.clickPosition, pos);
-        if (distanceMoved < 5) {
+        if (this.clickPosition && getDistanceOf(this.clickPosition, pos) < 5) {
             if (this.selection.additionOnlyMode == false) {
                 this.selection.clear();
             }
@@ -193,12 +192,13 @@ class GraphMouseHandler {
             // Nó abaixo do ponteiro do mouse atualmente
             let releasedOverNode = this.graphView.getNodesAt(pos).pop()
                                 ?? this.graphView.insertNewNodeAt(pos);
-
-            let insertedEdge = this.graphView.insertEdgeBetween(this.clickedNode,
-                                                                releasedOverNode);
-            if (insertedEdge) {
-                this.selection.clear();
-                this.selection.select(insertedEdge)
+            if (releasedOverNode) {
+                let insertedEdge = this.graphView.insertEdgeBetween(this.clickedNode,
+                                                                    releasedOverNode);
+                if (insertedEdge) {
+                    this.selection.clear();
+                    this.selection.select(insertedEdge)
+                }
             }
             // Pare de atualizar a aresta temporária
             this.shouldDrawTemporaryEdge = false;
@@ -216,6 +216,16 @@ class GraphMouseHandler {
     }
 
 
+    mouseLeave() {
+        // Eventos de mouse desabilitados
+        if(!this._enabled) { return; }
+        // Se está desenhando a área de seleção
+        if (this.selection.shouldDrawSelection) {
+            // Para de desenhar
+            this.selection.clearSelectionArea();
+            this.selection.refreshMenu()
+        }
+    }
     // Estilo do ponteiro do mouse
     refreshCursorStyle() {
         // Eventos de mouse desabilitados

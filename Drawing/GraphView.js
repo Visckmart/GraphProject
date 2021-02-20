@@ -55,7 +55,7 @@ class GraphView {
         canvas.addEventListener("mouseup",
                                 mouseHandler.mouseUpEvent.bind(mouseHandler));
         canvas.addEventListener("mouseleave",
-                                mouseHandler.mouseUpEvent.bind(mouseHandler));
+                                mouseHandler.mouseLeave.bind(mouseHandler));
 
         // Evite abrir o menu de contexto para não haver conflito com o gesto
         // de deletar nós.
