@@ -17,7 +17,7 @@ import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.j
 import {regularNodeRadius} from "../Structure/Node.js";
 
 import HistoryTracker from "./HistoryTracker.js"
-import {testBasicRoutine, testSelection} from "./GraphViewTests.js";
+import {testBasicRoutine} from "./GraphViewTests.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
