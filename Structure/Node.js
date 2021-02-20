@@ -17,10 +17,10 @@ export default class Node {
 
         this._initialTime = window.performance.now();
         this.index = index ?? globalNodeIndex;
-        let nextColor = getColorRotation()
         if (colorIndex) {
             this._originalcolor = nodeColorList[colorIndex % nodeColorList.length];
         } else {
+            let nextColor = getColorRotation()
             this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
         }
         this._breatheSettings = {
@@ -104,7 +104,6 @@ export default class Node {
         let hasHighlightWithBG = this.highlights.has(HighlightType.DARK_WITH_BLINK)
                                  || this.highlights.has(HighlightType.LIGHTEN)
                                  || this.highlights.has(HighlightType.DARKEN)
-                                 || this.highlights.has(HighlightType.COLORED_BORDER)
         if (!hasHighlightWithBG) {
             ctx.fillStyle = backgroundGradient;
         } else {
