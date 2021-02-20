@@ -54,14 +54,16 @@ class GraphView {
                                 mouseHandler.mouseDragEvent.bind(mouseHandler));
         canvas.addEventListener("mouseup",
                                 mouseHandler.mouseUpEvent.bind(mouseHandler));
-
-        // KEYBOARD
-        document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
-        document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
+        canvas.addEventListener("mouseleave",
+                                mouseHandler.mouseUpEvent.bind(mouseHandler));
 
         // Evite abrir o menu de contexto para não haver conflito com o gesto
         // de deletar nós.
         canvas.addEventListener("contextmenu", event => event.preventDefault());
+
+        // KEYBOARD
+        document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
+        document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
 
         this.history = new HistoryTracker();
         this.history.registerStep(this.structure.clone())
@@ -507,13 +509,13 @@ class GraphView {
 
     getCurrentFPS() {
         // Evitando processamento se o mapa estiver vazio
-        if (this.frameRateRequests.size == 0) { return IDLE_MAX_FPS }
+        if (this.frameRateRequests.size == 0) { return IDLE_MAX_FPS; }
 
-        let requestValues = this.frameRateRequests.values()
-        let highestFPS = Math.max(...requestValues)
+        let requestValues = this.frameRateRequests.values();
+        let highestFPS = Math.max(...requestValues);
 
         if (highestFPS < IDLE_MAX_FPS) {
-            highestFPS = IDLE_MAX_FPS
+            highestFPS = IDLE_MAX_FPS;
         }
 
         return highestFPS;
@@ -533,14 +535,16 @@ class GraphView {
         this.showingArea = this.selectionHandler.shouldDrawSelection;
     }
 
+    requestViewRefresh = () => {
+        requestAnimationFrame(this.refreshView.bind(this));
+    }
     refreshView(timestamp) {
         let currentFPS = this.getCurrentFPS();
-        setTimeout(() => requestAnimationFrame(this.refreshView.bind(this)),
-                   1000/currentFPS);
+        setTimeout(this.requestViewRefresh, 1000/currentFPS);
         // Se não há nós, pare
         if (this.structure.nodes().next().done) { return; }
         this.frameRateRequests.clear();
-        this.lastFrameTimestamp = window.performance.now();
+        this.lastFrameTimestamp = timestamp;
         this.redrawGraph();
         this.drawCurrentMaxFPS(currentFPS);
     }
@@ -552,4 +556,4 @@ class GraphView {
 export let g = new GraphView(canvas, overlayCanvas);
 g.redrawGraph();
 // g.refreshOverlay()
-g.refreshView()
+g.requestViewRefresh()
