@@ -14,7 +14,8 @@ export var overlayCanvas = document.getElementById("overCanvas");
 
 let ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
-export const backgroundGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+// TODO: Gradiente deveria atualizar quando o tamanho atualiza
+export const backgroundGradient = ctx.createLinearGradient(0, 0, 700, 0);
 backgroundGradient.addColorStop(0, "#E5E0FF");
 backgroundGradient.addColorStop(1, "#FFE0F3");
 

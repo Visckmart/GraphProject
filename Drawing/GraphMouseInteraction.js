@@ -109,16 +109,20 @@ class GraphMouseHandler {
         // Caso a ferramenta Move esteja selecionada,
         switch (this.graphView.primaryTool) {
         case Tool.MOVE: {
-            for (let nodeIndex in this.selection.selected.nodes) {
-                // Calcula cada nova posição levando em conta as posições
-                // originais de cada nó.
-                let posBeforeMove = this.selection.selectedNodePositions[nodeIndex];
-                let newPosition = {
-                    x: posBeforeMove.x + pos.x - this.clickPosition.x,
-                    y: posBeforeMove.y + pos.y - this.clickPosition.y
+            if (this.selection.selected.nodes.includes(this.clickedNode)) {
+                for (let nodeIndex in this.selection.selected.nodes) {
+                    // Calcula cada nova posição levando em conta as posições
+                    // originais de cada nó.
+                    let posBeforeMove = this.selection.selectedNodePositions[nodeIndex];
+                    let newPosition = {
+                        x: posBeforeMove.x + pos.x - this.clickPosition.x,
+                        y: posBeforeMove.y + pos.y - this.clickPosition.y
+                    }
+                    this.graphView.moveNode(this.selection.selected.nodes[nodeIndex],
+                                            newPosition);
                 }
-                this.graphView.moveNode(this.selection.selected.nodes[nodeIndex],
-                                        newPosition);
+            } else {
+                this.selection.quickSelect(this.clickedNode)
             }
             break;
         }
@@ -225,6 +229,8 @@ class GraphMouseHandler {
             this.selection.clearSelectionArea();
             this.selection.refreshMenu()
         }
+        // Pare de atualizar a aresta temporária
+        this.shouldDrawTemporaryEdge = false;
     }
     // Estilo do ponteiro do mouse
     refreshCursorStyle() {
