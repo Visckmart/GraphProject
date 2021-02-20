@@ -4,12 +4,11 @@ export function generateRandomNodes(graphView, quantity) {
     let tries = 0;
     while (i < quantity) {
         if (tries > 10*quantity) {
-            console.log("Desistindo")
             return;
         }
         let x = Math.random()*graphView.canvas.width+50;
         let y = Math.random()*graphView.canvas.height+30;
-        x *= 0.65;
+        x *= 0.75;
         y *= 0.5;
         if (graphView.getNodesAt({x: x, y: y}, true)[0] == null) {
             i++;

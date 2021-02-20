@@ -17,7 +17,7 @@ import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.j
 import {regularNodeRadius} from "../Structure/Node.js";
 
 import HistoryTracker from "./HistoryTracker.js"
-import {testSelection} from "./GraphViewTests.js";
+import {testBasicRoutine, testSelection} from "./GraphViewTests.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -560,5 +560,6 @@ g.redrawGraph();
 // g.refreshOverlay()
 g.requestViewRefresh()
 
-testSelection(g)
+// testSelection(g)
 // testNodeHighlights(g)
+// testBasicRoutine(g)
