@@ -612,4 +612,4 @@ function testNodeHighlights(graphView) {
                                        addedNodes[addedEdges++], edge)
     }
 }
-testNodeHighlights(g)
+// testNodeHighlights(g)
