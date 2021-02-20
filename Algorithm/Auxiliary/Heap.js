@@ -161,7 +161,9 @@ class Heap extends AlgorithmShowcase{
 
             this.showcaseMessage = this._steps[number].message
 
-            this.resizeCanvas(this.body.clientWidth,
+
+            let maxWidth = distanceBetweenElements *  (2 ** Math.floor(Math.log2(this._heapSize + 1)))
+            this.resizeCanvas(Math.max(maxWidth, this.body.clientWidth),
                  Math.floor(Math.log2(this._heapSize)+1) * (elementRadius + distanceBetweenLevels) + paddingTop)
 
             requestAnimationFrame(this.drawHeap)
@@ -180,7 +182,7 @@ class Heap extends AlgorithmShowcase{
             ctx.font = '20px Arial'
             ctx.fillText('Estado atual do heap:', this.canvas.width/2, 0)
             ctx.restore()
-            this.drawHeapElement(this._heap[0].element, 0, this.canvas.width/2, paddingTop, false)
+            this.drawHeapElement(this._heap[0], 0, this.canvas.width/2, paddingTop, false)
         }
     }
 
@@ -229,7 +231,28 @@ class Heap extends AlgorithmShowcase{
         ctx.restore()
     }
 
-    drawHeapElement = (element, index, parentX, parentY, isLeft) => {
+    _drawValue = (value, elementX, elementY, isLeft) => {
+        let ctx = this.ctx
+
+        ctx.save()
+        ctx.beginPath()
+        ctx.textAlign = isLeft ? 'right' : 'left'
+        ctx.textBaseline = 'bottom'
+        ctx.font = '12px Arial'
+        ctx.fillStyle = '#ffffff'
+        ctx.fillText(value === Infinity ? '∞' : value.toString(), elementX,
+                     elementY - elementRadius, elementRadius)
+        ctx.fill()
+        ctx.restore()
+    }
+
+    _calculateDistanceBetweenLevels(index) {
+        return 2 ** (Math.floor(Math.log2(this._heapSize + 1))
+            - Math.floor(Math.log2(index + 1) - 1) - 1)
+            * distanceBetweenElements
+    }
+
+    drawHeapElement = ({element, value}, index, parentX, parentY, isLeft) => {
         let x, y
         // Caso seja o primeiro elemento desenha no centro
         if(index === 0) {
@@ -237,7 +260,7 @@ class Heap extends AlgorithmShowcase{
             y = parentY
         // Caso contrário desenha do lado especificado pelo parâmetro
         } else {
-            let levelDistance = (Math.floor(Math.log2(this._heapSize)) - Math.floor(Math.log2(index + 1) - 1)) * distanceBetweenElements
+            let levelDistance = this._calculateDistanceBetweenLevels(index)
             x = parentX + (isLeft ?
                 -levelDistance/2 :
                 levelDistance/2)
@@ -250,16 +273,17 @@ class Heap extends AlgorithmShowcase{
         let leftChildIndex = index * 2 + 1
         if(this._heap[leftChildIndex]) {
             this._startDrawLines(x, y)
-            this.drawHeapElement(this._heap[leftChildIndex].element, leftChildIndex, x, y, true)
+            this.drawHeapElement(this._heap[leftChildIndex], leftChildIndex, x, y, true)
         }
 
         // Se existe filho a direita chama a recursão a direita
         let rightChildIndex = leftChildIndex + 1
         if(this._heap[rightChildIndex]) {
             this._startDrawLines(x, y, false)
-            this.drawHeapElement(this._heap[rightChildIndex].element, rightChildIndex, x, y, false)
+            this.drawHeapElement(this._heap[rightChildIndex], rightChildIndex, x, y, false)
         }
         this._drawElement(x,y, element)
+        this._drawValue(value, x, y, isLeft)
     }
     //#endregion
 }
