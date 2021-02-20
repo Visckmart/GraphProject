@@ -258,7 +258,9 @@ class GraphMouseHandler {
             cursorStyle = "crosshair";
         }
         // Atualize o estilo apropriadamente
-        this.graphView.canvas.style.cursor = cursorStyle;
+        if (this.graphView.canvas.style.cursor != cursorStyle) {
+            this.graphView.canvas.style.cursor = cursorStyle;
+        }
     }
 
     enable() {
