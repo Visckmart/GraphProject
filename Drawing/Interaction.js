@@ -102,7 +102,7 @@ window.onresize = g.recalculateLayout.bind(g)
 g.recalculateLayout()
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
 document.body.onblur = function() {
-    if (g.lastToolChoice == Tool.MOVE) {
+    if (!g.lastToolChoice || g.lastToolChoice == Tool.MOVE) {
         g.primaryTool = Tool.MOVE;
     }
     g.refreshInterfaceState()
