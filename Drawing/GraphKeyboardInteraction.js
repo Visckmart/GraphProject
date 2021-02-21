@@ -37,7 +37,7 @@ class GraphKeyboardHandler {
     // TODO: Organizar essas checagens
     // Key Pressed
 
-    keyPressed(keyboardEvent) {
+    keyPressed = (keyboardEvent) => {
         // Eventos de teclado desabilitados
         if(!this._enabled) { return }
 
@@ -95,7 +95,7 @@ class GraphKeyboardHandler {
 
     // Key Released
 
-    keyReleased(keyboardEvent) {
+    keyReleased = (keyboardEvent) => {
         // Eventos de teclado desabilitados
         if(!this._enabled) { return; }
 
