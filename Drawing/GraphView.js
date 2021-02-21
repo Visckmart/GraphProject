@@ -149,10 +149,12 @@ class GraphView {
 
     /* Destaca os nós selecionados */
     selectionChanged() {
+        let shouldShowDashedTools = false;
         for (let node of this.structure.nodes()) {
             if (this.selectionHandler.isSelected(node)
                 && this.selectionHandler.isQuickSelection === false) {
                 node.highlights.add(HighlightType.SELECTION)
+                shouldShowDashedTools = true;
             } else {
                 node.highlights.remove(HighlightType.SELECTION)
             }
@@ -161,15 +163,17 @@ class GraphView {
         for (let [edge, ,] of this.structure.edges()) {
             if (this.selectionHandler.isSelected(edge)) {
                 edge.highlights.add(HighlightType.SELECTION)
+                shouldShowDashedTools = true;
             } else {
                 edge.highlights.remove(HighlightType.SELECTION)
             }
         }
 
         // Seleção de nós NÃO temporária
-        let hasExplicitNodeSelection = this.selectionHandler.hasSelectedNodes > 0
-                                       && this.selectionHandler.isQuickSelection === false
-        if (hasExplicitNodeSelection || this.selectionHandler.hasSelectedEdges > 0) {
+        //let hasExplicitNodeSelection = this.selectionHandler.hasSelectedNodes > 0
+        //                               && this.selectionHandler.isQuickSelection === false
+        //if (hasExplicitNodeSelection || this.selectionHandler.hasSelectedEdges > 0) {
+        if (shouldShowDashedTools) {
             let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
             featureIcons.forEach(icon => icon.classList.add("selected"))
         } else {
@@ -191,16 +195,11 @@ class GraphView {
             let radiusCheck = Math.max(node.radius-4, regularNodeRadius);
             if (checkForConflict) { radiusCheck *= 2; }
 
-            if (node.pos.x-radiusCheck < pos.x && node.pos.x+radiusCheck > pos.x
-                && node.pos.y-radiusCheck < pos.y && node.pos.y+radiusCheck > pos.y) {
+            if (   node.pos.x - radiusCheck < pos.x && node.pos.x + radiusCheck > pos.x
+                && node.pos.y - radiusCheck < pos.y && node.pos.y + radiusCheck > pos.y) {
                 if (checkForConflict) return [node];
                 detectedNodes.push(node);
             }
-            //let dx = node.pos.x - pos.x;
-            //let dy = node.pos.y - pos.y;
-            //if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck) {
-                //detectedNodes.push(node);
-            //}
         }
         return detectedNodes;
     }
@@ -210,7 +209,7 @@ class GraphView {
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             let edgeLength = getDistanceOf(nodeA.pos, nodeB.pos)
             let distSum = getDistanceOf(pos, nodeA.pos)
-                       + getDistanceOf(pos, nodeB.pos)
+                          + getDistanceOf(pos, nodeB.pos)
             if (distSum >= edgeLength - eps
                 && distSum <= edgeLength + eps) {
                 return edge;
@@ -219,18 +218,17 @@ class GraphView {
     }
 
     getNodesWithin(initialPos, finalPos) {
-        let leftmost   = Math.min(initialPos.x, finalPos.x)
-        let rightmost  = Math.max(initialPos.x, finalPos.x)
-        let topmost    = Math.min(initialPos.y, finalPos.y)
-        let bottommost = Math.max(initialPos.y, finalPos.y)
+        let left   = Math.min(initialPos.x, finalPos.x);
+        let right  = Math.max(initialPos.x, finalPos.x);
+        let top    = Math.min(initialPos.y, finalPos.y);
+        let bottom = Math.max(initialPos.y, finalPos.y);
 
-        let nodesWithin = []
+        let nodesWithin = [];
         for (let node of this.structure.nodes()) {
-            if (   node.pos.x + node.radius > leftmost
-                && node.pos.x - node.radius < rightmost
-                && node.pos.y + node.radius > topmost
-                && node.pos.y - node.radius < bottommost) {
-                nodesWithin.push(node)
+            let nodeRadius = node.radius;
+            if (   node.pos.x + nodeRadius > left && node.pos.x - nodeRadius < right
+                && node.pos.y + nodeRadius > top && node.pos.y - nodeRadius < bottom) {
+                nodesWithin.push(node);
             }
         }
 
@@ -238,33 +236,44 @@ class GraphView {
     }
 
     getEdgesWithin(initialPos, finalPos) {
-        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
         let edgesWithin = [];
-        let lines = [
-            [initialPos, {x: initialPos.x, y: finalPos.y}],
-            [initialPos, {x: finalPos.x, y: initialPos.y}],
-            [{x: finalPos.x, y: initialPos.y}, finalPos],
-            [{x: initialPos.x, y: finalPos.y}, finalPos],
-        ]
-        for (let [edge, s, e] of this.structure.uniqueEdges()) {
-            for (let idx in lines) {
-                let [startPos, endPos] = lines[idx];
-                let uA = ((e.pos.x - s.pos.x) * (startPos.y - s.pos.y) - (e.pos.y - s.pos.y) * (startPos.x - s.pos.x)) / ((e.pos.y - s.pos.y) * (endPos.x - startPos.x) - (e.pos.x - s.pos.x) * (endPos.y - startPos.y));
-                let uB = ((endPos.x - startPos.x) * (startPos.y - s.pos.y) - (endPos.y - startPos.y) * (startPos.x - s.pos.x)) / ((e.pos.y - s.pos.y) * (endPos.x - startPos.x) - (e.pos.x - s.pos.x) * (endPos.y - startPos.y));
-
-                // console.log(uA, uB)
-                if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
-                    // console.log(`Hit ${s.label} ${e.label} ${idx}`)
-                    edgesWithin.push(edge);
-                    break;
-                }
-            }
-        }
-
+        // Passa por todas as arestas e considera contida caso
+        // um dos nós esteja contido.
+        let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
                 edgesWithin.push(edge);
                 edge.selected = true;
+            }
+        }
+
+        // Prepara os lados da área de seleção
+        let lines = [
+            [initialPos,    {x: finalPos.x, y: initialPos.y}], // Top
+            [{x: initialPos.x, y: finalPos.y},  finalPos],     // Bottom
+            [initialPos,    {x: initialPos.x, y: finalPos.y}], // Left
+            [{x: finalPos.x, y: initialPos.y},  finalPos],     // Right
+        ]
+        // Passa por todas as arestas restantes e considera contida caso haja
+        // uma interseção entre uma das laterais da seleção e a aresta.
+        // Explicação: http://jeffreythompson.org/collision-detection/line-line.php
+        for (let [edge, s, e] of this.structure.uniqueEdges()) {
+            if (edgesWithin.includes(edge)) continue;
+            let startPos = s.pos, endPos = e.pos;
+            rectSidesCheck:for (let [pointA, pointB] of lines) {
+                let denominator =   (endPos.y - startPos.y) * (pointB.x - pointA.x)
+                                  - (endPos.x - startPos.x) * (pointB.y - pointA.y);
+                let uA = (  (endPos.x - startPos.x) * (pointA.y - startPos.y)
+                          - (endPos.y - startPos.y) * (pointA.x - startPos.x))
+                         / denominator;
+                let uB = (  (pointB.x - pointA.x) * (pointA.y - startPos.y)
+                          - (pointB.y - pointA.y) * (pointA.x - startPos.x))
+                         / denominator;
+
+                if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+                    edgesWithin.push(edge);
+                    break rectSidesCheck;
+                }
             }
         }
         return edgesWithin;
@@ -326,9 +335,8 @@ class GraphView {
 
     removeEdgeAt(pos) {
         let edge = this.getEdgesAt(pos);
-        if (!edge) {
-            return;
-        }
+        if (!edge) { return; }
+
         this.selectionHandler.deselect(edge);
         this.structure.removeEdge(edge);
         this.registerStep();
@@ -423,14 +431,6 @@ class GraphView {
                 return;
             }
             this.requestHighFPS(HighFPSFeature.CONNECTING, 90);
-            // for (let [, s,e] of this.structure.uniqueEdges()) {
-            //     let uA = ((e.pos.x-s.pos.x)*(startPos.y-s.pos.y) - (e.pos.y-s.pos.y)*(startPos.x-s.pos.x)) / ((e.pos.y-s.pos.y)*(endPos.x-startPos.x) - (e.pos.x-s.pos.x)*(endPos.y-startPos.y));
-            //     let uB = ((endPos.x-startPos.x)*(startPos.y-s.pos.y) - (endPos.y-startPos.y)*(startPos.x-s.pos.x)) / ((e.pos.y-s.pos.y)*(endPos.x-startPos.x) - (e.pos.x-s.pos.x)*(endPos.y-startPos.y));
-            //     if (this.interactionHandler.mouse.clickedNode == s || this.interactionHandler.mouse.clickedNode == e) continue;
-            //     if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
-            //         console.log(`Hit ${s.label} ${e.label}`)
-            //     }
-            // }
             this.structure.temporaryEdge.draw(this.ctx, startPos, endPos);
         }
     }
