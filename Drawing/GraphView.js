@@ -45,27 +45,23 @@ class GraphView {
 
         // INTERACTION
         this.selectionHandler = new GraphSelection(this);
-        let mouseHandler = new GraphMouseHandler(this)
-        let keyboardHandler = new GraphKeyboardHandler(this)
+        let mouseHandler = new GraphMouseHandler(this);
+        let keyboardHandler = new GraphKeyboardHandler(this);
         this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
         
         // MOUSE
-        canvas.addEventListener("mousedown",
-                                mouseHandler.mouseDownEvent.bind(mouseHandler));
-        canvas.addEventListener("mousemove",
-                                mouseHandler.mouseDragEvent.bind(mouseHandler));
-        canvas.addEventListener("mouseup",
-                                mouseHandler.mouseUpEvent.bind(mouseHandler));
-        canvas.addEventListener("mouseleave",
-                                mouseHandler.mouseLeave.bind(mouseHandler));
+        canvas.onmousedown  = mouseHandler.mouseDownEvent;
+        canvas.onmousemove  = mouseHandler.mouseDragEvent;
+        canvas.onmouseup    = mouseHandler.mouseUpEvent;
+        canvas.onmouseleave = mouseHandler.mouseLeaveEvent;
 
         // Evite abrir o menu de contexto para não haver conflito com o gesto
         // de deletar nós.
-        canvas.addEventListener("contextmenu", event => event.preventDefault());
+        canvas.oncontextmenu = event => event.preventDefault();
 
         // KEYBOARD
-        document.body.onkeydown = keyboardHandler.keyPressed.bind(keyboardHandler);
-        document.body.onkeyup = keyboardHandler.keyReleased.bind(keyboardHandler);
+        document.body.onkeydown = keyboardHandler.keyPressed;
+        document.body.onkeyup = keyboardHandler.keyReleased;
 
         this.history = new HistoryTracker();
         this.history.registerStep(this.structure.clone())
@@ -523,6 +519,7 @@ class GraphView {
         return highestFPS;
     }
 
+    // TODO: Permitir o controle do FPS do canvas de overlay
     refreshOverlay(timestamp) {
         if (this.selectionHandler.shouldDrawSelection) {
             setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)),

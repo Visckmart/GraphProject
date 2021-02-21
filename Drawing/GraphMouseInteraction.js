@@ -35,7 +35,7 @@ class GraphMouseHandler {
 
     // Mouse DOWN event
     justClearedSelection = false;
-    mouseDownEvent(mouseEvent) {
+    mouseDownEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
 
@@ -65,7 +65,7 @@ class GraphMouseHandler {
 
     // Mouse DRAG event
     lastHoveredEdge = null;
-    mouseDragEvent(mouseEvent) {
+    mouseDragEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
 
@@ -137,7 +137,7 @@ class GraphMouseHandler {
     }
 
     // Mouse UP event
-    mouseUpEvent(mouseEvent) {
+    mouseUpEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
 
@@ -221,7 +221,7 @@ class GraphMouseHandler {
     }
 
 
-    mouseLeave() {
+    mouseLeaveEvent = () => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
         // Se está desenhando a área de seleção
@@ -232,6 +232,10 @@ class GraphMouseHandler {
         }
         // Pare de atualizar a aresta temporária
         this.shouldDrawTemporaryEdge = false;
+
+        // Atualiza a posição dos nós selecionados, para que o próximo
+        // gesto de mover esses nós tenha as posições adequadas.
+        this.selection.registerNodePositions();
     }
     // Estilo do ponteiro do mouse
     refreshCursorStyle() {
