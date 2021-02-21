@@ -133,18 +133,16 @@ class GraphView {
     }
 
     selectAllNodes() {
+        let allElements = [];
         switch (this.primaryTool) {
         case Tool.MOVE:
-            for (let node of this.structure.nodes()) {
-                this.selectionHandler.select(node);
-            }
+            allElements = Array.from(this.structure.nodes());
             break;
         case Tool.CONNECT:
-            for (let [edge, ,] of this.structure.edges()) {
-                this.selectionHandler.select(edge);
-            }
+            allElements = Array.from(this.structure.edges()).map(e => e[0]);
             break;
         }
+        this.selectionHandler.selectMultiple(allElements);
     }
 
     /* Destaca os nós selecionados */
