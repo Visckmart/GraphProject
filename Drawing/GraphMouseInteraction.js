@@ -1,6 +1,7 @@
 import { Tool } from "./General.js"
 import { HighlightType } from "../Structure/Highlights.js"
-import { getDistanceOf } from "../Structure/Utilities.js";
+import { getDistanceOf } from "../Structure/Utilities.js"
+import Edge from "../Structure/Edge.js";
 
 class GraphMouseHandler {
     
@@ -199,7 +200,7 @@ class GraphMouseHandler {
             if (releasedOverNode) {
                 let insertedEdge = this.graphView.insertEdgeBetween(this.clickedNode,
                                                                     releasedOverNode);
-                if (insertedEdge) {
+                if (insertedEdge && insertedEdge.constructor != Edge) {
                     this.selection.clear();
                     this.selection.select(insertedEdge)
                 }
@@ -258,7 +259,9 @@ class GraphMouseHandler {
             cursorStyle = "crosshair";
         }
         // Atualize o estilo apropriadamente
-        this.graphView.canvas.style.cursor = cursorStyle;
+        if (this.graphView.canvas.style.cursor != cursorStyle) {
+            this.graphView.canvas.style.cursor = cursorStyle;
+        }
     }
 
     enable() {

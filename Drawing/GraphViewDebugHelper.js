@@ -1,14 +1,20 @@
 // Geração aleatória de nós
 export function generateRandomNodes(graphView, quantity) {
     let i = 0;
+    let tries = 0;
     while (i < quantity) {
-        let x = Math.random()*70+5;
-        let y = Math.random()*20+5;
-        x *= 10;
-        y *= 10;
+        if (tries > 10*quantity) {
+            return;
+        }
+        let x = Math.random()*graphView.canvas.width+50;
+        let y = Math.random()*graphView.canvas.height+30;
+        x *= 0.75;
+        y *= 0.5;
         if (graphView.getNodesAt({x: x, y: y}, true)[0] == null) {
             i++;
             graphView.insertNewNodeAt({x: x, y: y});
+        } else {
+            tries += 1;
         }
     }
 }
