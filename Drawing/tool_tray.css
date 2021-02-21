@@ -7,6 +7,10 @@
   margin: 0 auto;
   transition: bottom ease-in-out 150ms;
   width: 65%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  pointer-events: none;
   /*background-color: green;*/
 }
 
@@ -21,6 +25,7 @@
   border-top-left-radius: 5pt;
   border-top-right-radius: 5pt;
   /*background-color: red;*/
+  pointer-events: auto;
 }
 
 .toolTrayCaretUp, .toolTrayCaretDown {
@@ -74,6 +79,7 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  pointer-events: auto;
   /*background-color: blue;*/
   /*padding-bottom: 0;*/
 }

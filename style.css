@@ -30,6 +30,9 @@ body {
   z-index: 1;
   height: var(--maxHeight);
   max-height: var(--maxHeight);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 
   width: calc(100% - var(--menuWidth));
   max-width: calc(100% - var(--menuWidth));
