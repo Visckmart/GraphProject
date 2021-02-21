@@ -10,7 +10,7 @@ export function generateRandomNodes(graphView, quantity) {
         let y = Math.random()*graphView.canvas.height+30;
         x *= 0.75;
         y *= 0.5;
-        if (graphView.getNodesAt({x: x, y: y}, true)[0] == null) {
+        if (graphView.checkIfNodeAt({x: x, y: y}, true)) {
             i++;
             graphView.insertNewNodeAt({x: x, y: y});
         } else {

@@ -76,7 +76,7 @@ class GraphMouseHandler {
         this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
         if (this.graphView.primaryTool == Tool.CONNECT) {
             // NODE COLISION
-            let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
+            let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
             if (this.graphView.primaryTool == Tool.CONNECT && isHoveringNode == false) {
                 let edgeHover = this.graphView.getEdgesAt(pos)
                 this.lastHoveredEdge = edgeHover
@@ -251,7 +251,7 @@ class GraphMouseHandler {
         
         // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
         grabCheck:if (this.graphView.primaryTool == Tool.MOVE) {
-            let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
+            let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
             if (!isHoveringNode) { break grabCheck; }
             if (this.selection.hasSelectedNodes && this.clickPosition && getDistanceOf(this.clickPosition, this.currentMousePos) < 5) {
                 cursorStyle = "grabbing";

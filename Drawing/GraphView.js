@@ -202,6 +202,20 @@ class GraphView {
         return detectedNodes;
     }
 
+    checkIfNodeAt(pos, checkForConflict = false) {
+
+        for (let node of this.structure.nodes()) {
+            let radiusCheck = Math.max(node.radius-4, regularNodeRadius);
+            if (checkForConflict) { radiusCheck *= 2; }
+
+            if (   node.pos.x - radiusCheck < pos.x && node.pos.x + radiusCheck > pos.x
+                   && node.pos.y - radiusCheck < pos.y && node.pos.y + radiusCheck > pos.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     getEdgesAt(pos) {
         const eps = 1;
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
@@ -286,7 +300,7 @@ class GraphView {
 
     nodeColorIndex = 0;
     insertNewNodeAt(pos) {
-        if (this.getNodesAt(pos, true).length !== 0) {
+        if (this.checkIfNodeAt(pos, true)) {
             return false;
         }
         let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y, colorIndex: this.nodeColorIndex++})
