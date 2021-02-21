@@ -75,9 +75,11 @@ class GraphView {
 
 
         /* Eventos que resetam o idle timer com qualquer ação */
-        document.addEventListener("mousedown", this._handleEvent)
-        document.addEventListener("keydown", this._handleEvent)
-        document.addEventListener("mousemove", this._handleEvent)
+        document.addEventListener("mousedown", this._handleCacheResetEvent)
+        document.addEventListener("keydown", this._handleCacheResetEvent)
+        document.addEventListener("mousemove", this._handleCacheResetEvent)
+
+        this._handleCacheResetEvent()
     }
 
     _primaryTool = Tool.MOVE;
@@ -539,7 +541,7 @@ class GraphView {
         this.showingArea = this.selectionHandler.shouldDrawSelection;
     }
 
-    _cachingFrames = true
+    _cachingFrames = false
     _cachingTimeout = null
 
     _cachedFrames = []
@@ -550,7 +552,7 @@ class GraphView {
     _cacheFrameSpacing = 0
 
     // Função de resetar a coleta de frames
-    _handleEvent = () => {
+    _handleCacheResetEvent = () => {
         clearTimeout(this._cachingTimeout)
 
         this._cachingFrames = false
