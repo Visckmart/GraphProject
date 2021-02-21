@@ -24,7 +24,8 @@ export default class Node {
             this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
         }
         this._breatheSettings = {
-            speed: 0.15,
+            // Duração em segundos
+            duration: 4,
             amplitude: 1.5,
             offset: -2.5
         }
@@ -69,10 +70,10 @@ export default class Node {
 
     get radius() {
         let elapsedTime = window.performance.now() - this._initialTime;
-        let speed  = this._breatheSettings.speed;
+        let speed  = this._breatheSettings.duration;
         let mult   = this._breatheSettings.amplitude;
         let offset = this._breatheSettings.offset;
-        let expansion = Math.sin((elapsedTime / 100)*speed) * mult + offset;
+        let expansion = Math.sin(elapsedTime * Math.PI / (500 * speed)) * mult + offset;
         return regularNodeRadius + expansion;
     }
 
