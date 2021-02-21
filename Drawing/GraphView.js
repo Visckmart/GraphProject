@@ -539,21 +539,34 @@ class GraphView {
         this.showingArea = this.selectionHandler.shouldDrawSelection;
     }
 
+    _cachingFrames = true
+    _cachingTimeout = null
+
     _cachedFrames = []
     _currentFrame = 0
     _frameInverted = false
 
     // Função de resetar a coleta de frames
     _handleEvent = () => {
-        //console.log('reset')
+        clearTimeout(this._cachingTimeout)
+
+        this._cachingFrames = false
         this._cachedFrames = []
         this._currentFrame = 0
         this._frameInverted = false
+
+        this._cachingTimeout = setTimeout(() => {
+            this._cachingFrames = true
+        }, 5000)
     }
 
     // Função resposável por cachear frames quando o canvas está idle
     // Retorna true se um canvas cacheado foi desenhado e false caso contrário
     cacheFrames(currentFPS) {
+        if(!this._cachingFrames) {
+            return false
+        }
+
         if(currentFPS > IDLE_MAX_FPS) {
             //console.log('greater')
             this._cachedFrames = []
@@ -586,7 +599,7 @@ class GraphView {
             let image = this._cachedFrames[this._currentFrame]
             // Se existe uma imagem cacheada e pronta
             if(image && image.complete) {
-                //console.log('idle')
+                //console.log('idle', this._currentFrame)
                 this.ctx.drawImage(image, 0, 0)
                 return true
             }
