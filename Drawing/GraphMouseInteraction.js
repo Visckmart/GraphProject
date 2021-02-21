@@ -9,13 +9,13 @@ class GraphMouseHandler {
         this.graphView = graphView;
         this.selection = graphView.selectionHandler;
         this._enabled = true
+        this.canvasRect = this.graphView.canvas.getBoundingClientRect();
     }
 
     getMousePos(mouseEvent) {
-        let canvasRect = this.graphView.canvas.getBoundingClientRect();
         return {
-            x: mouseEvent.clientX - canvasRect.left,
-            y: mouseEvent.clientY - canvasRect.top
+            x: mouseEvent.clientX - this.canvasRect.left,
+            y: mouseEvent.clientY - this.canvasRect.top
         };
     }
 
@@ -195,7 +195,7 @@ class GraphMouseHandler {
             if (this.clickedNode == null) { break; }
 
             // Nó abaixo do ponteiro do mouse atualmente
-            let releasedOverNode = this.graphView.getNodesAt(pos).pop()
+            let releasedOverNode = this.graphView.getNodesAt(pos, true).pop()
                                 ?? this.graphView.insertNewNodeAt(pos);
             if (releasedOverNode) {
                 let insertedEdge = this.graphView.insertEdgeBetween(this.clickedNode,
@@ -237,22 +237,21 @@ class GraphMouseHandler {
         // gesto de mover esses nós tenha as posições adequadas.
         this.selection.registerNodePositions();
     }
+
     // Estilo do ponteiro do mouse
     refreshCursorStyle() {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
 
         // Restaura o ponteiro para o visual padrão
-        let cursorStyle = null;
+        let cursorStyle = "";
         // Se não sabemos a posição (acontece antes do primeiro movimento)
         if (this.currentMousePos == null) { return; }
-
-        let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
-        // Checa se a ferramenta MOVE está selecionada
-        let moveToolSelected = this.graphView.primaryTool == Tool.MOVE;
         
         // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
-        if (moveToolSelected && isHoveringNode) {
+        grabCheck:if (this.graphView.primaryTool == Tool.MOVE) {
+            let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos).length > 0;
+            if (!isHoveringNode) { break grabCheck; }
             if (this.selection.hasSelectedNodes && this.clickPosition && getDistanceOf(this.clickPosition, this.currentMousePos) < 5) {
                 cursorStyle = "grabbing";
             } else {
@@ -262,6 +261,7 @@ class GraphMouseHandler {
         if (this.selection.shouldDrawSelection == true) {
             cursorStyle = "crosshair";
         }
+
         // Atualize o estilo apropriadamente
         if (this.graphView.canvas.style.cursor != cursorStyle) {
             this.graphView.canvas.style.cursor = cursorStyle;
