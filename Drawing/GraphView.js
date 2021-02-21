@@ -18,6 +18,7 @@ import {regularNodeRadius} from "../Structure/Node.js";
 
 import HistoryTracker from "./HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
+import cacheFrames from "./GraphFrameCaching.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -72,14 +73,6 @@ class GraphView {
         //     let r = getRandomInt(0, 3)
         //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
-
-
-        /* Eventos que resetam o idle timer com qualquer ação */
-        document.addEventListener("mousedown", this._handleCacheResetEvent)
-        document.addEventListener("keydown", this._handleCacheResetEvent)
-        document.addEventListener("mousemove", this._handleCacheResetEvent)
-
-        this._handleCacheResetEvent()
     }
 
     _primaryTool = Tool.MOVE;
@@ -541,95 +534,6 @@ class GraphView {
         this.showingArea = this.selectionHandler.shouldDrawSelection;
     }
 
-    _cachingFrames = false
-    _cachingTimeout = null
-
-    _cachedFrames = []
-    _currentFrame = 0
-    _frameInverted = false
-
-    // Espaçamento de frames entre coletas
-    _cacheFrameSpacing = 0
-
-    // Função de resetar a coleta de frames
-    _handleCacheResetEvent = () => {
-        clearTimeout(this._cachingTimeout)
-
-        this._cachingFrames = false
-        this._cachedFrames = []
-        this._currentFrame = 0
-        this._frameInverted = false
-        this._cacheFrameSpacing = 0
-
-        this._cachingTimeout = setTimeout(() => {
-            this._cachingFrames = true
-        }, 5000)
-    }
-
-    // Função resposável por cachear frames quando o canvas está idle
-    // Retorna true se um canvas cacheado foi desenhado e false caso contrário
-    cacheFrames(currentFPS) {
-        if(!this._cachingFrames) {
-            return false
-        }
-
-        if(currentFPS > IDLE_MAX_FPS) {
-            //console.log('greater')
-            this._cachedFrames = []
-            this._currentFrame = 0
-            // Controla o comporamento de leitura simétrica
-            this._frameInverted = false
-            return false
-        }
-
-        // Número de frames idle coletados, baseado na animação de "breathing" que é simétrica e tem ~44 frames
-        const numIdleFrames = 22
-
-        // Se frames o bastante já foram cacheados
-        if(this._cachedFrames.length === numIdleFrames) {
-            // Os frames são lidos de forma simétrica
-            if(!this._frameInverted)
-            {
-                this._currentFrame++
-            } else {
-                this._currentFrame--
-            }
-
-            // Inverte ao chegar nas pontas
-            if(this._currentFrame === numIdleFrames - 1 || this._currentFrame === 0)
-            {
-                this._frameInverted = !this._frameInverted
-            }
-
-
-            let image = this._cachedFrames[this._currentFrame]
-            // Se existe uma imagem cacheada e pronta
-            if(image && image.complete) {
-                //console.log('idle', this._currentFrame)
-                this.ctx.drawImage(image, 0, 0)
-                return true
-            }
-        // Caso contrário, coletar mais frames
-        } else {
-            // Desenhar o grafo antes de coletar o frame 0
-            if(this._cachedFrames.length === 0) {
-                this.redrawGraph()
-            }
-
-            if(this._cacheFrameSpacing === 0) {
-                // Captura o canvas em uma nova imagem
-                console.log('collecting')
-                let image = new Image()
-                image.src = this.canvas.toDataURL()
-                this._cachedFrames.push(image)
-
-                this._cacheFrameSpacing = numIdleFrames + 1
-            }
-            this._cacheFrameSpacing--
-        }
-        return false
-    }
-
     requestViewRefresh = () => {
         requestAnimationFrame(this.refreshView.bind(this));
     }
@@ -640,7 +544,7 @@ class GraphView {
         if (this.structure.nodes().next().done) { return; }
         this.frameRateRequests.clear();
         this.lastFrameTimestamp = timestamp;
-        if(!this.cacheFrames(currentFPS)) {
+        if(!cacheFrames(currentFPS, IDLE_MAX_FPS, this.ctx, this.canvas, () => this.redrawGraph())) {
             this.redrawGraph();
         }
         this.drawCurrentMaxFPS(currentFPS);
