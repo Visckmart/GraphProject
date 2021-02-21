@@ -76,6 +76,11 @@ class GraphView {
         //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
 
+
+        /* Eventos que resetam o idle timer com qualquer ação */
+        document.addEventListener("mousedown", this._handleEvent)
+        document.addEventListener("keydown", this._handleEvent)
+        document.addEventListener("mousemove", this._handleEvent)
     }
 
     _primaryTool = Tool.MOVE;
@@ -536,6 +541,73 @@ class GraphView {
         this.showingArea = this.selectionHandler.shouldDrawSelection;
     }
 
+    _cachedFrames = []
+    _currentFrame = 0
+    _frameInverted = false
+
+    // Função de resetar a coleta de frames
+    _handleEvent = () => {
+        //console.log('reset')
+        this._cachedFrames = []
+        this._currentFrame = 0
+        this._frameInverted = false
+    }
+
+    // Função resposável por cachear frames quando o canvas está idle
+    // Retorna true se um canvas cacheado foi desenhado e false caso contrário
+    cacheFrames(currentFPS) {
+        if(currentFPS > IDLE_MAX_FPS) {
+            //console.log('greater')
+            this._cachedFrames = []
+            this._currentFrame = 0
+            // Controla o comporamento de leitura simétrica
+            this._frameInverted = false
+            return false
+        }
+
+        // Número de frames idle coletados, baseado na animação de "breathing" que é simétrica e tem ~44 frames
+        const numIdleFrames = 22
+
+        // Se frames o bastante já foram cacheados
+        if(this._cachedFrames.length === numIdleFrames) {
+            // Os frames são lidos de forma simétrica
+            if(!this._frameInverted)
+            {
+                this._currentFrame++
+            } else {
+                this._currentFrame--
+            }
+
+            // Inverte ao chegar nas pontas
+            if(this._currentFrame === numIdleFrames - 1 || this._currentFrame === 0)
+            {
+                this._frameInverted = !this._frameInverted
+            }
+
+
+            let image = this._cachedFrames[this._currentFrame]
+            // Se existe uma imagem cacheada e pronta
+            if(image && image.complete) {
+                //console.log('idle')
+                this.ctx.drawImage(image, 0, 0)
+                return true
+            }
+        // Caso contrário, coletar mais frames
+        } else {
+            // Desenhar o grafo antes de coletar o frame 0
+            if(this._cachedFrames.length === 0) {
+                this.redrawGraph()
+            }
+            //console.log('collecting')
+
+            // Captura o canvas em uma nova imagem
+            let image = new Image()
+            image.src = this.canvas.toDataURL()
+            this._cachedFrames.push(image)
+        }
+        return false
+    }
+
     requestViewRefresh = () => {
         requestAnimationFrame(this.refreshView.bind(this));
     }
@@ -546,7 +618,9 @@ class GraphView {
         if (this.structure.nodes().next().done) { return; }
         this.frameRateRequests.clear();
         this.lastFrameTimestamp = timestamp;
-        this.redrawGraph();
+        if(!this.cacheFrames(currentFPS)) {
+            this.redrawGraph();
+        }
         this.drawCurrentMaxFPS(currentFPS);
     }
     // This function updates every node and redraws the graph.
@@ -555,7 +629,6 @@ class GraphView {
 }
 
 export let g = new GraphView(canvas, overlayCanvas);
-g.redrawGraph();
 // g.refreshOverlay()
 g.requestViewRefresh()
 
