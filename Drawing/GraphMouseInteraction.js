@@ -1,4 +1,4 @@
-import { Tool } from "./General.js"
+import {HighFPSFeature, Tool} from "./General.js"
 import { HighlightType } from "../Structure/Highlights.js"
 import { getDistanceOf } from "../Structure/Utilities.js"
 import Edge from "../Structure/Edge.js";
@@ -100,6 +100,7 @@ class GraphMouseHandler {
             // Atualize a área de seleção
             this.selection.draggingEvent(this.clickPosition, pos);
             if (selecting != this.selection.shouldDrawSelection) {
+                this.graphView.overlayFrameRateRequests.set(HighFPSFeature.SELECTING, 90)
                 requestAnimationFrame(this.graphView.refreshOverlay.bind(this.graphView))
             }
             this.refreshCursorStyle();
