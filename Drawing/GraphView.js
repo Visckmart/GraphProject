@@ -546,6 +546,9 @@ class GraphView {
     _currentFrame = 0
     _frameInverted = false
 
+    // Espaçamento de frames entre coletas
+    _cacheFrameSpacing = 0
+
     // Função de resetar a coleta de frames
     _handleEvent = () => {
         clearTimeout(this._cachingTimeout)
@@ -554,6 +557,7 @@ class GraphView {
         this._cachedFrames = []
         this._currentFrame = 0
         this._frameInverted = false
+        this._cacheFrameSpacing = 0
 
         this._cachingTimeout = setTimeout(() => {
             this._cachingFrames = true
@@ -609,12 +613,17 @@ class GraphView {
             if(this._cachedFrames.length === 0) {
                 this.redrawGraph()
             }
-            //console.log('collecting')
 
-            // Captura o canvas em uma nova imagem
-            let image = new Image()
-            image.src = this.canvas.toDataURL()
-            this._cachedFrames.push(image)
+            if(this._cacheFrameSpacing === 0) {
+                // Captura o canvas em uma nova imagem
+                console.log('collecting')
+                let image = new Image()
+                image.src = this.canvas.toDataURL()
+                this._cachedFrames.push(image)
+
+                this._cacheFrameSpacing = numIdleFrames + 1
+            }
+            this._cacheFrameSpacing--
         }
         return false
     }
