@@ -180,20 +180,27 @@ class GraphView {
 
     //region Deteção de Nós e Arestas
 
+    // TODO: Área de colisão pode ser um quadrado, checar se há 1 nó pode ser
+    //       separado de obter todos os nós
     // Searches for nodes that contain the point `pos`
     // The lookup is done from the last node to the first, the inverse of the
     // drawing lookup in order to return the frontmost node.
     getNodesAt(pos, checkForConflict = false) {
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
-            let radiusCheck = Math.max(node.radius, regularNodeRadius);
+            let radiusCheck = Math.max(node.radius-4, regularNodeRadius);
             if (checkForConflict) { radiusCheck *= 2; }
 
-            let dx = node.pos.x - pos.x;
-            let dy = node.pos.y - pos.y;
-            if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck) {
+            if (node.pos.x-radiusCheck < pos.x && node.pos.x+radiusCheck > pos.x
+                && node.pos.y-radiusCheck < pos.y && node.pos.y+radiusCheck > pos.y) {
+                if (checkForConflict) return [node];
                 detectedNodes.push(node);
             }
+            //let dx = node.pos.x - pos.x;
+            //let dy = node.pos.y - pos.y;
+            //if (Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) < radiusCheck) {
+                //detectedNodes.push(node);
+            //}
         }
         return detectedNodes;
     }
