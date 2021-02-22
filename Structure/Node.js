@@ -126,7 +126,7 @@ export default class Node {
         // Draw label
         let transparentText = !this.highlights.has(HighlightType.LIGHTEN)
                                && this.highlights.has(HighlightType.DARKEN)
-        this._drawLabel(ctx, nodeLabeling, transparentText ? backgroundGradient : this.color)
+        //this._drawLabel(ctx, nodeLabeling, transparentText ? backgroundGradient : this.color)
 
         ctx.restore();
 

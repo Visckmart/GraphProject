@@ -81,8 +81,14 @@ export default class GraphSelection {
     }
 
     selectMultiple(elements) {
-        this.selected.nodes = elements.filter(e => e instanceof Node);
-        this.selected.edges = elements.filter(e => e instanceof Edge);
+        let newNodes = elements.filter(e => e instanceof Node
+                                            && !this.selected.nodes.includes(e));
+        this.selected.nodes = this.selected.nodes.concat(...newNodes);
+
+        let newEdges = elements.filter(e => e instanceof Edge
+                                            && !this.selected.edges.includes(e));
+        console.log(newEdges, elements)
+        this.selected.edges = this.selected.edges.concat(...newEdges)
         this.registerNodePositions();
         this.graphView.selectionChanged();
     }
