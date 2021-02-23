@@ -63,6 +63,7 @@ export default function cacheFrames(currentFPS, idleFPS, ctx, canvas, drawGraph)
         // Se existe uma imagem cacheada e pronta
         if(image && image.complete) {
             //console.log('idle', _currentFrame)
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
             ctx.drawImage(image, 0, 0)
             return true
         }
