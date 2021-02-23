@@ -72,7 +72,6 @@ algorithmSelector.onchange = function () {
             categoryCheckboxes.directedEdges.checked = false;
             break
         case 'KruskalMST':
-        case 'PrimMST':
             categoryCheckboxes.weightedEdges.disabled = true;
             categoryCheckboxes.weightedEdges.checked = true;
             categoryCheckboxes.coloredEdges.disabled = false;

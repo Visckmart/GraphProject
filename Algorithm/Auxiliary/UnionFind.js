@@ -1,5 +1,10 @@
 import AlgorithmShowcase from "../../Drawing/AlgorithmControls/AlgorithmShowcase.js";
 
+const elementSize = 50
+const paddingTop = 30
+const paddingBottom = 30
+const spaceBetween = 50
+
 class Subset {
     constructor(element) {
         this.parent = this
@@ -19,11 +24,34 @@ export default class UnionFind extends AlgorithmShowcase {
         this._messages = []
 
         for(let element of elementList) {
-            this._subsetMap.set(element, new Subset())
+            this._subsetMap.set(element, new Subset(element))
         }
     }
 
     /* Funções do showcase */
+    _drawElement(x, y, element) {
+        let ctx = this.ctx
+
+        ctx.save()
+        ctx.beginPath()
+        ctx.strokeStyle = '#8b0000'
+        ctx.fillStyle = '#ff726f'
+        ctx.rect(x, y, elementSize, elementSize)
+        ctx.fill()
+        ctx.stroke()
+
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.font = 'bold 30px Arial'
+        ctx.fillStyle = '#ffffff'
+        ctx.fillText(element.toString(), x + elementSize/2, y + elementSize/2, elementSize)
+        ctx.restore()
+    }
+
+    drawUnionFind() {
+
+    }
+
     addStep() {
         let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
         for(let message of this._messages) {
@@ -67,8 +95,8 @@ export default class UnionFind extends AlgorithmShowcase {
 
     /* Funções do UnionFind */
     union(element1, element2) {
-        let subset1 = this.find(element1)
-        let subset2 = this.find(element2)
+        let subset1 = this._subsetMap.get(this.find(element1, false))
+        let subset2 = this._subsetMap.get(this.find(element2, false))
 
 
         if(!subset1 || !subset2 || subset1 === subset2) {
@@ -101,10 +129,8 @@ export default class UnionFind extends AlgorithmShowcase {
 
     // Função que acha a raiz do grupo do element
     // e faz que todos subset no caminho sejam filhos dessa raiz.
-    find(element) {
+    find(element, printMessage=true) {
         let subset = this._subsetMap.get(element)
-
-
         if(!subset) {
             console.error("Erro no find")
             console.trace()
@@ -112,11 +138,14 @@ export default class UnionFind extends AlgorithmShowcase {
         }
 
         if(subset.parent !== subset) {
-            subset.parent = this.find(subset.parent)
+            subset.parent = this._subsetMap.get(this.find(subset.parent.element, false))
         }
 
-        this._messages.push(`Achando o pai do elemento ${element.toString()} \
-        que é ${subset.parent.element.toString()}`)
+        if(printMessage)
+        {
+            this._messages.push(`Achando o pai do elemento ${element.toString()} \
+            que é ${subset.parent.element.toString()}`)
+        }
         return subset?.parent?.element
     }
 }
