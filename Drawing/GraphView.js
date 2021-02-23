@@ -426,19 +426,19 @@ class GraphView {
     //endregion
 
     //region Desenho do Grafo
-    drawSelectionArea() {
-        this.fastCtx.save();
+    drawSelectionArea(ctx) {
+        ctx.save();
 
-        this.fastCtx.strokeStyle = 'blue';
-        this.fastCtx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
-        this.fastCtx.lineWidth = 3;
+        ctx.strokeStyle = 'blue';
+        ctx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
+        ctx.lineWidth = 3;
 
-        this.selectionHandler.prepareSelectionAreaDrawing(this.fastCtx);
+        this.selectionHandler.prepareSelectionAreaDrawing(ctx);
 
-        this.fastCtx.fill();
-        this.fastCtx.stroke();
+        ctx.fill();
+        ctx.stroke();
 
-        this.fastCtx.restore();
+        ctx.restore();
     }
 
     drawEdges() {
@@ -460,12 +460,12 @@ class GraphView {
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.save();
-        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.fillStyle = backgroundGradient;
-        this.ctx.beginPath();
-        this.ctx.rect(0, 0, canvas.width, canvas.height);
-        this.ctx.fill();
+        // this.ctx.fillStyle = backgroundGradient;
+        // this.ctx.beginPath();
+        // this.ctx.rect(0, 0, canvas.width, canvas.height);
+        // this.ctx.fill();
 
         this.drawEdges();
         
@@ -507,6 +507,19 @@ class GraphView {
         this.ctx.restore()
     }
 
+    drawCurrentMaxFPS(ctx, fps, name = "", vertOffset = 0) {
+        ctx.save()
+        ctx.fillStyle = "#AAA8";
+        ctx.font = "12pt Arial";
+        let content = name + fps + " FPS";
+        let textMeasurement = ctx.measureText(content);
+        ctx.clearRect(canvas.width - textMeasurement.width - 30, 25,
+                      textMeasurement.width + 40, 55);
+        ctx.fillText(content,
+                     canvas.width - textMeasurement.width - 10,
+                     25 + vertOffset);
+        ctx.restore()
+    }
     //endregion
 
     //region Animações
@@ -524,40 +537,35 @@ class GraphView {
         this.frameRateRequests[canvasType].requests.set(feature, FPS)
     }
 
+    // Retorna a quantos FPS o canvas deverá ser atualizado,
+    // considerando as solicitações de framerates mais altos.
     getCurrentFPS(canvasType = CanvasType.GENERAL) {
         let requestsInfo = this.frameRateRequests[canvasType];
+
+        // Se for o canvas de uso geral e não houver nós, não atualize-o.
         if (canvasType == CanvasType.GENERAL && this.structure.nodes().next().done) {
             return 0;
         }
         // Evitando processamento se o mapa estiver vazio
+        // Se não houver requests, retorne o valor de idle.
         if (requestsInfo.requests.size == 0) {
             return requestsInfo.idle;
         }
 
+        // Obtenha o valor da maior request
         let requestValues = requestsInfo.requests.values();
         let highestFPS = Math.max(...requestValues);
 
+        // Tenha certeza de que ela é pelo menos o valor do idle
         if (highestFPS < requestsInfo.idle) {
             highestFPS = requestsInfo.idle;
         }
+        // Limpe as requests
+        requestsInfo.requests.clear();
 
-        this.frameRateRequests[canvasType].requests.clear()
         return highestFPS;
     }
 
-    drawCurrentMaxFPS(ctx, fps, name = "", vertOffset = 0) {
-        ctx.save()
-        ctx.fillStyle = "#AAA8";
-        ctx.font = "12pt Arial";
-        let content = name + fps + " FPS";
-        let textMeasurement = ctx.measureText(content);
-        ctx.clearRect(canvas.width - textMeasurement.width - 30, 25,
-                      textMeasurement.width + 40, 55);
-        ctx.fillText(content,
-                     canvas.width - textMeasurement.width - 10,
-                     25 + vertOffset);
-        ctx.restore()
-    }
 
     requestCanvasRefresh(canvasType) {
         switch (canvasType) {
@@ -573,13 +581,13 @@ class GraphView {
         }
     }
 
+
     refreshView(timestamp) {
         let currentFPS = this.getCurrentFPS();
         setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
                    1000/currentFPS);
 
-        // Se não há nós, pare
-        if (this.structure.nodes().next().done) {
+        if (currentFPS == 0) {
             this.ctx.clearRect(0, 0, this.width, this.height);
             this.drawCurrentMaxFPS(this.ctx, currentFPS);
             return;
@@ -598,9 +606,12 @@ class GraphView {
 
     refreshSlowCanvas(timestamp) {
         this.slowCtx.clearRect(0, 0, this.width, this.height)
+        // Chamando a cadeia de desenho de textos de cada nó
         for (let node of this.structure.nodes()) {
             node.drawText(this.slowCtx, this.nodeLabeling)
         }
+
+        // Debug
         this.slowCtx.save()
         this.slowCtx.fillStyle = "gray"
         this.slowCtx.fillRect( 0, 0, 50+Math.sin(timestamp/50)*25, 50)
@@ -608,22 +619,22 @@ class GraphView {
     }
 
     refreshFastCanvas(timestamp) {
-        this.fastCtx.clearRect(0, 0, this.width, this.height)
+        this.fastCtx.clearRect(0, 0, this.width, this.height);
         // this.fastCtx.fillStyle = colorFromComponents(230, 230, 50, 0.25)
         // this.fastCtx.fillRect(0, 0, this.width, this.height)
+
         // Desenho da área de seleção
         if (this.selectionHandler.shouldDrawSelection) {
-            if (this.showingArea == false) {
-                this.fastCanvas.style.zIndex = 10
-            }
-            this.fastCtx.save();
-            this.requestFramerateForCanvas(CanvasType.FAST, HighFPSFeature.SELECTING, 90)
-            this.drawSelectionArea();
-            this.fastCtx.restore();
+            // Envie o canvas para frente
+            if (this.showingArea == false) { this.fastCanvas.style.zIndex = 10; }
+            // Desenhe a área
+            this.drawSelectionArea(this.fastCtx);
         } else if (this.showingArea == true) {
+            // Limpe o canvas ao terminar de desenhar a área de seleção
             this.fastCtx.clearRect(0, 0, this.width, this.height);
         }
         this.showingArea = this.selectionHandler.shouldDrawSelection;
+
         // Desenhar aresta temporária
         if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
             let startPos = this.interactionHandler.mouse.clickedNode?.pos;
@@ -633,11 +644,13 @@ class GraphView {
                 this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
                 return;
             }
-            this.fastCanvas.style.zIndex = -2
-            this.requestFramerateForCanvas(CanvasType.FAST, HighFPSFeature.CONNECTING, 90);
+            // Envie o canvas para trás
+            this.fastCanvas.style.zIndex = -2;
+
             this.structure.temporaryEdge.draw(this.fastCtx, startPos, endPos);
         }
 
+        // Debug
         this.fastCtx.save()
         this.fastCtx.fillStyle = "red"
         this.fastCtx.fillRect( 0, 50, 50+Math.sin(timestamp/50)*25, 50)
