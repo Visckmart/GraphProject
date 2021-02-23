@@ -3,7 +3,7 @@ import AlgorithmShowcase from "../../Drawing/AlgorithmControls/AlgorithmShowcase
 const elementSize = 50
 const paddingTop = 30
 const paddingBottom = 30
-const spaceBetween = 50
+const spaceBetweenGroups = 80
 
 class Subset {
     constructor(element) {
@@ -29,15 +29,17 @@ export default class UnionFind extends AlgorithmShowcase {
     }
 
     /* Funções do showcase */
-    _drawElement(x, y, element) {
+    _drawElement = (x, y, element) => {
         let ctx = this.ctx
 
         ctx.save()
         ctx.beginPath()
-        ctx.strokeStyle = '#8b0000'
-        ctx.fillStyle = '#ff726f'
+        ctx.strokeStyle = element?.color ?? '#ff726f'
+        ctx.fillStyle = element?.color ?? '#ff726f'
         ctx.rect(x, y, elementSize, elementSize)
+        ctx.globalAlpha = 0.8
         ctx.fill()
+        ctx.globalAlpha = 1
         ctx.stroke()
 
         ctx.textAlign = 'center'
@@ -48,8 +50,37 @@ export default class UnionFind extends AlgorithmShowcase {
         ctx.restore()
     }
 
-    drawUnionFind() {
+    drawUnionFind = () => {
+        let groups = {}
 
+        for(let [element,] of this._subsetMap.entries()) {
+            let root = this.find(element)
+            if(!groups[root]) {
+                groups[root] = []
+            }
+            groups[root].push(element)
+        }
+
+        let maxGroupSize = Math.max(...Object.values(groups).map(g => g.length))
+
+        this.resizeCanvas(maxGroupSize * elementSize, Object.keys(groups).length * spaceBetweenGroups + paddingTop)
+
+        let ctx = this.ctx
+        ctx.save()
+        ctx.beginPath()
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'top'
+        ctx.fillStyle = '#ffffff'
+        ctx.font = '20px Arial'
+        ctx.fillText('Estado atual dos grupos:', this.canvas.width/2, 0)
+
+        let groupIndex = 0
+        for(let group of Object.values(groups)) {
+            group.forEach((element, index) => {
+                this._drawElement(index * elementSize, groupIndex * spaceBetweenGroups + paddingTop, element)
+            })
+            groupIndex++
+        }
     }
 
     addStep() {
@@ -73,9 +104,9 @@ export default class UnionFind extends AlgorithmShowcase {
         }
 
         // Mapeando pais dos elementos para seus clones
-        for(let [, subset] of cloneSubsetMap) {
+        for(let [, subset] of cloneSubsetMap.entries()) {
             if(subset.parent) {
-                subset.parent = cloneSubsetMap.get(subset)
+                subset.parent = cloneSubsetMap.get(subset.parent)
             }
         }
 
@@ -90,7 +121,10 @@ export default class UnionFind extends AlgorithmShowcase {
         if(step) {
             this.showcaseMessage = step.message
             this._subsetMap = step.map
+
+            requestAnimationFrame(this.drawUnionFind)
         }
+
     }
 
     /* Funções do UnionFind */
