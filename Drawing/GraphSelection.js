@@ -1,4 +1,4 @@
-import { Tool } from "./General.js";
+import {CanvasType, Tool} from "./General.js";
 
 import Node from "../Structure/Node.js";
 import Edge from "../Structure/Edge.js";
@@ -209,6 +209,7 @@ export default class GraphSelection {
         }
         this.selectionArea.startPoint = startPoint;
         this.selectionArea.endPoint = endPoint;
+        this.graphView.requestCanvasRefresh(CanvasType.FAST)
         this.updateContainedElements();
     }
 
@@ -262,6 +263,7 @@ export default class GraphSelection {
     clearSelectionArea() {
         this.selectionArea.startPoint = null;
         this.selectionArea.endPoint   = null;
+        this.graphView.requestCanvasRefresh(CanvasType.FAST)
     }
 
     //endregion

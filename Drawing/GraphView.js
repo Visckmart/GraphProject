@@ -530,11 +530,10 @@ class GraphView {
         [CanvasType.SLOW]:    { requests: new Map(), idle: 0 },
         [CanvasType.FAST]:    { requests: new Map(), idle: 0 }
     }
+
     requestFramerateForCanvas(canvasType = CanvasType.GENERAL, feature, FPS) {
-        if (!feature) {
-            console.warn("Unknown High FPS feature")
-            return;
-        }
+        if (!feature) { console.warn("Unknown High FPS feature"); return; }
+
         this.frameRateRequests[canvasType].requests.set(feature, FPS)
     }
 
@@ -611,32 +610,17 @@ class GraphView {
     }
 
     refreshSlowCanvas(timestamp) {
-        // let currentFPS = this.getCurrentFPS(CanvasType.SLOW);
-        // if (currentFPS != 0) {
-        //     setTimeout(() => this.requestCanvasRefresh(CanvasType.SLOW),
-        //                1000 / currentFPS);
-        // }
-
         this.slowCtx.clearRect(0, 0, this.width, this.height)
         for (let node of this.structure.nodes()) {
             node.drawText(this.slowCtx, this.nodeLabeling)
-            // node.drawLabel(this.slowCtx, this.nodeLabeling)
         }
         this.slowCtx.save()
         this.slowCtx.fillStyle = "gray"
         this.slowCtx.fillRect( 0, 0, 50+Math.sin(timestamp/50)*25, 50)
         this.slowCtx.restore()
-
-        // this.drawCurrentMaxFPS(this.slowCtx, currentFPS, "slow ", 30);
     }
 
     refreshFastCanvas(timestamp) {
-        let currentFPS = this.getCurrentFPS(CanvasType.FAST);
-        if (currentFPS != 0) {
-            setTimeout(() => this.requestCanvasRefresh(CanvasType.FAST),
-                       1000 / currentFPS);
-        }
-
         // Desenho da área de seleção
         if (this.selectionHandler.shouldDrawSelection) {
             this.fastCtx.save();
@@ -652,8 +636,6 @@ class GraphView {
         this.fastCtx.fillStyle = "red"
         this.fastCtx.fillRect( 0, 50, 50+Math.sin(timestamp/50)*25, 50)
         this.fastCtx.restore()
-
-        this.drawCurrentMaxFPS(this.fastCtx, currentFPS, "fast ", 55);
     }
 
     //endregion
