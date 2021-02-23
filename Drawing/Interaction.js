@@ -5,6 +5,7 @@ import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";
 import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
+import KruskalMST from "../Algorithm/KruskalMST.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
@@ -68,6 +69,14 @@ algorithmSelector.onchange = function () {
             categoryCheckboxes.weightedEdges.checked = true;
             categoryCheckboxes.coloredEdges.disabled = false;
             categoryCheckboxes.directedEdges.disabled = false;
+            categoryCheckboxes.directedEdges.checked = false;
+            break
+        case 'KruskalMST':
+            categoryCheckboxes.weightedEdges.disabled = true;
+            categoryCheckboxes.weightedEdges.checked = true;
+            categoryCheckboxes.coloredEdges.disabled = false;
+            categoryCheckboxes.directedEdges.disabled = false;
+            categoryCheckboxes.directedEdges.checked = false;
             break
         case 'DFSCycleDetection':
             categoryCheckboxes.weightedEdges.disabled = false;
@@ -88,6 +97,9 @@ runAlgorithmButton.onclick = async () => {
             break
         case 'PrimMST':
             await algorithmController.setup(PrimMST)
+            break
+        case 'KruskalMST':
+            await algorithmController.setup(KruskalMST)
             break
         case 'DFSCycleDetection':
             await algorithmController.setup(DFSCycleDetection)
