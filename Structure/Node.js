@@ -96,7 +96,6 @@ export default class Node {
 
     // Executa a cadeia de desenhos
     drawText(...args) {
-        console.log(this.textDrawChain._chain)
         let fpsRequests = this.textDrawChain.call(...args)
         fpsRequests = fpsRequests.filter(req => req !== undefined)
         return Math.max(...fpsRequests)

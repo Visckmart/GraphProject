@@ -132,6 +132,7 @@ class GraphMouseHandler {
         // Caso a ferramenta Connect esteja selecionada
         case Tool.CONNECT: {
             this.shouldDrawTemporaryEdge = true;
+            this.graphView.requestCanvasRefresh(CanvasType.FAST)
             break;
         }
         }

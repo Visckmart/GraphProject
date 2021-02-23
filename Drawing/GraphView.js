@@ -428,7 +428,6 @@ class GraphView {
     //region Desenho do Grafo
     drawSelectionArea() {
         this.fastCtx.save();
-        this.fastCtx.clearRect(0, 0, this.width, this.height)
 
         this.fastCtx.strokeStyle = 'blue';
         this.fastCtx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
@@ -446,18 +445,6 @@ class GraphView {
         // Desenhar arestas do grafo
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             edge.draw(this.ctx, nodeA.pos, nodeB.pos)
-        }
-        // Desenhar aresta temporária
-        if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
-            let startPos = this.interactionHandler.mouse.clickedNode?.pos;
-            let endPos   = this.interactionHandler.mouse.currentMousePos;
-            if (startPos == null || endPos == null) {
-                console.warn("Situação estranha.");
-                this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
-                return;
-            }
-            this.requestFramerateForCanvas(CanvasType.GENERAL, HighFPSFeature.CONNECTING, 90);
-            this.structure.temporaryEdge.draw(this.ctx, startPos, endPos);
         }
     }
     get width() {
@@ -621,8 +608,14 @@ class GraphView {
     }
 
     refreshFastCanvas(timestamp) {
+        this.fastCtx.clearRect(0, 0, this.width, this.height)
+        // this.fastCtx.fillStyle = colorFromComponents(230, 230, 50, 0.25)
+        // this.fastCtx.fillRect(0, 0, this.width, this.height)
         // Desenho da área de seleção
         if (this.selectionHandler.shouldDrawSelection) {
+            if (this.showingArea == false) {
+                this.fastCanvas.style.zIndex = 10
+            }
             this.fastCtx.save();
             this.requestFramerateForCanvas(CanvasType.FAST, HighFPSFeature.SELECTING, 90)
             this.drawSelectionArea();
@@ -631,6 +624,19 @@ class GraphView {
             this.fastCtx.clearRect(0, 0, this.width, this.height);
         }
         this.showingArea = this.selectionHandler.shouldDrawSelection;
+        // Desenhar aresta temporária
+        if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
+            let startPos = this.interactionHandler.mouse.clickedNode?.pos;
+            let endPos   = this.interactionHandler.mouse.currentMousePos;
+            if (startPos == null || endPos == null) {
+                console.warn("Situação estranha.");
+                this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
+                return;
+            }
+            this.fastCanvas.style.zIndex = -2
+            this.requestFramerateForCanvas(CanvasType.FAST, HighFPSFeature.CONNECTING, 90);
+            this.structure.temporaryEdge.draw(this.fastCtx, startPos, endPos);
+        }
 
         this.fastCtx.save()
         this.fastCtx.fillStyle = "red"
