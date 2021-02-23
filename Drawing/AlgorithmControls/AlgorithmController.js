@@ -130,6 +130,7 @@ class AlgorithmController {
                 }
                 let newState = this.steps[value].graphState.clone()
                 this.graphView.structure = newState
+                this.graphView.refreshGraph()
                 this.adjustNodePositions()
             }
         }

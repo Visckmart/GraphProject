@@ -10,7 +10,8 @@ export function getColorRotation() {
 
 // Canvas
 export var canvas = document.getElementById("mainCanvas");
-export var overlayCanvas = document.getElementById("overCanvas");
+export var slowOverlayCanvas = document.getElementById("slowCanvas");
+export var fastOverlayCanvas = document.getElementById("fastCanvas");
 
 let ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
@@ -23,6 +24,12 @@ export const nodeColorList = [
     "#32CD32",
     "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
 ]
+
+export const CanvasType = {
+    GENERAL: "general",
+    SLOW: "slow",
+    FAST: "fast"
+}
 
 export const Tool = {
     MOVE: "move",

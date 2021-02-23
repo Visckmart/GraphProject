@@ -1,4 +1,7 @@
-import {canvas, Tool, HighFPSFeature, backgroundGradient, overlayCanvas} from "./General.js"
+import {
+    canvas, Tool, HighFPSFeature, backgroundGradient, fastOverlayCanvas, slowOverlayCanvas,
+    CanvasType
+} from "./General.js"
 import Graph from "../Structure/Graph.js"
 import Edge from "../Structure/Edge.js"
 import Node from "../Structure/Node.js"
@@ -33,13 +36,18 @@ const NodeLabeling = {
 // Graph
 class GraphView {
     overlay = false;
-    constructor (canvas, overlayCanvas) {
+    constructor (canvas, slowCanvas, fastCanvas) {
         this.canvas = canvas;
-        this.overlayCanvas = overlayCanvas;
-        this.overlayCanvas.style.pointerEvents = "none";
-
         this.ctx = canvas.getContext("2d");
-        this.overlayCtx = overlayCanvas.getContext("2d");
+
+        this.fastCanvas = fastCanvas;
+        this.fastCanvas.style.pointerEvents = "none";
+        this.fastCtx = this.fastCanvas.getContext("2d");
+
+        this.slowCanvas = slowCanvas;
+        this.slowCanvas.style.pointerEvents = "none";
+        this.slowCtx = this.slowCanvas.getContext("2d");
+
 
         this.structure = new Graph();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
@@ -302,14 +310,15 @@ class GraphView {
         let inserted = this.structure.insertNode(newNode);
         if (!inserted) { return; }
 
-        this.redrawGraph();
+        this.refreshGraph();
         this.registerStep();
         return newNode;
     }
 
     moveNode(node, pos) {
-        this.requestOverlayRefresh()
-        this.requestHighFPS(HighFPSFeature.MOVING, 90);
+        // this.requestCanvasRefresh(CanvasType.FAST)
+        this.requestFramerateForCanvas(CanvasType.GENERAL, HighFPSFeature.MOVING, 90);
+        this.requestCanvasRefresh(CanvasType.SLOW)
         node.pos = pos;
     }
 
@@ -326,6 +335,7 @@ class GraphView {
         }
         this.selectionHandler.clear()
         this.structure.removeNode(frontmostNode);
+        this.refreshGraph();
         this.registerStep();
     }
 
@@ -355,12 +365,14 @@ class GraphView {
             node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
             node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
         }
+        this.refreshGraph();
         this.registerStep();
     }
 
     blurTimeout = null;
     removeBlur = () => {
         this.canvas.classList.remove("blurred");
+        this.slowCanvas.classList.remove("blurred");
         this.blurTimeout = null;
     }
     recalculateLayout() {
@@ -373,8 +385,10 @@ class GraphView {
         let newHeight = canvasArea.offsetHeight;
         this.canvas.width = newWidth;
         this.canvas.height = newHeight;
-        this.overlayCanvas.width = newWidth;
-        this.overlayCanvas.height = newHeight;
+        this.fastCanvas.width = newWidth;
+        this.fastCanvas.height = newHeight;
+        this.slowCanvas.width = newWidth;
+        this.slowCanvas.height = newHeight;
 
         // Ajustando posição dos nós
         let widthRatio = newWidth/originalWidth;
@@ -389,10 +403,15 @@ class GraphView {
             clearTimeout(this.blurTimeout);
         } else {
             this.canvas.classList.add("blurred");
+            this.slowCanvas.classList.add("blurred");
         }
         this.blurTimeout = setTimeout(this.removeBlur, 250);
 
-        this.redrawGraph()
+        this.refreshGraph();
+    }
+    refreshGraph() {
+        this.requestCanvasRefresh(CanvasType.GENERAL);
+        this.requestCanvasRefresh(CanvasType.SLOW);
     }
 
     loadSerializedGraph(serialized) {
@@ -401,26 +420,26 @@ class GraphView {
             this.structure = deserializedGraph;
         }
         refreshInterfaceCategories();
-        this.refreshOverlay()
+        this.refreshGraph();
     }
 
     //endregion
 
     //region Desenho do Grafo
     drawSelectionArea() {
-        this.overlayCtx.save();
-        //this.overlayCtx.clearRect(0, 0, this.width, this.height)
+        this.fastCtx.save();
+        this.fastCtx.clearRect(0, 0, this.width, this.height)
 
-        this.overlayCtx.strokeStyle = 'blue';
-        this.overlayCtx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
-        this.overlayCtx.lineWidth = 3;
+        this.fastCtx.strokeStyle = 'blue';
+        this.fastCtx.fillStyle = colorFromComponents(0, 0, 255, 0.1);
+        this.fastCtx.lineWidth = 3;
 
-        this.selectionHandler.prepareSelectionAreaDrawing(this.overlayCtx);
+        this.selectionHandler.prepareSelectionAreaDrawing(this.fastCtx);
 
-        this.overlayCtx.fill();
-        this.overlayCtx.stroke();
+        this.fastCtx.fill();
+        this.fastCtx.stroke();
 
-        this.overlayCtx.restore();
+        this.fastCtx.restore();
     }
 
     drawEdges() {
@@ -437,13 +456,13 @@ class GraphView {
                 this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
                 return;
             }
-            this.requestHighFPS(HighFPSFeature.CONNECTING, 90);
+            this.requestFramerateForCanvas(CanvasType.GENERAL, HighFPSFeature.CONNECTING, 90);
             this.structure.temporaryEdge.draw(this.ctx, startPos, endPos);
         }
     }
     get width() {
-        if (this.canvas.width != this.overlayCanvas.width) {
-            console.log(this.canvas.width, this.overlayCanvas.width)
+        if (this.canvas.width != this.fastCanvas.width) {
+            console.log(this.canvas.width, this.fastCanvas.width)
         }
         return this.canvas.width;
     }
@@ -470,7 +489,9 @@ class GraphView {
         }
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
-            this.requestHighFPS(HighFPSFeature.NODE_HIGHLIGHT, maxFPSRequest);
+            this.requestFramerateForCanvas(CanvasType.GENERAL,
+                                           HighFPSFeature.NODE_HIGHLIGHT,
+                                           maxFPSRequest);
         }
         
         if (this.overlay) {
@@ -499,131 +520,151 @@ class GraphView {
         this.ctx.restore()
     }
 
-    drawCurrentMaxFPS(fps) {
-        this.ctx.save()
-        this.ctx.fillStyle = "#AAA8";
-        this.ctx.font = "12pt Arial";
-        let content = fps + " FPS";
-        let textMeasurement = this.ctx.measureText(content);
-        this.ctx.fillText(content,
-                     canvas.width - textMeasurement.width - 10,
-                     25);
-        this.ctx.restore()
-    }
-
     //endregion
 
     //region Animações
 
     lastFrameTimestamp = window.performance.now()
-    frameRateRequests = new Map()
-    overlayFrameRateRequests = new Map()
-    requestHighFPS(feature, FPS) {
+    frameRateRequests = {
+        [CanvasType.GENERAL]: { requests: new Map(), idle: 8 },
+        [CanvasType.SLOW]:    { requests: new Map(), idle: 0 },
+        [CanvasType.FAST]:    { requests: new Map(), idle: 0 }
+    }
+    requestFramerateForCanvas(canvasType = CanvasType.GENERAL, feature, FPS) {
         if (!feature) {
             console.warn("Unknown High FPS feature")
             return;
         }
-        this.frameRateRequests.set(feature, FPS)
+        this.frameRateRequests[canvasType].requests.set(feature, FPS)
     }
 
-    getCurrentFPS() {
+    getCurrentFPS(canvasType = CanvasType.GENERAL) {
+        let requestsInfo = this.frameRateRequests[canvasType];
+        if (canvasType == CanvasType.GENERAL && this.structure.nodes().next().done) {
+            return 0;
+        }
         // Evitando processamento se o mapa estiver vazio
-        if (this.frameRateRequests.size == 0) { return IDLE_MAX_FPS; }
-
-        let requestValues = this.frameRateRequests.values();
-        let highestFPS = Math.max(...requestValues);
-
-        if (highestFPS < IDLE_MAX_FPS) {
-            highestFPS = IDLE_MAX_FPS;
+        if (requestsInfo.requests.size == 0) {
+            return requestsInfo.idle;
         }
 
+        let requestValues = requestsInfo.requests.values();
+        let highestFPS = Math.max(...requestValues);
+
+        if (highestFPS < requestsInfo.idle) {
+            highestFPS = requestsInfo.idle;
+        }
+
+        this.frameRateRequests[canvasType].requests.clear()
         return highestFPS;
     }
 
-    getOverlayCurrentFPS() {
-        // Evitando processamento se o mapa estiver vazio
-        if (this.overlayFrameRateRequests.size == 0) { return 0; }
+    drawCurrentMaxFPS(ctx, fps, name = "", vertOffset = 0) {
+        ctx.save()
+        ctx.fillStyle = "#AAA8";
+        ctx.font = "12pt Arial";
+        let content = name + fps + " FPS";
+        let textMeasurement = ctx.measureText(content);
+        ctx.clearRect(canvas.width - textMeasurement.width - 30, 25,
+                      textMeasurement.width + 40, 55);
+        ctx.fillText(content,
+                     canvas.width - textMeasurement.width - 10,
+                     25 + vertOffset);
+        ctx.restore()
+    }
 
-        let requestValues = this.overlayFrameRateRequests.values();
-        let highestFPS = Math.max(...requestValues);
-
-        if (highestFPS < IDLE_MAX_FPS) {
-            highestFPS = IDLE_MAX_FPS;
+    requestCanvasRefresh(canvasType) {
+        switch (canvasType) {
+        case CanvasType.GENERAL:
+            requestAnimationFrame(this.refreshView.bind(this));
+            break;
+        case CanvasType.SLOW:
+            requestAnimationFrame(this.refreshSlowCanvas.bind(this));
+            break;
+        case CanvasType.FAST:
+            requestAnimationFrame(this.refreshFastCanvas.bind(this));
+            break;
         }
-
-        return highestFPS;
     }
 
-    drawOverlayFPS(fps) {
-        this.overlayCtx.save()
-        this.overlayCtx.fillStyle = "#AAA8";
-        this.overlayCtx.font = "12pt Arial";
-        let content = fps + " oFPS";
-        let textMeasurement = this.overlayCtx.measureText(content);
-        this.overlayCtx.fillText(content,
-                                 this.width - textMeasurement.width - 100,
-                                 25);
-        this.overlayCtx.restore()
-    }
-
-    requestOverlayRefresh() {
-        setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)), 0);
-    }
-    // TODO: Permitir o controle do FPS do canvas de overlay
-    refreshOverlay(timestamp) {
-        let currentFPS = this.getOverlayCurrentFPS();
-        if ( currentFPS == 0) {
-            this.overlayCtx.clearRect(0, 0, this.width, this.height);
-            //currentFPS = 5;
-            //return;
-        } else {
-            setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)), 1000 / currentFPS);
-        }
-        //console.log(1)
-        this.overlayCtx.clearRect(0, 0, this.width, this.height);
-        for (let node of this.structure.nodes()) {
-            node._drawLabel(this.overlayCtx, this.nodeLabeling, node._originalcolor)
-
-        }
-        this.overlayFrameRateRequests.clear();
-        if (this.selectionHandler.shouldDrawSelection) {
-            //setTimeout(() => requestAnimationFrame(this.refreshOverlay.bind(this)),
-            //           1000/90);
-            this.overlayCtx.save();
-            //this.requestHighFPS(HighFPSFeature.SELECTING, 90);
-            this.overlayFrameRateRequests.set(HighFPSFeature.SELECTING, 90)
-            this.drawSelectionArea();
-            this.overlayCtx.restore();
-        } else if (this.showingArea == true) {
-            this.overlayCtx.clearRect(0, 0, this.width, this.height);
-        }
-        this.showingArea = this.selectionHandler.shouldDrawSelection;
-        this.drawOverlayFPS(currentFPS);
-    }
-
-    requestViewRefresh = () => {
-        requestAnimationFrame(this.refreshView.bind(this));
-    }
     refreshView(timestamp) {
         let currentFPS = this.getCurrentFPS();
-        setTimeout(this.requestViewRefresh, 1000/currentFPS);
+        setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
+                   1000/currentFPS);
+
         // Se não há nós, pare
-        if (this.structure.nodes().next().done) { return; }
-        this.frameRateRequests.clear();
-        this.lastFrameTimestamp = timestamp;
-        if(!cacheFrames(currentFPS, IDLE_MAX_FPS, this.ctx, this.canvas, () => this.redrawGraph())) {
-            this.redrawGraph();
+        if (this.structure.nodes().next().done) {
+            this.ctx.clearRect(0, 0, this.width, this.height);
+            this.drawCurrentMaxFPS(this.ctx, currentFPS);
+            return;
         }
-        this.drawCurrentMaxFPS(currentFPS);
+        this.lastFrameTimestamp = timestamp;
+        let cacheDrawn = cacheFrames(currentFPS, IDLE_MAX_FPS,
+                                     this.ctx, this.canvas,
+                                     () => this.redrawGraph());
+        if (!cacheDrawn) {
+            this.redrawGraph();
+            this.drawCurrentMaxFPS(this.ctx, currentFPS);
+        } else {
+            this.drawCurrentMaxFPS(this.ctx, currentFPS, "cache ");
+        }
     }
-    // This function updates every node and redraws the graph.
+
+    refreshSlowCanvas(timestamp) {
+        // let currentFPS = this.getCurrentFPS(CanvasType.SLOW);
+        // if (currentFPS != 0) {
+        //     setTimeout(() => this.requestCanvasRefresh(CanvasType.SLOW),
+        //                1000 / currentFPS);
+        // }
+
+        this.slowCtx.clearRect(0, 0, this.width, this.height)
+        for (let node of this.structure.nodes()) {
+            node.drawText(this.slowCtx, this.nodeLabeling)
+            // node.drawLabel(this.slowCtx, this.nodeLabeling)
+        }
+        this.slowCtx.save()
+        this.slowCtx.fillStyle = "gray"
+        this.slowCtx.fillRect( 0, 0, 50+Math.sin(timestamp/50)*25, 50)
+        this.slowCtx.restore()
+
+        // this.drawCurrentMaxFPS(this.slowCtx, currentFPS, "slow ", 30);
+    }
+
+    refreshFastCanvas(timestamp) {
+        let currentFPS = this.getCurrentFPS(CanvasType.FAST);
+        if (currentFPS != 0) {
+            setTimeout(() => this.requestCanvasRefresh(CanvasType.FAST),
+                       1000 / currentFPS);
+        }
+
+        // Desenho da área de seleção
+        if (this.selectionHandler.shouldDrawSelection) {
+            this.fastCtx.save();
+            this.requestFramerateForCanvas(CanvasType.FAST, HighFPSFeature.SELECTING, 90)
+            this.drawSelectionArea();
+            this.fastCtx.restore();
+        } else if (this.showingArea == true) {
+            this.fastCtx.clearRect(0, 0, this.width, this.height);
+        }
+        this.showingArea = this.selectionHandler.shouldDrawSelection;
+
+        this.fastCtx.save()
+        this.fastCtx.fillStyle = "red"
+        this.fastCtx.fillRect( 0, 50, 50+Math.sin(timestamp/50)*25, 50)
+        this.fastCtx.restore()
+
+        this.drawCurrentMaxFPS(this.fastCtx, currentFPS, "fast ", 55);
+    }
 
     //endregion
 }
 
-export let g = new GraphView(canvas, overlayCanvas);
-g.refreshOverlay()
-g.requestViewRefresh()
+export let g = new GraphView(canvas, slowOverlayCanvas, fastOverlayCanvas);
+// g.refreshFastCanvas()
+g.requestCanvasRefresh(CanvasType.GENERAL)
+g.requestCanvasRefresh(CanvasType.SLOW)
+g.slowCtx.fillStyle = "red"
+g.slowCtx.fillRect(150, 150, 200, 200)
 
 // testSelection(g)
 // testNodeHighlights(g)

@@ -43,10 +43,15 @@ body {
   transition: 0.1s;
   overflow: hidden;
 }
-#overCanvas {
+#slowCanvas {
   position: absolute;
   left: 0; top: 0; right: 0; bottom: 0;
   z-index: 10;
+}
+#fastCanvas {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 11;
 }
 .blurred {
   filter: blur(10pt);

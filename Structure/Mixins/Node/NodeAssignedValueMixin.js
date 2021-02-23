@@ -21,7 +21,7 @@ let NodeAssignedValueMixin = (superclass) => {
             super(args)
             this.assignedValue = assignedValue
 
-            this.drawChain.addLink(this.drawAuxLabel)
+            this.textDrawChain.addLink(this.drawAuxLabel)
 
             this.mixins.add(NodeAssignedValueMixin)
         }
@@ -35,7 +35,6 @@ let NodeAssignedValueMixin = (superclass) => {
 
         drawAuxLabel = (ctx) => {
             if(!this.assignedValue || this.assignedValue == "") { return; }
-
             ctx.save();
 
             if (this.assignedValue == "∞") {

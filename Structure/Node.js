@@ -41,9 +41,13 @@ export default class Node {
         
         // Instanciando cadeia de responsabilidade
         this.drawChain = new ResponsibilityChain()
-
         // Adicionando procedure de draw
         this.drawChain.addLink(this.drawProcedure)
+
+        // Instanciando cadeia de responsabilidade
+        this.textDrawChain = new ResponsibilityChain()
+        // Adicionando procedure de draw
+        this.textDrawChain.addLink(this.drawLabel)
 
         // Lista de mixins
         this.mixins = new Set()
@@ -86,6 +90,14 @@ export default class Node {
     // Executa a cadeia de desenhos
     draw(...args) {
         let fpsRequests = this.drawChain.call(...args)
+        fpsRequests = fpsRequests.filter(req => req !== undefined)
+        return Math.max(...fpsRequests)
+    }
+
+    // Executa a cadeia de desenhos
+    drawText(...args) {
+        console.log(this.textDrawChain._chain)
+        let fpsRequests = this.textDrawChain.call(...args)
         fpsRequests = fpsRequests.filter(req => req !== undefined)
         return Math.max(...fpsRequests)
     }
@@ -218,22 +230,22 @@ export default class Node {
         return fpsRequests;
     }
 
-    _drawLabel = (ctx, nodeLabeling, color) => {
+    drawLabel = (ctx, nodeLabeling) => {
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = color;
+        ctx.fillStyle = this._originalcolor;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
         switch (nodeLabeling) {
-            case "numbers":
-                nodeText = this.index;
-                break;
-            case "letters_randomized":
-                nodeText = this.label;
-                break;
-            case "letters_ordered":
-                nodeText = String.fromCharCode(this.index+65)
-                break;
+        case "numbers":
+            nodeText = this.index;
+            break;
+        case "letters_randomized":
+            nodeText = this.label;
+            break;
+        case "letters_ordered":
+            nodeText = String.fromCharCode(this.index+65)
+            break;
         }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
     }
