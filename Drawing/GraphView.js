@@ -22,6 +22,7 @@ import {regularNodeRadius} from "../Structure/Node.js";
 import HistoryTracker from "./HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
+import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -116,11 +117,18 @@ class GraphView {
         }
 
         g.structure = g.structure.cloneAndTransform({EdgeConstructor: EdgeType})
+        g.refreshGraph()
     }
 
     /* Atualiza o tipo de nó exibido */
-    updateNodeType() {
+    updateNodeType(colored) {
+        let NodeType = Node;
+        if(colored) {
+            NodeType = NodeColorMixin(NodeType)
+        }
 
+        g.structure = g.structure.cloneAndTransform({NodeConstructor: NodeType})
+        g.refreshGraph()
     }
 
     /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
@@ -460,12 +468,16 @@ class GraphView {
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.save();
-        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.ctx.fillStyle = backgroundGradient;
-        this.ctx.beginPath();
-        this.ctx.rect(0, 0, canvas.width, canvas.height);
-        this.ctx.fill();
+        // TODO: Esse if é meio gambiarra, o fundo deveria ser transparente
+        //       o tempo todo, e o cache deveria saber lidar com isso.
+        if (!this.selectionHandler.shouldDrawSelection) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.ctx.fillStyle = backgroundGradient;
+            this.ctx.beginPath();
+            this.ctx.rect(0, 0, canvas.width, canvas.height);
+            this.ctx.fill();
+        }
 
         this.drawEdges();
         

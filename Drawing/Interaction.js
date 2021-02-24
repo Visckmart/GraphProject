@@ -51,6 +51,7 @@ for (let loadFavBtn of loadFavButtons) {
 }
 
 export let categoryCheckboxes = {
+    coloredNodes: document.getElementById('coloredNodes'),
     weightedEdges: document.getElementById('weighedEdges'),
     coloredEdges:  document.getElementById('coloredEdges'),
     directedEdges: document.getElementById('directedEdges')
@@ -126,8 +127,12 @@ function updateEdge() {
         categoryCheckboxes.coloredEdges.checked,
         categoryCheckboxes.directedEdges.checked
     )
+    g.updateNodeType(
+        categoryCheckboxes.coloredNodes.checked
+    )
 }
 //Opções de formato de grafo
+categoryCheckboxes.coloredNodes.addEventListener('change', updateEdge)
 categoryCheckboxes.weightedEdges.addEventListener('change', updateEdge)
 
 // Executa a primeira vez

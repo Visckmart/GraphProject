@@ -2,6 +2,7 @@ import {canvas, nodeColorList} from "../Drawing/General.js";
 import {HighlightsHandler} from "./Highlights.js";
 import {positionAlphabet} from "./Utilities.js";
 import Node from "./Node.js"
+import Edge from "./Edge.js";
 
 
 //region Position Encoding
@@ -10,6 +11,20 @@ function encodePosition(relativeX, relativeY, alphabet = positionAlphabet) {
     let indexX = Math.round(relativeX * alphabetSize);
     let indexY = Math.round(relativeY * alphabetSize);
     return [alphabet[indexX], alphabet[indexY]];
+}
+
+export function serializeColor() {
+    // Colors
+    // Se for escolhida automaticamente, serialize o índice,
+    // caso contrário serialize o hexadecimal da cor.
+    let serializedColor;
+    let indexOfColor = nodeColorList.indexOf(this.color);
+    if (indexOfColor >= 0) {
+        serializedColor = indexOfColor;
+    } else {
+        serializedColor = this.color.slice(1);
+    }
+    return `-${serializedColor}`;
 }
 
 function decodePosition(serializedPos, alphabet = positionAlphabet) {
@@ -21,20 +36,17 @@ function decodePosition(serializedPos, alphabet = positionAlphabet) {
     let relativeY = indexY/alphabetSize;
     return [relativeX, relativeY];
 }
+
+export function deserializeColor(serializedColor) {
+    // Color
+    let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
+    if (!colorMatchResult) return;
+    let [, customColor, colorIndex] = colorMatchResult;
+    return { color: customColor, colorIndex: colorIndex };
+}
 //endregion
 
 export function serializeNode() {
-    // Colors
-    // Se for escolhida automaticamente, serialize o índice,
-    // caso contrário serialize o hexadecimal da cor.
-    let serializedColors;
-    let indexOfColor = nodeColorList.indexOf(this._originalcolor);
-    if (indexOfColor >= 0) {
-        serializedColors = indexOfColor;
-    } else {
-        serializedColors = this._originalcolor.slice(1);
-    }
-
     // Position
     // Transforma a posição absoluta em uma posição relativa ao tamanho do
     // canvas e converte para um caractere do alfabeto escolhido para isso.
@@ -48,42 +60,34 @@ export function serializeNode() {
     // }
     let serializedHighlights = "";
 
-    return `${this.index}-${serializedColors}-${this.label}${serializedPosition}${serializedHighlights}`
+    return `${this.index}-${this.label}${serializedPosition}${serializedHighlights}`
 }
 
-export function deserializeNode(serializedNode) {
-    const nodeSerializationFormat = /(\d+)-(.+?)-(.+)?/i;
+export function deserializeNode(serializedNode, partially = false) {
+    const nodeSerializationFormat = /(\d+)-(.+)?/i;
     let matchResult = serializedNode.match(nodeSerializationFormat);
     if (!matchResult) return;
     // Basic
-    let [, index, serializedColor, moreInfo] = matchResult;
+    let [, index, moreInfo] = matchResult;
     index = parseInt(index)
 
-    // Color
-    let colorMatchResult = serializedColor.match(/([a-fA-F0-9]{6})|(\d+)/i);
-    if (!colorMatchResult) return;
-    let [, customColor, colorIndex] = colorMatchResult;
-    let color = customColor ?? nodeColorList[colorIndex % nodeColorList.length];
-
     // Label and position
-    const moreInfoFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))(-(?<highlights>.+))?/i
+    const moreInfoFormat = /((?<label>[a-zA-Z0-9]{1,2})(?<pos>[a-zA-Z0-9]{2}))(-(?<rest>.+))?/i
     let moreInfoResult = moreInfo.match(moreInfoFormat);
     if (!moreInfoResult) return;
     let label = moreInfoResult.groups.label
     let serializedPos = moreInfoResult.groups.pos
-    let serializedHighlights = moreInfoResult.groups.highlights
-
-    // Highlights
-    let highlights;
-    if (serializedHighlights != null) {
-        highlights = HighlightsHandler.deserialize(serializedHighlights)
-    }
+    let rest = moreInfoResult.groups.rest
 
     let [relativeX, relativeY] = decodePosition(serializedPos);
     let xPos = relativeX * canvas.width;
     let yPos = relativeY * canvas.height;
 
-    return new Node({
-                        x: xPos, y: yPos, label, index, color, highlights
-                    });
+    if (partially == false) {
+        return new Node({
+                            x: xPos, y: yPos, label, index
+                        });
+    } else {
+        return [{ x: xPos, y: yPos, label, index }, rest];
+    }
 }

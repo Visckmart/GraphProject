@@ -1,13 +1,3 @@
-let colorRotation = 0
-
-export function resetColorRotation() {
-  colorRotation = 0
-}
-
-export function getColorRotation() {
-  return colorRotation++
-}
-
 // Canvas
 export var canvas = document.getElementById("mainCanvas");
 export var slowOverlayCanvas = document.getElementById("slowCanvas");
@@ -47,33 +37,8 @@ export const HighFPSFeature = {
 }
 
 export const GraphCategory = {
+    COLORED_NODES: "colored_nodes",
     WEIGHTED_EDGES: "weighted_edges",
     COLORED_EDGES: "colored_edges",
     DIRECTED_EDGES: "directed_edges"
 }
-// console.log("abcde")
-
-
-// class Original {
-//     originalMethod() {
-//         console.log("original")
-//     }
-// }
-
-// function newClass() {
-//     return class Sub extends Original {
-//         subMethod() {
-//             console.log("sub2")
-//         }
-//     }
-// }
-//
-// let og = new Original()
-// og.originalMethod()
-//
-// let type = newClass()
-// let sub = new type()
-// // let sub = new Sub()
-// sub.subMethod()
-// sub.originalMethod()
-// console.log(sub instanceof Sub)

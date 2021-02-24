@@ -1,14 +1,15 @@
-import { GraphCategory, resetColorRotation } from "../Drawing/General.js";
+import { GraphCategory } from "../Drawing/General.js";
 
 import Node from "./Node.js";
 
 import Edge from "./Edge.js";
 import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
+import NodeColorMixin from "./Mixins/Node/NodeColorMixin.js";
 
 
 class Graph {
-    constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = Node } = {}) {
+    constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = NodeColorMixin(Node) } = {}) {
         this.data = data;
         this.categories = new Set();
         this.debug = true;
@@ -34,7 +35,8 @@ class Graph {
         return {
             weightedEdges: this.categories.has(GraphCategory.WEIGHTED_EDGES),
             coloredEdges:  this.categories.has(GraphCategory.COLORED_EDGES),
-            directedEdges: this.categories.has(GraphCategory.DIRECTED_EDGES)
+            directedEdges: this.categories.has(GraphCategory.DIRECTED_EDGES),
+            coloredNodes:  this.categories.has(GraphCategory.COLORED_NODES)
         }
     }
 
@@ -230,7 +232,6 @@ class Graph {
 
     static deserialize(serialized, clone = false) {
         if (serialized.indexOf("~") < 0) { return; }
-        resetColorRotation();
         let typeChar = serialized.charAt(0);
         let edgeConstructor = Edge;
         if (typeChar == "W") {
@@ -242,6 +243,7 @@ class Graph {
         if (typeChar == "W") {
             graph.categories.add(GraphCategory.WEIGHTED_EDGES);
         }
+        graph.categories.add(GraphCategory.COLORED_NODES);
 
         let [serializedNodes, serializedEdges] = serialized.split("~")
         let deserializedNodes = []
@@ -249,7 +251,7 @@ class Graph {
             let serializedNodesList = serializedNodes.split(".")
             serializedNodesList.splice(-1, 1)
             for (let nodeStr of serializedNodesList) {
-                let node = Node.deserialize(nodeStr)
+                let node = (NodeColorMixin(Node)).deserialize(nodeStr)
                 if (node == undefined) continue;
                 deserializedNodes.push(node)
                 graph.insertNode(node)

@@ -1,5 +1,5 @@
 // Node Definition
-import {backgroundGradient, getColorRotation, nodeColorList} from "../Drawing/General.js";
+import {backgroundGradient, nodeColorList} from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
@@ -12,17 +12,10 @@ export const regularNodeRadius = 28;
 let globalNodeIndex = 0
 
 export default class Node {
-
-    constructor({x, y, label, index = null, colorIndex = null, oColor = null, highlights = null}) {
+    constructor({x, y, label, index = null, highlights = null}) {
 
         this._initialTime = window.performance.now();
         this.index = index ?? globalNodeIndex;
-        if (colorIndex) {
-            this._originalcolor = nodeColorList[colorIndex % nodeColorList.length];
-        } else {
-            let nextColor = getColorRotation()
-            this._originalcolor = oColor ?? nodeColorList[nextColor % nodeColorList.length];
-        }
         this._breatheSettings = {
             // Duração em segundos
             duration: 4,
@@ -60,16 +53,12 @@ export default class Node {
             y: this.pos.y,
             label: this.label,
             index: this.index,
-            oColor: this._originalcolor,
             highlights: new Set(this.highlights.list())
         }
     }
 
     get color() {
-        return this._originalcolor
-    }
-    set color(value) {
-        this._originalcolor = value
+        return "black"
     }
 
     get radius() {
@@ -101,6 +90,9 @@ export default class Node {
         return Math.max(...fpsRequests)
     }
 
+    get abcd() {
+        return 11;
+    }
 
     // This function draws one node. This includes the circle, the text and
     // the appropriate color (considering any animation happening).
@@ -119,7 +111,7 @@ export default class Node {
         if (!hasHighlightWithBG) {
             ctx.fillStyle = backgroundGradient;
         } else {
-            ctx.fillStyle = this._originalcolor;
+            ctx.fillStyle = this.color;
         }
         ctx.fill();
         ctx.stroke();
@@ -231,7 +223,7 @@ export default class Node {
 
     drawLabel = (ctx, nodeLabeling) => {
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = this._originalcolor;
+        ctx.fillStyle = this.color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
