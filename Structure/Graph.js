@@ -9,10 +9,12 @@ import NodeColorMixin from "./Mixins/Node/NodeColorMixin.js";
 
 
 class Graph {
-    constructor({ data = new Map(), EdgeConstructor = Edge, NodeConstructor = NodeColorMixin(Node) } = {}) {
+    constructor({   data = new Map(),
+                    EdgeConstructor = Edge, NodeConstructor = NodeColorMixin(Node),
+                    categories = null, debug = true } = {}) {
         this.data = data;
-        this.categories = new Set();
-        this.debug = true;
+        this.categories = categories ?? new Set();
+        this.debug = debug;
 
         // Guardando construtores de elementos do grafo
         this.EdgeConstructor = EdgeConstructor;
@@ -33,10 +35,10 @@ class Graph {
     // TODO: Melhorar
     getCategories() {
         return {
+            coloredNodes:  this.categories.has(GraphCategory.COLORED_NODES),
             weightedEdges: this.categories.has(GraphCategory.WEIGHTED_EDGES),
             coloredEdges:  this.categories.has(GraphCategory.COLORED_EDGES),
-            directedEdges: this.categories.has(GraphCategory.DIRECTED_EDGES),
-            coloredNodes:  this.categories.has(GraphCategory.COLORED_NODES)
+            directedEdges: this.categories.has(GraphCategory.DIRECTED_EDGES)
         }
     }
 
@@ -146,40 +148,6 @@ class Graph {
         return true;
     }
 
-    // Remoção
-    // TODO: Não está sendo usada, comentei para não apagar agora
-    //       Se continuar sem uso, podemos apagar sem problemas.
-    // removeEdgeBetween(nodeA, nodeB) {
-    //     // Validação
-    //     if (!(nodeA && nodeB)) {
-    //         console.error("Remoção de aresta chamada incorretamente.");
-    //         return;
-    //     }
-    //     if (this.debug) {
-    //         console.info("Removendo aresta que conecta os nós "
-    //                      + nodeA.label + " – " + nodeB.label);
-    //     }
-    //
-    //     // Operação
-    //     this.data.get(nodeA).delete(nodeB);
-    //     this.data.get(nodeB).delete(nodeA);
-    // }
-
-    // TODO: Considerar remover uma vez que já existe o iterador *edgesFrom(node)
-    // removeAllEdgesFromNode(node) {
-    //     // Validação
-    //     if (!(node)) {
-    //         console.error("Remoção de todas as arestas de nó chamada incorretamente.", node);
-    //         return false;
-    //     }
-    //     for (let [edge, nodeA, nodeB] of this.edges()) {
-    //         if (nodeA == node || nodeB == node) {
-    //             this.removeEdge(edge)
-    //         }
-    //     }
-    //     return true;
-    // }
-
     //endregion
 
     //region Deteção de Nós e Arestas
@@ -210,11 +178,16 @@ class Graph {
 
     serialize() {
         let graphType = "";
-        if (this.EdgeConstructor == Edge) {
-            // console.log("Regular edges")
-        } else {
-            graphType = "W";
-            // console.log("Weighted edges")
+        // console.log(this.nodes().next().value.mixins.entries().next().value[0])
+        for (let m of this.nodes().next().value.mixins) {
+            if (m == NodeColorMixin) {
+                graphType += "c"
+            }
+        }
+        for (let m of Array.from(this.edges()).map(e => e[0])[0].mixins) {
+            if (m == EdgeAssignedValueMixin) {
+                graphType += "W"
+            }
         }
 
         let serializedNodes = "";
@@ -232,18 +205,28 @@ class Graph {
 
     static deserialize(serialized, clone = false) {
         if (serialized.indexOf("~") < 0) { return; }
-        let typeChar = serialized.charAt(0);
-        let edgeConstructor = Edge;
-        if (typeChar == "W") {
-            edgeConstructor = EdgeAssignedValueMixin(Edge)
+        let nodeConstructor, edgeConstructor;
+        let serializedPrefix = serialized.match(/^([a-zA-Z]).+?/);
+        let cat = new Set();
+        if (!serializedPrefix) {
+            nodeConstructor = Node
+            edgeConstructor = Edge
+        } else {
+            let [, serializedCategories] = serializedPrefix;
+            console.log(serializedCategories)
+            if (serializedCategories.includes("W")) {
+                edgeConstructor = EdgeAssignedValueMixin(Edge)
+                cat.add(GraphCategory.WEIGHTED_EDGES);
+            }
+            if (serializedCategories.includes("c")) {
+                nodeConstructor = NodeColorMixin(Node)
+                cat.add(GraphCategory.COLORED_NODES);
+            }
         }
-        // console.log(edgeConstructor)
-        let graph = new this({ EdgeConstructor: edgeConstructor });
-        graph.debug = !clone;
-        if (typeChar == "W") {
-            graph.categories.add(GraphCategory.WEIGHTED_EDGES);
-        }
-        graph.categories.add(GraphCategory.COLORED_NODES);
+        let graph = new this({
+                                 NodeConstructor: nodeConstructor, EdgeConstructor: edgeConstructor,
+                                 categories: cat, debug: !clone
+        });
 
         let [serializedNodes, serializedEdges] = serialized.split("~")
         let deserializedNodes = []
@@ -251,7 +234,7 @@ class Graph {
             let serializedNodesList = serializedNodes.split(".")
             serializedNodesList.splice(-1, 1)
             for (let nodeStr of serializedNodesList) {
-                let node = (NodeColorMixin(Node)).deserialize(nodeStr)
+                let node = graph.NodeConstructor.deserialize(nodeStr)
                 if (node == undefined) continue;
                 deserializedNodes.push(node)
                 graph.insertNode(node)
