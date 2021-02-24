@@ -460,12 +460,12 @@ class GraphView {
     // This function clears the canvas and redraws it.
     redrawGraph() {
         this.ctx.save();
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // this.ctx.fillStyle = backgroundGradient;
-        // this.ctx.beginPath();
-        // this.ctx.rect(0, 0, canvas.width, canvas.height);
-        // this.ctx.fill();
+        this.ctx.fillStyle = backgroundGradient;
+        this.ctx.beginPath();
+        this.ctx.rect(0, 0, canvas.width, canvas.height);
+        this.ctx.fill();
 
         this.drawEdges();
         
@@ -612,10 +612,10 @@ class GraphView {
         }
 
         // Debug
-        this.slowCtx.save()
-        this.slowCtx.fillStyle = "gray"
-        this.slowCtx.fillRect( 0, 0, 50+Math.sin(timestamp/50)*25, 50)
-        this.slowCtx.restore()
+        // this.slowCtx.save()
+        // this.slowCtx.fillStyle = "gray"
+        // this.slowCtx.fillRect( 0, 0, 50+Math.sin(timestamp/50)*25, 50)
+        // this.slowCtx.restore()
     }
 
     refreshFastCanvas(timestamp) {
@@ -651,10 +651,10 @@ class GraphView {
         }
 
         // Debug
-        this.fastCtx.save()
-        this.fastCtx.fillStyle = "red"
-        this.fastCtx.fillRect( 0, 50, 50+Math.sin(timestamp/50)*25, 50)
-        this.fastCtx.restore()
+        // this.fastCtx.save()
+        // this.fastCtx.fillStyle = "red"
+        // this.fastCtx.fillRect( 0, 50, 50+Math.sin(timestamp/50)*25, 50)
+        // this.fastCtx.restore()
     }
 
     //endregion
