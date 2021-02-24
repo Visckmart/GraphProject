@@ -63,7 +63,7 @@ export default class UnionFind extends AlgorithmShowcase {
 
         let maxGroupSize = Math.max(...Object.values(groups).map(g => g.length))
 
-        this.resizeCanvas(maxGroupSize * elementSize, Object.keys(groups).length * spaceBetweenGroups + paddingTop)
+        this.resizeCanvas(Math.max(maxGroupSize * elementSize, this.body.clientWidth), Object.keys(groups).length * spaceBetweenGroups + paddingTop)
 
         let ctx = this.ctx
         ctx.save()
