@@ -85,7 +85,8 @@ class Graph {
     insertEdge(nodeA, nodeB, edge) {
         // Validação
         if (!(nodeA && nodeB)) {
-            console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
+            console.error("Inserção de aresta chamada incorretamente.",
+                          nodeA, nodeB, edge)
             return false;
         }
         if (nodeA === nodeB) {
@@ -102,27 +103,6 @@ class Graph {
         this.data.get(nodeB).set(nodeA, edge);
         return true;
     }
-
-    // insertEdgeBetween(nodeA, nodeB) {
-    //     // Validação
-    //     // Caso algo seja nulo, ou os nós sejam o mesmo, inserção é inválida
-    //     if (!(nodeA && nodeB) || nodeA === nodeB) {
-    //         console.error("Inserção de aresta chamada incorretamente.", nodeA, nodeB, edge)
-    //         return;
-    //     }
-    //     // Caso a aresta já exista, inserção é inválida
-    //     if (this.checkEdgeBetween(nodeA, nodeB)) { return; }
-    //     if (this.debug) {
-    //         console.info("Inserindo aresta entre os nós "
-    //                      + nodeA.label + " - " + nodeB.label, edge);
-    //     }
-    //
-    //     // Operação
-    //     let edge = new this.EdgeConstructor()
-    //     this.data.get(nodeA).set(nodeB, edge)
-    //     this.data.get(nodeB).set(nodeA, edge)
-    //     return edge;
-    // }
 
     removeEdge(edge) {
         // Validação
@@ -176,9 +156,9 @@ class Graph {
 
     //region Serialização
 
+    // TODO: Organizar o código da serialização e desserialização das categorias
     serialize() {
         let graphType = "";
-        // console.log(this.nodes().next().value.mixins.entries().next().value[0])
         for (let m of this.nodes().next().value.mixins) {
             if (m == NodeColorMixin) {
                 graphType += "c"
