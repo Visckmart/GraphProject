@@ -9,6 +9,7 @@ let _cacheTime = 0
 
 // Função de resetar a coleta de frames
 let _handleCacheResetEvent = () => {
+    return;
     //console.log("reset")
 
     clearTimeout(_cachingTimeout)
@@ -27,14 +28,15 @@ _handleCacheResetEvent()
 
 
 /* Eventos que resetam o idle timer com qualquer ação */
-document.addEventListener("mousedown", _handleCacheResetEvent)
-document.addEventListener("keydown", _handleCacheResetEvent)
-document.addEventListener("mousemove", _handleCacheResetEvent)
-document.addEventListener("resize", _handleCacheResetEvent)
+// document.addEventListener("mousedown", _handleCacheResetEvent)
+// document.addEventListener("keydown", _handleCacheResetEvent)
+// document.addEventListener("mousemove", _handleCacheResetEvent)
+// document.addEventListener("resize", _handleCacheResetEvent)
 
 // Função resposável por cachear frames quando o canvas está idle
 // Retorna true se um canvas cacheado foi desenhado e false caso contrário
 export default function cacheFrames(currentFPS, idleFPS, ctx, canvas, drawGraph) {
+    return false;
     if(!_cachingFrames) {
         return false
     }

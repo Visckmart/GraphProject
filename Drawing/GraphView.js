@@ -578,6 +578,7 @@ class GraphView {
     }
 
 
+    refreshViewTimeout;
     refreshView(timestamp) {
         let currentFPS = this.getCurrentFPS();
         if (currentFPS == 0) {
@@ -585,6 +586,11 @@ class GraphView {
             this.drawCurrentMaxFPS(this.ctx, currentFPS);
             return;
         }
+        clearTimeout(this.refreshViewTimeout)
+        // if (!this.refreshViewTimeout) {
+            this.refreshViewTimeout = setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
+                                                 1000 / currentFPS);
+        // }
         this.lastFrameTimestamp = timestamp;
         let cacheDrawn = cacheFrames(currentFPS, IDLE_MAX_FPS,
                                      this.ctx, this.canvas,
