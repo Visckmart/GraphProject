@@ -191,7 +191,7 @@ class Graph {
     static deserialize(serialized, clone = false) {
         if (serialized.indexOf("~") < 0) { return; }
         let nodeConstructor, edgeConstructor;
-        let serializedPrefix = serialized.match(/^([a-zA-Z]).+?/);
+        let serializedPrefix = serialized.match(/^([a-zA-Z]+).+?/);
         let cat = new Set();
         if (!serializedPrefix) {
             nodeConstructor = Node
