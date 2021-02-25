@@ -36,7 +36,6 @@ const NodeLabeling = {
 
 // Graph
 class GraphView {
-    overlay = false;
     constructor (canvas, slowCanvas, fastCanvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
@@ -82,6 +81,15 @@ class GraphView {
         //     let r = getRandomInt(0, 3)
         //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
+    }
+
+    _overlay = false;
+    get overlay() {
+        return this._overlay;
+    }
+    set overlay(newState) {
+        this._overlay = newState;
+        this.requestCanvasRefresh(CanvasType.FAST);
     }
 
     _primaryTool = Tool.MOVE;
@@ -483,7 +491,7 @@ class GraphView {
         
         let nodeFPSRequests = [];
         for (let node of this.structure.nodes()) {
-            let fpsRequest = node.draw(this.ctx, this.nodeLabeling);
+            let fpsRequest = node.draw(this.ctx);
             nodeFPSRequests.push(fpsRequest);
         }
         let maxFPSRequest = Math.max(...nodeFPSRequests);
@@ -491,30 +499,6 @@ class GraphView {
             this.requestFramerateForCanvas(CanvasType.GENERAL,
                                            HighFPSFeature.NODE_HIGHLIGHT,
                                            maxFPSRequest);
-        }
-        
-        if (this.overlay) {
-            // Preenchimento
-            this.ctx.fillStyle = "#AAFA";
-
-            this.ctx.beginPath();
-            this.ctx.rect(0, 0,
-                          canvas.width,
-                          canvas.height);
-            this.ctx.fill();
-
-            // Borda
-            this.ctx.strokeStyle = colorFromComponents(100, 100, 255, 0.8);
-            this.ctx.lineWidth = 15;
-            this.ctx.setLineDash([25, 25]);
-            this.ctx.lineDashOffset = window.performance.now()/20;
-
-            this.ctx.beginPath();
-            let offset = this.ctx.lineWidth / 2;
-            this.ctx.rect(offset, offset,
-                          canvas.width - 2*offset,
-                          canvas.height - 2*offset);
-            this.ctx.stroke();
         }
         this.ctx.restore()
     }
@@ -596,9 +580,6 @@ class GraphView {
 
     refreshView(timestamp) {
         let currentFPS = this.getCurrentFPS();
-        setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
-                   1000/currentFPS);
-
         if (currentFPS == 0) {
             this.ctx.clearRect(0, 0, this.width, this.height);
             this.drawCurrentMaxFPS(this.ctx, currentFPS);
@@ -660,6 +641,35 @@ class GraphView {
             this.fastCanvas.style.zIndex = -2;
 
             this.structure.temporaryEdge.draw(this.fastCtx, startPos, endPos);
+        }
+
+        if (this.overlay) {
+            this.fastCtx.save();
+            setTimeout(() => this.requestCanvasRefresh(CanvasType.FAST),
+                                                 1000 / 30);
+            // }
+            // Preenchimento
+            this.fastCtx.fillStyle = "#AAFA";
+
+            this.fastCtx.beginPath();
+            this.fastCtx.rect(0, 0,
+                          canvas.width,
+                          canvas.height);
+            this.fastCtx.fill();
+
+            // Borda
+            this.fastCtx.strokeStyle = colorFromComponents(100, 100, 255, 0.8);
+            this.fastCtx.lineWidth = 15;
+            this.fastCtx.setLineDash([25, 25]);
+            this.fastCtx.lineDashOffset = window.performance.now()/20;
+
+            this.fastCtx.beginPath();
+            let offset = this.fastCtx.lineWidth / 2;
+            this.fastCtx.rect(offset, offset,
+                          canvas.width - 2*offset,
+                          canvas.height - 2*offset);
+            this.fastCtx.stroke();
+            this.fastCtx.restore();
         }
 
         // Debug
