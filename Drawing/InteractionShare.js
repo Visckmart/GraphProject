@@ -1,4 +1,4 @@
-import {canvas} from "./General.js";
+import {backgroundGradient, canvas} from "./General.js";
 import {g} from "./GraphView.js";
 import {getFormattedTime} from "../Structure/Utilities.js";
 

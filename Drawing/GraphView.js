@@ -165,13 +165,15 @@ class GraphView {
     }
 
     /* Destaca os nós selecionados */
+    isShowingDashedTools = false;
     selectionChanged() {
+        // console.log(Math.random())
         let shouldShowDashedTools = false;
         for (let node of this.structure.nodes()) {
             if (this.selectionHandler.isSelected(node)
                 && this.selectionHandler.isQuickSelection === false) {
-                node.highlights.add(HighlightType.SELECTION)
                 shouldShowDashedTools = true;
+                node.highlights.add(HighlightType.SELECTION)
             } else {
                 node.highlights.remove(HighlightType.SELECTION)
             }
@@ -179,30 +181,27 @@ class GraphView {
 
         for (let [edge, ,] of this.structure.edges()) {
             if (this.selectionHandler.isSelected(edge)) {
-                edge.highlights.add(HighlightType.SELECTION)
                 shouldShowDashedTools = true;
+                edge.highlights.add(HighlightType.SELECTION)
             } else {
                 edge.highlights.remove(HighlightType.SELECTION)
             }
         }
 
-        // Seleção de nós NÃO temporária
-        //let hasExplicitNodeSelection = this.selectionHandler.hasSelectedNodes > 0
-        //                               && this.selectionHandler.isQuickSelection === false
-        //if (hasExplicitNodeSelection || this.selectionHandler.hasSelectedEdges > 0) {
-        if (shouldShowDashedTools) {
-            let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
-            featureIcons.forEach(icon => icon.classList.add("selected"))
-        } else {
-            let selectedElements = Array.from(document.getElementsByClassName("selected"))
-            selectedElements.forEach(element => element.classList.remove("selected"))
+        if (this.isShowingDashedTools != shouldShowDashedTools) {
+            if (shouldShowDashedTools) {
+                let featureIcons = Array.from(document.getElementsByClassName("feature-icon"))
+                featureIcons.forEach(icon => icon.classList.add("selected"))
+            } else {
+                let selectedElements = Array.from(document.getElementsByClassName("selected"))
+                selectedElements.forEach(element => element.classList.remove("selected"))
+            }
         }
+        this.isShowingDashedTools = shouldShowDashedTools;
     }
 
     //region Deteção de Nós e Arestas
 
-    // TODO: Área de colisão pode ser um quadrado, checar se há 1 nó pode ser
-    //       separado de obter todos os nós
     // Searches for nodes that contain the point `pos`
     // The lookup is done from the last node to the first, the inverse of the
     // drawing lookup in order to return the frontmost node.

@@ -92,7 +92,7 @@ export default class GraphSelection {
         this.registerNodePositions();
         this.graphView.selectionChanged();
     }
-    // TODO: Consertar baseado nos bugs da função de selecionar
+
     deselect(element) {
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
@@ -124,10 +124,11 @@ export default class GraphSelection {
         this.refreshMenu();
     }
 
-    clear() {
+    clear(propagate = true) {
         this.selected.nodes = [];
         this.selected.edges = [];
         this.isQuickSelection = false;
+        if (propagate == false) return;
         this.graphView.selectionChanged();
         this.refreshMenu();
     }
@@ -237,7 +238,7 @@ export default class GraphSelection {
                     .filter(node => !this.selected.nodes.includes(node))
                 this.selected.nodes = this.selected.nodes.concat(...filteredContainedNodes);
             } else {
-                this.clear()
+                this.clear(false)
                 this.selected.nodes = containedNodes;
             }
             break;
@@ -250,7 +251,7 @@ export default class GraphSelection {
                     .filter(edge => !this.selected.edges.includes(edge))
                 this.selected.edges = this.selected.edges.concat(...filteredContainedEdges);
             } else {
-                this.clear()
+                this.clear(false)
                 this.selected.edges = containedEdges;
             }
             break;
