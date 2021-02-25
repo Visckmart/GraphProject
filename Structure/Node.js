@@ -16,12 +16,6 @@ export default class Node {
 
         this._initialTime = window.performance.now();
         this.index = index ?? globalNodeIndex;
-        this._breatheSettings = {
-            // Duração em segundos
-            duration: 4,
-            amplitude: 1.5,
-            offset: -2.5
-        }
 
         // Posição
         this.pos = {x: x, y: y};
@@ -61,20 +55,23 @@ export default class Node {
         return "black"
     }
 
+    lastRadiusCallTimestamp = 0;
+    lastRadiusValue = 0;
     get radius() {
-        let elapsedTime = window.performance.now() - this._initialTime;
-        let speed  = this._breatheSettings.duration;
-        let mult   = this._breatheSettings.amplitude;
-        let offset = this._breatheSettings.offset;
-        let expansion = Math.sin(elapsedTime * Math.PI / (500 * speed)) * mult + offset;
+        let now = window.performance.now()
+        if (now-this.lastRadiusCallTimestamp < 10) { return this.lastRadiusValue; }
+
+        let elapsedTime = now - this._initialTime;
+        let expansion = Math.sin(elapsedTime * Math.PI / (500 * 4)) * 1.5 - 2.5;
+        // if (this.index == 0) { console.log(expansion) }
+
+        this.lastRadiusCallTimestamp = now;
+        this.lastRadiusValue = regularNodeRadius + expansion;
+
         return regularNodeRadius + expansion;
     }
 
     //region Drawing
-    _drawChain = []
-    addDrawProcedure(procedure) {
-        this._drawChain.push(procedure)
-    }
 
     // Executa a cadeia de desenhos
     draw(...args) {
@@ -83,20 +80,14 @@ export default class Node {
         return Math.max(...fpsRequests)
     }
 
-    // Executa a cadeia de desenhos
+    // Executa a cadeia de desenhos de texto
     drawText(...args) {
-        let fpsRequests = this.textDrawChain.call(...args)
-        fpsRequests = fpsRequests.filter(req => req !== undefined)
-        return Math.max(...fpsRequests)
-    }
-
-    get abcd() {
-        return 11;
+        this.textDrawChain.call(...args)
     }
 
     // This function draws one node. This includes the circle, the text and
     // the appropriate color (considering any animation happening).
-    drawProcedure = (ctx, nodeLabeling) => {
+    drawProcedure = (ctx) => {
         // Draw circle border
         ctx.save()
         ctx.lineWidth = 8;
