@@ -159,17 +159,22 @@ class Graph {
     // TODO: Organizar o código da serialização e desserialização das categorias
     serialize() {
         let graphType = "";
-        for (let m of this.nodes().next().value.mixins) {
-            if (m == NodeColorMixin) {
-                graphType += "c"
+        let anyNode = this.nodes().next().value;
+        if (anyNode) {
+            for (let m of anyNode.mixins) {
+                if (m == NodeColorMixin) {
+                    graphType += "c"
+                }
             }
         }
-        for (let m of Array.from(this.edges()).map(e => e[0])[0].mixins) {
-            if (m == EdgeAssignedValueMixin) {
-                graphType += "W"
+        let edges = Array.from(this.edges())
+        if (edges.length > 0) {
+            for (let m of edges.map(e => e[0])[0].mixins) {
+                if (m == EdgeAssignedValueMixin) {
+                    graphType += "W"
+                }
             }
         }
-
         let serializedNodes = "";
         for(let node of this.nodes()) {
             serializedNodes += `${node.serialize()}.`
