@@ -72,15 +72,22 @@ class GraphKeyboardHandler {
         case "z": {
             if (keyboardEvent.shiftKey == false) {
                 let step = this.graphView.history.goToStep(-1);
-                this.graphView.structure = step;
-                keyboardEvent.preventDefault()
+                if (step) {
+                    this.graphView.structure = step;
+                    this.graphView.refreshGraph()
+                    keyboardEvent.preventDefault()
+                }
                 break
             }
         }
+        break;
         case "Z": {
             let step = this.graphView.history.goToStep(1);
-            this.graphView.structure = step;
-            keyboardEvent.preventDefault()
+            if (step) {
+                this.graphView.structure = step;
+                this.graphView.refreshGraph()
+                keyboardEvent.preventDefault()
+            }
             break
         }
         }

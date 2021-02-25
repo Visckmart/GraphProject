@@ -14,7 +14,7 @@ let globalNodeIndex = 0
 export default class Node {
     constructor({x, y, label, index = null, highlights = null}) {
 
-        this._initialTime = window.performance.now();
+        this._initialTime = index == null ? window.performance.now() : Math.random()*3000;
         this.index = index ?? globalNodeIndex;
 
         // Posição

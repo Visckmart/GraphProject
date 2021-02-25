@@ -17,11 +17,14 @@ export default class HistoryTracker {
     // Move o marcador como solicitado e retorna o conteúdo do passo
     goToStep(relativePosition) {
         // Anda com o marcador
-        this.cursor += relativePosition;
-        // Não permite o marcador sair dos limites
-        let cursorEnd = this.steps.length-1;
-        this.cursor = Math.min(Math.max(this.cursor, 0), cursorEnd)
+        let newCursorPos = this.cursor + relativePosition;
 
+        // Não permite o marcador sair dos limites
+        if (newCursorPos < 0 || newCursorPos > this.steps.length-1) {
+            return null;
+        }
+
+        this.cursor = newCursorPos;
         // Retorna o passo solicitado
         return this.steps[this.cursor].clone();
     }
