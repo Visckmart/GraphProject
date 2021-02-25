@@ -156,7 +156,8 @@ class GraphMouseHandler {
         }
 
         // SELEÇÃO
-        if (this.clickPosition && getDistanceOf(this.clickPosition, pos) < 5) {
+        let distanceFromClick = getDistanceOf(this.clickPosition, pos);
+        if (this.clickPosition && distanceFromClick < 5) {
             if (this.selection.additionOnlyMode == false) {
                 this.selection.clear();
             }
@@ -177,6 +178,9 @@ class GraphMouseHandler {
         // Atualiza a posição dos nós selecionados, para que o próximo
         // gesto de mover esses nós tenha as posições adequadas.
         this.selection.registerNodePositions();
+        if (distanceFromClick > 5) {
+            this.graphView.registerStep();
+        }
 
         // Se o botão esquerdo foi o levantado,
         switch (this.graphView.primaryTool) {
@@ -238,7 +242,7 @@ class GraphMouseHandler {
 
         // Atualiza a posição dos nós selecionados, para que o próximo
         // gesto de mover esses nós tenha as posições adequadas.
-        this.selection.registerNodePositions();
+        // this.selection.registerNodePositions();
     }
 
     // Estilo do ponteiro do mouse
