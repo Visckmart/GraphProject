@@ -20,6 +20,9 @@ export default class Edge {
         this.drawChain = new ResponsibilityChain();
         this.drawChain.addLink(this.drawProcedure);
         this.draw = this.drawChain.call.bind(this.drawChain);
+
+        // Instanciando cadeias de responsabilidade
+        this.textDrawChain = new ResponsibilityChain();
     }
 
     get _args() {

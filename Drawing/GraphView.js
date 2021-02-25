@@ -449,7 +449,6 @@ class GraphView {
         ctx.lineWidth = 3;
 
         this.selectionHandler.prepareSelectionAreaDrawing(ctx);
-
         ctx.fill();
         ctx.stroke();
 
@@ -611,11 +610,9 @@ class GraphView {
             this.drawCurrentMaxFPS(this.ctx, currentFPS);
             return;
         }
-        clearTimeout(this.refreshViewTimeout)
-        // if (!this.refreshViewTimeout) {
-            this.refreshViewTimeout = setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
-                                                 1000 / currentFPS);
-        // }
+        clearTimeout(this.refreshViewTimeout);
+        this.refreshViewTimeout = setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
+                                             1000 / currentFPS);
         this.lastFrameTimestamp = timestamp;
         let cacheDrawn = cacheFrames(currentFPS, IDLE_MAX_FPS,
                                      this.ctx, this.canvas,
@@ -633,6 +630,9 @@ class GraphView {
         // Chamando a cadeia de desenho de textos de cada nó
         for (let node of this.structure.nodes()) {
             node.drawText(this.slowCtx, this.nodeLabeling)
+        }
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            edge.textDrawChain.call(this.slowCtx, nodeA.pos, nodeB.pos)
         }
 
         // Debug
