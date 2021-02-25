@@ -3,7 +3,10 @@ import {g} from "./GraphView.js";
 import ToolRepository from "./ToolRepository.js";
 import {HighlightType} from "../Structure/Highlights.js";
 
-nodeLabelingSelector.onchange = function(e) { g.nodeLabeling = e.target.value }
+nodeLabelingSelector.onchange = function(e) {
+    g.nodeLabeling = e.target.value;
+    g.refreshGraph();
+}
 
 let tray = document.querySelector("#tool_tray");
 let trayInputs = tray.getElementsByTagName("input");

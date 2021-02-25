@@ -481,7 +481,7 @@ class GraphView {
         } else {
             this.ctx.fillStyle = backgroundGradient;
             this.ctx.beginPath();
-            this.ctx.rect(0, 0, canvas.width, canvas.height);
+            this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.fill();
         }
 
@@ -507,10 +507,10 @@ class GraphView {
         ctx.font = "12pt Arial";
         let content = name + fps + " FPS";
         let textMeasurement = ctx.measureText(content);
-        ctx.clearRect(canvas.width - textMeasurement.width - 30, 25,
+        ctx.clearRect(this.canvas.width - textMeasurement.width - 30, 25,
                       textMeasurement.width + 40, 55);
         ctx.fillText(content,
-                     canvas.width - textMeasurement.width - 10,
+                     this.canvas.width - textMeasurement.width - 10,
                      25 + vertOffset);
         ctx.restore()
     }
@@ -522,8 +522,8 @@ class GraphView {
 
         ctx.beginPath();
         ctx.rect(0, 0,
-                          canvas.width,
-                          canvas.height);
+                 this.canvas.width,
+                 this.canvas.height);
         ctx.fill();
 
         // Borda
@@ -535,8 +535,8 @@ class GraphView {
         ctx.beginPath();
         let offset = ctx.lineWidth / 2;
         ctx.rect(offset, offset,
-                 canvas.width - 2*offset,
-                 canvas.height - 2*offset);
+                 this.canvas.width - 2*offset,
+                 this.canvas.height - 2*offset);
         ctx.stroke();
         ctx.restore();
     }

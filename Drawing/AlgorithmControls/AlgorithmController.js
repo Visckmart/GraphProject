@@ -18,7 +18,7 @@ class AlgorithmController {
         this.graphView = graphView
         this.initialGraph = graphView.structure.clone()
 
-        this.originalCanvasSize = [canvas.width, canvas.height]
+        this.originalCanvasSize = [this.graphView.canvas.width, this.graphView.canvas.height]
 
         // Instanciando handler de inputs
         this.inputHandler = new AlgorithmInputHandler(this)
@@ -85,8 +85,8 @@ class AlgorithmController {
     //#endregion
 
     adjustNodePositions() {
-        let widthMult = canvas.width/this.originalCanvasSize[0];
-        let heightMult = canvas.height/this.originalCanvasSize[1];
+        let widthMult = this.graphView.canvas.width/this.originalCanvasSize[0];
+        let heightMult = this.graphView.canvas.height/this.originalCanvasSize[1];
 
         for (let node of this.graphView.structure.nodes()) {
             node.pos.x *= widthMult;
