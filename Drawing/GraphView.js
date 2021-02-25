@@ -516,6 +516,32 @@ class GraphView {
                      25 + vertOffset);
         ctx.restore()
     }
+
+    drawImportOverlay(ctx) {
+        ctx.save();
+        // Preenchimento
+        ctx.fillStyle = "#AAFA";
+
+        ctx.beginPath();
+        ctx.rect(0, 0,
+                          canvas.width,
+                          canvas.height);
+        ctx.fill();
+
+        // Borda
+        ctx.strokeStyle = colorFromComponents(100, 100, 255, 0.8);
+        ctx.lineWidth = 15;
+        ctx.setLineDash([25, 25]);
+        ctx.lineDashOffset = window.performance.now()/20;
+
+        ctx.beginPath();
+        let offset = ctx.lineWidth / 2;
+        ctx.rect(offset, offset,
+                 canvas.width - 2*offset,
+                 canvas.height - 2*offset);
+        ctx.stroke();
+        ctx.restore();
+    }
     //endregion
 
     //region Animações
@@ -650,32 +676,9 @@ class GraphView {
         }
 
         if (this.overlay) {
-            this.fastCtx.save();
             setTimeout(() => this.requestCanvasRefresh(CanvasType.FAST),
-                                                 1000 / 30);
-            // }
-            // Preenchimento
-            this.fastCtx.fillStyle = "#AAFA";
-
-            this.fastCtx.beginPath();
-            this.fastCtx.rect(0, 0,
-                          canvas.width,
-                          canvas.height);
-            this.fastCtx.fill();
-
-            // Borda
-            this.fastCtx.strokeStyle = colorFromComponents(100, 100, 255, 0.8);
-            this.fastCtx.lineWidth = 15;
-            this.fastCtx.setLineDash([25, 25]);
-            this.fastCtx.lineDashOffset = window.performance.now()/20;
-
-            this.fastCtx.beginPath();
-            let offset = this.fastCtx.lineWidth / 2;
-            this.fastCtx.rect(offset, offset,
-                          canvas.width - 2*offset,
-                          canvas.height - 2*offset);
-            this.fastCtx.stroke();
-            this.fastCtx.restore();
+                       1000 / 30);
+            this.drawImportOverlay(this.fastCtx)
         }
 
         // Debug
