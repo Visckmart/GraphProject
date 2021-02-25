@@ -42,7 +42,7 @@ let EdgeAssignedValueMixin = (superclass) => {
             ctx.rotate(angle);
 
             // Levanta a label
-            ctx.translate(0, -15);
+            ctx.translate(0, -20);
 
             ctx.font = "bold 15pt Arial";
             ctx.fillStyle = "#444";
@@ -52,6 +52,7 @@ let EdgeAssignedValueMixin = (superclass) => {
             }
             ctx.textAlign = "center";
 
+            // TODO: Essa checagem deveria ser feita no assignment, não no draw
             let text = this.assignedValue.toString()
             if      (this.assignedValue == 6) { text = "6̲"; }
             else if (this.assignedValue == 9) { text = "9̲"; }
