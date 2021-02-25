@@ -54,26 +54,27 @@ class GraphView {
 
         // INTERACTION
         this.selectionHandler = new GraphSelection(this);
-        let mouseHandler = new GraphMouseHandler(this);
-        let keyboardHandler = new GraphKeyboardHandler(this);
-        this.interactionHandler = { mouse: mouseHandler, keyboard: keyboardHandler }
-        
-        // MOUSE
-        canvas.onmousedown  = mouseHandler.mouseDownEvent;
-        canvas.onmousemove  = mouseHandler.mouseDragEvent;
-        canvas.onmouseup    = mouseHandler.mouseUpEvent;
-        canvas.onmouseleave = mouseHandler.mouseLeaveEvent;
+        this.mouseHandler     = new GraphMouseHandler(this);
+        this.keyboardHandler  = new GraphKeyboardHandler(this);
+
+        // Mouse
+        canvas.onmousedown  = this.mouseHandler.mouseDownEvent;
+        canvas.onmousemove  = this.mouseHandler.mouseDragEvent;
+        canvas.onmouseup    = this.mouseHandler.mouseUpEvent;
+        canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
 
         // Evite abrir o menu de contexto para não haver conflito com o gesto
         // de deletar nós.
         canvas.oncontextmenu = event => event.preventDefault();
 
-        // KEYBOARD
-        document.body.onkeydown = keyboardHandler.keyPressed;
-        document.body.onkeyup = keyboardHandler.keyReleased;
+        // Keyboard
+        document.body.onkeydown = this.keyboardHandler.keyPressed;
+        document.body.onkeyup = this.keyboardHandler.keyReleased;
 
+        // HISTORY
         this.history = new HistoryTracker();
-        this.history.registerStep(this.structure.clone())
+        // this.history.registerStep(this.structure.clone())
+        this.registerStep()
         // Debugging
         // generateRandomNodes(this, 4)
         // generateRandomEdges(this, 3)
@@ -83,24 +84,27 @@ class GraphView {
         // }
     }
 
+    /// Overlay de importação
     _overlay = false;
     get overlay() {
         return this._overlay;
     }
     set overlay(newState) {
         this._overlay = newState;
+        // Chama uma atualização do canvas que se mantém até o overlay sair
         this.requestCanvasRefresh(CanvasType.FAST);
     }
 
+    /// Ferramenta escolhida
     _primaryTool = Tool.MOVE;
     get primaryTool() {
         return this._primaryTool;
     }
     set primaryTool(anotherTool) {
         this._primaryTool = anotherTool;
+        // Para de atualizar a aresta temporária caso tenha saído da ferramenta
         if (this.primaryTool !== Tool.CONNECT) {
-            // Pare de atualizar a aresta temporária
-            this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
+            this.mouseHandler.shouldDrawTemporaryEdge = false;
         }
         this.refreshInterfaceState()
     }
@@ -148,7 +152,7 @@ class GraphView {
                 }
             }
         }
-        this.interactionHandler.mouse.refreshCursorStyle();
+        this.mouseHandler.refreshCursorStyle();
     }
 
     selectAllNodes() {
@@ -431,11 +435,11 @@ class GraphView {
 
     loadSerializedGraph(serialized) {
         let deserializedGraph = Graph.deserialize(serialized);
-        if (deserializedGraph) {
-            this.structure = deserializedGraph;
-        }
+        if (!deserializedGraph) { return; }
+        this.structure = deserializedGraph;
         refreshInterfaceCategories();
         this.refreshGraph();
+        this.registerStep();
     }
 
     //endregion
@@ -660,12 +664,12 @@ class GraphView {
         this.showingArea = this.selectionHandler.shouldDrawSelection;
 
         // Desenhar aresta temporária
-        if (this.interactionHandler.mouse.shouldDrawTemporaryEdge) {
-            let startPos = this.interactionHandler.mouse.clickedNode?.pos;
-            let endPos   = this.interactionHandler.mouse.currentMousePos;
+        if (this.mouseHandler.shouldDrawTemporaryEdge) {
+            let startPos = this.mouseHandler.clickedNode?.pos;
+            let endPos   = this.mouseHandler.currentMousePos;
             if (startPos == null || endPos == null) {
                 console.warn("Situação estranha.");
-                this.interactionHandler.mouse.shouldDrawTemporaryEdge = false;
+                this.mouseHandler.shouldDrawTemporaryEdge = false;
                 return;
             }
             // Envie o canvas para trás
