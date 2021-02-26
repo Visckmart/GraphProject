@@ -87,10 +87,10 @@ export default class GraphSelection {
 
         let newEdges = elements.filter(e => e instanceof Edge
                                             && !this.selected.edges.includes(e));
-        console.log(newEdges, elements)
         this.selected.edges = this.selected.edges.concat(...newEdges)
         this.registerNodePositions();
         this.graphView.selectionChanged();
+        this.refreshMenu();
     }
 
     deselect(element) {
@@ -116,7 +116,7 @@ export default class GraphSelection {
     quickSelect(node) {
         if (this.additionOnlyMode) { return; }
 
-        this.clear();
+        this.clear(false);
         this.selected.nodes = [node];
         this.registerNodePositions();
         this.isQuickSelection = true;
@@ -280,12 +280,12 @@ export default class GraphSelection {
             s.style.display = "none"
         }
         let showSettings;
-        if(numberOfSelectedEdges >= 1 && numberOfSelectedNodes >= 1)
-        {
+        if(numberOfSelectedEdges >= 1 && numberOfSelectedNodes >= 1) {
             showSettings = document.getElementById("NodeEdgeSettings")
 
             let element = document.getElementById('NodeEdgeProperties')
             element.updateProperties('Dijkstra',  ...this.selected.nodes, ...this.selected.edges)
+
         } else if (numberOfSelectedNodes >= 1 && this.isQuickSelection === false
             && this.shouldDrawSelection === false) {
             showSettings = document.getElementById("NodeSettings")
@@ -293,11 +293,13 @@ export default class GraphSelection {
             let element = document.getElementById('NodeProperties')
             // TODO: Pegar algoritmo correto
             element.updateProperties('Dijkstra',  ...this.selected.nodes)
+
         } else if (numberOfSelectedEdges >= 1 && this.shouldDrawSelection === false) {
             showSettings = document.getElementById("EdgeSettings")
 
             let element = document.getElementById('EdgeProperties')
             element.updateProperties('Dijkstra',  ...this.selected.edges)
+
         } else {
             showSettings = document.getElementById("GraphSettings")
         }
