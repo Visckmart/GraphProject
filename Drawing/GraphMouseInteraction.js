@@ -29,8 +29,11 @@ class GraphMouseHandler {
     }
     set clickPosition(pos) {
         this._clickPosition = pos;
-        this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
-        this.clickedEdge = this.graphView.getEdgesAt(pos);
+        if (this.graphView.primaryTool == Tool.MOVE) {
+            this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
+        } else {
+            this.clickedEdge = this.graphView.getEdgesAt(pos);
+        }
     }
 
     // Mouse DOWN event
