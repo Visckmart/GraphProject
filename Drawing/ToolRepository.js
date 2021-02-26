@@ -22,15 +22,17 @@ export default {
     [Tool.CONNECT_ALL]: function () {
         let [targetNodes,] = getTargetElements(this);
 
-        let p = new Promise((resolve, reject) => {
-                for (let node of targetNodes) {
-                    for (let innerNode of targetNodes) {
-                        if (node == innerNode) continue;
-                        this.insertEdgeBetween(node, innerNode, false)
-                    }
-                }
-                resolve("Success!")  // Yay! Everything went well!
-        })
+        let insertionPromises = []
+        for (let node of targetNodes) {
+            for (let innerNode of targetNodes) {
+                if (node === innerNode) continue;
+                insertionPromises.push(new Promise(res => {
+                    this.insertEdgeBetween(node, innerNode, false)
+                    res()
+                }))
+            }
+        }
+        Promise.all(insertionPromises).then(() => console.log("GRAFO CONECTADO"))
     },
 
     [Tool.DISCONNECT_ALL]: function () {

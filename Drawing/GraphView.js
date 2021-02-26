@@ -360,6 +360,10 @@ class GraphView {
 
     // ARESTAS
     insertEdgeBetween(nodeA, nodeB, refresh = true) {
+        if(this.structure.checkEdgeBetween(nodeA, nodeB)) {
+            return
+        }
+
         let newEdge = new this.structure.EdgeConstructor();
         let inserted = this.structure.insertEdge(nodeA, nodeB, newEdge);
         if (!inserted) { return; }
