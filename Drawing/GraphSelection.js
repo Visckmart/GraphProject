@@ -302,7 +302,7 @@ export default class GraphSelection {
             showSettings = document.getElementById("GraphSettings")
         }
 
-        showSettings.style.display = "block";
+        showSettings.style.display = "";
 
     }
 }
