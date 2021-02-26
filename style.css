@@ -153,6 +153,19 @@ body {
 .favoriteEmpty {
   background-color: transparent;
 }
+
+footer p, footer a {
+  color: #444;
+  text-decoration: none;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+footer a:hover > #authors {
+  background-color: greenyellow;
+}
+
 @media only screen and (max-width: 650pt), only screen and (max-height: 225pt) {
   #menuArea {
     display: none;

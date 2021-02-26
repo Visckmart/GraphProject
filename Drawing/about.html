@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sobre Nós</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin:0;
+            /*background-image: url("file:///Users/victormartins/Downloads/math-background_23-2148146940.jpg");*/
+        }
+        #bg {
+            padding-top:20pt;
+            background-color: #fff;
+            padding-bottom: 40pt;
+        }
+        h1 {
+            font-size: 30pt;
+            margin-bottom: 10pt;
+            margin-top: 0;
+        }
+        #sidebyside {
+            margin: 5pt;
+            display: flex;
+            flex-direction: row;
+            /*width: calc(100vw - 10pt);*/
+            justify-content: space-evenly;
+        }
+        #sidebyside > div {
+            max-width: 40%;
+            width: 25em;
+        }
+        #sidebyside > div:first-of-type {
+            /*width: 90%;*/
+            /*background-color: orange;*/
+        }
+        #sidebyside > div:last-of-type {
+            /*width: 90%;*/
+            /*background-color: lightgreen;*/
+        }
+        .authorSection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f8f8;
+            /*border: 2pt #FFE0F3 solid;*/
+            border-radius: 15pt;
+            box-shadow: 0px 0px 20px 5px #f0f0f0;
+            padding: 25pt;
+        }
+        .authorSection:first-of-type {
+            /*background: #FF8C80;*/
+            /*box-shadow: 0px 0px 20px 5px #FF8C80;*/
+        }
+
+        .authorSection:last-of-type {
+            /*background: #99C5FF;*/
+
+            /*box-shadow: 0px 0px 20px 5px #99C5FF;*/
+        }
+
+        .authorSection > * {
+            margin: 15pt 0;
+        }
+        .authorSection > img {
+            width: 100pt;
+            height: 100pt;
+            background-color: #eee;
+            border-radius: 50%;
+            /*margin: 0 auto;*/
+            margin-top: 0;
+        }
+        .name, .name h3, .subtitle, .subtitle p {
+            margin: 0;
+        }
+        .name {
+            font-size: 15pt;
+            letter-spacing: 0.25pt;
+            margin-bottom: 4pt;
+        }
+        .subtitle {
+            font-size: 13pt;
+            color: #777;
+        }
+        .description {
+            font-size: 13.5pt;
+            line-height: 1.3;
+            color: #333;
+            margin-bottom: 0;
+        }
+        .description p {
+            font-style: italic;
+            margin: 0;
+            margin-bottom: 8pt;
+        }
+        .description p:last-of-type { margin-bottom: 0 }
+
+        .history {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30pt;
+            /*align-items: flex-end;*/
+        }
+        .history p {
+            font-size: 14pt;
+            max-width: 42em;
+            margin-top: 0;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 5pt;
+            text-align: justify;
+            line-height: 1.3;
+            letter-spacing: 0.25pt;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+<div id="bg">
+<h1 style="text-align: center">Sobre o Projeto</h1>
+<div class="history">
+    <p>
+        Enquanto dois estudantes de computação passavam por disciplinas que exploravam o conceito de grafos,
+        eles sentiram a falta de uma ferramenta didática para entender melhor o que estava sendo ensinado.
+        Por isso resolveram criar uma nova ferramenta.
+    </p>
+    <p>
+        O projeto foi tanto um desafio de férias,
+        quanto um bom motivo para aprender tecnologias diferentes,
+        e ao fim uma ferramenta útil para outros estudantes.
+    </p>
+</div>
+<div id="sidebyside">
+    <div class="authorSection">
+        <img src=""/>
+        <div class="name"><h3>Thiago Lamenza</h3></div>
+        <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+        <div class="description">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et feugiat nulla.
+                Quisque nulla ligula, finibus eget ligula in, mattis commodo mi.
+            </p>
+            <p>
+                Donec id erat non mauris blandit scelerisque quis et nisl. Nam efficitur convallis sodales.
+                Etiam sit amet varius lacus, eu condimentum ipsum. Proin porttitor vulputate tortor, sed ultrices nisi maximus sit amet.
+                Integer at nisl dignissim, dapibus metus non, aliquam elit. Phasellus nec tristique sapien.
+            </p>
+        </div>
+    </div>
+
+    <div class="authorSection">
+        <img src="/Users/victormartins/Downloads/photo_2021-02-26 04.37.57.jpeg"/>
+        <div class="name"><h3>Victor Martins</h3></div>
+        <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+        <div class="description">
+            <p>
+                Sou apaixonado por computação desde que eu era bem novo.
+                Mesmo entendendo pouco do que eu procurava, a vontade de entender estava lá.
+            </p>
+            <p>
+                Tenho interesse em muitas áreas distintas, algumas delas são:
+                linguagens de programação, desenvolvimento de aplicativos móveis, privacidade e acessibilidade.
+            </p>
+            <p>
+                Desde que entrei na faculdade, recebi um suporte incrível dos meus professores
+                e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
