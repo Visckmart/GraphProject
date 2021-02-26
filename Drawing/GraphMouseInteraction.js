@@ -29,9 +29,9 @@ class GraphMouseHandler {
     }
     set clickPosition(pos) {
         this._clickPosition = pos;
-        if (this.graphView.primaryTool == Tool.MOVE) {
-            this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
-        } else {
+        console.log(this.graphView.primaryTool)
+        this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
+        if (this.graphView.primaryTool != Tool.MOVE) {
             this.clickedEdge = this.graphView.getEdgesAt(pos);
         }
     }
