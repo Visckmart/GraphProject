@@ -159,6 +159,7 @@ class GraphKeyboardHandler {
                     this.graphView.structure.removeEdge(edge)
                 }
                 this.selection.clear()
+                this.graphView.refreshGraph()
             }
         }
     }

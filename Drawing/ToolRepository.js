@@ -22,11 +22,15 @@ export default {
     [Tool.CONNECT_ALL]: function () {
         let [targetNodes,] = getTargetElements(this);
 
-        for (let node of targetNodes) {
-            for (let innerNode of targetNodes) {
-                this.insertEdgeBetween(node, innerNode)
-            }
-        }
+        let p = new Promise((resolve, reject) => {
+                for (let node of targetNodes) {
+                    for (let innerNode of targetNodes) {
+                        if (node == innerNode) continue;
+                        this.insertEdgeBetween(node, innerNode, false)
+                    }
+                }
+                resolve("Success!")  // Yay! Everything went well!
+        })
     },
 
     [Tool.DISCONNECT_ALL]: function () {

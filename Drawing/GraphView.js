@@ -359,13 +359,15 @@ class GraphView {
     }
 
     // ARESTAS
-    insertEdgeBetween(nodeA, nodeB) {
+    insertEdgeBetween(nodeA, nodeB, refresh = true) {
         let newEdge = new this.structure.EdgeConstructor();
         let inserted = this.structure.insertEdge(nodeA, nodeB, newEdge);
         if (!inserted) { return; }
 
-        this.redrawGraph();
-        this.registerStep();
+        if (refresh) {
+            this.redrawGraph();
+            this.registerStep();
+        }
         return newEdge;
     }
 
@@ -459,12 +461,6 @@ class GraphView {
         ctx.restore();
     }
 
-    drawEdges() {
-        // Desenhar arestas do grafo
-        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            edge.draw(this.ctx, nodeA.pos, nodeB.pos)
-        }
-    }
     get width() {
         if (this.canvas.width != this.fastCanvas.width) {
             console.log(this.canvas.width, this.fastCanvas.width)
@@ -489,12 +485,16 @@ class GraphView {
             this.ctx.fill();
         }
 
-        this.drawEdges();
-        
+        // Desenhar arestas do grafo
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            edge.draw(this.ctx, nodeA.pos, nodeB.pos)
+        }
+
         let nodeFPSRequests = [];
         for (let node of this.structure.nodes()) {
-            let fpsRequest = node.draw(this.ctx);
-            nodeFPSRequests.push(fpsRequest);
+            nodeFPSRequests.push(
+                node.draw(this.ctx)
+            );
         }
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
@@ -523,7 +523,6 @@ class GraphView {
         ctx.save();
         // Preenchimento
         ctx.fillStyle = "#AAFA";
-
         ctx.beginPath();
         ctx.rect(0, 0,
                  this.canvas.width,
@@ -535,7 +534,6 @@ class GraphView {
         ctx.lineWidth = 15;
         ctx.setLineDash([25, 25]);
         ctx.lineDashOffset = window.performance.now()/20;
-
         ctx.beginPath();
         let offset = ctx.lineWidth / 2;
         ctx.rect(offset, offset,
