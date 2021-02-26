@@ -272,29 +272,32 @@ export default class GraphSelection {
     // Atualizando a interface
 
     refreshMenu() {
-        let numberOfSelectedNodes = this.selected.nodes.length
-        let numberOfSelectedEdges = this.selected.edges.length
-        let settingsList = ["GraphSettings", "NodeSettings", "EdgeSettings", "NodeEdgeSettings"]
+        let settingsList = [
+            "GraphSettings", "NodeSettings", "EdgeSettings", "NodeEdgeSettings"
+        ]
         for (let settingsID of settingsList) {
-            let s = document.getElementById(settingsID)
-            s.style.display = "none"
+            let s = document.getElementById(settingsID);
+            s.style.display = "none";
         }
         let showSettings;
-        if(numberOfSelectedEdges >= 1 && numberOfSelectedNodes >= 1) {
+        let hasSelectedNodes = this.hasSelectedNodes;
+        let hasSelectedEdges = this.hasSelectedEdges;
+
+        if(hasSelectedEdges && hasSelectedNodes) {
             showSettings = document.getElementById("NodeEdgeSettings")
 
             let element = document.getElementById('NodeEdgeProperties')
-            element.updateProperties('Dijkstra',  ...this.selected.nodes, ...this.selected.edges)
+            element.updateProperties('Dijkstra', ...this.selected.nodes, ...this.selected.edges)
 
-        } else if (numberOfSelectedNodes >= 1 && this.isQuickSelection === false
-            && this.shouldDrawSelection === false) {
+        } else if (hasSelectedNodes && this.isQuickSelection === false
+                   && this.shouldDrawSelection === false) {
             showSettings = document.getElementById("NodeSettings")
 
             let element = document.getElementById('NodeProperties')
             // TODO: Pegar algoritmo correto
             element.updateProperties('Dijkstra',  ...this.selected.nodes)
 
-        } else if (numberOfSelectedEdges >= 1 && this.shouldDrawSelection === false) {
+        } else if (hasSelectedEdges && this.shouldDrawSelection === false) {
             showSettings = document.getElementById("EdgeSettings")
 
             let element = document.getElementById('EdgeProperties')
