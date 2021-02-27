@@ -150,6 +150,17 @@ body {
   background-color: #FFFA;
   font-family: monospace;
 }
+.favorite div {
+  display: flex;
+  align-items: center;
+}
+.favorite input[type=text] {
+  font-family: monospace;
+  font-size: initial;
+  width: 70pt;
+  background: transparent;
+  border: 0;
+}
 .favoriteEmpty {
   background-color: transparent;
 }
