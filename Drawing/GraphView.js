@@ -370,12 +370,16 @@ class GraphView {
     // ARESTAS
     insertEdgeBetween(nodeA, nodeB, refresh = true) {
         if(this.structure.checkEdgeBetween(nodeA, nodeB)) {
+            console.error('Já existe uma aresta entre os nós.')
             return
         }
 
         let newEdge = new this.structure.EdgeConstructor();
         let inserted = this.structure.insertEdge(nodeA, nodeB, newEdge, !refresh);
-        if (!inserted) { return; }
+        if (!inserted) {
+            console.error('Aresta não pode ser inserida.')
+            return;
+        }
 
         if (refresh) {
             this.refreshGraph();
