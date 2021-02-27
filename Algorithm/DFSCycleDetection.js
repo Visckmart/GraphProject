@@ -1,10 +1,12 @@
 import {HighlightType} from "../Structure/Highlights.js";
 import Stack from "./Auxiliary/Stack.js";
+import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 
 
 
 export default function DFSCycleDetection(controller) {
     let graph = controller.graphView.structure
+    const isDirected = graph.mixins.has(GraphDirectedMixin)
 
     let stack = new Stack()
     controller.showcasing = stack
@@ -33,6 +35,7 @@ export default function DFSCycleDetection(controller) {
         // Procurando por nós não visitados
         for(let [edge, node] of graph.edgesFrom(currentNode))
         {
+            // Nó não visitado
             if(!node.visited)
             {
                 // Se achou pelo menos um nó novo mandar mensagem de verificação
@@ -55,15 +58,23 @@ export default function DFSCycleDetection(controller) {
 
                 // Prosseguindo para o nó descoberto
                 continue mainLoop
-            } else if(currentNode.ancestral !== node && node.ancestral !== currentNode) {
+
+            // Nó já visitado
+            } else if(currentNode.ancestral !== node && node.ancestral !== currentNode && (!isDirected || stack.isInStack(node))) {
                 edge.highlights.add(HighlightType.COLORED_BORDER)
-                controller.addStep(graph, `Aresta direcionada para o nó ${node.label} já visitado encontrada.`)
+                if(isDirected)
+                {
+                    controller.addStep(graph, `Aresta direcionada para o nó ${node.label} que está na pilha encontrada.`)
+                } else {
+                    controller.addStep(graph, `Aresta que aponta para o nó ${node.label} já visitado encontrada.`)
+                }
                 edge.highlights.remove(HighlightType.COLORED_BORDER)
                 edge.highlights.add(HighlightType.DARK_WITH_BLINK)
 
                 let backtrackNode = currentNode
                 while(backtrackNode !== node) {
-                    let edge = graph.getEdgeBetween(backtrackNode, backtrackNode.ancestral)
+                    console.log(backtrackNode)
+                    let edge = graph.getEdgeBetween(backtrackNode.ancestral, backtrackNode)
                     edge.highlights.add(HighlightType.DARK_WITH_BLINK)
                     backtrackNode = backtrackNode.ancestral
 
@@ -72,7 +83,7 @@ export default function DFSCycleDetection(controller) {
                         break mainLoop
                     }
                 }
-                controller.addStep(graph, 'Loop encontrado. Algoritmo finalizado.')
+                controller.addStep(graph, 'Ciclo encontrado. Algoritmo finalizado.')
                 return
             }
         }

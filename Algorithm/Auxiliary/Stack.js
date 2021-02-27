@@ -103,6 +103,12 @@ export default class Stack extends AlgorithmShowcase {
         return element
     }
 
+    isInStack(element) {
+        let response =  this._stack.some(ele => ele === element)
+        this._messages.push(`Verificou que o elemento ${element.toString()} ${response ? '': 'não'} está na pilha.`)
+        return response
+    }
+
     get length() {
         return this._stack.length
     }
