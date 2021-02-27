@@ -12,16 +12,13 @@ let GraphDirectedMixin = (superclass) => {
                 console.error("Inserção de aresta chamada incorretamente.")
                 return;
             }
-            this.data.get(nodeA).set(nodeB, edge)
-        }
 
-        // Remoção
-        removeEdgeBetween(nodeA, nodeB) {
-            if (!(nodeA && nodeB)) {
-                console.error("Remoção de aresta chamada incorretamente.")
-                return;
+            if (this.debug) {
+                console.info("Inserindo aresta direcionada entre os nós "
+                    + nodeA.label + " - " + nodeB.label, edge);
             }
-            this.data.get(nodeA).delete(nodeB)
+
+            this.data.get(nodeA).set(nodeB, edge)
         }
     }
 }

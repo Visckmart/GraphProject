@@ -130,6 +130,7 @@ function updateGraph() {
     g.updateNodeType(
         categoryCheckboxes.coloredNodes.checked
     )
+    console.log(g.structure)
 }
 //Opções de formato de grafo
 categoryCheckboxes.coloredNodes.addEventListener('change', updateGraph)

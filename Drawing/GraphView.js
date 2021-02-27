@@ -330,6 +330,7 @@ class GraphView {
 
     nodeColorIndex = 0;
     insertNewNodeAt(pos) {
+        console.log(g.structure)
         if (this.checkIfNodeAt(pos, true)) {
             return false;
         }

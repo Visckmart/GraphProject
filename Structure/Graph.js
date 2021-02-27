@@ -7,6 +7,7 @@ import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
 import NodeColorMixin from "./Mixins/Node/NodeColorMixin.js";
 import EdgeDirectedMixin from "./Mixins/Edge/EdgeDirectedMixin.js";
+import GraphDirectedMixin from "./Mixins/Graph/GraphDirectedMixin.js";
 
 
 class Graph {
@@ -212,12 +213,12 @@ class Graph {
 
     static deserialize(serialized, clone = false) {
         if (serialized.indexOf("~") < 0) { return; }
-        let nodeConstructor, edgeConstructor;
         let serializedPrefix = serialized.match(/^([a-zA-Z]+).+?/);
         let cat = new Set();
 
-        nodeConstructor = Node
-        edgeConstructor = Edge
+        let nodeConstructor = Node
+        let edgeConstructor = Edge
+        let graphConstructor = Graph
         if(serializedPrefix) {
             let [, serializedCategories] = serializedPrefix;
             console.log(serializedCategories)
@@ -227,6 +228,7 @@ class Graph {
             }
             if (serializedCategories.includes("D")) {
                 edgeConstructor = EdgeDirectedMixin(edgeConstructor)
+                graphConstructor = GraphDirectedMixin(graphConstructor)
                 cat.add(GraphCategory.DIRECTED_EDGES)
             }
 
@@ -236,7 +238,7 @@ class Graph {
             }
 
         }
-        let graph = new this({
+        let graph = new graphConstructor({
                                  NodeConstructor: nodeConstructor, EdgeConstructor: edgeConstructor,
                                  categories: cat, debug: !clone
         });
@@ -360,6 +362,7 @@ class Graph {
     }
 
     static from(graph) {
+        console.log(this)
         return new this(graph._args)
     }
 }
