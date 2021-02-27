@@ -23,6 +23,8 @@ class Graph {
         this.EdgeConstructor = EdgeConstructor;
         this.NodeConstructor = NodeConstructor;
 
+        this.temporaryEdge = new (EdgeTemporaryMixin(EdgeConstructor))();
+
         // Lista de mixins
         this.mixins = new Set();
     }
@@ -96,10 +98,6 @@ class Graph {
         this.data.delete(node);
         return true;
     }
-
-
-    // Criando aresta temporária
-    temporaryEdge = new (EdgeTemporaryMixin(Edge))();
 
     insertEdge(nodeA, nodeB, edge, quiet = false) {
         // Validação
