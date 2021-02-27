@@ -23,6 +23,8 @@ import HistoryTracker from "./HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
 import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
+import EdgeDirectedMixin from "../Structure/Mixins/Edge/EdgeDirectedMixin.js";
+import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -112,8 +114,13 @@ class GraphView {
 
     // Interaction
     /* Atualiza o tipo de grafo sendo exibido */
-    updateGraphType() {
+    updateGraphType(directed = false) {
+        let GraphType = Graph
+        if(directed) {
+            GraphType = GraphDirectedMixin(GraphType)
+        }
 
+        g.structure = GraphType.from(g.structure)
     }
     /* Atualiza o tipo de aresta exibida */
     updateEdgeType(weighed = false, colored = false, directed = false) {
@@ -125,7 +132,8 @@ class GraphView {
             //TODO: Mixin de edge colorido
         }
         if(directed) {
-            //TODO: Mixin de edge direcionado
+            EdgeType = EdgeDirectedMixin(EdgeType)
+            this.updateGraphType(true)
         }
 
         g.structure = g.structure.cloneAndTransform({EdgeConstructor: EdgeType})
