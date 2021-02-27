@@ -6,13 +6,16 @@ import Edge from "./Edge.js";
 import EdgeTemporaryMixin from "./Mixins/Edge/EdgeTemporaryMixin.js";
 import EdgeAssignedValueMixin from "./Mixins/Edge/EdgeAssignedValueMixin.js";
 import NodeColorMixin from "./Mixins/Node/NodeColorMixin.js";
+import EdgeDirectedMixin from "./Mixins/Edge/EdgeDirectedMixin.js";
+import GraphDirectedMixin from "./Mixins/Graph/GraphDirectedMixin.js";
 
 
 class Graph {
     constructor({   data = new Map(),
                     EdgeConstructor = Edge, NodeConstructor = NodeColorMixin(Node),
                     categories = null, debug = true } = {}) {
-        this.data = data;
+        this.data = new Map();
+        this.importData(data)
         this.categories = categories ?? new Set();
         this.debug = debug;
 
@@ -26,9 +29,25 @@ class Graph {
 
     get _args() {
         return {
-            data: this._cloneData(),
+            data: this.data,
             EdgeConstructor: this.EdgeConstructor,
             NodeConstructor: this.NodeConstructor
+        }
+    }
+
+    importData(data = new Map()) {
+        let oldNodeMap = new Map()
+        for(let node of data.keys()) {
+            let newNode = node.clone()
+            oldNodeMap.set(node, newNode)
+            this.insertNode(newNode)
+        }
+        for(let [nodeA, nodeMap] of data.entries()) {
+            for(let [nodeB, edge] of nodeMap.entries()) {
+                this.insertEdge(oldNodeMap.get(nodeA),
+                                oldNodeMap.get(nodeB),
+                                edge.clone())
+            }
         }
     }
 
@@ -173,6 +192,10 @@ class Graph {
                 if (m == EdgeAssignedValueMixin) {
                     graphType += "W"
                 }
+
+                if(m == EdgeDirectedMixin) {
+                    graphType += "D"
+                }
             }
         }
         let serializedNodes = "";
@@ -190,25 +213,32 @@ class Graph {
 
     static deserialize(serialized, clone = false) {
         if (serialized.indexOf("~") < 0) { return; }
-        let nodeConstructor, edgeConstructor;
         let serializedPrefix = serialized.match(/^([a-zA-Z]+).+?/);
         let cat = new Set();
-        if (!serializedPrefix) {
-            nodeConstructor = Node
-            edgeConstructor = Edge
-        } else {
+
+        let nodeConstructor = Node
+        let edgeConstructor = Edge
+        let graphConstructor = Graph
+        if(serializedPrefix) {
             let [, serializedCategories] = serializedPrefix;
             console.log(serializedCategories)
             if (serializedCategories.includes("W")) {
-                edgeConstructor = EdgeAssignedValueMixin(Edge)
+                edgeConstructor = EdgeAssignedValueMixin(edgeConstructor)
                 cat.add(GraphCategory.WEIGHTED_EDGES);
             }
+            if (serializedCategories.includes("D")) {
+                edgeConstructor = EdgeDirectedMixin(edgeConstructor)
+                graphConstructor = GraphDirectedMixin(graphConstructor)
+                cat.add(GraphCategory.DIRECTED_EDGES)
+            }
+
             if (serializedCategories.includes("c")) {
-                nodeConstructor = NodeColorMixin(Node)
+                nodeConstructor = NodeColorMixin(nodeConstructor)
                 cat.add(GraphCategory.COLORED_NODES);
             }
+
         }
-        let graph = new this({
+        let graph = new graphConstructor({
                                  NodeConstructor: nodeConstructor, EdgeConstructor: edgeConstructor,
                                  categories: cat, debug: !clone
         });
@@ -248,27 +278,6 @@ class Graph {
             console.info("Grafo desserializado com sucesso.");
         }
         return graph;
-    }
-
-    _cloneData() {
-        let tempGraph = new this.constructor();
-        tempGraph.debug = false;
-
-        let newNodeMap = new Map()
-        for (let node of this.nodes()) {
-            let newNode = node.clone()
-            newNodeMap.set(node, newNode)
-
-            tempGraph.insertNode(newNode)
-        }
-
-        for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
-            let newEdge = edge.clone()
-            // TODO: aparentemente nodeA e newNodeMap.get(nodeA) é a mesma coisa
-            tempGraph.insertEdge(newNodeMap.get(nodeA), newNodeMap.get(nodeB),
-                                 newEdge)
-        }
-        return tempGraph.data;
     }
 
     clone () {
@@ -353,6 +362,7 @@ class Graph {
     }
 
     static from(graph) {
+        console.log(this)
         return new this(graph._args)
     }
 }

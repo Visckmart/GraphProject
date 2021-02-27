@@ -266,8 +266,8 @@ class AlgorithmController {
     // Inicializa a preparação do algoritmo
     async setup (algorithm) {
         // console.warn("Starting")
-        this.graphView.interactionHandler.mouse.disable()
-        this.graphView.interactionHandler.keyboard.disable()
+        this.graphView.mouseHandler.disable()
+        this.graphView.keyboardHandler.disable()
 
         document.querySelector(".toolTray").style.display = 'none'
         this.show()
@@ -287,8 +287,8 @@ class AlgorithmController {
 
     // Finaliza a demonstração do algoritmo
     finish () {
-        this.graphView.interactionHandler.mouse.enable()
-        this.graphView.interactionHandler.keyboard.enable()
+        this.graphView.mouseHandler.enable()
+        this.graphView.keyboardHandler.enable()
 
         document.querySelector(".toolTray").style.display = 'unset'
 

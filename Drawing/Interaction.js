@@ -86,7 +86,7 @@ algorithmSelector.onchange = function () {
             categoryCheckboxes.directedEdges.checked = false;
             break
     }
-    updateEdge()
+    updateGraph()
 }
 let runAlgorithmButton = document.getElementById("run_algorithm")
 runAlgorithmButton.onclick = async () => {
@@ -121,7 +121,7 @@ document.body.onblur = function() {
     g.refreshInterfaceState()
 }
 
-function updateEdge() {
+function updateGraph() {
     g.updateEdgeType(
         categoryCheckboxes.weightedEdges.checked,
         categoryCheckboxes.coloredEdges.checked,
@@ -130,10 +130,12 @@ function updateEdge() {
     g.updateNodeType(
         categoryCheckboxes.coloredNodes.checked
     )
+    console.log(g.structure)
 }
 //Opções de formato de grafo
-categoryCheckboxes.coloredNodes.addEventListener('change', updateEdge)
-categoryCheckboxes.weightedEdges.addEventListener('change', updateEdge)
+categoryCheckboxes.coloredNodes.addEventListener('change', updateGraph)
+categoryCheckboxes.weightedEdges.addEventListener('change', updateGraph)
+categoryCheckboxes.directedEdges.addEventListener('change', updateGraph)
 
 // Executa a primeira vez
 g.refreshInterfaceState();
