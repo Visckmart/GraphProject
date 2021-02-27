@@ -187,13 +187,8 @@ class Graph {
         let edges = Array.from(this.edges())
         if (edges.length > 0) {
             for (let m of edges.map(e => e[0])[0].mixins) {
-                if (m == EdgeAssignedValueMixin) {
-                    graphType += "W"
-                }
-
-                if(m == EdgeDirectedMixin) {
-                    graphType += "D"
-                }
+                if (m == EdgeAssignedValueMixin) { graphType += "W"; }
+                if (m == EdgeDirectedMixin)      { graphType += "D"; }
             }
         }
         let serializedNodes = "";
@@ -237,8 +232,9 @@ class Graph {
 
         }
         let graph = new graphConstructor({
-                                 NodeConstructor: nodeConstructor, EdgeConstructor: edgeConstructor,
-                                 categories: cat, debug: !clone
+                                             NodeConstructor: nodeConstructor,
+                                             EdgeConstructor: edgeConstructor,
+                                             categories: cat, debug: !clone
         });
 
         let [serializedNodes, serializedEdges] = serialized.split("~")
@@ -247,7 +243,7 @@ class Graph {
             let serializedNodesList = serializedNodes.split(".")
             serializedNodesList.splice(-1, 1)
             for (let nodeStr of serializedNodesList) {
-                let node = graph.NodeConstructor.deserialize(nodeStr)
+                let node = nodeConstructor.deserialize(nodeStr)
                 if (node == undefined) continue;
                 deserializedNodes.push(node)
                 graph.insertNode(node)
@@ -263,7 +259,7 @@ class Graph {
                 if (found == undefined) continue;
 
                 const [, nodeA, nodeB, edgeData] = found;
-                let deserializedEdge = graph.EdgeConstructor.deserialize(edgeData)
+                let deserializedEdge = edgeConstructor.deserialize(edgeData)
 
                 graph.insertEdge(
                     deserializedNodes.find(n => n.index === parseInt(nodeA)),

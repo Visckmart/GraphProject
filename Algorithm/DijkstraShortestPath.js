@@ -112,6 +112,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         currentNode = heap.remove();
         if (!currentNode || currentNode.distance === Infinity) { break; }
 
+        markAsVisited(currentNode)
         markAsActive(currentNode)
 
 
@@ -162,19 +163,20 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
                 controller.addStep(graph,
                                    `Analisando a distância do nó \
-                                   ${currentNode.label} até ${node.label}, \
-                                   atualizando sua distância para ${newDistance}, \
+                                   ${currentNode.label} até ${node.label}.
+                                   Atualizando sua distância para ${newDistance}, \
                                    que é menor que a distância atual \
-                                   ${oldDistanceStr}, e salvando a aresta
-                                   destacada como a aresta anterior no caminho.`)
+                                   (${oldDistanceStr}), e salvando a aresta \
+                                   destacada como a aresta anterior no caminho \
+                                   até ${node.label}.`)
 
             // Se a distância atual NÃO é menor que a registrada
             } else {
                 controller.addStep(graph,
                                    `Analisando a distância do nó \
-                                   ${currentNode.label} até ${node.label}. \
-                                   Sua distância ${node.distance} é menor ou \
-                                   igual a nova distância ${newDistance} e \
+                                   ${currentNode.label} até ${node.label}.
+                                   Sua distância (${node.distance}) não é maior \
+                                   que a nova distância (${newDistance}) e \
                                    portanto não será atualizada.`)
             }
             markAsVisited(edge)
