@@ -26,30 +26,30 @@ export default function KruskalMST(controller) {
             edge.highlights.remove(HighlightType.ALGORITHM_NOTVISITED)
             edge.highlights.add(HighlightType.DARK_WITH_BLINK)
 
-            nodeA.highlights.add(HighlightType.COLORED_BORDER)
-            nodeB.highlights.add(HighlightType.COLORED_BORDER)
+            nodeA.highlights.add(HighlightType.COLORED_BORDER2)
+            nodeB.highlights.add(HighlightType.COLORED_BORDER2)
 
             unionFind.union(nodeA, nodeB)
 
             controller.addStep(graph, `A aresta conecta duas florestas diferentes contendo os nós \
             ${nodeA.toString()} e ${nodeB.toString()} e portanto será inclusa, unindo-as.`)
 
-            nodeA.highlights.remove(HighlightType.COLORED_BORDER)
-            nodeB.highlights.remove(HighlightType.COLORED_BORDER)
+            nodeA.highlights.remove(HighlightType.COLORED_BORDER2)
+            nodeB.highlights.remove(HighlightType.COLORED_BORDER2)
 
             edge.highlights.remove(HighlightType.DARK_WITH_BLINK)
         } else {
             edge.highlights.add(HighlightType.FEATURE_PREVIEW)
 
-            nodeA.highlights.add(HighlightType.COLORED_BORDER)
-            nodeB.highlights.add(HighlightType.COLORED_BORDER)
+            nodeA.highlights.add(HighlightType.COLORED_BORDER2)
+            nodeB.highlights.add(HighlightType.COLORED_BORDER2)
 
             controller.addStep(graph, `A aresta conecta dois s nós \
             ${nodeA.toString()} e ${nodeB.toString()} da mesma floresta \
              e portanto não será inclusa.`)
 
-            nodeA.highlights.remove(HighlightType.COLORED_BORDER)
-            nodeB.highlights.remove(HighlightType.COLORED_BORDER)
+            nodeA.highlights.remove(HighlightType.COLORED_BORDER2)
+            nodeB.highlights.remove(HighlightType.COLORED_BORDER2)
 
             edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
         }

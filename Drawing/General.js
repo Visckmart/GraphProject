@@ -11,8 +11,12 @@ backgroundGradient.addColorStop(0, "#E5E0FF");
 backgroundGradient.addColorStop(1, "#FFE0F3");
 
 export const nodeColorList = [
-    "#32CD32",
-    "#7B68EE", "#8D6E63", "#4FC3F7", "#DEB887", "#FF7043"
+    "#5982FF",
+    "#FC58D9",
+    "#30BEFF",
+    "#FF9500",
+    "#FE574C",
+    "#E6CB00"
 ]
 
 export const CanvasType = {

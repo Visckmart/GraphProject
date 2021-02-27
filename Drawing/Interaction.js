@@ -7,49 +7,9 @@ import PrimMST from "../Algorithm/PrimMST.js";
 import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 import KruskalMST from "../Algorithm/KruskalMST.js";
 import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
+import {updateFavorites} from "./FavoritesHandler.js";
 
-function updateFavorites() {
-    for (let loadFavBtn of loadFavButtons) {
-        let favName = "fav"+loadFavBtn.name;
-        let hasFavAssociated = window.localStorage.getItem(favName);
-        loadFavBtn.disabled = hasFavAssociated == null;
-    }
-}
-let saveFavButtons = document.getElementsByClassName("saveFavorite")
-// console.log(saveFavButtons)
-let saveFavorite = function() {
-    console.log("Salvando", "fav"+this.name)
-    if (Array.from(g.structure.nodes()).length == 0) {
-        window.localStorage.removeItem("fav"+this.name)
-    } else {
-        window.localStorage.setItem("fav" + this.name, g.structure.serialize())
-    }
-    updateFavorites()
-    // g.structure = UndirectedGraph.deserialize(urlParams.get("graph")) 
-}
-for (let saveFavBtn of saveFavButtons) {
-    saveFavBtn.onclick = saveFavorite
-}
-
-let clearFavBtn = document.getElementById("clearFavorites")
-clearFavBtn.onclick = function() {
-    window.localStorage.clear()
-    updateFavorites()
-}
-let loadFavButtons = document.getElementsByClassName("loadFavorite")
-let loadFavorite = function() {
-    let ser = window.localStorage.getItem("fav"+this.name)
-    console.log("Lendo", "fav"+this.name, ser)
-    if (!ser) {
-        console.log("Nao tem favorito")
-        return;
-    }
-    g.loadSerializedGraph(ser)
-}
 updateFavorites()
-for (let loadFavBtn of loadFavButtons) {
-    loadFavBtn.onclick = loadFavorite
-}
 
 export let categoryCheckboxes = {
     coloredNodes: document.getElementById('coloredNodes'),
@@ -59,6 +19,7 @@ export let categoryCheckboxes = {
 }
 let algorithmSelector = document.getElementById("algorithm")
 algorithmSelector.onchange = function () {
+    algorithmSelector.blur()
     switch (this.value) {
         case 'Dijkstra':
         default:

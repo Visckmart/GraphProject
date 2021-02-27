@@ -210,51 +210,33 @@
                 </div>
                 <div class="settingsSection">
                     <h4 class="sectionTitle">Favoritos</h4>
-                    <div class="favorite">
-                        <label><input type="text" class="inputLabel" value="Favorito 1"></label>
-                        <div>
-                            <button class="loadFavorite" name="1"><strong>Abrir</strong></button>
-                            <button class="saveFavorite" name="1">Apagar…</button>
-                        </div>
-                    </div>
+                    <div id="favoritesList">
+                        <template id="favoriteRow">
+                            <div class="favorite">
+                                <label><input type="text" id="inputLabel" value="Favorito 1"></label>
+                                <div>
+                                    <button id="loadFavorite" name="1"><strong>Abrir</strong></button>
+                                    <button id="removeFavorite" name="1">Apagar…</button>
+                                </div>
+                            </div>
+                        </template>
 
-                    <div class="favorite">
-                        <label style="font-family:sans-serif;font-size: 10.5pt;font-weight: bold;">Apagar?</label>
-                        <div>
-                            <button class="loadFavorite" name="1">Cancelar</button>
-                            <button class="saveFavorite" name="1">Sim</button>
-                        </div>
+                        <template id="favoriteDeleteConfirmationRow">
+                            <div class="favorite">
+                                <label style="font-family:sans-serif;font-size: 10.5pt;font-weight: bold;">Apagar?</label>
+                                <div>
+                                    <button id="cancelDeletion">Não</button>
+                                    <button id="confirmDeletion">Sim</button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template id="favoriteNewRow">
+                            <button style="width: 100%;font-size:10pt;margin-bottom:8pt;" id="newFavorite">Novo favorito <strong>+</strong></button>
+                        </template>
+
+                        <button style="margin-left: 0pt; margin-right: 2pt;" id="clearFavorites">Limpar</button>
                     </div>
-                    <button style="width: 100%;font-size:10pt;margin-bottom:8pt;">Novo favorito <strong>+</strong></button>
-                    <div class="favorite">
-                        <label>Favorito 2</label>
-                        <div>
-                            <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="2">Abrir</button>
-                            <button style="margin-right: 2pt;" class="saveFavorite" name="2">Salvar</button>
-                        </div>
-                    </div>
-                    <div class="favorite">
-                        <label>Favorito 3</label>
-                        <div>
-                            <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="3">Abrir</button>
-                            <button style="margin-right: 2pt;" class="saveFavorite" name="3">Salvar</button>
-                        </div>
-                    </div>
-                    <div class="favorite">
-                        <label>Favorito 4</label>
-                        <div>
-                            <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="4">Abrir</button>
-                            <button style="margin-right: 2pt;" class="saveFavorite" name="4">Salvar</button>
-                        </div>
-                    </div>
-                    <div class="favorite">
-                        <label>Favorito 5</label>
-                        <div>
-                            <button style="margin-left: 0pt; margin-right: 2pt;" class="loadFavorite" name="5">Abrir</button>
-                            <button style="margin-right: 2pt;" class="saveFavorite" name="5">Salvar</button>
-                        </div>
-                    </div>
-                    <button style="margin-left: 0pt; margin-right: 2pt;" id="clearFavorites">Limpar</button>
                 </div>
             </div>
         </div>

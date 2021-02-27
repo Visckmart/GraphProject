@@ -180,7 +180,7 @@ export default class Node {
         if (this.highlights.has(HighlightType.LIGHTEN)) { /* Clarear */
             ctx.save()
 
-            ctx.fillStyle = colorFromComponents(255, 255, 255, 0.7)
+            ctx.fillStyle = colorFromComponents(255, 255, 255, 0.8)
             ctx.fill();
 
             ctx.restore();
@@ -204,6 +204,21 @@ export default class Node {
             ctx.beginPath();
             ctx.arc(this.pos.x, this.pos.y,
                     this.radius + ctx.lineWidth / 2,
+                    0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.restore();
+        } else if (this.highlights.has(HighlightType.COLORED_BORDER2)) { /* Borda colorida */
+            ctx.save();
+
+            // Configuramos a borda
+            ctx.strokeStyle = colorFromComponents(80, 80, 80, 1)
+            ctx.lineWidth = 5
+
+            // Desenhamos a borda
+            ctx.beginPath();
+            ctx.arc(this.pos.x, this.pos.y,
+                    this.radius - ctx.lineWidth,
                     0, 2 * Math.PI);
             ctx.stroke();
 

@@ -75,20 +75,20 @@ export default class Edge {
     }
     // TODO: Transformar em ifs como nos highlights dos nós
     _drawHighlight = (ctx, highlight, xStart, yStart, xEnd, yEnd) => {
-        switch(highlight) {
-        case HighlightType.SELECTION:
+        if (this.highlights.has(HighlightType.SELECTION)) {
             ctx.save()
 
             ctx.setLineDash([12, 8]);
             ctx.strokeStyle = "blue";
             ctx.lineWidth = 7
-            ctx.lineDashOffset = (window.performance.now()-this._initialTime)/75
+            ctx.lineDashOffset = (window.performance.now() - this._initialTime) / 75
             this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
             ctx.stroke();
 
             ctx.restore()
-            break
-        case HighlightType.DARK_WITH_BLINK:
+        }
+
+        if (this.highlights.has(HighlightType.DARK_WITH_BLINK)) {
             ctx.save()
             ctx.lineWidth = 9
             ctx.strokeStyle = "#777";
@@ -99,10 +99,8 @@ export default class Edge {
             ctx.stroke();
 
             ctx.restore()
-            break
-
-        case HighlightType.LIGHTEN:
-            if (this.highlights.has(HighlightType.SELECTION)) break;
+        }
+        if (this.highlights.has(HighlightType.LIGHTEN)) {
             ctx.save()
             ctx.lineWidth = 9
             ctx.strokeStyle = "#266EFF";
@@ -114,21 +112,7 @@ export default class Edge {
             ctx.stroke();
 
             ctx.restore()
-            break
-
-        case HighlightType.ALGORITHM_VISITING:
-            ctx.save()
-            ctx.lineWidth = 9
-            ctx.strokeStyle = "#777";
-            ctx.setLineDash([]);
-
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
-
-            ctx.stroke();
-
-            ctx.restore()
-            break;
-        case HighlightType.DARKEN:
+        } else if (this.highlights.has(HighlightType.DARKEN)) {
             ctx.save()
             ctx.lineWidth = 9
             ctx.strokeStyle = "#bbb";
@@ -140,9 +124,20 @@ export default class Edge {
             ctx.stroke();
 
             ctx.restore()
-            break
+        }
+        if (this.highlights.has(HighlightType.ALGORITHM_VISITING)) {
+            ctx.save()
+            ctx.lineWidth = 9
+            ctx.strokeStyle = "#777";
+            ctx.setLineDash([]);
 
-        case HighlightType.COLORED_BORDER:
+            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+
+            ctx.stroke();
+
+            ctx.restore()
+        }
+        if (this.highlights.has(HighlightType.COLORED_BORDER)) {
             ctx.save()
             ctx.lineWidth = 9
             ctx.strokeStyle = "blue";
@@ -154,8 +149,8 @@ export default class Edge {
             ctx.stroke();
 
             ctx.restore()
-            break
-        case HighlightType.FEATURE_PREVIEW:
+        }
+        if (this.highlights.has(HighlightType.FEATURE_PREVIEW)) {
             ctx.save()
 
             ctx.setLineDash([]);
@@ -170,7 +165,6 @@ export default class Edge {
             ctx.stroke();
 
             ctx.restore()
-            break
         }
     }
     //endregion
