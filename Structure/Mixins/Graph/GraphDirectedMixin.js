@@ -12,6 +12,14 @@ let GraphDirectedMixin = (superclass) => {
                 console.error("Inserção de aresta chamada incorretamente.")
                 return;
             }
+            if (nodeA === nodeB) {
+                console.warn("Inserção de aresta que causaria um laço.", nodeA)
+                return false;
+            }
+            if (!this.data.has(nodeA) || !this.data.has(nodeB)) {
+                console.warn("Nós não encontrados no grafo")
+                return false;
+            }
 
             if (this.debug) {
                 console.info("Inserindo aresta direcionada entre os nós "
@@ -19,6 +27,17 @@ let GraphDirectedMixin = (superclass) => {
             }
 
             this.data.get(nodeA).set(nodeB, edge)
+            return true
+        }
+
+        *edgesTo(node) {
+            for(let [fromNode, nodeMap] of this.data.entries()) {
+                for(let [toNode, edge] of nodeMap.entries()) {
+                    if(toNode === node) {
+                        yield [edge, fromNode]
+                    }
+                }
+            }
         }
     }
 }

@@ -110,10 +110,16 @@ class Graph {
             console.warn("Inserção de aresta que causaria um laço.", nodeA)
             return false;
         }
+        if (!this.data.has(nodeA) || !this.data.has(nodeB)) {
+            console.warn("Nós não encontrados no grafo")
+            return false;
+        }
+
         if (this.debug && quiet == false) {
             console.info("Inserindo aresta entre os nós "
                          + nodeA.label + " - " + nodeB.label, edge);
         }
+
 
         // Operação
         this.data.get(nodeA).set(nodeB, edge);
@@ -159,6 +165,16 @@ class Graph {
 
         // Operação
         return connA.get(nodeB)
+    }
+
+    getEdgeNodes(edge) {
+        for(let [nodeA, nodeMap] of this.data.entries()) {
+            for(let [nodeB, mapEdge] of nodeMap) {
+                if(mapEdge === edge) {
+                    return [nodeA, nodeB]
+                }
+            }
+        }
     }
 
     checkEdgeBetween(nodeA, nodeB) {
@@ -335,6 +351,9 @@ class Graph {
     }
 
     *edgesFrom(node) {
+        if(!this.data.has(node)) {
+            return
+        }
         for(let [nodeB, edge] of this.data.get(node))  {
             yield [edge, nodeB]
         }
