@@ -19,7 +19,6 @@ export default class Edge {
         // Instanciando cadeias de responsabilidade
         this.drawChain = new ResponsibilityChain();
         this.drawChain.addLink(this.drawProcedure);
-        this.draw = this.drawChain.call.bind(this.drawChain);
 
         // Instanciando cadeias de responsabilidade
         this.textDrawChain = new ResponsibilityChain();
@@ -35,7 +34,7 @@ export default class Edge {
     //region Desenho do Nó
 
     // Executa a cadeia de responsabilidade
-    // draw(...args) { this.drawChain.call(...args) }
+    draw(...args) { this.drawChain.call(...args) }
 
     drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}) => {
         if (!this.isSelected) {

@@ -17,12 +17,10 @@ let EdgeTemporaryMixin = (superclass) => {
             ctx.strokeStyle = "black";
             ctx.setLineDash([12, 8]);
 
-            ctx.beginPath()
-            ctx.moveTo(xStart, yStart);
-            ctx.lineTo(xEnd, yEnd);
-            ctx.stroke();
+            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
 
-            ctx.restore()
+            ctx.stroke();
+            ctx.restore();
         }
     }
 }
