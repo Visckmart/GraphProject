@@ -101,7 +101,7 @@ class Graph {
     // Criando aresta temporária
     temporaryEdge = new (EdgeTemporaryMixin(Edge))();
 
-    insertEdge(nodeA, nodeB, edge) {
+    insertEdge(nodeA, nodeB, edge, quiet = false) {
         // Validação
         if (!(nodeA && nodeB)) {
             console.error("Inserção de aresta chamada incorretamente.",
@@ -112,7 +112,7 @@ class Graph {
             console.warn("Inserção de aresta que causaria um laço.", nodeA)
             return false;
         }
-        if (this.debug) {
+        if (this.debug && quiet == false) {
             console.info("Inserindo aresta entre os nós "
                          + nodeA.label + " - " + nodeB.label, edge);
         }

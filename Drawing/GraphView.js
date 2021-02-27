@@ -374,7 +374,7 @@ class GraphView {
         }
 
         let newEdge = new this.structure.EdgeConstructor();
-        let inserted = this.structure.insertEdge(nodeA, nodeB, newEdge);
+        let inserted = this.structure.insertEdge(nodeA, nodeB, newEdge, !refresh);
         if (!inserted) { return; }
 
         if (refresh) {
