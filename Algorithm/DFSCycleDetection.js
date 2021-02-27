@@ -4,14 +4,14 @@ import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js"
 
 
 
-export default function DFSCycleDetection(controller) {
+export default function DFSCycleDetection(controller, initialNode = null, record = true) {
     let graph = controller.graphView.structure
     const isDirected = graph.mixins.has(GraphDirectedMixin)
 
     let stack = new Stack()
     controller.showcasing = stack
 
-    let firstNode = graph.nodes().next().value
+    let firstNode = initialNode ?? graph.nodes().next().value
     if(firstNode) {
         stack.push(firstNode)
     }
@@ -38,8 +38,10 @@ export default function DFSCycleDetection(controller) {
             // Nó não visitado
             if(!node.visited)
             {
-                // Se achou pelo menos um nó novo mandar mensagem de verificação
-                controller.addStep(graph, `Verificando o nó ${currentNode.label}.`)
+                if(record) {
+                    // Se achou pelo menos um nó novo mandar mensagem de verificação
+                    controller.addStep(graph, `Verificando o nó ${currentNode.label}.`)
+                }
 
                 // Salvando nó atual para verificação posterior e marcando o nó descoberto para visitação
                 node.ancestral = currentNode
@@ -52,44 +54,60 @@ export default function DFSCycleDetection(controller) {
 
                 edge.highlights.add(HighlightType.DARKEN)
 
-                controller.addStep(graph, `O nó ${node.label} foi descoberto.`)
+                if(record) {
+                    controller.addStep(graph, `O nó ${node.label} foi descoberto.`)
+                }
                 // Desmarcando nó como ativo
                 currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
 
                 // Prosseguindo para o nó descoberto
                 continue mainLoop
 
-            // Nó já visitado
+            // Nó que forma um ciclo detectado
+            // No caso de um grafo direcionado é um nó que aponta para outro nó que ainda está na pilha
+            // No caso de um grafo não direcionado é um nó que aponta para outro já visitado
             } else if(currentNode.ancestral !== node && node.ancestral !== currentNode && (!isDirected || stack.isInStack(node))) {
                 edge.highlights.add(HighlightType.COLORED_BORDER)
-                if(isDirected)
-                {
-                    controller.addStep(graph, `Aresta direcionada para o nó ${node.label} que está na pilha encontrada.`)
-                } else {
-                    controller.addStep(graph, `Aresta que aponta para o nó ${node.label} já visitado encontrada.`)
+                if(record) {
+                    if(isDirected)
+                    {
+                        controller.addStep(graph, `Aresta direcionada para o nó ${node.label} que está na pilha encontrada.`)
+                    } else {
+                        controller.addStep(graph, `Aresta que aponta para o nó ${node.label} já visitado encontrada.`)
+                    }
                 }
                 edge.highlights.remove(HighlightType.COLORED_BORDER)
                 edge.highlights.add(HighlightType.DARK_WITH_BLINK)
 
+                // Fazendo backtracking para detectar o ciclo
                 let backtrackNode = currentNode
+                let cycle = [backtrackNode]
                 while(backtrackNode !== node) {
-                    console.log(backtrackNode)
                     let edge = graph.getEdgeBetween(backtrackNode.ancestral, backtrackNode)
                     edge.highlights.add(HighlightType.DARK_WITH_BLINK)
                     backtrackNode = backtrackNode.ancestral
+                    cycle.push(backtrackNode)
 
                     if(backtrackNode === null) {
                         console.error("Ancestrais mapeados incorretamente")
                         break mainLoop
                     }
                 }
-                controller.addStep(graph, 'Ciclo encontrado. Algoritmo finalizado.')
-                return
+                if(record) {
+                    controller.addStep(graph, 'Ciclo encontrado. Algoritmo finalizado.')
+                }
+
+                // Retornando o ciclo revertido já que foi descoberto por backtracking
+                return cycle.reverse()
             }
         }
         // Caso nenhum nó tenha sido encontrado, mandar mensagem de nenhum nó encontrado
-        controller.addStep(graph, `Verificando o nó ${currentNode.label}, nenhum nó novo encontrado.`)
+        if(record) {
+            controller.addStep(graph, `Verificando o nó ${currentNode.label}, nenhum nó novo encontrado.`)
+        }
         currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
     }
-    controller.addStep(graph, "Nenhum loop encontrado. Algoritmo finalizado.")
+    if(record) {
+        controller.addStep(graph, "Nenhum loop encontrado. Algoritmo finalizado.")
+    }
 }
