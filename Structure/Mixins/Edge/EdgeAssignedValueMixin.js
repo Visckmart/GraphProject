@@ -24,21 +24,24 @@ let EdgeAssignedValueMixin = (superclass) => {
             }
         }
 
-        drawText = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}) => {
+        getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}) {
             // Calcula o meio da linha
-            let midX = (xEnd - xStart)/2
-            let midY = (yEnd - yStart)/2
-
-            ctx.save()
-            ctx.translate(xStart + midX,
-                          yStart + midY);
-
+            return [xStart + (xEnd - xStart)/2, yStart + (yEnd - yStart)/2]
+        }
+        getTextAngle(x, y, {x: xStart, y: yStart}) {
             // Gira a label
-            let angle = Math.atan2(midY, midX);
+            let angle = Math.atan2(y-yStart, x-xStart);
             // Não permite que o texto fique de cabeça para baixo
             if (Math.abs(angle) > Math.PI/2) {
-                angle = Math.atan2(-midY, -midX)
+                angle = Math.atan2(-(y-yStart), -(x-xStart))
             }
+            return angle;
+        }
+        drawText = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) => {
+            let [midX, midY] = this.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled)
+            ctx.save()
+            ctx.translate(midX, midY);
+            let angle = this.getTextAngle(midX, midY, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled);
             ctx.rotate(angle);
 
             // Levanta a label

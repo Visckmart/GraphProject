@@ -232,15 +232,16 @@ class GraphView {
         return detectedNodes;
     }
 
-    checkIfNodeAt(pos, checkForConflict = false) {
+    checkIfNodeAt(pos, checkForConflict = false, exceptionIndex = null) {
 
         for (let node of this.structure.nodes()) {
+            if (node.index == exceptionIndex) continue;
             let radiusCheck = Math.max(node.radius-4, regularNodeRadius);
             if (checkForConflict) { radiusCheck *= 2; }
 
             if (   node.pos.x - radiusCheck < pos.x && node.pos.x + radiusCheck > pos.x
                    && node.pos.y - radiusCheck < pos.y && node.pos.y + radiusCheck > pos.y) {
-                return true;
+                return node;
             }
         }
         return false;
@@ -378,7 +379,7 @@ class GraphView {
         if (!inserted) { return; }
 
         if (refresh) {
-            this.redrawGraph();
+            this.refreshGraph();
             this.registerStep();
         }
         return newEdge;
@@ -500,7 +501,8 @@ class GraphView {
 
         // Desenhar arestas do grafo
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            edge.draw(this.ctx, nodeA.pos, nodeB.pos)
+            edge.draw(this.ctx, nodeA.pos, nodeB.pos, window.performance.now(),
+                      this.structure.checkEdgeBetween(nodeB, nodeA))
         }
 
         let nodeFPSRequests = [];
@@ -650,7 +652,8 @@ class GraphView {
             node.drawText(this.slowCtx, this.nodeLabeling)
         }
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            edge.textDrawChain.call(this.slowCtx, nodeA.pos, nodeB.pos)
+            edge.textDrawChain.call(this.slowCtx, nodeA.pos, nodeB.pos,
+                                    this.structure.checkEdgeBetween(nodeB, nodeA))
         }
 
         // Debug

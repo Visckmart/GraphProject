@@ -10,23 +10,46 @@ let EdgeDirectedMixin = (superclass) => {
             this.drawChain.addLink(this.drawProcedure)
         }
 
-        prepareLine(ctx, xStart, yStart, xEnd, yEnd, t) {
-            ctx.beginPath()
-            ctx.moveTo(xStart, yStart);
-            let offset = 50;
+        prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled) {
+            if (doubled) {
+                ctx.beginPath()
+                ctx.moveTo(xStart, yStart);
+                let offset = 50;
+                let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
+                let cpX = ((xStart + xEnd) / 2) + Math.cos(theta) * offset;
+                let cpY = ((yStart + yEnd) / 2) + Math.sin(theta) * offset;
+                ctx.quadraticCurveTo(cpX, cpY, xEnd, yEnd);
+            } else {
+                super.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
+            }
+        }
+        getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
+            if (!doubled) return super.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd})
+            let offset = 20;
             let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
+            if (theta > 0) {
+                offset = 25;
+            }
             let cpX = ((xStart + xEnd)/2) + Math.cos(theta) * offset;
             let cpY = ((yStart + yEnd)/2) + Math.sin(theta) * offset;
-            ctx.quadraticCurveTo(cpX, cpY, xEnd, yEnd);
+            return [cpX, cpY]
         }
-
-        drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp) => {
+        getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
+            if (!doubled) return super.getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd});
+            let theta = Math.atan2(yEnd - yStart, xEnd - xStart);
+            // Não permite que o texto fique de cabeça para baixo
+            if (Math.abs(theta) > Math.PI/2) {
+                theta = Math.atan2(-(yEnd - yStart), -(xEnd - xStart))
+            }
+            return theta;
+        }
+        drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp, doubled) => {
             ctx.save()
             ctx.lineWidth = 8;
             ctx.strokeStyle = "#aaa";
             ctx.setLineDash([8, 4]);
             ctx.lineDashOffset = -timestamp/200;
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, timestamp)
+            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
             ctx.stroke();
             ctx.restore()
 
