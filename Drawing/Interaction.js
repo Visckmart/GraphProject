@@ -7,48 +7,89 @@ import PrimMST from "../Algorithm/PrimMST.js";
 import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 import KruskalMST from "../Algorithm/KruskalMST.js";
 
+let favoritesSection = document.getElementById("favoritesList")
+let favoriteTemplate = document.querySelector("#favoriteRow")
+let newFavoriteTemplate = document.querySelector("#favoriteNewRow")
+let favoriteDeleteTemplate = document.querySelector("#favoriteDeleteConfirmationRow")
+let deletingFavorite = null;
 function updateFavorites() {
-    for (let loadFavBtn of loadFavButtons) {
-        let favName = "fav"+loadFavBtn.name;
-        let hasFavAssociated = window.localStorage.getItem(favName);
-        loadFavBtn.disabled = hasFavAssociated == null;
+    favoritesSection.innerHTML = "";
+    let favoriteKeys = []
+    for (let i = 0; i < localStorage.length; i++){
+            let key = localStorage.key(i)
+            if (key.includes("fav", 0)) {
+                favoriteKeys.push(key)
+            }
     }
-}
-let saveFavButtons = document.getElementsByClassName("saveFavorite")
-// console.log(saveFavButtons)
-let saveFavorite = function() {
-    console.log("Salvando", "fav"+this.name)
-    if (Array.from(g.structure.nodes()).length == 0) {
-        window.localStorage.removeItem("fav"+this.name)
-    } else {
-        window.localStorage.setItem("fav" + this.name, g.structure.serialize())
+    favoriteKeys.sort((a,b) => { return a.toLowerCase() > b.toLowerCase() })
+    for (let key of favoriteKeys) {
+        if (deletingFavorite != key) {
+            let newFavoriteRow = favoriteTemplate.content.cloneNode(true);
+            newFavoriteRow.getElementById("inputLabel").value = key.substr(3)
+            let labelInput = newFavoriteRow.getElementById("inputLabel")
+            labelInput.onchange = function(event) {
+                let newName = event.target.value
+                if (!newName
+                    || window.localStorage.getItem("fav"+newName) != null) {
+                    return;
+                }
+                let current = window.localStorage.getItem(key)
+                window.localStorage.removeItem(key)
+                window.localStorage.setItem("fav"+newName, current)
+                // window.localStorage.setItem("fav"+event.target.value+9, current)
+                updateFavorites()
+            }
+            labelInput.onblur = () => {
+                labelInput.value = key.substr(3)
+            }
+            let loadBtn = newFavoriteRow.getElementById("loadFavorite")
+            loadBtn.name = key
+            loadBtn.onclick = () => {
+                g.loadSerializedGraph(window.localStorage.getItem(key))
+                updateFavorites()
+            }
+            let removeBtn = newFavoriteRow.getElementById("removeFavorite")
+            removeBtn.name = key
+            removeBtn.onclick = () => {
+                deletingFavorite = key;
+                updateFavorites()
+            }
+            favoritesSection.appendChild(newFavoriteRow)
+        } else {
+            let newDeleteRow = favoriteDeleteTemplate.content.cloneNode(true);
+            let cancelBtn = newDeleteRow.getElementById("cancelDeletion")
+            cancelBtn.onclick = () => {
+                deletingFavorite = null;
+                updateFavorites()
+            }
+            let confirmBtn = newDeleteRow.getElementById("confirmDeletion")
+            confirmBtn.onclick = () => {
+                deletingFavorite = null;
+                window.localStorage.removeItem(key)
+                updateFavorites()
+            }
+            favoritesSection.appendChild(newDeleteRow)
+        }
     }
-    updateFavorites()
-    // g.structure = UndirectedGraph.deserialize(urlParams.get("graph")) 
-}
-for (let saveFavBtn of saveFavButtons) {
-    saveFavBtn.onclick = saveFavorite
+    let newFavorite = newFavoriteTemplate.content.cloneNode(true);
+    let newFavoriteBtn = newFavorite.getElementById("newFavorite");
+    newFavoriteBtn.onclick = () => {
+        let newName = "Favorito";
+        let offset = 1;
+        do {
+            newName = `Favorito ${window.localStorage.length + offset}`;
+            offset += 1;
+        } while (window.localStorage.getItem("fav" + newName) != null);
+        window.localStorage.setItem("fav" + newName, g.structure.serialize());
+        updateFavorites();
+
+        let mBody = document.getElementsByClassName("menuBody")[0];
+        mBody.scrollTop = mBody.scrollHeight;
+    }
+    favoritesSection.appendChild(newFavorite)
 }
 
-let clearFavBtn = document.getElementById("clearFavorites")
-clearFavBtn.onclick = function() {
-    window.localStorage.clear()
-    updateFavorites()
-}
-let loadFavButtons = document.getElementsByClassName("loadFavorite")
-let loadFavorite = function() {
-    let ser = window.localStorage.getItem("fav"+this.name)
-    console.log("Lendo", "fav"+this.name, ser)
-    if (!ser) {
-        console.log("Nao tem favorito")
-        return;
-    }
-    g.loadSerializedGraph(ser)
-}
 updateFavorites()
-for (let loadFavBtn of loadFavButtons) {
-    loadFavBtn.onclick = loadFavorite
-}
 
 export let categoryCheckboxes = {
     coloredNodes: document.getElementById('coloredNodes'),
