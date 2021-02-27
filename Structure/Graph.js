@@ -215,14 +215,14 @@ class Graph {
         let nodeConstructor, edgeConstructor;
         let serializedPrefix = serialized.match(/^([a-zA-Z]+).+?/);
         let cat = new Set();
-        if (!serializedPrefix) {
-            nodeConstructor = Node
-            edgeConstructor = Edge
-        } else {
+
+        nodeConstructor = Node
+        edgeConstructor = Edge
+        if(serializedPrefix) {
             let [, serializedCategories] = serializedPrefix;
             console.log(serializedCategories)
             if (serializedCategories.includes("W")) {
-                edgeConstructor = EdgeAssignedValueMixin(Edge)
+                edgeConstructor = EdgeAssignedValueMixin(edgeConstructor)
                 cat.add(GraphCategory.WEIGHTED_EDGES);
             }
             if (serializedCategories.includes("D")) {
@@ -231,7 +231,7 @@ class Graph {
             }
 
             if (serializedCategories.includes("c")) {
-                nodeConstructor = NodeColorMixin(Node)
+                nodeConstructor = NodeColorMixin(nodeConstructor)
                 cat.add(GraphCategory.COLORED_NODES);
             }
 
