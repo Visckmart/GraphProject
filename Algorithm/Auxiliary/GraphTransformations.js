@@ -9,3 +9,20 @@ export function cloneTransformNodes(graph, Mixin) {
     }
     return graph.clone()
 }
+
+export function mapNewNodesOrEdges(oldArtifacts, newArtifacts, newToOld = true) {
+    let artifactIdMap = new Map()
+    let artifactMap = new Map()
+
+    for(let artifact of oldArtifacts) {
+        artifactIdMap.set(artifact.index, artifact)
+    }
+    for(let artifact of newArtifacts) {
+        if(newToOld) {
+            artifactMap.set(artifact, artifactIdMap.get(artifact.index))
+        } else {
+            artifactMap.set(artifactIdMap.get(artifact.index), artifact)
+        }
+    }
+    return artifactMap
+}
