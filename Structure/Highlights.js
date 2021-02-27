@@ -44,6 +44,10 @@ export class HighlightsHandler {
         return this.highlights.has(highlight);
     }
 
+    clear() {
+        this.highlights = new Set()
+    }
+
     get length() {
         return this.highlights.size;
     }
