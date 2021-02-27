@@ -16,22 +16,22 @@ function convertMousePos(x, y, graphView) {
 
 function simulateMouseDown(x, y, graphView) {
     let clientPos = convertMousePos(x, y, graphView)
-    graphView.interactionHandler.mouse.mouseDownEvent(
+    graphView.mouseHandler.mouseDownEvent(
         // {clientX: clientPos.x, clientY: clientPos.y}
         {clientX: x, clientY: y}
     )
 }
 function simulateClick(x, y, graphView, button = 0) {
     // let clientPos = convertMousePos(x, y, graphView)
-    graphView.interactionHandler.mouse.mouseDownEvent(
+    graphView.mouseHandler.mouseDownEvent(
         {clientX: x, clientY: y, button: button, buttons: 1}
     )
-    graphView.interactionHandler.mouse.mouseUpEvent(
+    graphView.mouseHandler.mouseUpEvent(
         {clientX: x, clientY: y, button: button, buttons: 1}
     )
 }
 function simulateHover(x, y, graphView) {
-    graphView.interactionHandler.mouse.mouseDragEvent(
+    graphView.mouseHandler.mouseDragEvent(
         {clientX: x, clientY: y})
 }
 function simulateClickAndDrag(clientX, clientY, endX, endY, graphView, time = 1) {
@@ -52,12 +52,12 @@ function simulateClickAndDrag(clientX, clientY, endX, endY, graphView, time = 1)
                 clientY: clientY + distY / steps * i,
                 button: 0
             }
-            graphView.interactionHandler.mouse.mouseDragEvent(dragEvent)
+            graphView.mouseHandler.mouseDragEvent(dragEvent)
         }, 22.5*i);
     }
     setTimeout(() => {
         let upEvent = {clientX: endX, clientY: endY}
-        graphView.interactionHandler.mouse.mouseUpEvent(upEvent)
+        graphView.mouseHandler.mouseUpEvent(upEvent)
     }, time*1000);
 }
 function runAfter(delay, func) {
