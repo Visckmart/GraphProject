@@ -629,6 +629,9 @@ class GraphView {
         this.refreshViewTimeout = setTimeout(() => this.requestCanvasRefresh(CanvasType.GENERAL),
                                              1000 / currentFPS);
         this.lastFrameTimestamp = timestamp;
+        if (this.selectionHandler.isQuickSelection) {
+            this.refreshSlowCanvas(timestamp)
+        }
         let cacheDrawn = cacheFrames(currentFPS, IDLE_MAX_FPS,
                                      this.ctx, this.canvas,
                                      () => this.redrawGraph());
