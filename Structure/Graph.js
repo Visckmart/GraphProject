@@ -360,7 +360,6 @@ class Graph {
     }
 
     static from(graph) {
-        console.log(this)
         return new this(graph._args)
     }
 }
