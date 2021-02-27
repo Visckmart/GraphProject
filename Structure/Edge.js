@@ -5,13 +5,16 @@ import { generateNewRandomLabel } from "./Utilities.js";
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { backgroundGradient } from "../Drawing/General.js";
 
-
+let globalEdgeIndex = 0
 export default class Edge {
 
-    constructor({ label, highlights = null } = {}) {
+    constructor({ index = null, label, highlights = null } = {}) {
         this._initialTime = window.performance.now();
         this.label = label ?? generateNewRandomLabel();
         this.highlights = new HighlightsHandler(highlights);
+
+        this.index = index ?? globalEdgeIndex
+        globalEdgeIndex = Math.max(globalEdgeIndex, index ?? globalEdgeIndex)+1;
 
         // Lista de mixins
         this.mixins = new Set()
@@ -27,7 +30,8 @@ export default class Edge {
     get _args() {
         return {
             label: this.label,
-            highlights: new Set(this.highlights.list())
+            highlights: new Set(this.highlights.list()),
+            index: this.index
         }
     }
 
