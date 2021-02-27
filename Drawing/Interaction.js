@@ -58,6 +58,7 @@ export let categoryCheckboxes = {
 }
 let algorithmSelector = document.getElementById("algorithm")
 algorithmSelector.onchange = function () {
+    algorithmSelector.blur()
     switch (this.value) {
         case 'Dijkstra':
         default:

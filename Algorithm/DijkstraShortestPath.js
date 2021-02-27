@@ -6,10 +6,10 @@ import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
 
 function markAsActive(artifact) {
-    artifact.highlights.add(HighlightType.LIGHTEN)
+    artifact.highlights.add(HighlightType.COLORED_BORDER2)
 }
 function markAsNotActive(artifact) {
-    artifact.highlights.remove(HighlightType.LIGHTEN)
+    artifact.highlights.remove(HighlightType.COLORED_BORDER2)
 }
 
 function markAsNotVisited(artifact) {
@@ -18,8 +18,10 @@ function markAsNotVisited(artifact) {
 function markAsVisited(artifact) {
     if (artifact instanceof Edge) {
         artifact.highlights.remove(HighlightType.ALGORITHM_VISITING)
+        artifact.highlights.add(HighlightType.DARKEN)
+        return;
     }
-    artifact.highlights.add(HighlightType.DARKEN)
+    artifact.highlights.add(HighlightType.LIGHTEN)
 }
 
 function markAsVisiting(artifact) {
@@ -181,11 +183,13 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         markAsNotActive(currentNode)
         markAsVisited(currentNode)
         if (currentNode === initialNode) {
-            initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
+            // initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
+            // initialNode.highlights.add(HighlightType.DARKEN)
         }
     }
 
-    finalNode.highlights.add(HighlightType.DARK_WITH_BLINK);
+    // finalNode.highlights.add(HighlightType.DARK_WITH_BLINK);
+    // finalNode.highlights.add(HighlightType.DARKEN)
     let textoPassoFinal;
     if(currentNode === finalNode) {
         textoPassoFinal = 'Nó final foi visitado portanto as visitações estão ' +
@@ -196,6 +200,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         currentNode = finalNode
         while(currentNode !== null) {
             currentNode.highlights.add(HighlightType.COLORED_BORDER)
+            // currentNode.highlights.remove(HighlightType.DARKEN)
             currentNode.previous.edge?.highlights.add(HighlightType.COLORED_BORDER)
             currentNode = currentNode.previous.node
         }

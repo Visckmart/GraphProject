@@ -6,7 +6,8 @@ export const HighlightType = {
     DARKEN:               "algorithm_visited",
     ALGORITHM_NOTVISITED: "algorithm_notvisited",
     COLORED_BORDER:       "algorithm_result",
-    FEATURE_PREVIEW:      "feature_preview"
+    FEATURE_PREVIEW:      "feature_preview",
+    COLORED_BORDER2: "cb2"
 }
 
 const highlightNames = Object.entries(HighlightType)
