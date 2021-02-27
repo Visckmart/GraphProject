@@ -6,6 +6,7 @@ import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";
 import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 import KruskalMST from "../Algorithm/KruskalMST.js";
+import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
 
 function updateFavorites() {
     for (let loadFavBtn of loadFavButtons) {
@@ -84,6 +85,13 @@ algorithmSelector.onchange = function () {
             categoryCheckboxes.coloredEdges.disabled = false;
             categoryCheckboxes.directedEdges.disabled = false;
             break
+        case 'EdmondsMSA':
+            categoryCheckboxes.weightedEdges.disabled = true;
+            categoryCheckboxes.weightedEdges.checked = true;
+            categoryCheckboxes.coloredEdges.disabled = false;
+            categoryCheckboxes.directedEdges.disabled = true;
+            categoryCheckboxes.directedEdges.checked = true;
+            break
     }
     updateGraph()
 }
@@ -104,6 +112,8 @@ runAlgorithmButton.onclick = async () => {
         case 'DFSCycleDetection':
             await algorithmController.setup(DFSCycleDetection)
             break
+        case 'EdmondsMSA':
+            await algorithmController.setup(EdmondsMSA)
     default:
         break;
     }
