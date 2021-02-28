@@ -1,29 +1,46 @@
 import {g} from "./GraphView.js";
 
-let favoritesList = document.getElementById("favoritesList")
+let favoritesList = document.getElementById("favoritesList");
+let menuBody = document.getElementsByClassName("menuBody")[0];
 
-let favoriteTemplate = document.querySelector("#favoriteRow")
-let newFavoriteTemplate = document.querySelector("#favoriteNewRow")
-let favoriteDeleteTemplate = document.querySelector("#favoriteDeleteConfirmationRow")
+let favoriteTemplate = document.querySelector("#favoriteRow");
+let newFavoriteTemplate = document.querySelector("#favoriteNewRow");
+let favoriteDeleteTemplate = document.querySelector("#favoriteDeleteConfirmationRow");
 
 let deletingFavorite = null;
 
+/**
+ * Atualização da lista de favoritos no menu lateral.
+ */
 export function updateFavorites() {
+    /* Limpa a lista */
     favoritesList.innerHTML = "";
+    /* Obtém todas as chaves que representam favoritos */
     let favoriteKeys = getAllFavoriteKeys();
+
+    /*
+    Cria linhas de acordo com os templates
+    de favoritos e de remoção de favoritos.
+    */
     for (let key of favoriteKeys) {
-        if (deletingFavorite != key) {
-            let favoriteRow = makeFavoriteRow(key);
-            favoritesList.appendChild(favoriteRow);
+        let newRow;
+        if (deletingFavorite == key) {
+            newRow = makeFavoriteDeletionRow(key);
         } else {
-            let deletionRow = makeFavoriteDeletionRow(key);
-            favoritesList.appendChild(deletionRow);
+            newRow = makeFavoriteRow(key);
         }
+        favoritesList.appendChild(newRow);
     }
+
+    /* Cria uma linha que possibilita a criação de um novo favorito */
     let newFavoriteRow = makeNewFavoriteRow();
     favoritesList.appendChild(newFavoriteRow);
 }
 
+/**
+ * Obtém todas as chaves que representam favoritos no localStorage e as retorna
+ * em ordem alfabética.
+ */
 function getAllFavoriteKeys() {
     let favoriteKeys = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -36,70 +53,106 @@ function getAllFavoriteKeys() {
     return favoriteKeys;
 }
 
+/**
+ * Cria, a partir de um template, uma linha nova para um favorito e associa aos
+ * elementos tratadores de eventos que atuam sobre o favorito em questão.
+ */
 function makeFavoriteRow(key) {
-    let newFavoriteRow = favoriteTemplate.content.cloneNode(true);
-    newFavoriteRow.getElementById("inputLabel").value = key.substr(3);
-    let labelInput = newFavoriteRow.getElementById("inputLabel");
+    /* Clona o template */
+    let favoriteRow = favoriteTemplate.content.cloneNode(true);
+
+    /* Configurando o text input */
+    let labelInput = favoriteRow.getElementById("inputLabel");
+    /* Remove o prefixo "fav" */
+    labelInput.value = key.substr(3);
+    /* Renomeia o favorito de acordo com o texto do text input */
     labelInput.onchange = function(event) {
         let newName = event.target.value;
-        if (!newName
-            || window.localStorage.getItem("fav"+newName) != null) {
+        /* Checa se o nome não é vazio e se não existe um favorito com esse nome */
+        if (!newName || window.localStorage.getItem("fav"+newName) != null) {
             return;
         }
+        /* Copia o favorito do nome antigo, apaga e cria um com o nome novo */
         let current = window.localStorage.getItem(key);
         window.localStorage.removeItem(key);
         window.localStorage.setItem("fav"+newName, current);
         updateFavorites();
     }
+    /* Ao tirar o foco (sem confirmar o nome novo), escreva o original */
     labelInput.onblur = () => {
         labelInput.value = key.substr(3);
     }
-    let loadBtn = newFavoriteRow.getElementById("loadFavorite");
-    loadBtn.name = key;
+
+    /* Configurando o botão de carregar o favorito */
+    let loadBtn = favoriteRow.getElementById("loadFavorite");
+    /* Obtém e carrega o grafo serializado no localStorage */
     loadBtn.onclick = () => {
-        g.loadSerializedGraph(window.localStorage.getItem(key));
+        let favoriteContent = window.localStorage.getItem(key);
+        g.loadSerializedGraph(favoriteContent);
         updateFavorites();
     }
-    let removeBtn = newFavoriteRow.getElementById("removeFavorite");
-    removeBtn.name = key;
+    /* Configurando o botão de apagar o favorito */
+    let removeBtn = favoriteRow.getElementById("removeFavorite");
+    /* Marcando o favorito atual como "sendo apagado" (para mostrar a confirmação) */
     removeBtn.onclick = () => {
         deletingFavorite = key;
         updateFavorites();
     }
-    return newFavoriteRow;
+    return favoriteRow;
 }
 
+/**
+ * Cria, a partir de um template, uma linha de apagamento de favoritos e
+ * configura seus botões apropriadamente.
+ */
 function makeFavoriteDeletionRow(key) {
-    let newDeleteRow = favoriteDeleteTemplate.content.cloneNode(true);
-    let cancelBtn = newDeleteRow.getElementById("cancelDeletion");
+    /* Clona o template */
+    let deleteRow = favoriteDeleteTemplate.content.cloneNode(true);
+
+    /* Configura o botão de cancelar o apagamento */
+    let cancelBtn = deleteRow.getElementById("cancelDeletion");
     cancelBtn.onclick = () => {
         deletingFavorite = null;
         updateFavorites();
     }
-    let confirmBtn = newDeleteRow.getElementById("confirmDeletion");
+
+    /* Configura o botão de confirmar o apagamento */
+    let confirmBtn = deleteRow.getElementById("confirmDeletion");
     confirmBtn.onclick = () => {
         deletingFavorite = null;
         window.localStorage.removeItem(key);
         updateFavorites();
     }
-    return newDeleteRow;
+    return deleteRow;
 }
 
+/**
+ * Cria, de acordo com um template, uma linha responsável por possibilitar
+ * a adição de um novo favorito.
+ */
 function makeNewFavoriteRow() {
+    /* Clona o template */
     let newFavorite = newFavoriteTemplate.content.cloneNode(true);
+    /* Configura o botão de criar um novo favorito */
     let newFavoriteBtn = newFavorite.getElementById("newFavorite");
     newFavoriteBtn.onclick = () => {
         let newName = "Favorito";
+
+        /*
+        Busca por nomes no formato Favorito X, onde X é um inteiro que ainda
+        não foi utilizado.
+         */
         let offset = 1;
         do {
             newName = `Favorito ${window.localStorage.length + offset}`;
             offset += 1;
         } while (window.localStorage.getItem("fav" + newName) != null);
+
         window.localStorage.setItem("fav" + newName, g.structure.serialize());
         updateFavorites();
 
-        let mBody = document.getElementsByClassName("menuBody")[0];
-        mBody.scrollTop = mBody.scrollHeight;
+        /* Desce o menu */
+        menuBody.scrollTop = menuBody.scrollHeight;
     }
     return newFavorite;
 }
