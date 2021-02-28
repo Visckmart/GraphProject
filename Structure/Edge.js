@@ -74,7 +74,7 @@ export default class Edge {
         ctx.lineTo(xEnd, yEnd);
     }
     // TODO: Transformar em ifs como nos highlights dos nós
-    _drawHighlight = (ctx, highlight, xStart, yStart, xEnd, yEnd) => {
+    _drawHighlight (ctx, highlight, xStart, yStart, xEnd, yEnd) {
         if (this.highlights.has(HighlightType.SELECTION)) {
             ctx.save()
 

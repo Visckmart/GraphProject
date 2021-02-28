@@ -46,9 +46,9 @@ let EdgeDirectedMixin = (superclass) => {
         drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp, doubled) => {
             ctx.save()
             ctx.lineWidth = 8;
-            ctx.strokeStyle = "#aaa";
+            ctx.strokeStyle = "#777";
             ctx.setLineDash([8, 4]);
-            ctx.lineDashOffset = -timestamp/200;
+            ctx.lineDashOffset = -timestamp/350;
             this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
             ctx.stroke();
             ctx.restore()
@@ -57,6 +57,22 @@ let EdgeDirectedMixin = (superclass) => {
                 ctx.save()
                 this._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd);
                 ctx.restore()
+            }
+        }
+        _drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd) {
+            if (this.highlights.has(HighlightType.SELECTION)) {
+                ctx.save()
+
+                ctx.setLineDash([8, 4]);
+                ctx.lineWidth = 8
+                ctx.lineDashOffset = -window.performance.now()/350;
+                ctx.strokeStyle = "blue";
+                this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+                ctx.stroke();
+
+                ctx.restore()
+            } else {
+                super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd)
             }
         }
     }

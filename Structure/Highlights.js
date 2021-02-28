@@ -34,6 +34,10 @@ export class HighlightsHandler {
         this.highlights.add(highlight);
     }
 
+    setTo(highlight) {
+        this.highlights.clear()
+        this.highlights.add(highlight)
+    }
     remove(highlight) {
         if (this.has(highlight) == false && highlight != HighlightType.SELECTION) {
             if (this.debug) console.warn(`Destaque ${highlight} já não está presente.`)
