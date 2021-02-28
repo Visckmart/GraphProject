@@ -1,5 +1,5 @@
 // Node Definition
-import {backgroundGradient, nodeColorList} from "../Drawing/General.js";
+import { backgroundGradient } from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
@@ -8,85 +8,80 @@ import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 import { deserializeNode, serializeNode } from "./NodeSerialization.js";
 
 export const regularNodeRadius = 28;
-
 let globalNodeIndex = 0
 
 export default class Node {
+
     constructor({x, y, label, index = null, highlights = null}) {
 
         this._initialTime = index == null ? window.performance.now() : Math.random()*3000;
         this.index = index ?? globalNodeIndex;
+        if (index == null) {
+            globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex) + 1;
+        }
 
-        // Posição
+        /* Posição */
         this.pos = {x: x, y: y};
 
-        // Informações de label
+        /* Informações de label */
         this.label = label ?? generateNewRandomLabel();
-        
-        this.highlights = new HighlightsHandler(highlights)
-        globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex)+1;
-        
-        // Instanciando cadeia de responsabilidade
+
+        /* Cadeia de desenho do nó */
         this.drawChain = new ResponsibilityChain()
-        // Adicionando procedure de draw
         this.drawChain.addLink(this.drawProcedure)
 
-        // Instanciando cadeia de responsabilidade
+        /* Cadeia de desenho de texto */
         this.textDrawChain = new ResponsibilityChain()
-        // Adicionando procedure de draw
         this.textDrawChain.addLink(this.drawLabel)
 
-        // Lista de mixins
+        /* Destaques */
+        this.highlights = new HighlightsHandler(highlights)
+
+        /* Lista de mixins */
         this.mixins = new Set()
     }
 
-    // Lista de argumentos para clonagem
-    get _args() {
-        return {
-            x: this.pos.x,
-            y: this.pos.y,
-            label: this.label,
-            index: this.index,
-            highlights: new Set(this.highlights.list())
-        }
-    }
-
+    /** Cor **/
     get color() {
-        return "black"
+        // Retorna um valor estático porque a coloração é feita pelo componente
+        // de coloração (NodeColorMixin).
+        return "black";
     }
 
+    /** Raio **/
+    /* Variáveis auxiliares para otimização */
     lastRadiusCallTimestamp = 0;
     lastRadiusValue = 0;
     get radius() {
-        let now = window.performance.now()
+        /* Retorna o valor armazenado se o tempo desde a última chamada foi curto */
+        let now = window.performance.now();
         if (now-this.lastRadiusCallTimestamp < 10) { return this.lastRadiusValue; }
 
+        /* Calcula o raio dado o tempo atual */
         let elapsedTime = now - this._initialTime;
         let expansion = Math.sin(elapsedTime * Math.PI / (500 * 4)) * 1.5 - 2.5;
-        // if (this.index == 0) { console.log(expansion) }
 
+        /* Atualiza os valores armazenados */
         this.lastRadiusCallTimestamp = now;
         this.lastRadiusValue = regularNodeRadius + expansion;
 
+        /* Retorna o valor calculado */
         return regularNodeRadius + expansion;
     }
 
     //region Drawing
 
-    // Executa a cadeia de desenhos
+    /** Cadeias de desenhos **/
     draw(...args) {
         let fpsRequests = this.drawChain.call(...args)
         fpsRequests = fpsRequests.filter(req => req !== undefined)
         return Math.max(...fpsRequests)
     }
-
-    // Executa a cadeia de desenhos de texto
     drawText(...args) {
         this.textDrawChain.call(...args)
     }
 
-    // This function draws one node. This includes the circle, the text and
-    // the appropriate color (considering any animation happening).
+    /** Desenho do nó **/
     drawProcedure = (ctx) => {
         // Draw circle border
         ctx.save()
@@ -118,8 +113,8 @@ export default class Node {
         let maxFPSRequest = Math.max(...fpsRequests);
 
         // Draw label
-        let transparentText = !this.highlights.has(HighlightType.LIGHTEN)
-                               && this.highlights.has(HighlightType.DARKEN)
+        // let transparentText = !this.highlights.has(HighlightType.LIGHTEN)
+        //                        && this.highlights.has(HighlightType.DARKEN)
         //this._drawLabel(ctx, nodeLabeling, transparentText ? backgroundGradient : this.color)
 
         ctx.restore();
@@ -127,8 +122,7 @@ export default class Node {
         return maxFPSRequest;
     }
 
-    // HIGHLIGHTS
-
+    /** Desenho dos destaques **/
     _drawHighlights = (ctx) => {
         let fpsRequests = [0]
         if (this.highlights.has(HighlightType.SELECTION)) {
@@ -227,6 +221,7 @@ export default class Node {
         return fpsRequests;
     }
 
+    /** Desenho da label **/
     drawLabel = (ctx, nodeLabeling) => {
         ctx.font = "bold 30px Arial";
         ctx.fillStyle = this.color;
@@ -257,19 +252,29 @@ export default class Node {
 
     static deserialize(...arg) { return deserializeNode(...arg) };
 
-    //endregion
+    // Lista de argumentos para clonagem
+    get _args() {
+        return {
+            x: this.pos.x,
+            y: this.pos.y,
+            label: this.label,
+            index: this.index,
+            highlights: new Set(this.highlights.list())
+        }
+    }
 
-    // Clona o nó a partir da instância atual
+    /** Clona o nó a partir da instância atual **/
     clone() {
         return new this.constructor(this._args);
     }
 
-    // Instancia a classe atual a partir de um nó existente
+    /** Instancia a classe atual a partir de um nó existente **/
     static from(node) {
         return new this(node._args);
     }
 
     toString() {
-        return this.label
+        return this.label;
     }
+    //endregion
 }
