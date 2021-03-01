@@ -113,6 +113,9 @@ class GraphView {
 
 
     // Interaction
+
+    // TODO: (V) a conversão das categorias para um construtor deveria ser
+    //       feita pelo próprio Graph, e não pela GraphView
     /* Atualiza o tipo de grafo sendo exibido */
     updateGraphType(directed = false) {
         let GraphType = Graph
@@ -151,6 +154,7 @@ class GraphView {
         g.refreshGraph()
     }
 
+    // TODO: (V) Renomear isso para ter mais a ver com a tray e refatorar
     /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
     refreshInterfaceState() {
         for(let x of document.querySelector("#tool_tray").children) {
@@ -214,6 +218,7 @@ class GraphView {
 
     //region Deteção de Nós e Arestas
 
+    // TODO: (V) Colisão de quadrados pode ser isolada desse arquivo
     // Searches for nodes that contain the point `pos`
     // The lookup is done from the last node to the first, the inverse of the
     // drawing lookup in order to return the frontmost node.
@@ -232,6 +237,7 @@ class GraphView {
         return detectedNodes;
     }
 
+    // TODO: (V) Colisão de quadrados pode ser isolada desse arquivo
     checkIfNodeAt(pos, checkForConflict = false, exceptionIndex = null) {
 
         for (let node of this.structure.nodes()) {
@@ -247,6 +253,7 @@ class GraphView {
         return false;
     }
 
+    // TODO: (V) Colisão de ponto e linha pode ser isolada
     getEdgesAt(pos) {
         const eps = 1;
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
@@ -260,6 +267,7 @@ class GraphView {
         }
     }
 
+    // TODO: (V) Checagem de ponto em quadrilátero pode ser isolada
     getNodesWithin(initialPos, finalPos) {
         let left   = Math.min(initialPos.x, finalPos.x);
         let right  = Math.max(initialPos.x, finalPos.x);
@@ -278,6 +286,8 @@ class GraphView {
         return nodesWithin;
     }
 
+    // TODO: (V) Colisão de linhas com linhas e checagem de linha em
+    //       quadrilátero poderiam ser isoladas.
     getEdgesWithin(initialPos, finalPos) {
         let edgesWithin = [];
         // Passa por todas as arestas e considera contida caso

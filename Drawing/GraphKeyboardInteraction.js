@@ -35,7 +35,7 @@ class GraphKeyboardHandler {
         return pressed;
     }
 
-    // TODO: Organizar essas checagens
+    // TODO: (V) Organizar essas checagens
     // Key Pressed
 
     keyPressed = (keyboardEvent) => {
@@ -125,6 +125,7 @@ class GraphKeyboardHandler {
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
             let chosenAlgorithm = null;
+            // TODO: (V) Seleção dos algoritmos deveria ser feita de forma unificada (Interaction)
             switch (algorithmSelector.value) {
             case 'Dijkstra':
                 chosenAlgorithm = DijkstraShortestPath

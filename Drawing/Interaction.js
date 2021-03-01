@@ -60,7 +60,7 @@ algorithmSelector.onchange = function () {
 let runAlgorithmButton = document.getElementById("run_algorithm")
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g)
-
+    // TODO: (V) Seleção dos algoritmos deveria ser feita de forma unificada (KeyboardHandler)
     switch (algorithmSelector.value) {
         case 'Dijkstra':
             await algorithmController.setup(DijkstraShortestPath)
