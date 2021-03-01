@@ -16,9 +16,9 @@ export default class Node {
 
         this._initialTime = index == null ? window.performance.now() : Math.random()*3000;
         this.index = index ?? globalNodeIndex;
-        if (index == null) {
+        // if (index == null) {
             globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex) + 1;
-        }
+        // }
 
         /* Posição */
         this.pos = {x: x, y: y};
@@ -274,7 +274,7 @@ export default class Node {
     }
 
     toString() {
-        return this.label;
+        return `${this.label} (${this.index})`;
     }
     //endregion
 }
