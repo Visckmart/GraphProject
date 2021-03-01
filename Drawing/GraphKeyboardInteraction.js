@@ -3,6 +3,7 @@ import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";
 import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
+import EulerianPath from "../Algorithm/EulerianPath.js";
 
 class GraphKeyboardHandler {
 
@@ -130,6 +131,9 @@ class GraphKeyboardHandler {
                 break
             case 'PrimMST':
                 chosenAlgorithm = PrimMST
+                break
+            case 'EulerianPath':
+                chosenAlgorithm = EulerianPath
                 break
             case 'DFSCycleDetection':
                 chosenAlgorithm = DFSCycleDetection

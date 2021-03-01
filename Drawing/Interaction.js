@@ -8,6 +8,7 @@ import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 import KruskalMST from "../Algorithm/KruskalMST.js";
 import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
 import {updateFavorites} from "./FavoritesHandler.js";
+import EulerianPath from "../Algorithm/EulerianPath.js";
 
 updateFavorites()
 
@@ -75,6 +76,10 @@ runAlgorithmButton.onclick = async () => {
             break
         case 'EdmondsMSA':
             await algorithmController.setup(EdmondsMSA)
+        break
+        case 'EulerianPath':
+            await algorithmController.setup(EulerianPath)
+            break
     default:
         break;
     }
