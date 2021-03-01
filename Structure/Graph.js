@@ -71,7 +71,7 @@ class Graph {
             console.error("Inserção de nó chamada incorretamente.");
             return false;
         }
-        if (this.debug) { console.info("Inserindo nó", node); }
+        if (this.debug) { console.info(`Inserindo nó ${node}`); }
         console.assert(this.data.has(node) == false, "Nó já estava no grafo.");
 
         // Operação
@@ -85,7 +85,7 @@ class Graph {
             console.error("Remoção de nó chamada incorretamente.");
             return false;
         }
-        if (this.debug) { console.info("Removendo nó", node); }
+        if (this.debug) { console.info(`Removendo nó ${node}`); }
         console.assert(this.data.has(node) == true, "Nó não está no grafo.");
 
         // Operação
@@ -116,8 +116,7 @@ class Graph {
         }
 
         if (this.debug && quiet == false) {
-            console.info("Inserindo aresta entre os nós "
-                         + nodeA.label + " - " + nodeB.label, edge);
+            console.info(`Inserindo aresta entre os nós ${nodeA} - ${nodeB}`, edge);
         }
 
 
