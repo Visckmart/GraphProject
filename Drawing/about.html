@@ -6,13 +6,12 @@
     <style>
         body {
             font-family: sans-serif;
-            margin:0;
-            /*scroll-snap-type: y proximity;*/
-            /*background-image: url("file:///Users/victormartins/Downloads/math-background_23-2148146940.jpg");*/
+            margin: 0 auto;
+            max-width: 70em;
+            background-color: #f8f8f8;
         }
         #bg {
             padding-top:20pt;
-            background-color: #f8f8f8;
             padding-bottom: 40pt;
         }
         h1 {
@@ -20,6 +19,28 @@
             margin-bottom: 10pt;
             margin-top: 0;
         }
+
+
+        .history {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30pt;
+            /*align-items: flex-end;*/
+        }
+        .history p, .history a {
+            font-size: 14pt;
+            max-width: 42em;
+            margin-top: 0;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 5pt;
+            text-align: justify;
+            line-height: 1.5;
+            letter-spacing: 0.25pt;
+            color: #333;
+        }
+
+
         #sidebyside {
             margin: 5pt;
             display: flex;
@@ -31,20 +52,6 @@
             max-width: 40%;
             width: 25em;
         }
-        #sidebyside > div:first-of-type {
-            /*width: 90%;*/
-            /*background-color: orange;*/
-        }
-        #sidebyside > div:last-of-type {
-            /*width: 90%;*/
-            /*background-color: lightgreen;*/
-        }
-
-        .profilePicture {
-            object-position: top;
-            object-fit: cover;
-        }
-
         .authorSection {
             scroll-snap-align: center;
             display: flex;
@@ -56,26 +63,14 @@
             box-shadow: 0px 0px 20px 5px #eee;
             padding: 25pt;
         }
-        .authorSection:first-of-type {
-            /*background: #FF8C80;*/
-            /*box-shadow: 0px 0px 20px 5px #FF8C80;*/
-        }
-
-        .authorSection:last-of-type {
-            /*background: #99C5FF;*/
-
-            /*box-shadow: 0px 0px 20px 5px #99C5FF;*/
-        }
-
         .authorSection > * {
-            margin: 15pt 0;
+            margin: 15pt 5pt;
         }
         .authorSection > img {
             width: 120pt;
             height: 120pt;
             background-color: #eee;
             border-radius: 50%;
-            /*margin: 0 auto;*/
             margin-top: 0;
         }
         .name, .name h3, .subtitle, .subtitle p {
@@ -101,26 +96,11 @@
             margin: 0;
             margin-bottom: 8pt;
         }
-        .description p:last-of-type { margin-bottom: 0 }
+        .description p:last-of-type {
+            margin-bottom: 0
+        }
 
-        .history {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 30pt;
-            /*align-items: flex-end;*/
-        }
-        .history p {
-            font-size: 14pt;
-            max-width: 42em;
-            margin-top: 0;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 5pt;
-            text-align: justify;
-            line-height: 1.3;
-            letter-spacing: 0.25pt;
-            color: #333;
-        }
+
         .aboutSection {
             padding: 15pt 50pt;
         }
@@ -139,14 +119,14 @@
             margin: 0;
         }
         .aboutSection h3 {
-            font-size: 15pt;
+            font-size: 15.5pt;
         }
         .aboutSection p {
             color: #222;
-            font-size: 13.5pt;
-            line-height: 1.2;
+            font-size: 13pt;
+            line-height: 1.3;
             text-align: justify;
-            width: 40em;
+            width: 45em;
         }
         .aboutSection p code {
             /*font-size: 13pt;*/
@@ -162,11 +142,11 @@
     <h1 style="text-align: center">Sobre o Projeto</h1>
     <div class="history">
         <p>
-            Enquanto dois estudantes de computação passavam por disciplinas que exploravam o conceito de grafos,
-            eles sentiram a falta de uma ferramenta didática para entender melhor o que estava sendo ensinado.
-            Por isso resolveram criar uma nova ferramenta.
-        </p>
-        <p>
+            Enquanto dois estudantes de computação passavam por disciplinas que
+            exploravam o conceito de <a href="#grafo">grafos</a>, eles sentiram a
+            falta de uma ferramenta didática para entender melhor o que estava
+            sendo ensinado. Por isso resolveram criar uma nova ferramenta.
+        <br><br>
             O projeto foi tanto um desafio de férias,
             quanto um bom motivo para aprender tecnologias diferentes,
             e ao fim uma ferramenta útil para outros estudantes.
@@ -212,6 +192,44 @@
                 </p>
             </div>
         </div>
+    </div>
+    <div class="aboutSection">
+        <h2>Proposta e Objetivos</h2>
+        <ul>
+            <li>
+                <h3 id="grafo">O que são grafos?</h3>
+                <p>
+                    Grafos são estruturas matemáticas definidas por um conjunto
+                    de objetos e pelas relações entre eles. Os objetos são
+                    usualmente chamados de nós, e as relações chamadas de arestas.
+                </p>
+            </li>
+            <li>
+                <h3>Para que servem os grafos na prática?</h3>
+                <p>
+                    Essas estruturas podem representar diversas situações reais,
+                    dessa forma algoritmos que atuam sobre grafos podem resultar
+                    em soluções para problemas reais. Representar um mapa por
+                    meio um grafo permite o encontro do melhor caminho entre
+                    dois pontos do mapa, permite o encontro de um trajeto que
+                    passa por todas as ruas da forma mais eficiente. Representar
+                    disciplinas e salas por meio de um grafo, permite que as
+                    aulas sejam alocadas nas salas ideais considerando o número
+                    de alunos, o tamanho de cada sala e outros diversos fatores.
+                </p>
+            </li>
+            <li>
+                <h3>Qual a proposta da ferramenta?</h3>
+                <p>
+                    Nossa ideia é permitir a exploração de grafos para que alunos
+                    possam entender o funcionamento de certos algoritmos na
+                    prática. Para isso, precisamos permitir a criação e
+                    manipulação de grafos com diversas características, além do
+                    compartilhamento desses grafos e a visualização didática da
+                    execução dos algoritmos.
+                </p>
+            </li>
+        </ul>
     </div>
     <div class="aboutSection">
         <h2>Desafios e Aprendizados</h2>
@@ -263,9 +281,6 @@
                 </p>
             </li>
         </ul>
-    <br><br><br><br><br><br><br><br><br><br><br>
-    <br><br><br><br><br><br><br><br><br><br><br>
-    <br><br><br><br><br><br><br><br><br><br><br>
     </div>
     <script>
         // document.body.onscroll = function(a) {
