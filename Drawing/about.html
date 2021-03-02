@@ -7,6 +7,7 @@
         body {
             font-family: sans-serif;
             margin:0;
+            /*scroll-snap-type: y proximity;*/
             /*background-image: url("file:///Users/victormartins/Downloads/math-background_23-2148146940.jpg");*/
         }
         #bg {
@@ -45,6 +46,7 @@
         }
 
         .authorSection {
+            scroll-snap-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -69,8 +71,8 @@
             margin: 15pt 0;
         }
         .authorSection > img {
-            width: 100pt;
-            height: 100pt;
+            width: 120pt;
+            height: 120pt;
             background-color: #eee;
             border-radius: 50%;
             /*margin: 0 auto;*/
@@ -119,65 +121,165 @@
             letter-spacing: 0.25pt;
             color: #333;
         }
+        .aboutSection {
+            padding: 15pt 50pt;
+        }
+        .aboutSection h2 {
+            font-size: 25pt;
+            margin-bottom: 0;
+        }
+        .aboutSection li {
+
+            padding-top: 20pt;
+        }
+        .aboutSection ul {
+            list-style-type: none;
+        }
+        .aboutSection h3, .aboutSection p {
+            margin: 0;
+        }
+        .aboutSection h3 {
+            font-size: 15pt;
+        }
+        .aboutSection p {
+            color: #222;
+            font-size: 13.5pt;
+            line-height: 1.2;
+            text-align: justify;
+            width: 40em;
+        }
+        .aboutSection p code {
+            /*font-size: 13pt;*/
+            font-family: sans-serif;
+            font-style: italic;
+            /*background-color: red;*/
+        }
     </style>
 </head>
 
 <body>
 <div id="bg">
-<h1 style="text-align: center">Sobre o Projeto</h1>
-<div class="history">
-    <p>
-        Enquanto dois estudantes de computação passavam por disciplinas que exploravam o conceito de grafos,
-        eles sentiram a falta de uma ferramenta didática para entender melhor o que estava sendo ensinado.
-        Por isso resolveram criar uma nova ferramenta.
-    </p>
-    <p>
-        O projeto foi tanto um desafio de férias,
-        quanto um bom motivo para aprender tecnologias diferentes,
-        e ao fim uma ferramenta útil para outros estudantes.
-    </p>
-</div>
-<div id="sidebyside">
-    <div class="authorSection">
-        <img src="../assets/img/thiago.jpeg" class="profilePicture"/>
-        <div class="name"><h3>Thiago Lamenza</h3></div>
-        <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
-        <div class="description">
-            <p>
-                Sempre tive muita afinidade por computadores e vontade de entender como eles
-                funcionavam então a escolha de computação foi natural para mim.
-            </p>
-            <p>
-                Diversas áreas da computação me atraem, as principais são:
-                Desenvolvimento web, inteligência artificial e ciência de dados.
-            </p>
-            <p>
-                A faculdade me deu o insumo necessário para aprender sobre computação e
-                a oportunidade para colocar meus conhecimentos em prática.
-            </p>
-        </div>
+    <h1 style="text-align: center">Sobre o Projeto</h1>
+    <div class="history">
+        <p>
+            Enquanto dois estudantes de computação passavam por disciplinas que exploravam o conceito de grafos,
+            eles sentiram a falta de uma ferramenta didática para entender melhor o que estava sendo ensinado.
+            Por isso resolveram criar uma nova ferramenta.
+        </p>
+        <p>
+            O projeto foi tanto um desafio de férias,
+            quanto um bom motivo para aprender tecnologias diferentes,
+            e ao fim uma ferramenta útil para outros estudantes.
+        </p>
     </div>
+    <div id="sidebyside">
+        <div class="authorSection">
+            <img src="../assets/img/thiago.jpeg" class="profilePicture" alt="Foto do Thiago Lamenza"/>
+            <div class="name"><h3>Thiago Lamenza</h3></div>
+            <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+            <div class="description">
+                <p>
+                    Sempre tive muita afinidade por computadores e vontade de entender como eles
+                    funcionavam então a escolha de computação foi natural para mim.
+                </p>
+                <p>
+                    Diversas áreas da computação me atraem, as principais são:
+                    Desenvolvimento web, inteligência artificial e ciência de dados.
+                </p>
+                <p>
+                    A faculdade me deu o insumo necessário para aprender sobre computação e
+                    a oportunidade para colocar meus conhecimentos em prática.
+                </p>
+            </div>
+        </div>
 
-    <div class="authorSection">
-        <img src="/Users/victormartins/Downloads/photo_2021-02-26 04.37.57.jpeg" class="profilePicture"/>
-        <div class="name"><h3>Victor Martins</h3></div>
-        <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
-        <div class="description">
-            <p>
-                Sou apaixonado por computação desde que eu era bem novo.
-                Mesmo entendendo pouco do que eu procurava, a vontade de entender estava lá.
-            </p>
-            <p>
-                Tenho interesse em muitas áreas distintas, algumas delas são:
-                linguagens de programação, desenvolvimento de aplicativos móveis, privacidade e acessibilidade.
-            </p>
-            <p>
-                Desde que entrei na faculdade, recebi um suporte incrível dos meus professores
-                e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
-            </p>
+        <div class="authorSection">
+            <img src="../assets/img/victor_foto.jpeg" class="profilePicture" alt="Foto do Thiago Lamenza"/>
+            <div class="name"><h3>Victor Martins</h3></div>
+            <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+            <div class="description">
+                <p>
+                    Sou apaixonado por computação desde que eu era bem novo.
+                    Mesmo entendendo pouco do que eu procurava, a vontade de entender estava lá.
+                </p>
+                <p>
+                    Tenho interesse em muitas áreas distintas, algumas delas são:
+                    linguagens de programação, desenvolvimento de aplicativos móveis, privacidade e acessibilidade.
+                </p>
+                <p>
+                    Desde que entrei na faculdade, recebi um suporte incrível dos meus professores
+                    e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
+                </p>
+            </div>
         </div>
     </div>
-</div>
+    <div class="aboutSection">
+        <h2>Desafios e Aprendizados</h2>
+        <ul>
+            <li>
+                <h3>Trabalho em Equipe</h3>
+                <p>
+                    O projeto serviu como um exercício para nossa comunicação e
+                    organização. A divisão das tarefas foi ocorrendo de forma
+                    natural, seguindo nossa empolgação e a dedicação necessária
+                    para cada recurso.
+                    Conversávamos frequentemente para alinhar os
+                    próximos passos e pensar em como resolver problemas complexos
+                    ou que um de nós acreditava ter uma solução mais elegante.
+                </p>
+            </li>
+            <li>
+                <h3>Ambiente e Linguagem</h3>
+                <p>
+                    Tivemos bastante facilidade com os ambientes de programação e
+                    com JavaScript, que é a linguagem que usamos na maior parte do
+                    projeto. Fizemos uso de múltiplas estruturas de dados e de
+                    recursos mais avançados da linguagem como
+                    <code>regular expressions</code> e <code>promises</code> nos
+                    momentos apropriados.
+                </p>
+            </li>
+            <li>
+                <h3>Organização</h3>
+                <p>
+                    O código-fonte do projeto é bastante modularizado.
+                    Documentamos diversas partes do código, principalmente
+                    as mais relevantes de cada um dos módulos. Além disso,
+                    procuramos usar <code>design patterns</code> que
+                    melhor se adequam às necessidades, como herança que
+                    aprendemos em aula, e <code>mixin</code>, que aprendemos
+                    por conta própria.
+                </p>
+            </li>
+            <li>
+                <h3>Versionamento</h3>
+                <p>
+                    Nós já conhecíamos e sabíamos usar o Git, mas aprofundamos
+                    nosso conhecimento durante o desenvolvimento. Isso se deu
+                    nos momentos em que recursos como <code>branches</code> e <code>stashes</code> se
+                    encaixavam bem com as nossas necessidades, e também nos
+                    momentos em que algo inesperado acontecia e tínhamos a
+                    liberdade cometer erros ao tentar consertar.
+                </p>
+            </li>
+        </ul>
+    <br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br>
+    </div>
+    <script>
+        // document.body.onscroll = function(a) {
+        //     // console.log(!!( a.offsetWidth || a.offsetHeight || a.getClientRects().length ));
+        //     let x = document.getElementsByClassName("authorSection")[0]
+        //     console.log(x.offsetTop > window.pageYOffset)
+        //     if (x.offsetTop > window.pageYOffset) {
+        //         document.body.classList.add("scrollStart")
+        //     } else {
+        //         document.body.classList.remove("scrollStart")
+        //     }
+            // console.log(x.offsetParent === null)
+        // }
+    </script>
 </div>
 </body>
 </html>
