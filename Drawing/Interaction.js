@@ -1,4 +1,4 @@
-import { Tool } from "./General.js"
+import { GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
 import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
@@ -13,47 +13,26 @@ import EulerianPath from "../Algorithm/EulerianPath.js";
 updateFavorites()
 
 export let categoryCheckboxes = {
-    coloredNodes: document.getElementById('coloredNodes'),
-    weightedEdges: document.getElementById('weighedEdges'),
-    coloredEdges:  document.getElementById('coloredEdges'),
-    directedEdges: document.getElementById('directedEdges')
+    [GraphCategory.COLORED_NODES]:  document.getElementById('coloredNodes'),
+
+    [GraphCategory.DIRECTED_EDGES]: document.getElementById('directedEdges'),
+    [GraphCategory.WEIGHTED_EDGES]: document.getElementById('weightedEdges'),
+    [GraphCategory.COLORED_EDGES]:  document.getElementById('coloredEdges')
 }
+
 let algorithmSelector = document.getElementById("algorithm")
+
 algorithmSelector.onchange = function () {
     algorithmSelector.blur()
-    switch (this.value) {
-        case 'Dijkstra':
-        default:
-            categoryCheckboxes.weightedEdges.disabled = false;
-            categoryCheckboxes.coloredEdges.disabled = false;
-            categoryCheckboxes.directedEdges.disabled = false;
-            break
-        case 'PrimMST':
-            categoryCheckboxes.weightedEdges.disabled = true;
-            categoryCheckboxes.weightedEdges.checked = true;
-            categoryCheckboxes.coloredEdges.disabled = false;
-            categoryCheckboxes.directedEdges.disabled = false;
-            categoryCheckboxes.directedEdges.checked = false;
-            break
-        case 'KruskalMST':
-            categoryCheckboxes.weightedEdges.disabled = true;
-            categoryCheckboxes.weightedEdges.checked = true;
-            categoryCheckboxes.coloredEdges.disabled = false;
-            categoryCheckboxes.directedEdges.disabled = false;
-            categoryCheckboxes.directedEdges.checked = false;
-            break
-        case 'DFSCycleDetection':
-            categoryCheckboxes.weightedEdges.disabled = false;
-            categoryCheckboxes.coloredEdges.disabled = false;
-            categoryCheckboxes.directedEdges.disabled = false;
-            break
-        case 'EdmondsMSA':
-            categoryCheckboxes.weightedEdges.disabled = true;
-            categoryCheckboxes.weightedEdges.checked = true;
-            categoryCheckboxes.coloredEdges.disabled = false;
-            categoryCheckboxes.directedEdges.disabled = true;
-            categoryCheckboxes.directedEdges.checked = true;
-            break
+    let requiredCategories = getRequiredCategoriesForAlgorithm(this.value)
+    console.log(requiredCategories)
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        if (requiredCategories[category]) {
+            checkbox.disabled = true
+            checkbox.checked = true
+        } else {
+            checkbox.disabled = false;
+        }
     }
     updateGraph()
 }
@@ -97,19 +76,24 @@ document.body.onblur = function() {
 }
 
 function updateGraph() {
-    g.updateEdgeType(
-        categoryCheckboxes.weightedEdges.checked,
-        categoryCheckboxes.coloredEdges.checked,
-        categoryCheckboxes.directedEdges.checked
-    )
-    g.updateNodeType(
-        categoryCheckboxes.coloredNodes.checked
-    )
+    let enabledCategories = []
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        if (checkbox.checked) { enabledCategories.push(category) }
+    }
+    console.log(enabledCategories)
+    g.updateGraphConstructors(enabledCategories)
+}
+
+export function refreshInterfaceCategories() {
+    let categoriesState = g.structure.getCategories();
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        checkbox.checked = categoriesState.has(category);
+    }
 }
 //Opções de formato de grafo
-categoryCheckboxes.coloredNodes.addEventListener('change', updateGraph)
-categoryCheckboxes.weightedEdges.addEventListener('change', updateGraph)
-categoryCheckboxes.directedEdges.addEventListener('change', updateGraph)
+categoryCheckboxes[GraphCategory.COLORED_NODES].addEventListener('change', updateGraph)
+categoryCheckboxes[GraphCategory.WEIGHTED_EDGES].addEventListener('change', updateGraph)
+categoryCheckboxes[GraphCategory.DIRECTED_EDGES].addEventListener('change', updateGraph)
 
 // Executa a primeira vez
 g.refreshInterfaceState();
