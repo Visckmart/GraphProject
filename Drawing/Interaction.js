@@ -36,32 +36,40 @@ algorithmSelector.onchange = function () {
     }
     updateGraph()
 }
-let runAlgorithmButton = document.getElementById("run_algorithm")
-runAlgorithmButton.onclick = async () => {
-    let algorithmController = new AlgorithmController(g)
-    // TODO: (V) Seleção dos algoritmos deveria ser feita de forma unificada (KeyboardHandler)
-    switch (algorithmSelector.value) {
-        case 'Dijkstra':
-            await algorithmController.setup(DijkstraShortestPath)
-            break
-        case 'PrimMST':
-            await algorithmController.setup(PrimMST)
-            break
-        case 'KruskalMST':
-            await algorithmController.setup(KruskalMST)
-            break
-        case 'DFSCycleDetection':
-            await algorithmController.setup(DFSCycleDetection)
-            break
-        case 'EdmondsMSA':
-            await algorithmController.setup(EdmondsMSA)
-        break
-        case 'EulerianPath':
-            await algorithmController.setup(EulerianPath)
-            break
+function getRequiredCategoriesForAlgorithm(alg) {
+    let requiredCategory = {};
+    switch (alg) {
+    case 'PrimMST':
+        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        break;
+    case 'KruskalMST':
+        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        break;
+    case 'EdmondsMSA':
+        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        requiredCategory[GraphCategory.DIRECTED_EDGES] = true;
+        break;
     default:
         break;
     }
+    return requiredCategory;
+}
+let runAlgorithmButton = document.getElementById("run_algorithm")
+function getAlgorithm(name) {
+    switch (name) {
+    case 'Dijkstra':          return DijkstraShortestPath;
+    case 'PrimMST':           return PrimMST;
+    case 'KruskalMST':        return KruskalMST;
+    case 'DFSCycleDetection': return DFSCycleDetection;
+    case 'EdmondsMSA':        return EdmondsMSA;
+    case 'EulerianPath':      return EulerianPath;
+    }
+    return null;
+}
+runAlgorithmButton.onclick = async () => {
+    let algorithmController = new AlgorithmController(g)
+    let algorithm = getAlgorithm(algorithmSelector.value)
+    await algorithmController.setup(algorithm)
 }
 
 // Window Resizing
