@@ -33,7 +33,7 @@ class Graph {
         return {
             data: this.data,
             EdgeConstructor: this.EdgeConstructor,
-            NodeConstructor: this.NodeConstructor
+            NodeConstructor: this.NodeConstructor,
         }
     }
 
@@ -55,12 +55,28 @@ class Graph {
 
     // TODO: Melhorar
     getCategories() {
-        return {
-            coloredNodes:  this.categories.has(GraphCategory.COLORED_NODES),
-            weightedEdges: this.categories.has(GraphCategory.WEIGHTED_EDGES),
-            coloredEdges:  this.categories.has(GraphCategory.COLORED_EDGES),
-            directedEdges: this.categories.has(GraphCategory.DIRECTED_EDGES)
+        return this.categories;
+    }
+    static getConstructorsFromCategories(categories) {
+        let NodeType = Node;
+        let EdgeType = Edge;
+        let GraphType = Graph;
+
+        if (categories.includes(GraphCategory.COLORED_NODES)) {
+            NodeType = NodeColorMixin(NodeType);
         }
+
+        if(categories.includes(GraphCategory.WEIGHTED_EDGES)) {
+            EdgeType = EdgeAssignedValueMixin(EdgeType);
+        }
+        if(categories.includes(GraphCategory.COLORED_EDGES)) {
+            //TODO: Mixin de edge colorido
+        }
+        if(categories.includes(GraphCategory.DIRECTED_EDGES)) {
+            EdgeType = EdgeDirectedMixin(EdgeType);
+            GraphType = GraphDirectedMixin(GraphType);
+        }
+        return [GraphType, NodeType, EdgeType];
     }
 
     //region Manipulação do Grafo
@@ -230,22 +246,24 @@ class Graph {
         if(serializedPrefix) {
             let [, serializedCategories] = serializedPrefix;
             console.log(serializedCategories)
-            if (serializedCategories.includes("W")) {
-                edgeConstructor = EdgeAssignedValueMixin(edgeConstructor)
-                cat.add(GraphCategory.WEIGHTED_EDGES);
-            }
-            if (serializedCategories.includes("D")) {
-                edgeConstructor = EdgeDirectedMixin(edgeConstructor)
-                graphConstructor = GraphDirectedMixin(graphConstructor)
-                cat.add(GraphCategory.DIRECTED_EDGES)
-            }
 
             if (serializedCategories.includes("c")) {
                 nodeConstructor = NodeColorMixin(nodeConstructor)
                 cat.add(GraphCategory.COLORED_NODES);
             }
 
+            if (serializedCategories.includes("W")) {
+                edgeConstructor = EdgeAssignedValueMixin(edgeConstructor)
+                cat.add(GraphCategory.WEIGHTED_EDGES);
+            }
+
+            if (serializedCategories.includes("D")) {
+                edgeConstructor = EdgeDirectedMixin(edgeConstructor)
+                graphConstructor = GraphDirectedMixin(graphConstructor)
+                cat.add(GraphCategory.DIRECTED_EDGES)
+            }
         }
+
         let graph = new graphConstructor({
                                              NodeConstructor: nodeConstructor,
                                              EdgeConstructor: edgeConstructor,
@@ -274,6 +292,7 @@ class Graph {
                 if (found == undefined) continue;
 
                 const [, nodeA, nodeB, edgeData] = found;
+                console.log(edgeConstructor)
                 let deserializedEdge = edgeConstructor.deserialize(edgeData)
 
                 graph.insertEdge(
@@ -299,6 +318,7 @@ class Graph {
                                                 NodeConstructor: NodeConstructor
                                             })
         newGraph.debug = false;
+        console.log(EdgeConstructor)
         let newNodeMap = new Map()
         for(let node of this.nodes()) {
             let newNode = NodeConstructor.from(node)

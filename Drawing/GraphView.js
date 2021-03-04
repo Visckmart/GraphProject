@@ -13,7 +13,7 @@ import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
 import {
-    colorFromComponents, getDistanceOf, refreshInterfaceCategories,
+    colorFromComponents, getDistanceOf,
 } from "../Structure/Utilities.js";
 import PropertyList from "./Properties/PropertyList.js";
 import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
@@ -25,6 +25,7 @@ import cacheFrames from "./GraphFrameCaching.js";
 import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
 import EdgeDirectedMixin from "../Structure/Mixins/Edge/EdgeDirectedMixin.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
+import { refreshInterfaceCategories } from "./Interaction.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 
@@ -114,44 +115,18 @@ class GraphView {
 
     // Interaction
 
-    // TODO: (V) a conversão das categorias para um construtor deveria ser
-    //       feita pelo próprio Graph, e não pela GraphView
     /* Atualiza o tipo de grafo sendo exibido */
-    updateGraphType(directed = false) {
-        let GraphType = Graph
-        if(directed) {
-            GraphType = GraphDirectedMixin(GraphType)
-        }
+    updateGraphConstructors(categories) {
+        let [GraphType, NodeType, EdgeType] = Graph.getConstructorsFromCategories(categories)
 
-        g.structure = GraphType.from(g.structure)
-    }
-    /* Atualiza o tipo de aresta exibida */
-    updateEdgeType(weighed = false, colored = false, directed = false) {
-        let EdgeType = Edge;
-        if(weighed) {
-            EdgeType = EdgeAssignedValueMixin(EdgeType)
+        if (g.structure.constructor != GraphType) {
+            g.structure = GraphType.from(g.structure);
         }
-        if(colored) {
-            //TODO: Mixin de edge colorido
-        }
-        if(directed) {
-            EdgeType = EdgeDirectedMixin(EdgeType)
-            this.updateGraphType(true)
-        }
-
-        g.structure = g.structure.cloneAndTransform({EdgeConstructor: EdgeType})
-        g.refreshGraph()
-    }
-
-    /* Atualiza o tipo de nó exibido */
-    updateNodeType(colored) {
-        let NodeType = Node;
-        if(colored) {
-            NodeType = NodeColorMixin(NodeType)
-        }
-
-        g.structure = g.structure.cloneAndTransform({NodeConstructor: NodeType})
-        g.refreshGraph()
+        g.structure = g.structure.cloneAndTransform({
+                                                      NodeConstructor: NodeType,
+                                                      EdgeConstructor: EdgeType
+        });
+        g.refreshGraph();
     }
 
     // TODO: (V) Renomear isso para ter mais a ver com a tray e refatorar

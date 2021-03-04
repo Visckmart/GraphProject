@@ -1,4 +1,5 @@
 import {HighlightType} from "../../Highlights.js";
+import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
 
 let EdgeDirectedMixin = (superclass) => {
     return class EdgeDirected extends superclass {
@@ -11,6 +12,7 @@ let EdgeDirectedMixin = (superclass) => {
         }
 
         prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled) {
+            // doubled = true;
             if (doubled) {
                 ctx.beginPath()
                 ctx.moveTo(xStart, yStart);
@@ -48,7 +50,7 @@ let EdgeDirectedMixin = (superclass) => {
             ctx.lineWidth = 8;
             ctx.strokeStyle = "#777";
             ctx.setLineDash([8, 4]);
-            ctx.lineDashOffset = -timestamp/350;
+            ctx.lineDashOffset = -timestamp/200;
             this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
             ctx.stroke();
             ctx.restore()
@@ -74,6 +76,15 @@ let EdgeDirectedMixin = (superclass) => {
             } else {
                 super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd)
             }
+        }
+        serialize() {
+            // A informação de ser direcionada vai pelo grafo
+            return super.serialize();
+        }
+
+        static deserialize(serializedEdge) {
+            let x = superclass.deserialize(serializedEdge);
+            return new (EdgeDirectedMixin(superclass))({...x._args});
         }
     }
 }
