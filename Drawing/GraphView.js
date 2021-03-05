@@ -109,7 +109,7 @@ class GraphView {
         if (this.primaryTool !== Tool.CONNECT) {
             this.mouseHandler.shouldDrawTemporaryEdge = false;
         }
-        this.refreshInterfaceState()
+        this.refreshTrayIcons()
     }
 
 
@@ -129,15 +129,10 @@ class GraphView {
         g.refreshGraph();
     }
 
-    // TODO: (V) Renomear isso para ter mais a ver com a tray e refatorar
-    /* Atualiza a interface para que os botões reflitam o estado das ferramentas */
-    refreshInterfaceState() {
-        for(let x of document.querySelector("#tool_tray").children) {
-            for (let element of x.children) {
-                if(element.tagName === "INPUT" && element.value === this.primaryTool) {
-                    element.click();
-                }
-            }
+    /* Atualiza os botões para que eles reflitam o estado das ferramentas */
+    refreshTrayIcons() {
+        for (let element of toolTrayElement.getElementsByTagName("input")) {
+            if (element.value === this.primaryTool) { element.click(); }
         }
         this.mouseHandler.refreshCursorStyle();
     }
