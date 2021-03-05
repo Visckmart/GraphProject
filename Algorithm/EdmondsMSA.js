@@ -135,7 +135,9 @@ function executeEdmondsMSA(controller, initialNode) {
     let cycleSet = new Set(cycle)
     // Analisando todos os nós do ciclo para reduzi-los
     for(let oldNode of cycle) {
-
+        let newNode = oldToReducedGraphMap.get(oldNode)
+        newNode.highlights.add(HighlightType.DARKEN)
+        controller.addStep(reducedGraph, `Analisando a aresta ${newNode.toString()} do ciclo.`)
         // Analisando nós chegando no ciclo
         for(let [edge, oldSourceNode] of graph.edgesTo(oldNode)) {
             // Nó faz parte do ciclo
@@ -187,7 +189,7 @@ function executeEdmondsMSA(controller, initialNode) {
             newEdge.oldSource = oldNode
             newEdge.oldEdge = edge
 
-            controller.addStep(reducedNode, `Analisando a aresta que sai do nó ${oldNode.toString()} para o nó \
+            controller.addStep(reducedGraph, `Analisando a aresta que sai do nó ${oldNode.toString()} para o nó \
             ${oldDestinationNode.toString()}. Uma nova aresta será criada no nó reduzido até o antigo destino, o\
             nó ${oldDestinationNode.toString()}. Seu peso será igual a aresta anterior, ${newEdge.assignedValue}.`)
         }
