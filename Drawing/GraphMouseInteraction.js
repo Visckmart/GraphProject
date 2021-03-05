@@ -256,19 +256,22 @@ class GraphMouseHandler {
         let cursorStyle = "";
         // Se não sabemos a posição (acontece antes do primeiro movimento)
         if (this.currentMousePos == null) { return; }
-        
-        // Se a ferramenta MOVE for selecionada E o mouse estiver sobre um nó
-        grabCheck:if (this.graphView.primaryTool == Tool.MOVE) {
-            let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
-            if (!isHoveringNode) { break grabCheck; }
-            if (this.selection.hasSelectedNodes && this.clickPosition && getDistanceOf(this.clickPosition, this.currentMousePos) < 5) {
-                cursorStyle = "grabbing";
-            } else {
-                cursorStyle = "grab";
-            }
-        }
+
+        // Caso tenha uma área de seleção sendo desenhada
         if (this.selection.shouldDrawSelection == true) {
             cursorStyle = "crosshair";
+        } else {
+            grabCheck:if (this.graphView.primaryTool == Tool.MOVE) {
+                let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
+                if (!isHoveringNode) {
+                    break grabCheck;
+                }
+                if (this.selection.hasSelectedNodes) {
+                    cursorStyle = "grabbing";
+                } else {
+                    cursorStyle = "grab";
+                }
+            }
         }
 
         // Atualize o estilo apropriadamente
