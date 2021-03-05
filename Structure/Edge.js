@@ -20,7 +20,8 @@ export default class Edge {
         this.mixins = new Set()
 
         // Instanciando cadeias de responsabilidade
-        this.drawChain = new ResponsibilityChain();
+        if (!this.drawChain) {
+        this.drawChain = new ResponsibilityChain();}
         this.drawChain.addLink(this.drawProcedure);
 
         // Instanciando cadeias de responsabilidade

@@ -1,9 +1,6 @@
 import { Tool } from "./General.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
-import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
-import PrimMST from "../Algorithm/PrimMST.js";
-import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
-import EulerianPath from "../Algorithm/EulerianPath.js";
+import { getAlgorithmFromName } from "./Interaction.js";
 
 class GraphKeyboardHandler {
 
@@ -27,41 +24,37 @@ class GraphKeyboardHandler {
         return metaPressed;
     }
 
-    isDeletionKey(keyboardEvent) {
-        let pressed = keyboardEvent.key === "Backspace";
+    get deletionKey() {
+        let key =  "Backspace";
         if (navigator.platform.includes("Mac") == false) {
-            pressed = keyboardEvent.key === "Delete";
+            key = "Delete";
         }
-        return pressed;
+        return key;
     }
 
-    // TODO: (V) Organizar essas checagens
     // Key Pressed
 
-    keyPressed = (keyboardEvent) => {
+    shouldHandleKeyboardEvent() {
         // Eventos de teclado desabilitados
-        if(!this._enabled) { return }
+        if (!this._enabled) { return false; }
 
         // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
-        if(this.selection.shouldDrawSelection) { return; }
+        if (this.selection.shouldDrawSelection) { return false; }
 
+        return true;
+    }
 
-        let metaPressed = this.isMetaKey(keyboardEvent)
-
-        if (document.activeElement.tagName == "BODY") {
-            if (keyboardEvent.key == "e") { // E
-                this.graphView.structure.showGraph()
-            }
-            // console.log(keyboardEvent.key)
-            if (keyboardEvent.key == "a") { // A
-                this.graphView.selectAllNodes()
-                keyboardEvent.preventDefault()
-            }
-        }
+    keyPressed = (keyboardEvent) => {
+        if (this.shouldHandleKeyboardEvent() == false) { return; }
 
         if (keyboardEvent.key == "Shift") {
             this.selection.additionOnlyMode = true;
         }
+
+        if (document.activeElement.tagName != "BODY") { return; }
+
+
+        let metaPressed = this.isMetaKey(keyboardEvent)
         if (metaPressed) {
             if (this.lastToolChoice == null) {
                 this.lastToolChoice = this.graphView.primaryTool;
@@ -70,33 +63,12 @@ class GraphKeyboardHandler {
         }
 
         switch (keyboardEvent.key) {
-        case "z": {
-            if (keyboardEvent.shiftKey == false) {
-                let step = this.graphView.history.goToStep(-1);
-                if (step) {
-                    this.graphView.structure = step;
-                    this.graphView.refreshGraph()
-                    keyboardEvent.preventDefault()
-                }
-                break
-            }
-        }
-        break;
-        case "Z": {
-            let step = this.graphView.history.goToStep(1);
-            if (step) {
-                this.graphView.structure = step;
-                this.graphView.refreshGraph()
-                keyboardEvent.preventDefault()
-            }
-            break
-        }
-        }
-
-        if (keyboardEvent.key == 1) {
+        case "1":
             this.graphView.primaryTool = Tool.MOVE;
-        } else if (keyboardEvent.key == 2) {
+            break;
+        case "2":
             this.graphView.primaryTool = Tool.CONNECT;
+            break;
         }
     }
 
@@ -104,68 +76,80 @@ class GraphKeyboardHandler {
     // Key Released
 
     keyReleased = (keyboardEvent) => {
-        // Eventos de teclado desabilitados
-        if(!this._enabled) { return; }
+        if (this.shouldHandleKeyboardEvent() == false) { return; }
 
         if (keyboardEvent.key == "Shift") {
             this.selection.additionOnlyMode = false;
         }
 
-        // Ignorando eventos de teclado enquanto a seleção múltipla está ativa
-        if(this.selection.shouldDrawSelection) { return; }
+        if (document.activeElement.tagName != "BODY") { return; }
 
-        let metaPressed = this.isMetaKey(keyboardEvent)
+
+        let metaPressed = this.isMetaKey(keyboardEvent);
         if (metaPressed == false && this.lastToolChoice == Tool.MOVE) {
             this.graphView.primaryTool = Tool.MOVE;
             this.lastToolChoice = null;
         }
 
         switch (keyboardEvent.key) {
+        case "a":
+            this.graphView.selectAllNodes();
+            keyboardEvent.preventDefault();
+            break;
+
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
-            let chosenAlgorithm = null;
-            // TODO: (V) Seleção dos algoritmos deveria ser feita de forma unificada (Interaction)
-            switch (algorithmSelector.value) {
-            case 'Dijkstra':
-                chosenAlgorithm = DijkstraShortestPath
-                break
-            case 'PrimMST':
-                chosenAlgorithm = PrimMST
-                break
-            case 'EulerianPath':
-                chosenAlgorithm = EulerianPath
-                break
-            case 'DFSCycleDetection':
-                chosenAlgorithm = DFSCycleDetection
-                break
-            default:
-                break;
-            }
+            let chosenAlgorithm = getAlgorithmFromName(algorithmSelector.value);
             algorithmController.setup(chosenAlgorithm);
             break;
-        case "s":
-            console.log(this.graphView.structure.serialize());
-            break;
-        case "Escape":
-            this.graphView.selectionHandler.clear();
+
+        case "e":
+            this.graphView.structure.showGraph();
             break;
         case "m":
             this.graphView.snapNodesToGrid();
             break;
-        }
 
-        if (document.activeElement.tagName == "BODY") {
-            if (this.isDeletionKey(keyboardEvent)) {
-                for (let node of this.selection.selected.nodes) {
-                    this.graphView.structure.removeNode(node)
+        case "s":
+            console.log(this.graphView.structure.serialize());
+            break;
+
+        case "z":
+            if (keyboardEvent.shiftKey == false) {
+                let step = this.graphView.history.goToStep(-1);
+                if (step) {
+                    this.graphView.structure = step;
+                    this.graphView.refreshGraph();
+                    keyboardEvent.preventDefault();
                 }
-                for (let edge of this.selection.selected.edges) {
-                    this.graphView.structure.removeEdge(edge)
-                }
-                this.selection.clear()
-                this.graphView.refreshGraph()
             }
+            break;
+
+        case "Z":
+            let step = this.graphView.history.goToStep(1);
+            if (step) {
+                this.graphView.structure = step;
+                this.graphView.refreshGraph();
+                keyboardEvent.preventDefault();
+            }
+            break;
+
+
+        case "Escape":
+            this.graphView.selectionHandler.clear();
+            break;
+
+        case this.deletionKey:
+            for (let node of this.selection.selected.nodes) {
+                this.graphView.structure.removeNode(node);
+            }
+            for (let edge of this.selection.selected.edges) {
+                this.graphView.structure.removeEdge(edge);
+            }
+            this.selection.clear();
+            this.graphView.refreshGraph();
+            break;
         }
     }
 

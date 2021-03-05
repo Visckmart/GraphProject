@@ -1,13 +1,3 @@
-import { g } from "../Drawing/GraphView.js";
-import { categoryCheckboxes } from "../Drawing/Interaction.js";
-
-export function refreshInterfaceCategories() {
-    let categoriesState = g.structure.getCategories()
-    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
-        checkbox.checked = categoriesState[category];
-    }
-}
-
 // Cores e gradientes
 export function colorFromComponents(r, g, b, a = 1) {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")"

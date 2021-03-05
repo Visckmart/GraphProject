@@ -3,9 +3,9 @@ import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSeri
 import { HighlightType } from "../../Highlights.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
-    if (!(superclass instanceof Edge || superclass == Edge)) {
-        return;
-    }
+    // if (!(superclass instanceof Edge || superclass == Edge)) {
+    //     return;
+    // }
 
     class EdgeAssignedValue extends superclass {
         constructor({assignedValue, ...args} = {}) {
@@ -70,10 +70,12 @@ let EdgeAssignedValueMixin = (superclass) => {
         }
 
         static deserialize(serializedEdge) {
-            let [superProperties, rest] = superclass.deserialize(serializedEdge, true);
+            let [superProperties, rest] = Edge.deserialize(serializedEdge, true);
+            let ab = superclass.deserialize(rest);
             let assignedValueProperties = deserializeAssignedValue(rest);
-            return new EdgeAssignedValue({
+            return new (EdgeAssignedValueMixin(superclass))({
                                 ...superProperties,
+                                ...ab._args,
                                 ...assignedValueProperties
                             })
         }

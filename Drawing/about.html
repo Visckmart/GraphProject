@@ -19,16 +19,24 @@
             margin-bottom: 10pt;
             margin-top: 0;
         }
+        .subhead {
+            margin-top: 0;
+            margin-bottom: 8pt;
+            font-size: 17pt;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
 
         .history {
             display: flex;
             flex-direction: column;
-            margin-bottom: 30pt;
+            /*margin-bottom: 0pt;*/
             /*align-items: flex-end;*/
         }
         .history p, .history a {
-            font-size: 14pt;
+            font-size: 13pt;
             max-width: 42em;
             margin-top: 0;
             margin-left: auto;
@@ -60,15 +68,39 @@
             background-color: #fff;
             /*border: 2pt #FFE0F3 solid;*/
             border-radius: 20pt;
-            box-shadow: 0px 0px 20px 5px #eee;
+            box-shadow: 0px 0px 20px 0px #eee;
             padding: 25pt;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20pt;
+            margin-bottom: 20pt;
         }
         .authorSection > * {
             margin: 15pt 5pt;
         }
+        .authorSection .contact {
+            margin-top: auto;
+            padding-top: 10pt;
+            font-weight: bold;
+            font-size: 13pt;
+            /*color: #777;*/
+            margin-bottom: 0;
+        }
+        .authorSection .contact a {
+            text-decoration: none;
+            color: #777;
+            transition: 0.2s;
+        }
+        .authorSection:hover {
+            /*transform: translateY(-10pt);*/
+            transform: scale(1.025);
+            box-shadow: 0px 0px 35px 5px #eee;
+        }
+        .authorSection:hover .contact a {
+            color: revert;
+        }
         .authorSection > img {
-            width: 120pt;
-            height: 120pt;
+            width: 100pt;
+            height: 100pt;
             background-color: #eee;
             border-radius: 50%;
             margin-top: 0;
@@ -105,15 +137,17 @@
             padding: 15pt 50pt;
         }
         .aboutSection h2 {
+            margin-top: 0;
             font-size: 25pt;
             margin-bottom: 0;
         }
         .aboutSection li {
-
             padding-top: 20pt;
         }
         .aboutSection ul {
             list-style-type: none;
+            padding-left: 3em;
+            margin-top: 0;
         }
         .aboutSection h3, .aboutSection p {
             margin: 0;
@@ -122,7 +156,7 @@
             font-size: 15.5pt;
         }
         .aboutSection p {
-            color: #222;
+            color: #333;
             font-size: 13pt;
             line-height: 1.3;
             text-align: justify;
@@ -134,22 +168,29 @@
             font-style: italic;
             /*background-color: red;*/
         }
+        .aboutSection p+p {
+            padding-top: 5pt;
+        }
     </style>
 </head>
 
 <body>
 <div id="bg">
     <h1 style="text-align: center">Sobre o Projeto</h1>
+    <p class="subhead">
+        Ferramenta de manipulação de grafos e exploração de algoritmos.
+    </p>
     <div class="history">
         <p>
+            O projeto começou como um desafio de férias,
+            e um bom motivo para aprender tecnologias diferentes,
+            e se tornou uma ferramenta útil para o aprendizado de outros estudantes.
+        </p>
+        <p>
             Enquanto dois estudantes de computação passavam por disciplinas que
-            exploravam o conceito de <a href="#grafo">grafos</a>, eles sentiram a
+            exploravam o conceito de grafos, eles sentiram a
             falta de uma ferramenta didática para entender melhor o que estava
-            sendo ensinado. Por isso resolveram criar uma nova ferramenta.
-        <br><br>
-            O projeto foi tanto um desafio de férias,
-            quanto um bom motivo para aprender tecnologias diferentes,
-            e ao fim uma ferramenta útil para outros estudantes.
+            sendo ensinado e então resolveram criar uma.
         </p>
     </div>
     <div id="sidebyside">
@@ -171,10 +212,11 @@
                     a oportunidade para colocar meus conhecimentos em prática.
                 </p>
             </div>
+            <div class="contact"><a href="a">thiago.lamenza@aluno.puc-rio.br</a></div>
         </div>
 
         <div class="authorSection">
-            <img src="../assets/img/victor_foto.jpeg" class="profilePicture" alt="Foto do Thiago Lamenza"/>
+            <img src="../assets/img/victor_foto.jpeg" class="profilePicture" alt="Foto do Victor Martins"/>
             <div class="name"><h3>Victor Martins</h3></div>
             <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
             <div class="description">
@@ -191,6 +233,7 @@
                     e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
                 </p>
             </div>
+            <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br">victormartins@aluno.puc-rio.br</a></div>
         </div>
     </div>
     <div class="aboutSection">
@@ -209,11 +252,11 @@
                 <p>
                     Essas estruturas podem representar diversas situações reais,
                     dessa forma algoritmos que atuam sobre grafos podem resultar
-                    em soluções para problemas reais. Representar um mapa por
+                    em soluções para problemas reais. <br>Representar um mapa por
                     meio um grafo permite o encontro do melhor caminho entre
                     dois pontos do mapa, permite o encontro de um trajeto que
-                    passa por todas as ruas da forma mais eficiente. Representar
-                    disciplinas e salas por meio de um grafo, permite que as
+                    passa por todas as ruas da forma mais eficiente.<br>Representar
+                    disciplinas e salas por meio de um grafo, permite que
                     aulas sejam alocadas nas salas ideais considerando o número
                     de alunos, o tamanho de cada sala e outros diversos fatores.
                 </p>
@@ -227,6 +270,22 @@
                     manipulação de grafos com diversas características, além do
                     compartilhamento desses grafos e a visualização didática da
                     execução dos algoritmos.
+                </p>
+            </li>
+            <li>
+                <h3>Quais recursos estão disponíveis?</h3>
+                <p>
+                    É possível criar e manipular livremente grafos de várias
+                    categorias, como grafos com peso nas arestas, arestas
+                    direcionadas, e etc. Além disso os usuários podem
+                    executar uma série de algoritmos nos próprios grafos e
+                    acompanhar o passo a passo com explicações no processo.<br>
+                    O compartilhamento de grafos pode ser feito de diversas
+                    maneiras, como por meio de uma imagem ou mesmo
+                    por meio de um link ou arquivo que pode ser enviado a outra
+                    pessoa, possibilitando que ela então consiga manipular o grafo.
+                    Isso permite que colegas de turma discutam com facilidade
+                    uma execução em algoritmos criados por eles próprios.
                 </p>
             </li>
         </ul>
@@ -247,14 +306,26 @@
                 </p>
             </li>
             <li>
-                <h3>Ambiente e Linguagem</h3>
+                <h3>Linguagem e Desenvolvimento</h3>
                 <p>
-                    Tivemos bastante facilidade com os ambientes de programação e
-                    com JavaScript, que é a linguagem que usamos na maior parte do
-                    projeto. Fizemos uso de múltiplas estruturas de dados e de
-                    recursos mais avançados da linguagem como
-                    <code>regular expressions</code> e <code>promises</code> nos
-                    momentos apropriados.
+                    Decidimos desenvolver tudo a partir do zero e usando apenas
+                    JavaScript puro.
+                    Do desenho dos nós e das arestas, ao tratamento de eventos
+                    do mouse, ao passo a passo dos algoritmos e todo o resto,
+                    tudo foi feito manualmente e cuidadosamente por nós dois,
+                    sem dependências externas.
+                    Fizemos uso de alguns recursos mais avançados da
+                    linguagem como <code>regular expressions</code> e
+                    <code>promises</code> nos momentos apropriados.<br>
+                    Durante o desenvolvimento nós buscamos boas práticas,
+                    exemplos de implementação de algoritmos e soluções para
+                    problemas encontrados. Partes (pequenas)
+                    dos resultados eventualmente foram usadas no projeto.
+                    Nenhuma porção significativa de código foi feita por alguém
+                    além de nós dois.<br>
+                    Para a publicação nós utilizamos dependências externas afim
+                    de estender a compatibilidade do nosso código. Além disso,
+                    para a interface utilizamos ícones do Bootstrap Icons.
                 </p>
             </li>
             <li>
@@ -277,7 +348,9 @@
                     nos momentos em que recursos como <code>branches</code> e <code>stashes</code> se
                     encaixavam bem com as nossas necessidades, e também nos
                     momentos em que algo inesperado acontecia e tínhamos a
-                    liberdade cometer erros ao tentar consertar.
+                    liberdade cometer erros ao tentar consertar, afinal aprender
+                    mais sobre desenvolvimento era um dos principais objetivos
+                    do projeto.
                 </p>
             </li>
         </ul>

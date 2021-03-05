@@ -22,9 +22,15 @@ export default class ResponsibilityChain {
 
     call(...args) {
         let returnValues = []
-        for(let procedure of this._chain)
-        {
+        for(let procedure of this._chain) {
             returnValues.push(procedure(...args))
+        }
+        return returnValues
+    }
+    callBind(t, ...args) {
+        let returnValues = []
+        for(let procedure of this._chain) {
+            returnValues.push(procedure.bind(t, ...args)())
         }
         return returnValues
     }
