@@ -25,11 +25,10 @@ let algorithmSelector = document.getElementById("algorithm")
 algorithmSelector.onchange = function () {
     algorithmSelector.blur()
     let requiredCategories = getRequiredCategoriesForAlgorithm(this.value)
-    console.log(requiredCategories)
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         if (requiredCategories[category]) {
-            checkbox.disabled = true
-            checkbox.checked = true
+            checkbox.disabled = true;
+            checkbox.checked = true;
         } else {
             checkbox.disabled = false;
         }
@@ -68,7 +67,7 @@ export function getAlgorithmFromName(name) {
 }
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g);
-    let algorithm = getAlgorithm(algorithmSelector.value);
+    let algorithm = getAlgorithmFromName(algorithmSelector.value);
     await algorithmController.setup(algorithm);
 }
 
