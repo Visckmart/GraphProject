@@ -222,6 +222,7 @@ class GraphMouseHandler {
             this.selection.clearSelectionArea();
             this.selection.refreshMenu()
         }
+        this.clickedNode = null;
         this.refreshCursorStyle()
     }
 
@@ -259,10 +260,8 @@ class GraphMouseHandler {
         } else {
             grabCheck:if (this.graphView.primaryTool == Tool.MOVE) {
                 let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
-                if (!isHoveringNode) {
-                    break grabCheck;
-                }
-                if (this.selection.hasSelectedNodes) {
+                if (!isHoveringNode) { break grabCheck; }
+                if (this.selection.hasSelectedNodes && this.clickPosition) {
                     cursorStyle = "grabbing";
                 } else {
                     cursorStyle = "grab";
