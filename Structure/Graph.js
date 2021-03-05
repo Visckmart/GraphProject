@@ -318,7 +318,6 @@ class Graph {
                                                 NodeConstructor: NodeConstructor
                                             })
         newGraph.debug = false;
-        console.log(EdgeConstructor)
         let newNodeMap = new Map()
         for(let node of this.nodes()) {
             let newNode = NodeConstructor.from(node)

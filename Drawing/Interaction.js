@@ -88,7 +88,6 @@ function updateGraph() {
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         if (checkbox.checked) { enabledCategories.push(category) }
     }
-    console.log(enabledCategories)
     g.updateGraphConstructors(enabledCategories)
 }
 
