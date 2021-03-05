@@ -61,8 +61,12 @@ class GraphMouseHandler {
             this.graphView.removeEdgeAt(pos);
         } else if (this.clickedNode) {
             let clickedNotSelected = !this.selection.isSelected(this.clickedNode);
-            if (this.selection.isEmpty && clickedNotSelected) {
-                this.selection.quickSelect(this.clickedNode);
+            if (clickedNotSelected) {
+                if (this.selection.isEmpty) {
+                    this.selection.quickSelect(this.clickedNode);
+                } else if (this.selection.additionOnlyMode) {
+                    this.selection.select(this.clickedNode);
+                }
             }
         }
         if (this.selection.isEmpty == false) {
