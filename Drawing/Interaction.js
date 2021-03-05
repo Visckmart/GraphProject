@@ -1,4 +1,4 @@
-import { GraphCategory, Tool } from "./General.js"
+import { Algorithm, GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
 import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
@@ -55,21 +55,21 @@ function getRequiredCategoriesForAlgorithm(alg) {
     return requiredCategory;
 }
 let runAlgorithmButton = document.getElementById("run_algorithm")
-function getAlgorithm(name) {
+export function getAlgorithmFromName(name) {
     switch (name) {
-    case 'Dijkstra':          return DijkstraShortestPath;
-    case 'PrimMST':           return PrimMST;
-    case 'KruskalMST':        return KruskalMST;
-    case 'DFSCycleDetection': return DFSCycleDetection;
-    case 'EdmondsMSA':        return EdmondsMSA;
-    case 'EulerianPath':      return EulerianPath;
+    case Algorithm.DIJKSTRA:           return DijkstraShortestPath;
+    case Algorithm.MST_PRIM:           return PrimMST;
+    case Algorithm.MST_KRUSKAL:        return KruskalMST;
+    case Algorithm.DFS_CYCLEDETECTION: return DFSCycleDetection;
+    case Algorithm.MSA_EDMONDS:        return EdmondsMSA;
+    case Algorithm.EULERIANPATH:       return EulerianPath;
     }
     return null;
 }
 runAlgorithmButton.onclick = async () => {
-    let algorithmController = new AlgorithmController(g)
-    let algorithm = getAlgorithm(algorithmSelector.value)
-    await algorithmController.setup(algorithm)
+    let algorithmController = new AlgorithmController(g);
+    let algorithm = getAlgorithm(algorithmSelector.value);
+    await algorithmController.setup(algorithm);
 }
 
 // Window Resizing

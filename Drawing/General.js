@@ -1,4 +1,11 @@
 // Canvas
+import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
+import PrimMST from "../Algorithm/PrimMST.js";
+import KruskalMST from "../Algorithm/KruskalMST.js";
+import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
+import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
+import EulerianPath from "../Algorithm/EulerianPath.js";
+
 export var canvas = document.getElementById("mainCanvas");
 export var slowOverlayCanvas = document.getElementById("slowCanvas");
 export var fastOverlayCanvas = document.getElementById("fastCanvas");
@@ -45,4 +52,13 @@ export const GraphCategory = {
     WEIGHTED_EDGES: "weighted_edges",
     COLORED_EDGES: "colored_edges",
     DIRECTED_EDGES: "directed_edges"
+}
+
+export const Algorithm = {
+    DIJKSTRA:           'Dijkstra',
+    MST_PRIM:           'PrimMST',
+    MST_KRUSKAL:        'KruskalMST',
+    DFS_CYCLEDETECTION: 'DFSCycleDetection',
+    MSA_EDMONDS:        'EdmondsMSA',
+    EULERIANPATH:       'EulerianPath'
 }

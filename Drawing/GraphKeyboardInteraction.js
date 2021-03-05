@@ -4,6 +4,7 @@ import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";
 import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 import EulerianPath from "../Algorithm/EulerianPath.js";
+import { getAlgorithmFromName } from "./Interaction.js";
 
 class GraphKeyboardHandler {
 
@@ -124,24 +125,7 @@ class GraphKeyboardHandler {
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
-            let chosenAlgorithm = null;
-            // TODO: (V) Seleção dos algoritmos deveria ser feita de forma unificada (Interaction)
-            switch (algorithmSelector.value) {
-            case 'Dijkstra':
-                chosenAlgorithm = DijkstraShortestPath
-                break
-            case 'PrimMST':
-                chosenAlgorithm = PrimMST
-                break
-            case 'EulerianPath':
-                chosenAlgorithm = EulerianPath
-                break
-            case 'DFSCycleDetection':
-                chosenAlgorithm = DFSCycleDetection
-                break
-            default:
-                break;
-            }
+            let chosenAlgorithm = getAlgorithmFromName(algorithmSelector.value);
             algorithmController.setup(chosenAlgorithm);
             break;
         case "s":
