@@ -26,9 +26,13 @@ import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
 import EdgeDirectedMixin from "../Structure/Mixins/Edge/EdgeDirectedMixin.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 import { refreshInterfaceCategories } from "./Interaction.js";
+import {
+    checkLineLineCollision,
+    checkLinePointCollision, checkRectangleSquareCollision, checkSquarePointCollision
+} from "./GeometryHelper.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
-
+const toolTrayElement = document.querySelector("#tool_tray")
 const IDLE_MAX_FPS = 10;
 
 const NodeLabeling = {
@@ -188,7 +192,6 @@ class GraphView {
 
     //region Deteção de Nós e Arestas
 
-    // TODO: (V) Colisão de quadrados pode ser isolada desse arquivo
     // Searches for nodes that contain the point `pos`
     // The lookup is done from the last node to the first, the inverse of the
     // drawing lookup in order to return the frontmost node.
@@ -198,8 +201,7 @@ class GraphView {
             let radiusCheck = Math.max(node.radius-4, regularNodeRadius);
             if (checkForConflict) { radiusCheck *= 2; }
 
-            if (   node.pos.x - radiusCheck < pos.x && node.pos.x + radiusCheck > pos.x
-                && node.pos.y - radiusCheck < pos.y && node.pos.y + radiusCheck > pos.y) {
+            if (checkSquarePointCollision(node.pos, radiusCheck*2, pos)) {
                 if (checkForConflict) return [node];
                 detectedNodes.push(node);
             }
@@ -207,48 +209,43 @@ class GraphView {
         return detectedNodes;
     }
 
-    // TODO: (V) Colisão de quadrados pode ser isolada desse arquivo
     checkIfNodeAt(pos, checkForConflict = false, exceptionIndex = null) {
-
         for (let node of this.structure.nodes()) {
             if (node.index == exceptionIndex) continue;
+
             let radiusCheck = Math.max(node.radius-4, regularNodeRadius);
             if (checkForConflict) { radiusCheck *= 2; }
 
-            if (   node.pos.x - radiusCheck < pos.x && node.pos.x + radiusCheck > pos.x
-                   && node.pos.y - radiusCheck < pos.y && node.pos.y + radiusCheck > pos.y) {
-                return node;
-            }
+            let collided = checkSquarePointCollision(
+                node.pos, radiusCheck*2,
+                pos)
+            if (collided) { return node; }
         }
         return false;
     }
 
-    // TODO: (V) Colisão de ponto e linha pode ser isolada
-    getEdgesAt(pos) {
-        const eps = 1;
+    getEdgeAt(pos) {
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let edgeLength = getDistanceOf(nodeA.pos, nodeB.pos)
-            let distSum = getDistanceOf(pos, nodeA.pos)
-                          + getDistanceOf(pos, nodeB.pos)
-            if (distSum >= edgeLength - eps
-                && distSum <= edgeLength + eps) {
-                return edge;
-            }
+            let collided = checkLinePointCollision(
+                nodeA.pos, nodeB.pos, 1,
+                pos
+            )
+            if (collided) { return edge; }
         }
     }
 
     // TODO: (V) Checagem de ponto em quadrilátero pode ser isolada
     getNodesWithin(initialPos, finalPos) {
-        let left   = Math.min(initialPos.x, finalPos.x);
-        let right  = Math.max(initialPos.x, finalPos.x);
-        let top    = Math.min(initialPos.y, finalPos.y);
-        let bottom = Math.max(initialPos.y, finalPos.y);
-
+        let area = {
+            rectLeft:   Math.min(initialPos.x, finalPos.x),
+            rectTop:    Math.max(initialPos.x, finalPos.x),
+            rectRight:  Math.min(initialPos.y, finalPos.y),
+            rectBottom: Math.max(initialPos.y, finalPos.y)
+        }
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
             let nodeRadius = node.radius;
-            if (   node.pos.x + nodeRadius > left && node.pos.x - nodeRadius < right
-                && node.pos.y + nodeRadius > top && node.pos.y - nodeRadius < bottom) {
+            if (checkRectangleSquareCollision(area, node.pos, nodeRadius*2)) {
                 nodesWithin.push(node);
             }
         }
@@ -256,8 +253,7 @@ class GraphView {
         return nodesWithin;
     }
 
-    // TODO: (V) Colisão de linhas com linhas e checagem de linha em
-    //       quadrilátero poderiam ser isoladas.
+    // TODO: (V) Checagem de linha e quadrilátero poderia ser isolada.
     getEdgesWithin(initialPos, finalPos) {
         let edgesWithin = [];
         // Passa por todas as arestas e considera contida caso
@@ -272,30 +268,21 @@ class GraphView {
 
         // Prepara os lados da área de seleção
         let lines = [
-            [initialPos,    {x: finalPos.x, y: initialPos.y}], // Top
-            [{x: initialPos.x, y: finalPos.y},  finalPos],     // Bottom
-            [initialPos,    {x: initialPos.x, y: finalPos.y}], // Left
-            [{x: finalPos.x, y: initialPos.y},  finalPos],     // Right
+            [initialPos, {x: finalPos.x, y: initialPos.y}], // Top
+            [{x: initialPos.x, y: finalPos.y}, finalPos],   // Bottom
+            [initialPos, {x: initialPos.x, y: finalPos.y}], // Left
+            [{x: finalPos.x, y: initialPos.y}, finalPos],   // Right
         ]
-        // Passa por todas as arestas restantes e considera contida caso haja
-        // uma interseção entre uma das laterais da seleção e a aresta.
-        // Explicação: http://jeffreythompson.org/collision-detection/line-line.php
-        for (let [edge, s, e] of this.structure.uniqueEdges()) {
+        for (let [edge, nodeStart, nodeEnd] of this.structure.uniqueEdges()) {
             if (edgesWithin.includes(edge)) continue;
-            let startPos = s.pos, endPos = e.pos;
-            rectSidesCheck:for (let [pointA, pointB] of lines) {
-                let denominator =   (endPos.y - startPos.y) * (pointB.x - pointA.x)
-                                  - (endPos.x - startPos.x) * (pointB.y - pointA.y);
-                let uA = (  (endPos.x - startPos.x) * (pointA.y - startPos.y)
-                          - (endPos.y - startPos.y) * (pointA.x - startPos.x))
-                         / denominator;
-                let uB = (  (pointB.x - pointA.x) * (pointA.y - startPos.y)
-                          - (pointB.y - pointA.y) * (pointA.x - startPos.x))
-                         / denominator;
-
-                if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+            for (let [lineStart, lineEnd] of lines) {
+                let edgeSideCollided = checkLineLineCollision(
+                    [nodeStart.pos, nodeEnd.pos],
+                    [lineStart, lineEnd]
+                )
+                if (edgeSideCollided) {
                     edgesWithin.push(edge);
-                    break rectSidesCheck;
+                    break;
                 }
             }
         }
@@ -369,7 +356,7 @@ class GraphView {
     }
 
     removeEdgeAt(pos) {
-        let edge = this.getEdgesAt(pos);
+        let edge = this.getEdgeAt(pos);
         if (!edge) { return; }
 
         this.selectionHandler.deselect(edge);

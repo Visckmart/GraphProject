@@ -31,7 +31,7 @@ class GraphMouseHandler {
         this._clickPosition = pos;
         this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
         if (this.graphView.primaryTool != Tool.MOVE) {
-            this.clickedEdge = this.graphView.getEdgesAt(pos);
+            this.clickedEdge = this.graphView.getEdgeAt(pos);
         }
     }
 
@@ -83,7 +83,7 @@ class GraphMouseHandler {
         if (this.graphView.primaryTool != Tool.CONNECT) { return; }
         if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
 
-        let edgeHover = this.graphView.getEdgesAt(pos);
+        let edgeHover = this.graphView.getEdgeAt(pos);
         this.lastHoveredEdge = edgeHover;
         if (edgeHover && !this.selection.isSelected(edgeHover)) {
             edgeHover.highlights.add(HighlightType.LIGHTEN);
