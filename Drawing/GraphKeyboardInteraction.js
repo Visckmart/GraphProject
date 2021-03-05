@@ -32,7 +32,6 @@ class GraphKeyboardHandler {
         return key;
     }
 
-    // TODO: (V) Organizar essas checagens
     // Key Pressed
 
     shouldHandleKeyboardEvent() {

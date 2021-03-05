@@ -52,8 +52,14 @@ class GraphMouseHandler {
         // console.log(this.clickedEdge)
         // console.log(this.graphView.primaryTool, this.clickedNode, this.clickedEdge)
 
-
-        if (this.clickedNode) {
+        // Se o botão direito foi o levantado
+        if (mouseEvent.button == 2
+            && this.selection.shouldDrawSelection == false) {
+            // Tente remover um nó, se o mouse estiver sobre algum
+            this.graphView.removeNodeAt(pos);
+            // Tente remover uma arestas, se o mouse estiver sobre alguma
+            this.graphView.removeEdgeAt(pos);
+        } else if (this.clickedNode) {
             let clickedNotSelected = !this.selection.isSelected(this.clickedNode);
             if (this.selection.isEmpty && clickedNotSelected) {
                 this.selection.quickSelect(this.clickedNode);
@@ -65,46 +71,42 @@ class GraphMouseHandler {
         this.refreshCursorStyle();
     }
 
-    // Mouse DRAG event
     lastHoveredEdge = null;
+    checkEdgeHover(pos) {
+        this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
+
+        // NODE COLISION
+        if (this.graphView.primaryTool != Tool.CONNECT) { return; }
+        if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
+
+        let edgeHover = this.graphView.getEdgesAt(pos);
+        this.lastHoveredEdge = edgeHover;
+        if (edgeHover && !this.selection.isSelected(edgeHover)) {
+            edgeHover.highlights.add(HighlightType.LIGHTEN);
+        }
+    }
+
+    // Mouse DRAG event
     mouseDragEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
 
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
+        this.checkEdgeHover(pos);
 
-        // TODO: Organizar destaque de arestas
-        this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
-        if (this.graphView.primaryTool == Tool.CONNECT) {
-            // NODE COLISION
-            let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
-            if (this.graphView.primaryTool == Tool.CONNECT && isHoveringNode == false) {
-                let edgeHover = this.graphView.getEdgesAt(pos)
-                this.lastHoveredEdge = edgeHover
-                if (edgeHover && !this.selection.isSelected(edgeHover)) {
-                    edgeHover.highlights.add(HighlightType.LIGHTEN)
-                }
-            }
-        }
-
-        if (mouseEvent.buttons == 0|| mouseEvent.buttons == 2
+        if (mouseEvent.buttons == 0
+            || mouseEvent.buttons == 2
             || mouseEvent.button != 0) {
             this.refreshCursorStyle();
             return;
         }
-        // SOMENTE COM MOUSE ESQUERDO CLICADO
+        /* SOMENTE COM MOUSE ESQUERDO CLICADO */
 
         // SELEÇÃO
-        // Se um nó não tiver sido selecionado,
         if (!this.clickedNode && !this.clickedEdge) {
-            let selecting = this.selection.shouldDrawSelection
             // Atualize a área de seleção
             this.selection.draggingEvent(this.clickPosition, pos);
-            if (selecting != this.selection.shouldDrawSelection) {
-                this.graphView.requestFramerateForCanvas(CanvasType.FAST, HighFPSFeature.SELECTING, 90)
-                requestAnimationFrame(this.graphView.refreshFastCanvas.bind(this.graphView))
-            }
             this.refreshCursorStyle();
             return;
         }
@@ -147,16 +149,10 @@ class GraphMouseHandler {
 
         let pos = this.getMousePos(mouseEvent);
 
-        // Se o botão direito foi o levantado
         if (mouseEvent.button == 2
             && this.selection.shouldDrawSelection == false) {
-            // Tente remover um nó, se o mouse estiver sobre algum
-            this.graphView.removeNodeAt(pos);
-            // Tente remover uma arestas, se o mouse estiver sobre alguma
-            this.graphView.removeEdgeAt(pos);
             return;
         }
-
         // SELEÇÃO
         let distanceFromClick = getDistanceOf(this.clickPosition, pos);
         if (this.clickPosition && distanceFromClick < 5) {
