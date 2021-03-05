@@ -223,6 +223,7 @@ class GraphMouseHandler {
             this.selection.refreshMenu()
         }
         this.clickedNode = null;
+        this.graphView.requestCanvasRefresh(CanvasType.SLOW);
         this.refreshCursorStyle()
     }
 

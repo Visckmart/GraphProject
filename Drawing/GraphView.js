@@ -491,6 +491,7 @@ class GraphView {
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             edge.draw(this.ctx, nodeA.pos, nodeB.pos, window.performance.now(),
                       this.structure.checkEdgeBetween(nodeB, nodeA))
+            // console.log(this.mouseHandler.clickedNode)
         }
 
         let nodeFPSRequests = [];
@@ -499,6 +500,8 @@ class GraphView {
                 node.draw(this.ctx)
             );
         }
+        this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
+
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
             this.requestFramerateForCanvas(CanvasType.GENERAL,
@@ -637,6 +640,9 @@ class GraphView {
         this.slowCtx.clearRect(0, 0, this.width, this.height)
         // Chamando a cadeia de desenho de textos de cada nó
         for (let node of this.structure.nodes()) {
+            if (node.index == this.mouseHandler.clickedNode?.index) {
+                continue;
+            }
             node.drawText(this.slowCtx, this.nodeLabeling)
         }
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
