@@ -238,16 +238,18 @@ class GraphView {
     getNodesWithin(initialPos, finalPos) {
         let area = {
             rectLeft:   Math.min(initialPos.x, finalPos.x),
-            rectTop:    Math.max(initialPos.x, finalPos.x),
-            rectRight:  Math.min(initialPos.y, finalPos.y),
+            rectRight:  Math.max(initialPos.x, finalPos.x),
+            rectTop:    Math.min(initialPos.y, finalPos.y),
             rectBottom: Math.max(initialPos.y, finalPos.y)
         }
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
             let nodeRadius = node.radius;
-            if (checkRectangleSquareCollision(area, node.pos, nodeRadius*2)) {
-                nodesWithin.push(node);
-            }
+            let collided = checkRectangleSquareCollision(
+                area,
+                node.pos, nodeRadius*2
+            )
+            if (collided) { nodesWithin.push(node); }
         }
 
         return nodesWithin;
