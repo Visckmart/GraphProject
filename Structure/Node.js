@@ -11,9 +11,9 @@ export const regularNodeRadius = 28;
 
 export default class Node {
 
-    constructor({x, y, label, index = null, highlights = null}) {
+    constructor({x, y, label, index = null, highlights = null, randomStart = false}) {
 
-        this._initialTime = index == null ? window.performance.now() : Math.random()*3000;
+        this._initialTime = randomStart == false ? 0 : Math.random()*3000;
         this.index = index ?? globalNodeIndex;
         // if (index == null) {
         // }

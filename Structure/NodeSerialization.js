@@ -85,9 +85,9 @@ export function deserializeNode(serializedNode, partially = false) {
 
     if (partially == false) {
         return new Node({
-                            x: xPos, y: yPos, label, index
+                            x: xPos, y: yPos, label, index, randomStart: true
                         });
     } else {
-        return [{ x: xPos, y: yPos, label, index }, rest];
+        return [{ x: xPos, y: yPos, label, index, randomStart: true }, rest];
     }
 }
