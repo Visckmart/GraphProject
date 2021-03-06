@@ -69,7 +69,11 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 13pt;
     /*font-weight: bold;*/
 }
-
+#tutorialContainer em {
+    font-style: normal;
+    font-weight: bold;
+    text-decoration: underline;
+}
 .separator {
     width: 100%;
     display: inline-block;
