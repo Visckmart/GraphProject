@@ -1,5 +1,5 @@
 // Node Definition
-import { backgroundGradient } from "../Drawing/General.js";
+import { backgroundGradient, globalNodeIndex } from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
@@ -8,7 +8,6 @@ import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 import { deserializeNode, serializeNode } from "./NodeSerialization.js";
 
 export const regularNodeRadius = 28;
-let globalNodeIndex = 0
 
 export default class Node {
 
@@ -17,7 +16,6 @@ export default class Node {
         this._initialTime = index == null ? window.performance.now() : Math.random()*3000;
         this.index = index ?? globalNodeIndex;
         // if (index == null) {
-            globalNodeIndex = Math.max(globalNodeIndex, index ?? globalNodeIndex) + 1;
         // }
 
         /* Posição */

@@ -1,6 +1,6 @@
 import {
     canvas, Tool, HighFPSFeature, backgroundGradient, fastOverlayCanvas, slowOverlayCanvas,
-    CanvasType
+    CanvasType, incrementGlobalIndex
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
 import Edge from "../Structure/Edge.js"
@@ -304,6 +304,7 @@ class GraphView {
         let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y, colorIndex: this.nodeColorIndex++})
         let inserted = this.structure.insertNode(newNode);
         if (!inserted) { return; }
+        incrementGlobalIndex();
 
         this.refreshGraph();
         this.registerStep();
