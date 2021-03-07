@@ -1,4 +1,4 @@
-import { GraphCategory } from "../Drawing/General.js";
+import { GraphCategory, incrementGlobalIndex } from "../Drawing/General.js";
 
 import Node from "./Node.js";
 
@@ -272,17 +272,19 @@ class Graph {
 
         let [serializedNodes, serializedEdges] = serialized.split("~")
         let deserializedNodes = []
+        let biggestIndex = 0;
         if (serializedNodes) {
             let serializedNodesList = serializedNodes.split(".")
             serializedNodesList.splice(-1, 1)
             for (let nodeStr of serializedNodesList) {
                 let node = nodeConstructor.deserialize(nodeStr)
                 if (node == undefined) continue;
+                if (node.index > biggestIndex) biggestIndex = node.index;
                 deserializedNodes.push(node)
                 graph.insertNode(node)
             }
         }
-
+        incrementGlobalIndex(biggestIndex+1)
         if (serializedEdges) {
             let serializedEdgesList = serializedEdges.split(".")
             serializedEdgesList.splice(-1, 1)

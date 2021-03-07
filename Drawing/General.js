@@ -17,6 +17,10 @@ export const backgroundGradient = ctx.createLinearGradient(0, 0, 700, 0);
 backgroundGradient.addColorStop(0, "#E5E0FF");
 backgroundGradient.addColorStop(1, "#FFE0F3");
 
+export let globalNodeIndex = 0;
+export function incrementGlobalIndex(newValue = null) {
+    globalNodeIndex = newValue ?? globalNodeIndex+1;
+}
 export const nodeColorList = [
     "#5982FF",
     "#FC58D9",

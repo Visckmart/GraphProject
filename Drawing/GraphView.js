@@ -1,6 +1,6 @@
 import {
     canvas, Tool, HighFPSFeature, backgroundGradient, fastOverlayCanvas, slowOverlayCanvas,
-    CanvasType
+    CanvasType, incrementGlobalIndex
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
 import Edge from "../Structure/Edge.js"
@@ -238,16 +238,18 @@ class GraphView {
     getNodesWithin(initialPos, finalPos) {
         let area = {
             rectLeft:   Math.min(initialPos.x, finalPos.x),
-            rectTop:    Math.max(initialPos.x, finalPos.x),
-            rectRight:  Math.min(initialPos.y, finalPos.y),
+            rectRight:  Math.max(initialPos.x, finalPos.x),
+            rectTop:    Math.min(initialPos.y, finalPos.y),
             rectBottom: Math.max(initialPos.y, finalPos.y)
         }
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
             let nodeRadius = node.radius;
-            if (checkRectangleSquareCollision(area, node.pos, nodeRadius*2)) {
-                nodesWithin.push(node);
-            }
+            let collided = checkRectangleSquareCollision(
+                area,
+                node.pos, nodeRadius*2
+            )
+            if (collided) { nodesWithin.push(node); }
         }
 
         return nodesWithin;
@@ -304,6 +306,7 @@ class GraphView {
         let newNode = new this.structure.NodeConstructor({x: pos.x, y:pos.y, colorIndex: this.nodeColorIndex++})
         let inserted = this.structure.insertNode(newNode);
         if (!inserted) { return; }
+        incrementGlobalIndex();
 
         this.refreshGraph();
         this.registerStep();

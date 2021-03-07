@@ -126,7 +126,7 @@ class AlgorithmController {
                 if(this.steps[value].message)
                 {
                     this.inputHandler.tutorialContainer.style.display = 'block'
-                    this.inputHandler.message.innerText = this.steps[value].message
+                    this.inputHandler.message.innerHTML = this.steps[value].message
                     this.messageIsWarning = this.steps[value].isWarning
                     this.messageIsHighlighted = this.steps[value].isHighlight
                 } else {
