@@ -204,7 +204,7 @@ class Graph {
 
     //region Serialização
 
-    // TODO: Organizar o código da serialização e desserialização das categorias
+    // TODO: Organizar o código da serialização e desserialização
     serialize() {
         let graphType = "";
         let anyNode = this.nodes().next().value;

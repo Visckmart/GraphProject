@@ -64,17 +64,6 @@ function executeEulerianPath(controller, initialNode, finalNode) {
     }
     let oddCount = 0
 
-    // for (let node of graph.nodes()) {
-    //     let count = 0
-    //     for (let neighbour of graph.edgesFrom(node)) count += 1;
-    //     if (count % 2 == 0) {
-    //         markAsActive(node)
-    //     }
-    // }
-    // controller.addStep(graph,
-    //                    `${node.label} tem um número ímpar de vizinhos (${count}).
-    //                            Total de nós com número ímpar de vizinhos: ${oddCount}`)
-
     // Create a Queue and add our initial node in it
     let q = [];
     let explored = new Set();
@@ -82,19 +71,15 @@ function executeEulerianPath(controller, initialNode, finalNode) {
     q.push(n);
 
     // Mark the first node as explored explored.
-    // add(n);
 
     let allNodes = new Set(Array.from(graph.nodes()))
     console.log(allNodes)
     // We'll continue till our queue gets empty
     // PASSA POR TODOS E DEIXA OS DESCONECTADOS
     while (q.length != 0) {
-        // console.log(">", q)
         let t = q.shift();
-        // console.log(">>", t)
         explored.add(t)
         // Log every element that comes out of the Queue
-        // console.log(t);
         allNodes.delete(t)
 
         console.log(Array.from(allNodes).map(n => n.label))
