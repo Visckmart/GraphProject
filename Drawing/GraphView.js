@@ -368,7 +368,7 @@ class GraphView {
     }
 
     snapNodesToGrid() {
-        let gridCellSide = 2*regularNodeRadius + 10;
+        let gridCellSide = 2*regularNodeRadius + 20;
         for (let node of this.structure.nodes()) {
             node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
             node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
