@@ -28,14 +28,14 @@ let EdgeDirectedMixin = (superclass) => {
         }
         getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
             if (!doubled) return super.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd})
-            let offset = 20;
+            let offset = 45;
             let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
-            if (theta > 0) {
-                offset = 25;
-            }
+            // if (theta > Math.PI/2) {
+            //     offset = 1000;
+            // }
             let cpX = ((xStart + xEnd)/2) + Math.cos(theta) * offset;
             let cpY = ((yStart + yEnd)/2) + Math.sin(theta) * offset;
-            return [cpX, cpY]
+            return [cpX, cpY, 7.5]
         }
         getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
             if (!doubled) return super.getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd});
@@ -60,11 +60,11 @@ let EdgeDirectedMixin = (superclass) => {
 
             for (let highlight of this.highlights.list()) {
                 ctx.save()
-                this._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd);
+                this._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, doubled);
                 ctx.restore()
             }
         }
-        _drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd) {
+        _drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, doubled) {
             if (this.highlights.has(HighlightType.SELECTION)) {
                 ctx.save()
 
@@ -72,12 +72,12 @@ let EdgeDirectedMixin = (superclass) => {
                 ctx.lineWidth = 8
                 ctx.lineDashOffset = -window.performance.now()/200;
                 ctx.strokeStyle = "#3344FF";
-                this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+                this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
                 ctx.stroke();
 
                 ctx.restore()
             } else {
-                super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd)
+                super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, this.prepareLine, doubled)
             }
         }
         serialize() {

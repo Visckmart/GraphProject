@@ -31,7 +31,7 @@ class GraphMouseHandler {
         this._clickPosition = pos;
         this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
         if (this.graphView.primaryTool != Tool.MOVE) {
-            this.clickedEdge = this.graphView.getEdgeAt(pos);
+            this.clickedEdge = this.graphView.getEdgesAt(pos).pop();
         }
     }
 
@@ -75,18 +75,27 @@ class GraphMouseHandler {
         this.refreshCursorStyle();
     }
 
-    lastHoveredEdge = null;
+    lastHoveredEdges = null;
     checkEdgeHover(pos) {
-        this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
+        if (this.lastHoveredEdges?.length > 0) {
+            for (let lastEdge of this.lastHoveredEdges) {
+                lastEdge.highlights.remove(HighlightType.LIGHTEN);
+            }
+        }
 
         // NODE COLISION
         if (this.graphView.primaryTool != Tool.CONNECT) { return; }
         if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
 
-        let edgeHover = this.graphView.getEdgeAt(pos);
-        this.lastHoveredEdge = edgeHover;
-        if (edgeHover && !this.selection.isSelected(edgeHover)) {
-            edgeHover.highlights.add(HighlightType.LIGHTEN);
+        let edgesHover = this.graphView.getEdgesAt(pos);
+        this.lastHoveredEdges = edgesHover;
+        if (edgesHover.length > 0) {
+            for (let edge of edgesHover) {
+                if (this.selection.isSelected(edge)) { return ; }
+            }
+            for (let edge of edgesHover) {
+                edge.highlights.add(HighlightType.LIGHTEN);
+            }
         }
     }
 
@@ -170,6 +179,7 @@ class GraphMouseHandler {
                 }
             } else if (this.clickedEdge && Tool.CONNECT == this.graphView.primaryTool) {
                 this.selection.invertSelection(this.clickedEdge);
+                this.checkEdgeHover(pos);
             }
         } else {
             if (this.selection.isQuickSelection) {

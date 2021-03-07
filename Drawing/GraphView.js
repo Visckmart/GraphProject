@@ -224,14 +224,17 @@ class GraphView {
         return false;
     }
 
-    getEdgeAt(pos) {
+    getEdgesAt(pos) {
+        let allEdges = []
+
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             let collided = checkLinePointCollision(
                 nodeA.pos, nodeB.pos, 1,
                 pos
             )
-            if (collided) { return edge; }
+            if (collided) { allEdges.push(edge); }
         }
+        return allEdges;
     }
 
     // TODO: (V) Checagem de ponto em quadrilátero pode ser isolada
@@ -359,7 +362,7 @@ class GraphView {
     }
 
     removeEdgeAt(pos) {
-        let edge = this.getEdgeAt(pos);
+        let edge = this.getEdgesAt(pos).pop();
         if (!edge) { return; }
 
         this.selectionHandler.deselect(edge);

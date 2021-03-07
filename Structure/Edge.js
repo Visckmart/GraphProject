@@ -75,7 +75,8 @@ export default class Edge {
         ctx.lineTo(xEnd, yEnd);
     }
     // TODO: Transformar em ifs como nos highlights dos nós
-    _drawHighlight (ctx, highlight, xStart, yStart, xEnd, yEnd) {
+    _drawHighlight (ctx, highlight, xStart, yStart, xEnd, yEnd, z, d) {
+        let prepareLine = z ?? this.prepareLine
         if (this.highlights.has(HighlightType.SELECTION)) {
             ctx.save()
 
@@ -83,7 +84,7 @@ export default class Edge {
             ctx.strokeStyle = "blue";
             ctx.lineWidth = 7
             ctx.lineDashOffset = (window.performance.now() - this._initialTime) / 75
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd, d)
             ctx.stroke();
 
             ctx.restore()
@@ -95,7 +96,7 @@ export default class Edge {
             ctx.strokeStyle = "#777";
             ctx.setLineDash([]);
 
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd, d)
 
             ctx.stroke();
 
@@ -108,7 +109,7 @@ export default class Edge {
             ctx.setLineDash([]);
 
 
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd, d)
 
             ctx.stroke();
 
@@ -120,7 +121,7 @@ export default class Edge {
             ctx.setLineDash([]);
 
 
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd, d)
 
             ctx.stroke();
 
@@ -132,7 +133,7 @@ export default class Edge {
             ctx.strokeStyle = "#777";
             ctx.setLineDash([]);
 
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd, d)
 
             ctx.stroke();
 
@@ -141,11 +142,11 @@ export default class Edge {
         if (this.highlights.has(HighlightType.COLORED_BORDER)) {
             ctx.save()
             ctx.lineWidth = 9
-            ctx.strokeStyle = "blue";
+            ctx.strokeStyle = "MediumSeaGreen";
             ctx.setLineDash([]);
 
 
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd)
 
             ctx.stroke();
 
@@ -157,7 +158,7 @@ export default class Edge {
             ctx.setLineDash([]);
             ctx.strokeStyle = backgroundGradient;
             ctx.lineWidth = 9
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            prepareLine(ctx, xStart, yStart, xEnd, yEnd)
 
             ctx.stroke();
             ctx.lineWidth = 7

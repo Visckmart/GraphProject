@@ -26,7 +26,7 @@ let EdgeAssignedValueMixin = (superclass) => {
 
         getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}) {
             // Calcula o meio da linha
-            return [xStart + (xEnd - xStart)/2, yStart + (yEnd - yStart)/2]
+            return [xStart + (xEnd - xStart)/2, yStart + (yEnd - yStart)/2, -10]
         }
         getTextAngle(x, y, {x: xStart, y: yStart}) {
             // Gira a label
@@ -38,14 +38,14 @@ let EdgeAssignedValueMixin = (superclass) => {
             return angle;
         }
         drawText = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) => {
-            let [midX, midY] = this.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled)
+            let [midX, midY, yOff] = this.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled)
             ctx.save()
             ctx.translate(midX, midY);
             let angle = this.getTextAngle(midX, midY, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled);
             ctx.rotate(angle);
 
             // Levanta a label
-            ctx.translate(0, -20);
+            ctx.translate(0, yOff);
 
             ctx.font = "bold 15pt Arial";
             ctx.fillStyle = "#444";
