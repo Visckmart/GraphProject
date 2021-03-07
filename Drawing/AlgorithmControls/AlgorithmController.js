@@ -4,9 +4,11 @@ import {canvas} from "../General.js";
 
 
 class Step {
-    constructor(graph, message = "") {
+    constructor(graph, message = "", isWarning, isHighlight) {
         this.graphState = graph.clone()
         this.message = message
+        this.isWarning = isWarning
+        this.isHighlight = isHighlight
     }
 }
 
@@ -125,6 +127,8 @@ class AlgorithmController {
                 {
                     this.inputHandler.tutorialContainer.style.display = 'block'
                     this.inputHandler.message.innerText = this.steps[value].message
+                    this.messageIsWarning = this.steps[value].isWarning
+                    this.messageIsHighlighted = this.steps[value].isHighlight
                 } else {
                     this.inputHandler.tutorialContainer.style.display = 'none'
                 }
@@ -241,8 +245,8 @@ class AlgorithmController {
     }
 
     // Adiciona uma nova etapa
-    addStep(graph, message) {
-        this.steps.push(new Step(graph, message))
+    addStep(graph, message, isWarning = false, isHighlighted = false) {
+        this.steps.push(new Step(graph, message, isWarning, isHighlighted))
         this.inputHandler.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
 
         this.showcasing?.addStep()
@@ -255,7 +259,7 @@ class AlgorithmController {
             let requirement = this.requirements.shift()
             this.inputHandler.message.textContent = requirement.message
             await requirement.resolve()
-        this.messageIsWarning = false
+            this.messageIsWarning = false
             this.messageIsHighlighted = true
         }
         this.messageIsHighlighted = false

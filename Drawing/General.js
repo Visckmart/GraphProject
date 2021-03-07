@@ -60,5 +60,6 @@ export const Algorithm = {
     MST_KRUSKAL:        'KruskalMST',
     DFS_CYCLEDETECTION: 'DFSCycleDetection',
     MSA_EDMONDS:        'EdmondsMSA',
-    EULERIANPATH:       'EulerianPath'
+    EULERIANPATH:       'EulerianPath',
+    FORD_FULKERSON:      'FordFulkerson'
 }

@@ -9,6 +9,7 @@ import KruskalMST from "../Algorithm/KruskalMST.js";
 import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
 import {updateFavorites} from "./FavoritesHandler.js";
 import EulerianPath from "../Algorithm/EulerianPath.js";
+import FordFulkerson from "../Algorithm/FordFulkerson.js";
 
 updateFavorites()
 
@@ -36,6 +37,7 @@ algorithmSelector.onchange = function () {
     updateGraph()
 }
 function getRequiredCategoriesForAlgorithm(alg) {
+    console.log(alg)
     let requiredCategory = {};
     switch (alg) {
     case 'PrimMST':
@@ -48,6 +50,10 @@ function getRequiredCategoriesForAlgorithm(alg) {
         requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
         requiredCategory[GraphCategory.DIRECTED_EDGES] = true;
         break;
+    case 'FordFulkerson':
+        requiredCategory[GraphCategory.DIRECTED_EDGES] = true;
+        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        break;
     default:
         break;
     }
@@ -56,12 +62,13 @@ function getRequiredCategoriesForAlgorithm(alg) {
 let runAlgorithmButton = document.getElementById("run_algorithm")
 export function getAlgorithmFromName(name) {
     switch (name) {
-    case Algorithm.DIJKSTRA:           return DijkstraShortestPath;
-    case Algorithm.MST_PRIM:           return PrimMST;
-    case Algorithm.MST_KRUSKAL:        return KruskalMST;
-    case Algorithm.DFS_CYCLEDETECTION: return DFSCycleDetection;
-    case Algorithm.MSA_EDMONDS:        return EdmondsMSA;
-    case Algorithm.EULERIANPATH:       return EulerianPath;
+        case Algorithm.DIJKSTRA:           return DijkstraShortestPath;
+        case Algorithm.MST_PRIM:           return PrimMST;
+        case Algorithm.MST_KRUSKAL:        return KruskalMST;
+        case Algorithm.DFS_CYCLEDETECTION: return DFSCycleDetection;
+        case Algorithm.MSA_EDMONDS:        return EdmondsMSA;
+        case Algorithm.EULERIANPATH:       return EulerianPath;
+        case Algorithm.FORD_FULKERSON:     return FordFulkerson;
     }
     return null;
 }
