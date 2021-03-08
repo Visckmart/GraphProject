@@ -8,7 +8,6 @@ import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 import { deserializeNode, serializeNode } from "./NodeSerialization.js";
 
 export const regularNodeRadius = 28;
-
 export default class Node {
 
     constructor({x, y, label, index = null, highlights = null, randomStart = false}) {
@@ -85,7 +84,7 @@ export default class Node {
         ctx.save()
         ctx.lineWidth = 8;
         ctx.strokeStyle = this.color;
-        
+
         ctx.beginPath();
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2*Math.PI);
 
@@ -98,7 +97,12 @@ export default class Node {
             ctx.fillStyle = this.color;
         }
         ctx.fill();
+        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+            ctx.globalAlpha = 0.5;
+        }
+        this.highlights.clear();
         ctx.stroke();
+        ctx.globalAlpha = 1;
 
         ctx.beginPath();
         ctx.arc(this.pos.x, this.pos.y,
@@ -189,13 +193,13 @@ export default class Node {
             ctx.save();
 
             // Configuramos a borda
-            ctx.strokeStyle = colorFromComponents(0, 0, 255, 1)
-            ctx.lineWidth = 8
+            ctx.strokeStyle = "MediumSeaGreen";
+            ctx.lineWidth = 4
 
             // Desenhamos a borda
             ctx.beginPath();
             ctx.arc(this.pos.x, this.pos.y,
-                    this.radius + ctx.lineWidth / 2,
+                    this.radius + 4,
                     0, 2 * Math.PI);
             ctx.stroke();
 
@@ -203,14 +207,31 @@ export default class Node {
         } else if (this.highlights.has(HighlightType.COLORED_BORDER2)) { /* Borda colorida */
             ctx.save();
 
-            // Configuramos a borda
-            ctx.strokeStyle = colorFromComponents(80, 80, 80, 1)
             ctx.lineWidth = 5
+
+            // Configuramos a borda
+            ctx.strokeStyle = "MediumSpringGreen";
 
             // Desenhamos a borda
             ctx.beginPath();
             ctx.arc(this.pos.x, this.pos.y,
-                    this.radius - ctx.lineWidth,
+                    this.radius + 5,
+                    0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.restore();
+        } else if (this.highlights.has(HighlightType.ALGORITHM_VISITING)) {
+            ctx.save();
+
+            ctx.lineWidth = 5
+
+            // Configuramos a borda
+            ctx.strokeStyle = "blue";
+
+            // Desenhamos a borda
+            ctx.beginPath();
+            ctx.arc(this.pos.x, this.pos.y,
+                    this.radius + 5,
                     0, 2 * Math.PI);
             ctx.stroke();
 
@@ -221,8 +242,9 @@ export default class Node {
 
     /** Desenho da label **/
     drawLabel = (ctx, nodeLabeling) => {
+        ctx.save()
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = this.highlights.has(HighlightType.DARKEN) ? backgroundGradient : this.color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
@@ -237,7 +259,12 @@ export default class Node {
             nodeText = String.fromCharCode(this.index+65)
             break;
         }
+        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+            ctx.globalAlpha = 0.5;
+        }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);
+        ctx.globalAlpha = 1;
+        ctx.restore()
     }
     //endregion
 
