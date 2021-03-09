@@ -55,17 +55,6 @@ let EdgeDirectedMixin = (superclass) => {
                 ctx.lineDashOffset = -timestamp / 200;
                 this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
                 ctx.stroke();
-                ctx.fillStyle = "#AAFA"
-                let theta = Math.atan2(yEnd - yStart, xEnd - xStart);
-                // Não permite que o texto fique de cabeça para baixo
-                if (Math.abs(theta) > Math.PI/2) {
-                    // theta = Math.atan2(-(yEnd - yStart), -(xEnd - xStart))
-                }
-                ctx.save()
-                ctx.translate(xStart, yStart)
-                ctx.rotate(theta)
-                ctx.fillRect(0, 0, getDistanceOf({x: xStart, y: yStart}, {x: xEnd, y: yEnd}), 30);
-                ctx.restore()
                 ctx.restore()
             }
 

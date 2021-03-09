@@ -1,6 +1,6 @@
 import {
     canvas, Tool, HighFPSFeature, backgroundGradient, fastOverlayCanvas, slowOverlayCanvas,
-    CanvasType, incrementGlobalIndex
+    CanvasType, incrementGlobalIndex, GraphCategory
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
 import Edge from "../Structure/Edge.js"
@@ -227,30 +227,46 @@ class GraphView {
 
     getEdgesAt(pos) {
         let allEdges = []
-        // console.log("edges")
+
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let apos = nodeA.pos; let bpos = nodeB.pos;
-            let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x);
-
-            let hitboxCornerA, hitboxCornerB;
-            if (Math.abs(angle) > Math.PI/2) {
-                angle = Math.atan2(apos.y - bpos.y, apos.x - bpos.x);
-
-                hitboxCornerA = { x: 0, y: 30 }
-                hitboxCornerB = { x: -getDistanceOf(nodeA.pos, nodeB.pos), y: 60 }
+            // console.log(this.structure.checkEdgeBetween(nodeB, nodeA))
+            if (this.structure.categories.has(GraphCategory.DIRECTED_EDGES) == false
+            || this.structure.checkEdgeBetween(nodeB, nodeA) == false) {
+                let collided = checkLinePointCollision(
+                    nodeA.pos, nodeB.pos, 1,
+                    pos
+                )
+                if (collided) {
+                    allEdges.push(edge);
+                }
             } else {
-                hitboxCornerA = { x: 0, y: 0}
-                hitboxCornerB = { x: getDistanceOf(nodeA.pos, nodeB.pos), y: 30 }
-            }
-            let pointerOffset = { x: pos.x - nodeA.pos.x, y: pos.y - nodeA.pos.y + 30 }
-            let collided = checkRectanglePointCollision(
-                [hitboxCornerA, hitboxCornerB],
-                rotatePoint(pointerOffset, -angle)
-            );
+                let apos = nodeA.pos;
+                let bpos = nodeB.pos;
+                let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x);
 
-            if (collided) { console.log(1); allEdges.push(edge);
-                this.requestCanvasRefresh(CanvasType.GENERAL);}
+                let hitboxCornerA, hitboxCornerB;
+                if (Math.abs(angle) > Math.PI / 2) {
+                    angle = Math.atan2(apos.y - bpos.y, apos.x - bpos.x);
+
+                    hitboxCornerA = {x: 0, y: 30}
+                    hitboxCornerB = {x: -getDistanceOf(nodeA.pos, nodeB.pos), y: 60}
+                } else {
+                    hitboxCornerA = {x: 0, y: 0}
+                    hitboxCornerB = {x: getDistanceOf(nodeA.pos, nodeB.pos), y: 30}
+                }
+                let pointerOffset = {x: pos.x - nodeA.pos.x, y: pos.y - nodeA.pos.y + 30}
+                let r = rotatePoint(pointerOffset, -angle)
+                let collided = checkRectanglePointCollision(
+                    [hitboxCornerA, hitboxCornerB],
+                    r
+                );
+
+                if (collided) {
+                    allEdges.push(edge);
+                }
+            }
         }
+        if (allEdges.length > 0) { this.requestCanvasRefresh(); }
         return allEdges;
     }
 
