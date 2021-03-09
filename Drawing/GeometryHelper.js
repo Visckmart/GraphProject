@@ -36,7 +36,7 @@ export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rec
  *  │   R   │   • P
  *  └───────┘
  */
-export function checkRectanglePointCollision({topLeft: cornerA, bottomRight: cornerB}, point) {
+export function checkRectanglePointCollision([cornerA, cornerB], point) {
     let top, left, bottom, right;
     if (cornerA.x < cornerB.x) {
         left = cornerA.x
@@ -71,6 +71,11 @@ export function checkLinePointCollision(lineStart, lineEnd, lineWidth, point) {
         && distSum <= edgeLength + lineWidth;
 }
 
+export function rotatePoint(point, angle) {
+    let xConverter = (pos, t) => ((pos.x) * Math.cos(t)) - ((pos.y) * Math.sin(t))
+    let yConverter = (pos, t) => ((pos.x) * Math.sin(t)) + ((pos.y) * Math.cos(t))
+    return { x: xConverter(point, angle), y: yConverter(point, angle) }
+}
 /**
  * Checa se a a linha L1 intersecta a linha L2.
  *  Passa por todas as arestas restantes e considera contida caso haja
