@@ -75,27 +75,20 @@ class GraphMouseHandler {
         this.refreshCursorStyle();
     }
 
-    lastHoveredEdges = null;
+    lastHoveredEdge = null;
     checkEdgeHover(pos) {
-        if (this.lastHoveredEdges?.length > 0) {
-            for (let lastEdge of this.lastHoveredEdges) {
-                lastEdge.highlights.remove(HighlightType.LIGHTEN);
-            }
+        if (this.lastHoveredEdge) {
+            this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
         }
 
         // NODE COLISION
         if (this.graphView.primaryTool != Tool.CONNECT) { return; }
         if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
 
-        let edgesHover = this.graphView.getEdgesAt(pos);
-        this.lastHoveredEdges = edgesHover;
-        if (edgesHover.length > 0) {
-            for (let edge of edgesHover) {
-                if (this.selection.isSelected(edge)) { return ; }
-            }
-            for (let edge of edgesHover) {
-                edge.highlights.add(HighlightType.LIGHTEN);
-            }
+        let edgeHover = this.graphView.getEdgesAt(pos).pop();
+        this.lastHoveredEdge = edgeHover;
+        if (edgeHover && !this.selection.isSelected(edgeHover)) {
+            edgeHover.highlights.add(HighlightType.LIGHTEN);
         }
     }
 

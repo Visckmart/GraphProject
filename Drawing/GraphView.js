@@ -29,7 +29,7 @@ import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLineLineCollision,
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
-    checkSquarePointCollision, rotatePoint
+    checkSquarePointCollision, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -91,6 +91,8 @@ class GraphView {
         //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
     }
+
+    debugBalls = []
 
     /// Overlay de importação
     _overlay = false;
@@ -165,10 +167,8 @@ class GraphView {
                 && this.selectionHandler.isQuickSelection === false) {
                 shouldShowDashedTools = true;
                 node.highlights.add(HighlightType.SELECTION)
-                // console.log(node.label)
             } else {
                 node.highlights.remove(HighlightType.SELECTION)
-                console.log("R", node.label)
             }
         }
 
@@ -231,9 +231,8 @@ class GraphView {
         let allEdges = []
 
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            // console.log(this.structure.checkEdgeBetween(nodeB, nodeA))
             if (this.structure.categories.has(GraphCategory.DIRECTED_EDGES) == false
-            || this.structure.checkEdgeBetween(nodeB, nodeA) == false) {
+                || this.structure.checkEdgeBetween(nodeB, nodeA) == false) {
                 let collided = checkLinePointCollision(
                     nodeA.pos, nodeB.pos, 1,
                     pos
@@ -242,27 +241,14 @@ class GraphView {
                     allEdges.push(edge);
                 }
             } else {
-                let apos = nodeA.pos;
-                let bpos = nodeB.pos;
-                let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x);
+                let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x) - Math.PI / 2;
 
-                let hitboxCornerA, hitboxCornerB;
-                if (Math.abs(angle) > Math.PI / 2) {
-                    angle = Math.atan2(apos.y - bpos.y, apos.x - bpos.x);
+                let offsetA = translateWithAngle(nodeA.pos, angle, 0, 25)
+                let offsetB = translateWithAngle(nodeB.pos, angle, 0, 25)
 
-                    hitboxCornerA = {x: 0, y: 30}
-                    hitboxCornerB = {x: -getDistanceOf(nodeA.pos, nodeB.pos), y: 60}
-                } else {
-                    hitboxCornerA = {x: 0, y: 0}
-                    hitboxCornerB = {x: getDistanceOf(nodeA.pos, nodeB.pos), y: 30}
-                }
-                let pointerOffset = {x: pos.x - nodeA.pos.x, y: pos.y - nodeA.pos.y + 30}
-                let r = rotatePoint(pointerOffset, -angle)
-                let collided = checkRectanglePointCollision(
-                    [hitboxCornerA, hitboxCornerB],
-                    r
-                );
-
+                let collided = checkLinePointCollision(
+                    offsetA, offsetB, 5, pos
+                )
                 if (collided) {
                     allEdges.push(edge);
                 }
@@ -313,6 +299,8 @@ class GraphView {
             [initialPos, {x: initialPos.x, y: finalPos.y}], // Left
             [{x: finalPos.x, y: initialPos.y}, finalPos],   // Right
         ]
+        // Passa por todas as arestas restantes e considera contida caso haja
+        // uma interseção entre uma das laterais da seleção e a aresta.
         for (let [edge, nodeStart, nodeEnd] of this.structure.uniqueEdges()) {
             if (edgesWithin.includes(edge)) continue;
             for (let [lineStart, lineEnd] of lines) {
@@ -529,6 +517,14 @@ class GraphView {
             nodeFPSRequests.push(
                 node.draw(this.ctx)
             );
+        }
+        for (let [bx, by] of this.debugBalls) {
+            this.ctx.save()
+            this.ctx.fillStyle = "red"
+            this.ctx.beginPath()
+            this.ctx.arc(bx, by, 10, 0, 2*Math.PI)
+            this.ctx.fill()
+            this.ctx.restore()
         }
         this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
 

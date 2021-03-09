@@ -71,16 +71,9 @@ export function checkLinePointCollision(lineStart, lineEnd, lineWidth, point) {
         && distSum <= edgeLength + lineWidth;
 }
 
-export function rotatePoint(point, angle) {
-    let xConverter = (pos, t) => ((pos.x) * Math.cos(t)) - ((pos.y) * Math.sin(t))
-    let yConverter = (pos, t) => ((pos.x) * Math.sin(t)) + ((pos.y) * Math.cos(t))
-    return { x: xConverter(point, angle), y: yConverter(point, angle) }
-}
 /**
  * Checa se a a linha L1 intersecta a linha L2.
- *  Passa por todas as arestas restantes e considera contida caso haja
- *  uma interseção entre uma das laterais da seleção e a aresta.
- *  Explicação: http://jeffreythompson.org/collision-detection/line-line.php
+ * Explicação: http://jeffreythompson.org/collision-detection/line-line.php
  *
  *      ╱
  *  L1 ╱     ╷
@@ -98,4 +91,25 @@ export function checkLineLineCollision([startA, endA], [startB, endB]) {
 
     return    uA >= 0 && uA <= 1
            && uB >= 0 && uB <= 1;
+}
+
+/**
+ * Rotaciona um ponto.
+ */
+export function rotatePoint(point, angle) {
+    return {
+        x: (point.x * Math.cos(angle)) - (point.y * Math.sin(angle)),
+        y: (point.x * Math.sin(angle)) + (point.y * Math.cos(angle))
+    }
+}
+
+/**
+ *
+ *
+ */
+export function translateWithAngle(point, angle, offsetX, offsetY) {
+    return {
+        x: point.x + Math.cos(angle) * offsetX,
+        y: point.y + Math.sin(angle) * offsetY
+    }
 }
