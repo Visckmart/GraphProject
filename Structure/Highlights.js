@@ -50,6 +50,7 @@ export class HighlightsHandler {
     }
 
     clear() {
+        console.trace()
         this.highlights = new Set()
     }
 

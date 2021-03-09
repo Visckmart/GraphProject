@@ -100,7 +100,6 @@ export default class Node {
         if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
             ctx.globalAlpha = 0.5;
         }
-        this.highlights.clear();
         ctx.stroke();
         ctx.globalAlpha = 1;
 
@@ -127,9 +126,11 @@ export default class Node {
     /** Desenho dos destaques **/
     _drawHighlights = (ctx) => {
         let fpsRequests = [0]
+        // console.log(this.highlights.highlights)
         if (this.highlights.has(HighlightType.SELECTION)) {
             /* Borda pontilhada */
             ctx.save()
+            console.log(2)
 
             ctx.strokeStyle = "#1050FF"
             ctx.lineWidth = 4

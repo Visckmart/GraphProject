@@ -165,8 +165,10 @@ class GraphView {
                 && this.selectionHandler.isQuickSelection === false) {
                 shouldShowDashedTools = true;
                 node.highlights.add(HighlightType.SELECTION)
+                // console.log(node.label)
             } else {
                 node.highlights.remove(HighlightType.SELECTION)
+                console.log("R", node.label)
             }
         }
 
