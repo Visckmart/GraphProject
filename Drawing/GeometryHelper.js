@@ -14,7 +14,6 @@ export function checkSquarePointCollision(squareMid, squareLength, point) {
         && squareMid.y - offset < point.y && squareMid.y + offset > point.y;
 }
 
-
 /**
  * Checa se o retângulo R, definido pelos seus lados, colide com o quadrado S,
  * definido pelo ponto central e o tamanho dos lados.
@@ -29,6 +28,31 @@ export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rec
     let offset = squareLength/2;
     return squareMid.x + offset > rectLeft && squareMid.x - offset < rectRight
            && squareMid.y + offset > rectTop && squareMid.y - offset < rectBottom;
+}
+/**
+ * Checa se o retângulo R, definido por dois pontos opostos, colide com o ponto P.
+ *
+ *  ┌───────┐
+ *  │   R   │   • P
+ *  └───────┘
+ */
+export function checkRectanglePointCollision({topLeft: cornerA, bottomRight: cornerB}, point) {
+    let top, left, bottom, right;
+    if (cornerA.x < cornerB.x) {
+        left = cornerA.x
+        right = cornerB.x
+    } else {
+        right = cornerA.x
+        left = cornerB.x
+    }
+    if (cornerA.y < cornerB.y) {
+        top = cornerA.y
+        bottom = cornerB.y
+    } else {
+        bottom = cornerA.y
+        top = cornerB.y
+    }
+    return left < point.x && top < point.y && right > point.x && bottom > point.y;
 }
 
 /**

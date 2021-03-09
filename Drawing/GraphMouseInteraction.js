@@ -82,10 +82,11 @@ class GraphMouseHandler {
                 lastEdge.highlights.remove(HighlightType.LIGHTEN);
             }
         }
+        // this.graphView.getEdgesAt(pos);
 
         // NODE COLISION
-        if (this.graphView.primaryTool != Tool.CONNECT) { return; }
-        if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
+        // if (this.graphView.primaryTool != Tool.CONNECT) { return; }
+        // if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
 
         let edgesHover = this.graphView.getEdgesAt(pos);
         this.lastHoveredEdges = edgesHover;

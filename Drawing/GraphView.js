@@ -28,7 +28,8 @@ import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js"
 import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLineLineCollision,
-    checkLinePointCollision, checkRectangleSquareCollision, checkSquarePointCollision
+    checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
+    checkSquarePointCollision
 } from "./GeometryHelper.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -224,15 +225,67 @@ class GraphView {
         return false;
     }
 
+    debugBalls = []
+    debugSquares = []
+    dbc = 0;
+    extraDrawings = []
     getEdgesAt(pos) {
         let allEdges = []
-
+        this.dbc += 1;
+        this.debugSquares = [];
+        // console.log("edges")
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let collided = checkLinePointCollision(
-                nodeA.pos, nodeB.pos, 1,
-                pos
-            )
-            if (collided) { allEdges.push(edge); }
+
+            // console.log(edge.getTextAngle(nodeA.pos.x, nodeA.pos.y, nodeA.pos, nodeB.pos, true))
+            let apos = nodeA.pos; let bpos = nodeB.pos;
+            let angle = Math.atan2(bpos.y - apos.y, bpos.x - apos.x);
+            // // Não permite que o texto fique de cabeça para baixo
+            // if (nodeA.pos.x < nodeB.pos.x) {
+            //     angle += Math.PI/2
+            // }
+
+            let cA, cB;
+            cA = { x: 0, y: 0}
+            cB = { x: getDistanceOf(nodeA.pos, nodeB.pos), y: 30 }
+            if (Math.abs(angle) > Math.PI/2) {
+                cA = { x: 0, y: 30 }
+                cB = { x: -getDistanceOf(nodeA.pos, nodeB.pos), y: 60 }
+                angle = Math.atan2(apos.y - bpos.y, apos.x - bpos.x);
+            }
+            // let t = -angle
+            let xConverter = (pos, t) => ((pos.x) * Math.cos(t)) - ((pos.y) * Math.sin(t))
+            let yConverter = (pos, t) => ((pos.x) * Math.sin(t)) + ((pos.y) * Math.cos(t))
+            let ppos = {x: pos.x-nodeA.pos.x, y: -nodeA.pos.y+pos.y+30}
+            let point = {x: xConverter(ppos, -angle), y: +yConverter(ppos, -angle)}
+            this.debugBalls.push(point)
+            // console.log(nodeA.label)
+            // break
+            let collided = checkRectanglePointCollision({topLeft: cA, bottomRight: cB}, point);
+
+            if (collided) { console.log(1); allEdges.push(edge); }
+            // let
+            // let
+            // let collided2 = checkRectanglePointCollision({topLeft: cA2, bottomRight: cB2}, point);
+
+            // let newX = nodeB.pos.x + (nodeA.pos.x * Math.cos(t)) - (nodeA.pos.y * Math.sin(t))
+            // let newY = nodeB.pos.y + (nodeA.pos.x * Math.sin(t)) + (nodeA.pos.y * Math.cos(t))
+            // if (this.dbc % 3 == 0) this.debugBalls.push({x: newX, y: newY})
+            // if (this.debugBalls.length > 400) {
+            //     this.debugBalls.shift()
+            // }
+            // let za = {x: nodeA.pos.x, y: nodeA.pos.y}
+            // let zb = {x: nodeA.pos.x+getDistanceOf(nodeA.pos, nodeB.pos), y: nodeA.pos.y+30}
+            // this.debugSquares.push([za, zb])
+            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, getDistanceOf(nodeA.pos, nodeB.pos), 30);
+            // let zp = {x: xConverter(pos, t), y: j.y+yConverter(pos, t) + nodeA.pos.y}
+            // let collided = checkRectanglePointCollision({topLeft: za, bottomRight: zb}, zp);
+            // let collided = checkLinePointCollision(
+            //     nodeA.pos,
+            //     nodeB.pos, 1,
+            //     {x: xConverter(pos, t), y: yConverter(pos, t)}
+            // );
+            // if (this.dbc % 10 == 0) this.debugBalls.push(zp)
+            // if (collided) { console.log(1); allEdges.push(edge); }
         }
         return allEdges;
     }
@@ -480,6 +533,13 @@ class GraphView {
             edge.draw(this.ctx, nodeA.pos, nodeB.pos, window.performance.now(),
                       this.structure.checkEdgeBetween(nodeB, nodeA))
             // console.log(this.mouseHandler.clickedNode)
+            this.ctx.save()
+            this.ctx.fillStyle = "red"
+            this.ctx.beginPath()
+            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, getDistanceOf(nodeA.pos, nodeB.pos), 30);
+            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, Math.abs(nodeB.pos.x-nodeA.pos.y), 50)
+            this.ctx.fill()
+            this.ctx.restore()
         }
 
         let nodeFPSRequests = [];
@@ -487,6 +547,36 @@ class GraphView {
             nodeFPSRequests.push(
                 node.draw(this.ctx)
             );
+            // this.ctx.save()
+            // let t = Math.PI/8
+            // let newX = (node.pos.x * Math.cos(t)) - (node.pos.y * Math.sin(t))
+            // let newY = (node.pos.x * Math.sin(t)) + (node.pos.y * Math.cos(t))
+            // this.ctx.fillStyle = "red"
+            // this.ctx.beginPath()
+            // this.ctx.arc(newX, newY, 5, 0, 2*Math.PI)
+            // this.ctx.fill()
+            // this.ctx.restore()
+        }
+        for (let d of this.extraDrawings) {
+            d.bind(this)()
+        }
+        for (let {x, y} of this.debugBalls) {
+            this.ctx.save()
+            this.ctx.fillStyle = "red"
+            this.ctx.beginPath()
+            this.ctx.arc(x, y, 5, 0, 2*Math.PI)
+            this.ctx.fill()
+            this.ctx.restore()
+        }
+        for (let [pointA, pointB] of this.debugSquares) {
+            this.ctx.fillStyle = "#8F88"
+            this.ctx.beginPath()
+            this.ctx.moveTo(pointA.x, pointA.y)
+            this.ctx.lineTo(pointB.x, pointA.y)
+            this.ctx.lineTo(pointB.x, pointB.y)
+            this.ctx.lineTo(pointA.x, pointB.y)
+            this.ctx.lineTo(pointA.x, pointA.y)
+            this.ctx.fill()
         }
         this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
 
