@@ -495,11 +495,11 @@ class GraphView {
     }
 
     // This function clears the canvas and redraws it.
-    redrawGraph() {
+    redrawGraph(background = false) {
         this.ctx.save();
         // TODO: Esse if é meio gambiarra, o fundo deveria ser transparente
         //       o tempo todo, e o cache deveria saber lidar com isso.
-        if (!this.selectionHandler.shouldDrawSelection) {
+        if (background == false && !this.selectionHandler.shouldDrawSelection) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
             this.ctx.fillStyle = backgroundGradient;
