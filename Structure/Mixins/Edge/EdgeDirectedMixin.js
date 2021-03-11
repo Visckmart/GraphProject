@@ -1,6 +1,7 @@
 import {HighlightType} from "../../Highlights.js";
 import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
 import { colorFromComponents, getDistanceOf } from "../../Utilities.js";
+import { pointFromCircleAngle } from "../../../Drawing/GeometryHelper.js";
 
 let EdgeDirectedMixin = (superclass) => {
     return class EdgeDirected extends superclass {
@@ -12,8 +13,15 @@ let EdgeDirectedMixin = (superclass) => {
             this.drawChain.addLink(this.drawProcedure)
         }
 
+        // TODO: Organizar
         prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled) {
             // doubled = true;
+            let arrowStartX;
+            let arrowStartY;
+            let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
+            let newp = pointFromCircleAngle(
+                {x:xEnd, y:yEnd},
+                30, theta - Math.PI/2)
             if (doubled) {
                 ctx.beginPath()
                 ctx.moveTo(xStart, yStart);
@@ -21,10 +29,28 @@ let EdgeDirectedMixin = (superclass) => {
                 let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
                 let cpX = ((xStart + xEnd) / 2) + Math.cos(theta) * offset;
                 let cpY = ((yStart + yEnd) / 2) + Math.sin(theta) * offset;
-                ctx.quadraticCurveTo(cpX, cpY, xEnd, yEnd);
+                arrowStartX = cpX
+                arrowStartY = cpY
+                let newp2 = pointFromCircleAngle(
+                    {x:xEnd, y:yEnd},
+                    30, Math.atan2(cpX - cpY, xEnd - xStart) - Math.PI / 2)
+                ctx.quadraticCurveTo(cpX, cpY, newp.x, newp.y);
             } else {
                 super.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
+                arrowStartX = xStart;
+                arrowStartY = yStart;
             }
+            let arrowAngle = Math.atan2(arrowStartX - xEnd, arrowStartY - yEnd) + Math.PI;
+
+            let arrowHeadSize = 25
+            ctx.moveTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle - Math.PI / 6.5)),
+                       newp.y - (arrowHeadSize * Math.cos(arrowAngle - Math.PI / 6.5)));
+
+            ctx.lineTo(newp.x, newp.y);
+
+            ctx.lineTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6.5)),
+                       newp.y - (arrowHeadSize * Math.cos(arrowAngle + Math.PI / 6.5)));
+
         }
         getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
             if (!doubled) return super.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd})
@@ -49,9 +75,9 @@ let EdgeDirectedMixin = (superclass) => {
         drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp, doubled) => {
             if (!this.highlights.has(HighlightType.SELECTION)) {
                 ctx.save()
-                ctx.lineWidth = 8;
-                ctx.strokeStyle = "#777";
-                ctx.setLineDash([10, 7]);
+                ctx.lineWidth = 7;
+                ctx.strokeStyle = "#444";
+                // ctx.setLineDash([10, 7]);
                 ctx.lineDashOffset = -timestamp / 200;
                 this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
                 ctx.stroke();

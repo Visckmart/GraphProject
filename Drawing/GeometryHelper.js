@@ -94,6 +94,16 @@ export function checkLineLineCollision([startA, endA], [startB, endB]) {
 }
 
 /**
+ * Calcula o ponto que a partir do centro do círculo, dado um ângulo, toca
+ * na borda desse círculo.
+ */
+export function pointFromCircleAngle(circleMid, circleRadius, angle) {
+    return {
+        x: circleMid.x + (circleRadius * Math.cos(angle)),
+        y: circleMid.y + (circleRadius * Math.sin(angle))
+    }
+}
+/**
  * Rotaciona um ponto.
  */
 export function rotatePoint(point, angle) {
