@@ -1,12 +1,14 @@
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
 import {canvas} from "../General.js";
+import AlgorithmPseudocode from "./AlgorithmPseudocode.js";
 
 
 class Step {
-    constructor(graph, message = "", isWarning, isHighlight) {
+    constructor(graph, message = "", pseudoLabel, isWarning, isHighlight) {
         this.graphState = graph.clone()
         this.message = message
+        this.pseudoLabel = pseudoLabel
         this.isWarning = isWarning
         this.isHighlight = isHighlight
     }
@@ -127,6 +129,12 @@ class AlgorithmController {
                 {
                     this.inputHandler.tutorialContainer.style.display = 'block'
                     this.inputHandler.message.innerHTML = this.steps[value].message
+
+                    if(this.pseudocode && this.steps[value].pseudoLabel)
+                    {
+                        this.pseudocode.current = this.steps[value].pseudoLabel
+                    }
+
                     this.messageIsWarning = this.steps[value].isWarning
                     this.messageIsHighlighted = this.steps[value].isHighlight
                 } else {
@@ -228,6 +236,11 @@ class AlgorithmController {
     }
     //#endregion
 
+    //#region Comportamento de pseudo-código
+    setPseudocode(code, labels) {
+        this.pseudocode = new AlgorithmPseudocode(code, labels)
+    }
+    //#endregion
     // Esconde a barra de play
     hide() {
         this.inputHandler.controls.style.display = 'none'
@@ -245,8 +258,8 @@ class AlgorithmController {
     }
 
     // Adiciona uma nova etapa
-    addStep(graph, message, isWarning = false, isHighlighted = false) {
-        this.steps.push(new Step(graph, message, isWarning, isHighlighted))
+    addStep(graph, message, pseudoLabel = null, isWarning = false, isHighlighted = false) {
+        this.steps.push(new Step(graph, message, pseudoLabel, isWarning, isHighlighted))
         this.inputHandler.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
 
         this.showcasing?.addStep()
@@ -286,6 +299,10 @@ class AlgorithmController {
         this.playing = true
         this.progress = 0
         this.isBlocked = false
+
+        for (let element of document.getElementsByClassName('menuContent')) {
+            element.style.display = 'none'
+        }
     }
 
 
@@ -307,6 +324,11 @@ class AlgorithmController {
         this.adjustNodePositions()
 
         this.inputHandler.finish()
+        this?.pseudocode.finish()
+
+        for (let element of document.getElementsByClassName('menuContent')) {
+            element.style.display = 'unset'
+        }
     }
 }
 
