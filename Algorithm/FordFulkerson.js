@@ -61,12 +61,12 @@ function executeFordFulkerson(controller, source, sink) {
     // Verificando nós de entrada e saída
     if(graph.edgesFrom(sink).next().value) {
         console.error("Final não pode ter nós saindo")
-        controller.addStep(graph, "Nó final não pode ter nós saindo dele", true)
+        controller.addStep(graph, "Nó final não pode ter nós saindo dele", null, true)
         return
     }
     if(graph.edgesTo(source).next().value) {
         console.error("Fonte não pode ter nós chegando")
-        controller.addStep(graph, "Nó fonte não pode ter nós incidentes.", true)
+        controller.addStep(graph, "Nó fonte não pode ter nós incidentes.", null, true)
         return
     }
     // Inicializando visualização
