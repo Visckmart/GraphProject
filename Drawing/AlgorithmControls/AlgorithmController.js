@@ -1,7 +1,7 @@
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
 import {canvas} from "../General.js";
-import AlgorithmPseudocode from "./AlgorithmPseudocode.js";
+import AlgorithmPseudocode from "./Pseudocode/AlgorithmPseudocode.js";
 
 
 class Step {

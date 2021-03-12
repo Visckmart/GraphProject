@@ -289,8 +289,20 @@ input[type="range"]::-webkit-slider-thumb {
     background: none;
 }
 
+#pseudocode {
+    position: relative;
+}
+
 #pseudocode > h2 {
     margin-bottom: 0;
+}
+
+#pseudoPopup {
+    position: absolute;
+    right: 5px;
+    top:5px;
+    color: #444444;
+    text-decoration: none;
 }
 
 #pseudoWrapper {

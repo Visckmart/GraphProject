@@ -1,0 +1,37 @@
+#pseudocode {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top:0;
+    left:0;
+}
+
+#pseudocode > h2 {
+    margin-bottom: 0;
+}
+
+#pseudoWrapper {
+    overflow: auto;
+}
+
+#pseudoContainer {
+    padding: 5px;
+}
+
+#pseudoContainer > pre {
+    margin: 0;
+    width: 100%;
+}
+
+#pseudoContainer > pre[current="true"] {
+    background-color: lightgray;
+}
+
+#pseudoContainer > pre > span {
+    color: #777777;
+}
+
+#pseudoContainer > pre > span::before {
+    color: darkgray;
+    content: '# ';
+}
