@@ -225,27 +225,23 @@ class GraphView {
         let allEdges = []
 
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            if (this.structure.categories.has(GraphCategory.DIRECTED_EDGES) == false
-                || this.structure.checkEdgeBetween(nodeB, nodeA) == false) {
+            let straightLine = !this.structure.categories.has(GraphCategory.DIRECTED_EDGES)
+                               || !this.structure.checkEdgeBetween(nodeB, nodeA)
+
+            if (straightLine) {
                 let collided = checkLinePointCollision(
-                    nodeA.pos, nodeB.pos, 1,
-                    pos
+                    nodeA.pos, nodeB.pos, 1, pos
                 )
-                if (collided) {
-                    allEdges.push(edge);
-                }
+                if (collided) { allEdges.push(edge); }
             } else {
                 let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x) - Math.PI / 2;
 
                 let offsetA = translateWithAngle(nodeA.pos, angle, 0, 25)
                 let offsetB = translateWithAngle(nodeB.pos, angle, 0, 25)
-
                 let collided = checkLinePointCollision(
                     offsetA, offsetB, 5, pos
                 )
-                if (collided) {
-                    allEdges.push(edge);
-                }
+                if (collided) { allEdges.push(edge); }
             }
         }
         if (allEdges.length > 0) { this.requestCanvasRefresh(); }
@@ -331,6 +327,7 @@ class GraphView {
         }
         this.selectionHandler.clear()
         this.structure.removeNode(frontmostNode);
+
         this.refreshGraph();
         this.registerStep();
     }
@@ -348,7 +345,6 @@ class GraphView {
             console.error('Aresta não pode ser inserida.')
             return;
         }
-
         if (refresh) {
             this.refreshGraph();
             this.registerStep();
@@ -362,6 +358,7 @@ class GraphView {
 
         this.selectionHandler.deselect(edge);
         this.structure.removeEdge(edge);
+        this.refreshGraph();
         this.registerStep();
     }
 

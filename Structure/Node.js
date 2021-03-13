@@ -130,7 +130,6 @@ export default class Node {
         if (this.highlights.has(HighlightType.SELECTION)) {
             /* Borda pontilhada */
             ctx.save()
-            console.log(2)
 
             ctx.strokeStyle = "#1050FF"
             ctx.lineWidth = 4
