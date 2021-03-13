@@ -9,7 +9,11 @@ export default class AlgorithmPseudocode {
         this.container = document.getElementById("pseudoContainer")
 
         this.wrapper.style.display = ''
-        document.getElementById("pseudocodeTab").style.display = ''
+        this.tab = document.getElementById("pseudocodeTab")
+
+        if(this.tab) {
+            this.tab.style.display = ''
+        }
 
         this.codeElements = []
         this._initCode()
