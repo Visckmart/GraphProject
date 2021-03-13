@@ -266,6 +266,7 @@ class AlgorithmController {
         this.isBlocked = false
     }
 
+    enabledInputs = null;
     // Inicializa a preparação do algoritmo
     async setup (algorithm) {
         // console.warn("Starting")
@@ -275,6 +276,11 @@ class AlgorithmController {
         document.querySelector(".toolTray").style.display = 'none'
         this.show()
         this.playing = false
+        let inputElements = document.getElementById("menuArea").getElementsByTagName("input")
+        this.enabledInputs = Array.from(inputElements).map(element => [element, element.disabled])
+        for (let [input, ] of this.enabledInputs) {
+            input.disabled = true
+        }
         await algorithm(this)
         this.ready()
     }
@@ -295,6 +301,9 @@ class AlgorithmController {
 
         document.querySelector(".toolTray").style.display = 'unset'
 
+        for (let [input, originalState] of this.enabledInputs) {
+            input.disabled = originalState
+        }
         this.hide()
         this.playing = false
         this.showcasing = false
