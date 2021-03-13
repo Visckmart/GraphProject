@@ -165,6 +165,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             edge.highlights.clear()
         }
 
+        currentNode.highlights.clear()
         for (let node of graph.nodes()) {
             node.distance = node.distance;
         }
