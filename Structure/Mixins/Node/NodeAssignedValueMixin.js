@@ -40,13 +40,13 @@ let NodeAssignedValueMixin = (superclass) => {
             if (this.assignedValue == "∞") {
                 ctx.font = "bold 20pt Arial";
             } else {
-                ctx.font = "bold 15pt Arial";
+                ctx.font = "bold 17pt Arial";
             }
             ctx.textAlign = "center";
             ctx.textBaseline = 'middle';
 
             let boxWidth = ctx.measureText(this.assignedValue).width + 5;
-            let boxHeight = 20;
+            let boxHeight = 25;
             let boxVerticalOffset = 45;
 
             ctx.beginPath();
