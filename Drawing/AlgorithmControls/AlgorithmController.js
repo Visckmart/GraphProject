@@ -166,7 +166,7 @@ class AlgorithmController {
             this.inputHandler.playButton.style.display = 'none'
             this.inputHandler.stopButton.style.display = 'block'
 
-            if(this.progress === this.numberOfSteps) {
+            if(this.progress === this.numberOfSteps - 1) {
                 this.progress = 0
             }
 

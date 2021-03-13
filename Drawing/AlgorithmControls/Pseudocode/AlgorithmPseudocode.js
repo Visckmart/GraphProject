@@ -60,6 +60,7 @@ export default class AlgorithmPseudocode {
             localStorage.removeItem('pseudo__message-label')
             localStorage.removeItem('pseudo__code')
             localStorage.removeItem('pseudo__labels')
+            this._popup?.close()
         }
 
         this.wrapper.style.display = 'none'
@@ -82,7 +83,7 @@ export default class AlgorithmPseudocode {
 
         this._popup = window.open('./AlgorithmControls/Pseudocode/window.html',
             'window',
-            'toolbar=no,scrollbars=yes,resizable=yes,top=200,left=200,width=700,height=700')
+            `toolbar=no,scrollbars=yes,resizable=yes,top=200,left=200`)
 
     }
 
