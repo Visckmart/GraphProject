@@ -312,6 +312,7 @@ class AlgorithmController {
 
         // Restaurando grafo ao estado inicial
         this.graphView.structure = this.initialGraph
+        this.graphView.refreshGraph()
         this.adjustNodePositions()
 
         this.inputHandler.finish()
