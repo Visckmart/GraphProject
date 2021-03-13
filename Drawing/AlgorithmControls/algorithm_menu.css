@@ -1,0 +1,119 @@
+/* Showcase de algoritmos */
+#algorithmMenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 10%;
+    height: fit-content;
+    z-index: 15;
+    transform: translateX(calc(-100% + 8pt - 1px));
+    transition: all 0.1s ease-in-out;
+}
+
+#algorithmMenuBody {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
+}
+
+#algorithmMenu:hover, #algorithmMenu:target{
+    transform: translateX(0);
+}
+#algorithmMenu:hover #algorithmMenuTab, #algorithmMenu:target #algorithmMenuTab {
+    width: 0;
+    opacity: 0;
+}
+
+#algorithmMenuTab {
+    width: 8pt;
+    height: 50pt;
+    border-top-right-radius: 3pt;
+    border-bottom-right-radius: 3pt;
+    background-color: rgba(0, 0, 0, 0.7);
+    margin-bottom: auto;
+}
+
+#algorithmMenuPin, #algorithmMenuUnPin {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    opacity: 0.4;
+    z-index: 20;
+    display: none
+}
+
+#algorithmMenu:hover #algorithmMenuPin, #algorithmMenu:hover #algorithmMenuUnPin {
+    display: block;
+}
+
+#algorithmMenuUnPin {
+    display: none !important;
+    opacity: 1;
+}
+
+#algorithmMenu:target #algorithmMenuPin {
+    display: none;
+}
+
+#algorithmMenu:target #algorithmMenuUnPin {
+    display: block !important;
+}
+
+#algorithmMenuTabs {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#algorithmMenuTabs > div {
+    margin-left: 10px;
+    color:white;
+    background-color: #666;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 8px;
+    font-size: .8rem;
+    text-align: center;
+    position: relative;
+    z-index: 100;
+}
+
+#algorithmMenuTabs > div:before,
+#algorithmMenuTabs > div:after {
+    content: "";
+    position: absolute;
+    z-index: 90;
+
+    height: 10px;
+    width: 20px;
+
+    bottom: 0;
+}
+
+#algorithmMenuTabs > div:after {
+    right: -20px;
+
+    border-radius: 0 0 0 5px;
+    box-shadow: -5px 0 0 0 #666;
+}
+
+#algorithmMenuTabs > div:before {
+    left: -20px;
+
+    border-radius: 0 0 5px 0;
+    box-shadow: 5px 0 0 0 #666;
+}
+
+#algorithmMenuTabs > div[active="true"] {
+    background-color: #888;
+}
+
+#algorithmMenuTabs > div[active="true"]:before  {
+    box-shadow: 5px 0 0 0 #888;
+}
+
+#algorithmMenuTabs > div[active="true"]:after {
+    box-shadow: -5px 0 0 0 #888;
+}

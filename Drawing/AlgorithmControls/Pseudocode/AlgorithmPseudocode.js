@@ -18,9 +18,6 @@ export default class AlgorithmPseudocode {
         }
 
 
-        // Mudando tamanho do menu lateral para visualizar o código melhor
-        document.body.style.setProperty('--menuWidth', "350pt");
-
         // Adicionando evento de popup
         document.getElementById("pseudoPopup")?.addEventListener('click', this.popup.bind(this))
     }
@@ -65,7 +62,6 @@ export default class AlgorithmPseudocode {
 
         this.wrapper.style.display = 'none'
         this.container.innerHTML = ''
-        document.body.style.removeProperty('--menuWidth');
     }
 
     _popup = null
@@ -75,10 +71,8 @@ export default class AlgorithmPseudocode {
         localStorage.setItem('pseudo__labels', JSON.stringify(this.labels))
         localStorage.setItem('pseudo__message-label', this._currentLabel)
 
-        document.body.style.setProperty('--menuWidth', "0pt");
         window.onPseudoClose = () => {
             this._popup = null
-            document.body.style.setProperty('--menuWidth', "350pt");
         }
 
         this._popup = window.open('./AlgorithmControls/Pseudocode/window.html',

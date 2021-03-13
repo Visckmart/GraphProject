@@ -2,6 +2,7 @@ import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
 import {canvas} from "../General.js";
 import AlgorithmPseudocode from "./Pseudocode/AlgorithmPseudocode.js";
+import AlgorithmMenu from "./AlgorithmMenu.js";
 
 
 class Step {
@@ -29,6 +30,9 @@ class AlgorithmController {
 
         this.inputHandler.progressBar.setAttribute("min", "0")
         this.inputHandler.progressBar.setAttribute("max", this.numberOfSteps.toString())
+
+        // Instanciando handler do menu lateral
+        this.menuHandler = new AlgorithmMenu()
 
         this.progress = 0
         this.speed = 0
@@ -228,9 +232,12 @@ class AlgorithmController {
     set showcasing(showcase) {
         this._showcasing = showcase
         if(showcase) {
-            this.inputHandler.showcase.style.display = 'flex'
+            this.inputHandler.showcase.style.display = ''
+            this.inputHandler.showcaseTab.style.display = ''
+            this.menuHandler.selectedTab = this.inputHandler.showcaseTab
         } else {
             this.inputHandler.showcase.style.display = 'none'
+            this.inputHandler.showcaseTab.style.display = 'none'
             this.showcasing?.finish?.()
         }
     }
@@ -324,6 +331,7 @@ class AlgorithmController {
         this.adjustNodePositions()
 
         this.inputHandler.finish()
+        this.menuHandler.finish()
         this?.pseudocode.finish()
 
         for (let element of document.getElementsByClassName('menuContent')) {
