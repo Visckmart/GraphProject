@@ -3,9 +3,6 @@ import {
     CanvasType, incrementGlobalIndex, GraphCategory
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
-import Edge from "../Structure/Edge.js"
-import Node from "../Structure/Node.js"
-import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
 import {HighlightType} from "../Structure/Highlights.js";
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
@@ -13,7 +10,7 @@ import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
 import {
-    colorFromComponents, getDistanceOf,
+    colorFromComponents,
 } from "../Structure/Utilities.js";
 import PropertyList from "./Properties/PropertyList.js";
 import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
@@ -22,9 +19,6 @@ import {regularNodeRadius} from "../Structure/Node.js";
 import HistoryTracker from "./HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
-import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
-import EdgeDirectedMixin from "../Structure/Mixins/Edge/EdgeDirectedMixin.js";
-import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLineLineCollision,

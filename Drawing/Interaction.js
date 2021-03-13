@@ -1,6 +1,5 @@
 import { Algorithm, GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
-import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";

@@ -1,6 +1,4 @@
 import {HighlightType} from "../../Highlights.js";
-import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
-import { colorFromComponents, getDistanceOf } from "../../Utilities.js";
 import { pointFromCircleAngle } from "../../../Drawing/GeometryHelper.js";
 
 let EdgeDirectedMixin = (superclass) => {
