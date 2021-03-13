@@ -189,9 +189,7 @@ class GraphView {
 
     //region Deteção de Nós e Arestas
 
-    // Searches for nodes that contain the point `pos`
-    // The lookup is done from the last node to the first, the inverse of the
-    // drawing lookup in order to return the frontmost node.
+    /** Obtém os nós que estão em uma determinada posição. **/
     getNodesAt(pos, checkForConflict = false) {
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
@@ -206,6 +204,8 @@ class GraphView {
         return detectedNodes;
     }
 
+
+    /** Checa se há ao menos 1 nó em uma determinada posição. **/
     checkIfNodeAt(pos, checkForConflict = false, exceptionIndex = null) {
         for (let node of this.structure.nodes()) {
             if (node.index == exceptionIndex) continue;
@@ -214,13 +214,13 @@ class GraphView {
             if (checkForConflict) { radiusCheck *= 2; }
 
             let collided = checkSquarePointCollision(
-                node.pos, radiusCheck*2,
-                pos)
+                node.pos, radiusCheck*2, pos)
             if (collided) { return node; }
         }
         return false;
     }
 
+    /** Obtém as arestas que estão em uma determinada posição. **/
     getEdgesAt(pos) {
         let allEdges = []
 
@@ -244,10 +244,10 @@ class GraphView {
                 if (collided) { allEdges.push(edge); }
             }
         }
-        if (allEdges.length > 0) { this.requestCanvasRefresh(); }
         return allEdges;
     }
 
+    /** Obtém os nós que estão em uma determinada área. **/
     getNodesWithin(initialPos, finalPos) {
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
@@ -260,6 +260,7 @@ class GraphView {
         return nodesWithin;
     }
 
+    /** Obtém as arestas que tocam ou estão contidas em uma determinada área. **/
     getEdgesWithin(initialPos, finalPos) {
         let edgesWithin = new Set();
 
