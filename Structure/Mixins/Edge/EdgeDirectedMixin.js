@@ -46,8 +46,10 @@ let EdgeDirectedMixin = (superclass) => {
 
             ctx.lineTo(newp.x, newp.y);
 
-            ctx.lineTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6.5)),
+            ctx.moveTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6.5)),
                        newp.y - (arrowHeadSize * Math.cos(arrowAngle + Math.PI / 6.5)));
+
+            ctx.lineTo(newp.x, newp.y);
 
         }
         getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
@@ -70,23 +72,28 @@ let EdgeDirectedMixin = (superclass) => {
             }
             return theta;
         }
-        drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp, doubled) => {
-            if (!this.highlights.has(HighlightType.SELECTION) && !this.highlights.has(HighlightType.DISABLED)) {
-                ctx.save()
-                ctx.lineWidth = 7;
-                ctx.strokeStyle = "#444";
-                // ctx.setLineDash([10, 7]);
-                ctx.lineDashOffset = -timestamp / 200;
-                this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
-                ctx.stroke();
-                ctx.restore()
-            }
 
-            for (let highlight of this.highlights.list()) {
-                ctx.save()
-                this._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, doubled);
-                ctx.restore()
+        get width() {
+            return 7;
+        }
+        get color() {
+            let c = super.color
+            if (this.highlights.has(HighlightType.DISABLED) || c != "#aaa") {
+                return c
+            } else {
+                return "#444"
             }
+        }
+        drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp, doubled) => {
+            ctx.save()
+            this.prepareStyle(ctx)
+            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
+
+            ctx.stroke();
+
+            ctx.restore()
+
+
         }
         _drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, doubled) {
             if (this.highlights.has(HighlightType.SELECTION)) {
@@ -101,7 +108,7 @@ let EdgeDirectedMixin = (superclass) => {
 
                 ctx.restore()
             } else {
-                super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, this.prepareLine, doubled)
+                // super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, this.prepareLine, doubled)
             }
         }
         serialize() {

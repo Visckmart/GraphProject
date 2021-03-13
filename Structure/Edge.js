@@ -98,7 +98,7 @@ export default class Edge {
         if      (this.highlights.has(HighlightType.DISABLED))  { return 5 }
         else if (this.highlights.has(HighlightType.LIGHTEN))   { return 8 }
         else if (this.highlights.has(HighlightType.COLORED_A)) { return 9 }
-        return 7;
+        return 8;
     }
     // // TODO: Transformar em ifs como nos highlights dos nós
     // _drawHighlight (ctx, highlight, xStart, yStart, xEnd, yEnd, z, d) {
@@ -227,4 +227,6 @@ export default class Edge {
     static from(edge) {
         return new this(edge._args)
     }
+
+
 }
