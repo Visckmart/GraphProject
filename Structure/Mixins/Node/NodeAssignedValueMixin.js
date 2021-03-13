@@ -62,7 +62,7 @@ let NodeAssignedValueMixin = (superclass) => {
                 // Text color
                 ctx.fillStyle = "#888";
             } else {
-                ctx.fillStyle = this._originalcolor;
+                ctx.fillStyle = this.color;
                 ctx.fill();
 
                 // Text color
