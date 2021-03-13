@@ -23,7 +23,7 @@ import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLineLineCollision,
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
-    checkSquarePointCollision, rotatePoint, translateWithAngle
+    checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -255,7 +255,7 @@ class GraphView {
     getNodesWithin(initialPos, finalPos) {
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
-            let collided = checkRectangle2SquareCollision(
+            let collided = checkRectangleSquareCollision(
                 [initialPos, finalPos],
                 node.pos, node.radius*2
             )
@@ -264,42 +264,29 @@ class GraphView {
         return nodesWithin;
     }
 
-    // TODO: (V) Checagem de linha e quadrilátero poderia ser isolada.
     getEdgesWithin(initialPos, finalPos) {
-        let edgesWithin = [];
-        // Passa por todas as arestas e considera contida caso
-        // um dos nós esteja contido.
+        let edgesWithin = new Set();
+
+        // Considera arestas contidas se um dos nós está contido.
         let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-                edgesWithin.push(edge);
-                edge.selected = true;
+                edgesWithin.add(edge);
             }
         }
 
-        // Prepara os lados da área de seleção
-        let lines = [
-            [initialPos, {x: finalPos.x, y: initialPos.y}], // Top
-            [{x: initialPos.x, y: finalPos.y}, finalPos],   // Bottom
-            [initialPos, {x: initialPos.x, y: finalPos.y}], // Left
-            [{x: finalPos.x, y: initialPos.y}, finalPos],   // Right
-        ]
         // Passa por todas as arestas restantes e considera contida caso haja
         // uma interseção entre uma das laterais da seleção e a aresta.
-        for (let [edge, nodeStart, nodeEnd] of this.structure.uniqueEdges()) {
-            if (edgesWithin.includes(edge)) continue;
-            for (let [lineStart, lineEnd] of lines) {
-                let edgeSideCollided = checkLineLineCollision(
-                    [nodeStart.pos, nodeEnd.pos],
-                    [lineStart, lineEnd]
-                )
-                if (edgeSideCollided) {
-                    edgesWithin.push(edge);
-                    break;
-                }
+        let rectChecker = createRectangleChecker(initialPos,
+                                                      finalPos);
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            if (edgesWithin.has(edge)) continue;
+            if (rectChecker.checkLineCollision(nodeA.pos,
+                                               nodeB.pos)) {
+                edgesWithin.add(edge);
             }
         }
-        return edgesWithin;
+        return Array.from(edgesWithin);
     }
     //endregion
 
