@@ -332,7 +332,7 @@ class AlgorithmController {
 
         this.inputHandler.finish()
         this.menuHandler.finish()
-        this?.pseudocode.finish()
+        this?.pseudocode?.finish()
 
         for (let element of document.getElementsByClassName('menuContent')) {
             element.style.display = 'unset'

@@ -8,7 +8,8 @@ export default class AlgorithmPseudocode {
         this.wrapper = document.getElementById("pseudocode")
         this.container = document.getElementById("pseudoContainer")
 
-        this.wrapper.style.display = 'block'
+        this.wrapper.style.display = ''
+        document.getElementById("pseudocodeTab").style.display = ''
 
         this.codeElements = []
         this._initCode()
@@ -61,6 +62,7 @@ export default class AlgorithmPseudocode {
         }
 
         this.wrapper.style.display = 'none'
+        document.getElementById("pseudocodeTab").style.display = 'none'
         this.container.innerHTML = ''
     }
 
