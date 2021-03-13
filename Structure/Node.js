@@ -97,7 +97,7 @@ export default class Node {
             ctx.fillStyle = this.color;
         }
         ctx.fill();
-        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+        if (this.highlights.has(HighlightType.DISABLED)) {
             ctx.globalAlpha = 0.5;
         }
         ctx.stroke();
@@ -161,7 +161,7 @@ export default class Node {
             /* Fundo cinza escuro */
             // drawPreservingState(ctx, () => {
             ctx.save();
-            if (this.highlights.has(HighlightType.COLORED_BORDER)) {
+            if (this.highlights.has(HighlightType.COLORED_A)) {
                 let twinkleTime = window.performance.now() / 500;
                 let whiteLayerAlpha = -(Math.sin(twinkleTime) - 0.85);
                 ctx.globalAlpha = whiteLayerAlpha < 0 ? 0 : whiteLayerAlpha;
@@ -190,7 +190,7 @@ export default class Node {
             ctx.restore();
         }
 
-        if (this.highlights.has(HighlightType.COLORED_BORDER)) { /* Borda colorida */
+        if (this.highlights.has(HighlightType.COLORED_A)) { /* Borda colorida */
             ctx.save();
 
             // Configuramos a borda
@@ -260,7 +260,7 @@ export default class Node {
             nodeText = String.fromCharCode(this.index+65)
             break;
         }
-        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+        if (this.highlights.has(HighlightType.DISABLED)) {
             ctx.globalAlpha = 0.5;
         }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);

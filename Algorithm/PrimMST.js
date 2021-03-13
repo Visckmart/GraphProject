@@ -4,11 +4,11 @@ import {HighlightType} from "../Structure/Highlights.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
 
 function markArtifactAsUnreached(artifact) {
-    artifact.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
+    artifact.highlights.add(HighlightType.DISABLED)
 }
 
 function markArtifactAsReached(artifact) {
-    artifact.highlights.remove(HighlightType.ALGORITHM_NOTVISITED)
+    artifact.highlights.remove(HighlightType.DISABLED)
     artifact.highlights.add(HighlightType.DARKEN)
 }
 
@@ -127,7 +127,7 @@ export default function PrimMST(controller) {
 
     if(treeCompleted) {
         for(let [edge,,] of graph.edges()) {
-            if(!edge.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+            if(!edge.highlights.has(HighlightType.DISABLED)) {
                 edge.highlights.add(HighlightType.DARK_WITH_BLINK)
             }
         }

@@ -49,7 +49,7 @@ let EdgeAssignedValueMixin = (superclass) => {
 
             ctx.font = "bold 15pt Arial";
             ctx.fillStyle = "#444";
-            if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)
+            if (this.highlights.has(HighlightType.DISABLED)
             && this.highlights.length == 1) {
                 ctx.fillStyle = "#999"
             }

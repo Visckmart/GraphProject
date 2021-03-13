@@ -6,29 +6,30 @@ import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
 
 function markAsActive(artifact) {
-    artifact.highlights.add(HighlightType.COLORED_BORDER2)
+    artifact.highlights.setTo(HighlightType.COLORED_BORDER2)
 }
 function markAsNotActive(artifact) {
-    artifact.highlights.remove(HighlightType.COLORED_BORDER2)
+    // artifact.highlights.remove(HighlightType.COLORED_BORDER2)
 }
-
 function markAsNotVisited(artifact) {
-    artifact.highlights.setTo(HighlightType.ALGORITHM_NOTVISITED)
+    artifact.highlights.setTo(HighlightType.DISABLED)
 }
 function markAsVisited(artifact) {
-    if (artifact instanceof Edge) {
-        artifact.highlights.remove(HighlightType.ALGORITHM_VISITING)
-        artifact.highlights.add(HighlightType.DARKEN)
-        return;
-    }
-    artifact.highlights.setTo(HighlightType.COLORED_BORDER)
+    // if (artifact instanceof Edge) {
+    //     artifact.highlights.remove(HighlightType.ALGORITHM_VISITING)
+    //     // artifact.highlights.add(HighlightType.DARKEN)
+    //     return;
+    // }
+    artifact.highlights.clear()
 }
 
 function markAsVisiting(artifact) {
     if (!(artifact instanceof Edge)) {
+        artifact.highlights.clear()
+        return;
         // if (artifact.highlights.has(HighlightType.DARKEN)) { return; }
     }
-    artifact.highlights.setTo(HighlightType.ALGORITHM_VISITING)
+    artifact.highlights.setTo(HighlightType.DARKEN)
 }
 
 export default async function DijkstraShortestPath(controller) {
@@ -199,12 +200,12 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         }
         markAsNotActive(currentNode)
         markAsVisited(currentNode)
-        controller.addStep(graph,
-                           `terminando nó X`)
-        if (currentNode === initialNode) {
-            // initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
-            // initialNode.highlights.add(HighlightType.DARKEN)
-        }
+        // controller.addStep(graph,
+        //                    `terminando nó X`)
+        // if (currentNode === initialNode) {
+        //     // initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
+        //     // initialNode.highlights.add(HighlightType.DARKEN)
+        // }
     }
 
     // finalNode.highlights.add(HighlightType.DARK_WITH_BLINK);
@@ -218,9 +219,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // Caminhe pelos nós e pelas arestas anteriores, destacando-os
         currentNode = finalNode
         while(currentNode !== null) {
-            currentNode.highlights.setTo(HighlightType.COLORED_BORDER)
+            currentNode.highlights.setTo(HighlightType.COLORED_BORDER2)
             // currentNode.highlights.remove(HighlightType.DARKEN)
-            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_BORDER)
+            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_A)
             currentNode = currentNode.previous.node
         }
     } else {

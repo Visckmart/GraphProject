@@ -118,7 +118,7 @@ function executeFordFulkerson(controller, source, sink) {
         // Destacando nós com residual
         for(let [edge,] of graph.uniqueEdges()) {
             if(edge.residual === 0) {
-                edge.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
+                edge.highlights.add(HighlightType.DISABLED)
             } else {
                 edge.highlights.add(HighlightType.DARK_WITH_BLINK)
             }
@@ -129,7 +129,7 @@ function executeFordFulkerson(controller, source, sink) {
         // Retirando destaque
         for(let [edge,] of graph.uniqueEdges()) {
             if(edge.residual === 0) {
-                edge.highlights.remove(HighlightType.ALGORITHM_NOTVISITED)
+                edge.highlights.remove(HighlightType.DISABLED)
             } else {
                 edge.highlights.remove(HighlightType.DARK_WITH_BLINK)
             }
@@ -138,7 +138,7 @@ function executeFordFulkerson(controller, source, sink) {
         // Encontrando arestas que fazem parte do caminho
         for(let i=0;i<path.length - 1;i++) {
             let edge = graph.getEdgeBetween(path[i], path[i+1])
-            edge.highlights.add(HighlightType.COLORED_BORDER)
+            edge.highlights.add(HighlightType.COLORED_A)
 
             let backEdge = graph.getEdgeBetween(path[i+1], path[i])
             backEdge.highlights.add(HighlightType.DARK_WITH_BLINK)
@@ -163,7 +163,7 @@ function executeFordFulkerson(controller, source, sink) {
         de ida e incrementar o residual do caminho de volta pelo valor empurrado (${lowestResidual}).`)
 
         for(let i=0;i<path.length - 1;i++) {
-            pathEdges[i].highlights.remove(HighlightType.COLORED_BORDER)
+            pathEdges[i].highlights.remove(HighlightType.COLORED_A)
             pathBackEdges[i].highlights.remove(HighlightType.DARK_WITH_BLINK)
         }
     }

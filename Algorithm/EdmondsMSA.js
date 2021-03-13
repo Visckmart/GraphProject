@@ -85,7 +85,7 @@ function executeEdmondsMSA(controller, initialNode) {
         // Achando nó no grafo clonado
         let newNode = mapNewNodesOrEdges([node], controller.graphView.structure.nodes(), false).get(node)
 
-        newNode.highlights.add(HighlightType.COLORED_BORDER)
+        newNode.highlights.add(HighlightType.COLORED_A)
         controller.addStep(controller.graphView.structure, `Chamando a detecção de ciclo DFS no nó ${node.toString()}.`)
 
         let foundCycle = DFSCycleDetection(controller, newNode, false)
@@ -119,7 +119,7 @@ function executeEdmondsMSA(controller, initialNode) {
 
     // Marcando nós do ciclo
     for(let node of cycleNodeMap.values()) {
-        oldToReducedGraphMap.get(node).highlights.add(HighlightType.COLORED_BORDER)
+        oldToReducedGraphMap.get(node).highlights.add(HighlightType.COLORED_A)
     }
     controller.addStep(reducedGraph, 'Reduzindo o ciclo encontrado para um nó')
 
@@ -149,7 +149,7 @@ function executeEdmondsMSA(controller, initialNode) {
             let newEdge =  controller.graphView.insertEdgeBetween(oldToReducedGraphMap.get(oldSourceNode), reducedNode)
 
             newEdge.assignedValue = edge.assignedValue - oldNode.source.assignedValue
-            newEdge.highlights.add(HighlightType.COLORED_BORDER)
+            newEdge.highlights.add(HighlightType.COLORED_A)
             edge.highlights.add(HighlightType.FEATURE_PREVIEW)
 
             // Guardando equivalência com nó antigo
@@ -163,7 +163,7 @@ function executeEdmondsMSA(controller, initialNode) {
              ${oldNode.toString()} (${oldNode.source.assignedValue}), \
             ${newEdge.assignedValue}.`)
 
-            newEdge.highlights.remove(HighlightType.COLORED_BORDER)
+            newEdge.highlights.remove(HighlightType.COLORED_A)
             edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
         }
 
@@ -181,7 +181,7 @@ function executeEdmondsMSA(controller, initialNode) {
                 return
             }
             newEdge.assignedValue = edge.assignedValue
-            newEdge.highlights.add(HighlightType.COLORED_BORDER)
+            newEdge.highlights.add(HighlightType.COLORED_A)
             edge.highlights.add(HighlightType.FEATURE_PREVIEW)
 
             // Guardando equivalência com nó antigo
@@ -210,11 +210,11 @@ function executeEdmondsMSA(controller, initialNode) {
         return new Map()
     }
 
-    reducedRemainingEdge.highlights.add(HighlightType.COLORED_BORDER)
+    reducedRemainingEdge.highlights.add(HighlightType.COLORED_A)
     controller.addStep(reducedGraph, 'A aresta destacada é o último remanescente para o nó reduzido.')
 
     let correspondingEdge = reducedRemainingEdge.oldEdge
-    correspondingEdge.highlights.add(HighlightType.COLORED_BORDER)
+    correspondingEdge.highlights.add(HighlightType.COLORED_A)
 
     let correspondingDestinationNode = reducedRemainingEdge.oldDestination
 
@@ -226,12 +226,12 @@ function executeEdmondsMSA(controller, initialNode) {
     ${correspondingDestinationNode}, quebrando o ciclo.`)
 
     graph.removeEdge(markedEdge)
-    correspondingEdge.highlights.remove(HighlightType.COLORED_BORDER)
+    correspondingEdge.highlights.remove(HighlightType.COLORED_A)
 
     controller.graphView.structure = graph
 
     for(let [edge,,] of graph.uniqueEdges()) {
-        edge.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
+        edge.highlights.add(HighlightType.DISABLED)
     }
 
     let arborescense = new Map()

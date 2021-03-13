@@ -17,7 +17,7 @@ let EdgeTemporaryMixin = (superclass) => {
             ctx.strokeStyle = "black";
             ctx.setLineDash([12, 8]);
 
-            this.prepareLine(ctx, xStart, yStart, xEnd, yEnd)
+            this.prepareLinePath(ctx, xStart, yStart, xEnd, yEnd)
 
             ctx.stroke();
             ctx.restore();

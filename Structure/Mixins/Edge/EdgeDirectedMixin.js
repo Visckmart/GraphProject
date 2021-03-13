@@ -36,7 +36,7 @@ let EdgeDirectedMixin = (superclass) => {
                     30, Math.atan2(cpX - cpY, xEnd - xStart) - Math.PI / 2)
                 ctx.quadraticCurveTo(cpX, cpY, newp.x, newp.y);
             } else {
-                super.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
+                super.prepareLinePath(ctx, xStart, yStart, xEnd, yEnd, doubled)
                 arrowStartX = xStart;
                 arrowStartY = yStart;
             }
@@ -73,7 +73,7 @@ let EdgeDirectedMixin = (superclass) => {
             return theta;
         }
         drawProcedure = (ctx, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, timestamp, doubled) => {
-            if (!this.highlights.has(HighlightType.SELECTION)) {
+            if (!this.highlights.has(HighlightType.SELECTION) && !this.highlights.has(HighlightType.DISABLED)) {
                 ctx.save()
                 ctx.lineWidth = 7;
                 ctx.strokeStyle = "#444";
@@ -95,7 +95,7 @@ let EdgeDirectedMixin = (superclass) => {
                 ctx.save()
 
                 ctx.setLineDash([10, 7]);
-                ctx.lineWidth = 8
+                ctx.lineWidth = 7
                 ctx.lineDashOffset = -window.performance.now()/200;
                 ctx.strokeStyle = "#3344FF";
                 this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
