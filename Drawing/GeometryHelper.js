@@ -29,6 +29,27 @@ export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rec
     return squareMid.x + offset > rectLeft && squareMid.x - offset < rectRight
            && squareMid.y + offset > rectTop && squareMid.y - offset < rectBottom;
 }
+export function checkRectangle2SquareCollision([rectCornerA, rectCornerB],
+                                              squareMid, squareLength) {
+    let offset = squareLength/2;
+    let top, left, bottom, right;
+    if (rectCornerA.x < rectCornerB.x) {
+        left  = rectCornerA.x;
+        right = rectCornerB.x;
+    } else {
+        left  = rectCornerB.x;
+        right = rectCornerA.x;
+    }
+    if (rectCornerA.y < rectCornerB.y) {
+        top    = rectCornerA.y;
+        bottom = rectCornerB.y;
+    } else {
+        top    = rectCornerB.y;
+        bottom = rectCornerA.y;
+    }
+    return squareMid.x + offset > left && squareMid.x - offset < right
+           && squareMid.y + offset > top && squareMid.y - offset < bottom;
+}
 /**
  * Checa se o retângulo R, definido por dois pontos opostos, colide com o ponto P.
  *
@@ -39,18 +60,18 @@ export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rec
 export function checkRectanglePointCollision([cornerA, cornerB], point) {
     let top, left, bottom, right;
     if (cornerA.x < cornerB.x) {
-        left = cornerA.x
-        right = cornerB.x
+        left  = cornerA.x;
+        right = cornerB.x;
     } else {
-        right = cornerA.x
-        left = cornerB.x
+        left  = cornerB.x;
+        right = cornerA.x;
     }
     if (cornerA.y < cornerB.y) {
-        top = cornerA.y
-        bottom = cornerB.y
+        top    = cornerA.y;
+        bottom = cornerB.y;
     } else {
-        bottom = cornerA.y
-        top = cornerB.y
+        top    = cornerB.y;
+        bottom = cornerA.y;
     }
     return left < point.x && top < point.y && right > point.x && bottom > point.y;
 }

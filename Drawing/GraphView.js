@@ -252,24 +252,15 @@ class GraphView {
         return allEdges;
     }
 
-    // TODO: (V) Checagem de ponto em quadrilátero pode ser isolada
     getNodesWithin(initialPos, finalPos) {
-        let area = {
-            rectLeft:   Math.min(initialPos.x, finalPos.x),
-            rectRight:  Math.max(initialPos.x, finalPos.x),
-            rectTop:    Math.min(initialPos.y, finalPos.y),
-            rectBottom: Math.max(initialPos.y, finalPos.y)
-        }
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
-            let nodeRadius = node.radius;
-            let collided = checkRectangleSquareCollision(
-                area,
-                node.pos, nodeRadius*2
+            let collided = checkRectangle2SquareCollision(
+                [initialPos, finalPos],
+                node.pos, node.radius*2
             )
             if (collided) { nodesWithin.push(node); }
         }
-
         return nodesWithin;
     }
 
