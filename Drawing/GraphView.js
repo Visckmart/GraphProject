@@ -1,5 +1,5 @@
 import {
-    canvas, Tool, HighFPSFeature, backgroundGradient, fastOverlayCanvas, slowOverlayCanvas,
+    canvas, Tool, HighFPSFeature, fastOverlayCanvas, slowOverlayCanvas,
     CanvasType, incrementGlobalIndex, GraphCategory
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
@@ -50,6 +50,10 @@ class GraphView {
         this.slowCanvas.style.pointerEvents = "none";
         this.slowCtx = this.slowCanvas.getContext("2d");
 
+        this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+        this.background.addColorStop(0, "#E5E0FF");
+        this.background.addColorStop(1, "#FFE0F3");
+
 
         this.structure = new Graph();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
@@ -86,6 +90,7 @@ class GraphView {
         // }
     }
 
+    background;
     debugBalls = []
 
     /// Overlay de importação
@@ -395,6 +400,9 @@ class GraphView {
         this.fastCanvas.height = newHeight;
         this.slowCanvas.width = newWidth;
         this.slowCanvas.height = newHeight;
+        this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+        this.background.addColorStop(0, "#E5E0FF");
+        this.background.addColorStop(1, "#FFE0F3");
 
         // Ajustando posição dos nós
         let widthRatio = newWidth/originalWidth;
@@ -461,13 +469,14 @@ class GraphView {
 
     // This function clears the canvas and redraws it.
     redrawGraph(background = false) {
+        if (this.processingScreenshot && background == false) return;
         this.ctx.save();
         // TODO: Esse if é meio gambiarra, o fundo deveria ser transparente
         //       o tempo todo, e o cache deveria saber lidar com isso.
         if (background == false && !this.selectionHandler.shouldDrawSelection) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
-            this.ctx.fillStyle = backgroundGradient;
+            this.ctx.fillStyle = this.background;
             this.ctx.beginPath();
             this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.fill();
@@ -507,11 +516,11 @@ class GraphView {
                 }
             }
             nodeFPSRequests.push(
-                node.draw(this.ctx)
+                node.draw(this.ctx, this.background)
             );
             if (this.overlappingNodes.has(node)
                 || this.mouseHandler.clickedNode?.index == node.index) {
-                node.drawText(this.ctx, this.nodeLabeling)
+                node.drawText(this.ctx, this.background, this.nodeLabeling)
             }
         }
 
@@ -669,7 +678,7 @@ class GraphView {
                 || node.index == this.mouseHandler.clickedNode?.index) {
                 continue;
             }
-            node.drawText(this.slowCtx, this.nodeLabeling)
+            node.drawText(this.slowCtx, this.background, this.nodeLabeling)
         }
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             edge.textDrawChain.call(this.slowCtx, nodeA.pos, nodeB.pos,

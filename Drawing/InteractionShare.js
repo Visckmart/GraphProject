@@ -1,4 +1,4 @@
-import { backgroundGradient, canvas, slowOverlayCanvas } from "./General.js";
+import { canvas, slowOverlayCanvas } from "./General.js";
 import {g} from "./GraphView.js";
 import {getFormattedTime} from "../Structure/Utilities.js";
 
@@ -46,12 +46,16 @@ exportLinkButton.onclick = function (mouseEvent) {
 let exportImageButton = document.getElementById("exportImage");
 // TODO: Organizar um pouco mais
 exportImageButton.onclick = function () {
-    let ctx = canvas.getContext("2d");
-    g.redrawGraph(true)
+    g.processingScreenshot = true;
+
     let textImg = new Image();
     textImg.src = slowOverlayCanvas.toDataURL('image/png');
+    g.redrawGraph(true);
+    let ctx = canvas.getContext("2d");
     ctx.drawImage(textImg, 0, 0);
     let image = canvas.toDataURL();
+
+    g.processingScreenshot = false;
 
     let temporaryLink = document.createElement('a');
     temporaryLink.download = `Grafo ${getFormattedTime()}.png`;

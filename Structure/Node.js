@@ -1,5 +1,5 @@
 // Node Definition
-import { backgroundGradient, globalNodeIndex } from "../Drawing/General.js";
+import { globalNodeIndex } from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
@@ -79,7 +79,7 @@ export default class Node {
     }
 
     /** Desenho do nó **/
-    drawProcedure = (ctx) => {
+    drawProcedure = (ctx, background) => {
         // Draw circle border
         ctx.save()
         ctx.lineWidth = 8;
@@ -92,7 +92,7 @@ export default class Node {
                                  || this.highlights.has(HighlightType.LIGHTEN)
                                  || this.highlights.has(HighlightType.DARKEN)
         if (!hasHighlightWithBG) {
-            ctx.fillStyle = backgroundGradient;
+            ctx.fillStyle = background;
         } else {
             ctx.fillStyle = this.color;
         }
@@ -241,10 +241,10 @@ export default class Node {
     }
 
     /** Desenho da label **/
-    drawLabel = (ctx, nodeLabeling) => {
+    drawLabel = (ctx, background, nodeLabeling) => {
         ctx.save()
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = this.highlights.has(HighlightType.DARKEN) ? backgroundGradient : this.color;
+        ctx.fillStyle = this.highlights.has(HighlightType.DARKEN) ? background : this.color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;

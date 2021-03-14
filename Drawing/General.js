@@ -5,10 +5,6 @@ export var fastOverlayCanvas = document.getElementById("fastCanvas");
 
 let ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
-// TODO: Gradiente deveria atualizar quando o tamanho atualiza
-export const backgroundGradient = ctx.createLinearGradient(0, 0, 700, 0);
-backgroundGradient.addColorStop(0, "#E5E0FF");
-backgroundGradient.addColorStop(1, "#FFE0F3");
 
 export let globalNodeIndex = 0;
 export function incrementGlobalIndex(newValue = null) {
