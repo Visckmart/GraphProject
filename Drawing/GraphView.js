@@ -308,11 +308,13 @@ class GraphView {
         return newNode;
     }
 
+    shouldRefreshCollisions = true;
     moveNode(node, pos) {
         // this.requestCanvasRefresh(CanvasType.FAST)
+        this.shouldRefreshCollisions = true;
+        node.pos = pos;
         this.requestFramerateForCanvas(CanvasType.GENERAL, HighFPSFeature.MOVING, 90);
         this.requestCanvasRefresh(CanvasType.SLOW)
-        node.pos = pos;
     }
 
     removeNodeAt(pos) {
@@ -411,6 +413,7 @@ class GraphView {
         }
         this.blurTimeout = setTimeout(this.removeBlur, 250);
 
+        this.shouldRefreshCollisions = true;
         this.refreshGraph();
     }
     refreshGraph() {
@@ -454,6 +457,8 @@ class GraphView {
         return this.canvas.height;
     }
 
+    overlappingNodes = new Set()
+
     // This function clears the canvas and redraws it.
     redrawGraph(background = false) {
         this.ctx.save();
@@ -483,11 +488,35 @@ class GraphView {
         }
 
         let nodeFPSRequests = [];
+        if (this.shouldRefreshCollisions) {
+            this.overlappingNodes.clear()
+        }
         for (let node of this.structure.nodes()) {
+            if (this.shouldRefreshCollisions) {
+                for (let otherNode of this.structure.nodes()) {
+                    if (node == otherNode) {
+                        continue;
+                    }
+                    let collided = checkSquarePointCollision(
+                        node.pos, 70, otherNode.pos
+                    )
+                    if (collided) {
+                        this.overlappingNodes.add(node)
+                        this.overlappingNodes.add(otherNode)
+                    }
+                }
+            }
             nodeFPSRequests.push(
                 node.draw(this.ctx)
             );
+            if (this.overlappingNodes.has(node)
+                || this.mouseHandler.clickedNode?.index == node.index) {
+                node.drawText(this.ctx, this.nodeLabeling)
+            }
         }
+
+
+        this.shouldRefreshCollisions = false;
         for (let [bx, by] of this.debugBalls) {
             this.ctx.save()
             this.ctx.fillStyle = "red"
@@ -496,7 +525,7 @@ class GraphView {
             this.ctx.fill()
             this.ctx.restore()
         }
-        this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
+        // this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
 
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
@@ -636,7 +665,8 @@ class GraphView {
         this.slowCtx.clearRect(0, 0, this.width, this.height)
         // Chamando a cadeia de desenho de textos de cada nó
         for (let node of this.structure.nodes()) {
-            if (node.index == this.mouseHandler.clickedNode?.index) {
+            if (this.overlappingNodes.has(node)
+                || node.index == this.mouseHandler.clickedNode?.index) {
                 continue;
             }
             node.drawText(this.slowCtx, this.nodeLabeling)
