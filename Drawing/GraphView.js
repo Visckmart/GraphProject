@@ -486,26 +486,14 @@ class GraphView {
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             edge.draw(this.ctx, nodeA.pos, nodeB.pos, window.performance.now(),
                       this.structure.checkEdgeBetween(nodeB, nodeA))
-            // console.log(this.mouseHandler.clickedNode)
-            this.ctx.save()
-            this.ctx.fillStyle = "red"
-            this.ctx.beginPath()
-            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, getDistanceOf(nodeA.pos, nodeB.pos), 30);
-            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, Math.abs(nodeB.pos.x-nodeA.pos.y), 50)
-            this.ctx.fill()
-            this.ctx.restore()
         }
 
         let nodeFPSRequests = [];
         if (this.shouldRefreshCollisions) {
-            this.overlappingNodes.clear()
-        }
-        for (let node of this.structure.nodes()) {
-            if (this.shouldRefreshCollisions) {
+            this.overlappingNodes.clear();
+            for (let node of this.structure.nodes()) {
                 for (let otherNode of this.structure.nodes()) {
-                    if (node == otherNode) {
-                        continue;
-                    }
+                    if (node == otherNode) { continue; }
                     let collided = checkSquarePointCollision(
                         node.pos, 70, otherNode.pos
                     )
@@ -515,6 +503,9 @@ class GraphView {
                     }
                 }
             }
+        }
+
+        for (let node of this.structure.nodes()) {
             nodeFPSRequests.push(
                 node.draw(this.ctx, this.background)
             );
