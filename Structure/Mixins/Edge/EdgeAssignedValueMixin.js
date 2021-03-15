@@ -16,6 +16,30 @@ let EdgeAssignedValueMixin = (superclass) => {
 
             this.mixins.add(EdgeAssignedValueMixin);
         }
+        _assignedValue;
+        styledValue;
+        set assignedValue(newValue) {
+            let digits = Array.from(newValue.toString());
+
+            /* Sublinhando caso só hajam os dígitos 6 e 9. */
+            let filteredDigits = digits.filter(digit => digit != "6" && digit != "9");
+            let newDigits = [];
+            if (filteredDigits.length == 0) {
+                for (let digit of digits) {
+                    if      (digit == "6") { newDigits.push("6̲"); }
+                    else if (digit == "9") { newDigits.push("9̲"); }
+                    else { newDigits.push(digit) }
+                }
+                this.styledValue = newDigits.join("");
+            } else {
+                this.styledValue = digits.join("");
+            }
+
+            this._assignedValue = newValue;
+        }
+        get assignedValue() {
+            return this._assignedValue;
+        }
 
         get _args() {
             return {
@@ -49,17 +73,14 @@ let EdgeAssignedValueMixin = (superclass) => {
 
             ctx.font = "bold 15pt Arial";
             ctx.fillStyle = "#444";
-            if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)
+            if (this.highlights.has(HighlightType.DISABLED)
             && this.highlights.length == 1) {
                 ctx.fillStyle = "#999"
             }
             ctx.textAlign = "center";
 
             // TODO: Essa checagem deveria ser feita no assignment, não no draw
-            let text = this.assignedValue.toString()
-            if      (this.assignedValue == 6) { text = "6̲"; }
-            else if (this.assignedValue == 9) { text = "9̲"; }
-            ctx.fillText(text, 0, 0);
+            ctx.fillText(this.styledValue, 0, 0);
             ctx.restore()
         }
 

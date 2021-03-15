@@ -18,7 +18,7 @@ export default function DFSCycleDetection(controller, initialNode = null, record
 
     /* Marcando todas as arestas como não visitadas */
     for(let [edge,,] of graph.edges()) {
-        edge.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
+        edge.highlights.add(HighlightType.DISABLED)
     }
 
 
@@ -67,7 +67,7 @@ export default function DFSCycleDetection(controller, initialNode = null, record
             // No caso de um grafo direcionado é um nó que aponta para outro nó que ainda está na pilha
             // No caso de um grafo não direcionado é um nó que aponta para outro já visitado
             } else if(currentNode.ancestral !== node && node.ancestral !== currentNode && (!isDirected || stack.isInStack(node))) {
-                edge.highlights.add(HighlightType.COLORED_BORDER)
+                edge.highlights.add(HighlightType.COLORED_A)
                 if(record) {
                     if(isDirected)
                     {
@@ -76,7 +76,7 @@ export default function DFSCycleDetection(controller, initialNode = null, record
                         controller.addStep(graph, `Aresta que aponta para o nó ${node.label} já visitado encontrada.`)
                     }
                 }
-                edge.highlights.remove(HighlightType.COLORED_BORDER)
+                edge.highlights.remove(HighlightType.COLORED_A)
                 edge.highlights.add(HighlightType.DARK_WITH_BLINK)
 
                 // Fazendo backtracking para detectar o ciclo

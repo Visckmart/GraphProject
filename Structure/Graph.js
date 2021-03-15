@@ -132,7 +132,7 @@ class Graph {
         }
 
         if (this.debug && quiet == false) {
-            console.info(`Inserindo aresta entre os nós ${nodeA} - ${nodeB}`, edge);
+            console.info(`Inserindo aresta entre os nós ${nodeA} - ${nodeB}`);
         }
 
 
@@ -294,7 +294,6 @@ class Graph {
                 if (found == undefined) continue;
 
                 const [, nodeA, nodeB, edgeData] = found;
-                console.log(edgeConstructor)
                 let deserializedEdge = edgeConstructor.deserialize(edgeData)
 
                 graph.insertEdge(
@@ -317,7 +316,8 @@ class Graph {
     cloneAndTransform ({EdgeConstructor = this.EdgeConstructor, NodeConstructor = this.NodeConstructor}) {
         let newGraph = new this.constructor({
                                                 EdgeConstructor: EdgeConstructor,
-                                                NodeConstructor: NodeConstructor
+                                                NodeConstructor: NodeConstructor,
+            debug: this.debug, categories: this.categories
                                             })
         newGraph.debug = false;
         let newNodeMap = new Map()
@@ -334,6 +334,7 @@ class Graph {
                                 newEdge)
         }
 
+        newGraph.debug = this.debug;
         return newGraph;
     }
     //endregion

@@ -13,7 +13,7 @@ function markAsNotActive(artifact) {
 }
 
 function markAsNotVisited(artifact) {
-    artifact.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
+    artifact.highlights.add(HighlightType.DISABLED)
 }
 function markAsVisited(artifact) {
     if (artifact instanceof Edge) {
@@ -281,9 +281,9 @@ function executeEulerianPath(controller, initialNode, finalNode) {
         // Caminhe pelos nós e pelas arestas anteriores, destacando-os
         currentNode = finalNode
         while(currentNode !== null) {
-            currentNode.highlights.add(HighlightType.COLORED_BORDER)
+            currentNode.highlights.add(HighlightType.COLORED_A)
             // currentNode.highlights.remove(HighlightType.DARKEN)
-            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_BORDER)
+            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_A)
             currentNode = currentNode.previous.node
         }
     } else {

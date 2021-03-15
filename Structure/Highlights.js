@@ -4,8 +4,8 @@ export const HighlightType = {
     LIGHTEN:              "algorithm_focus2",
     ALGORITHM_VISITING:   "algorithm_visiting",
     DARKEN:               "algorithm_visited",
-    ALGORITHM_NOTVISITED: "algorithm_notvisited",
-    COLORED_BORDER:       "algorithm_result",
+    DISABLED: "algorithm_notvisited",
+    COLORED_A:       "algorithm_result",
     FEATURE_PREVIEW:      "feature_preview",
     COLORED_BORDER2: "cb2"
 }
@@ -50,7 +50,6 @@ export class HighlightsHandler {
     }
 
     clear() {
-        console.trace()
         this.highlights = new Set()
     }
 

@@ -1,4 +1,4 @@
-import {CanvasType, HighFPSFeature, Tool} from "./General.js"
+import {CanvasType, Tool} from "./General.js"
 import { HighlightType } from "../Structure/Highlights.js"
 import { getDistanceOf } from "../Structure/Utilities.js"
 import Edge from "../Structure/Edge.js";

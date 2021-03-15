@@ -1,11 +1,8 @@
 import {
-    canvas, Tool, HighFPSFeature, backgroundGradient, fastOverlayCanvas, slowOverlayCanvas,
+    canvas, Tool, HighFPSFeature, fastOverlayCanvas, slowOverlayCanvas,
     CanvasType, incrementGlobalIndex, GraphCategory
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
-import Edge from "../Structure/Edge.js"
-import Node from "../Structure/Node.js"
-import EdgeAssignedValueMixin from "../Structure/Mixins/Edge/EdgeAssignedValueMixin.js";
 import {HighlightType} from "../Structure/Highlights.js";
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
@@ -13,7 +10,7 @@ import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
 import {
-    colorFromComponents, getDistanceOf,
+    colorFromComponents,
 } from "../Structure/Utilities.js";
 import PropertyList from "./Properties/PropertyList.js";
 import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
@@ -22,14 +19,11 @@ import {regularNodeRadius} from "../Structure/Node.js";
 import HistoryTracker from "./HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
-import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
-import EdgeDirectedMixin from "../Structure/Mixins/Edge/EdgeDirectedMixin.js";
-import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLineLineCollision,
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
-    checkSquarePointCollision, rotatePoint, translateWithAngle
+    checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -55,6 +49,10 @@ class GraphView {
         this.slowCanvas = slowCanvas;
         this.slowCanvas.style.pointerEvents = "none";
         this.slowCtx = this.slowCanvas.getContext("2d");
+
+        this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+        this.background.addColorStop(0, "#E5E0FF");
+        this.background.addColorStop(1, "#FFE0F3");
 
 
         this.structure = new Graph();
@@ -92,6 +90,7 @@ class GraphView {
         // }
     }
 
+    background;
     debugBalls = []
 
     /// Overlay de importação
@@ -195,9 +194,7 @@ class GraphView {
 
     //region Deteção de Nós e Arestas
 
-    // Searches for nodes that contain the point `pos`
-    // The lookup is done from the last node to the first, the inverse of the
-    // drawing lookup in order to return the frontmost node.
+    /** Obtém os nós que estão em uma determinada posição. **/
     getNodesAt(pos, checkForConflict = false) {
         let detectedNodes = [];
         for (let node of this.structure.nodes()) {
@@ -212,6 +209,8 @@ class GraphView {
         return detectedNodes;
     }
 
+
+    /** Checa se há ao menos 1 nó em uma determinada posição. **/
     checkIfNodeAt(pos, checkForConflict = false, exceptionIndex = null) {
         for (let node of this.structure.nodes()) {
             if (node.index == exceptionIndex) continue;
@@ -220,101 +219,76 @@ class GraphView {
             if (checkForConflict) { radiusCheck *= 2; }
 
             let collided = checkSquarePointCollision(
-                node.pos, radiusCheck*2,
-                pos)
+                node.pos, radiusCheck*2, pos)
             if (collided) { return node; }
         }
         return false;
     }
 
+    /** Obtém as arestas que estão em uma determinada posição. **/
     getEdgesAt(pos) {
         let allEdges = []
 
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            if (this.structure.categories.has(GraphCategory.DIRECTED_EDGES) == false
-                || this.structure.checkEdgeBetween(nodeB, nodeA) == false) {
+            let straightLine = !this.structure.categories.has(GraphCategory.DIRECTED_EDGES)
+                               || !this.structure.checkEdgeBetween(nodeB, nodeA)
+
+            if (straightLine) {
                 let collided = checkLinePointCollision(
-                    nodeA.pos, nodeB.pos, 1,
-                    pos
+                    nodeA.pos, nodeB.pos, 1, pos
                 )
-                if (collided) {
-                    allEdges.push(edge);
-                }
+                if (collided) { allEdges.push(edge); }
             } else {
                 let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x) - Math.PI / 2;
 
                 let offsetA = translateWithAngle(nodeA.pos, angle, 0, 25)
                 let offsetB = translateWithAngle(nodeB.pos, angle, 0, 25)
-
                 let collided = checkLinePointCollision(
                     offsetA, offsetB, 5, pos
                 )
-                if (collided) {
-                    allEdges.push(edge);
-                }
+                if (collided) { allEdges.push(edge); }
             }
         }
-        if (allEdges.length > 0) { this.requestCanvasRefresh(); }
         return allEdges;
     }
 
-    // TODO: (V) Checagem de ponto em quadrilátero pode ser isolada
+    /** Obtém os nós que estão em uma determinada área. **/
     getNodesWithin(initialPos, finalPos) {
-        let area = {
-            rectLeft:   Math.min(initialPos.x, finalPos.x),
-            rectRight:  Math.max(initialPos.x, finalPos.x),
-            rectTop:    Math.min(initialPos.y, finalPos.y),
-            rectBottom: Math.max(initialPos.y, finalPos.y)
-        }
         let nodesWithin = [];
         for (let node of this.structure.nodes()) {
-            let nodeRadius = node.radius;
             let collided = checkRectangleSquareCollision(
-                area,
-                node.pos, nodeRadius*2
+                [initialPos, finalPos],
+                node.pos, node.radius*2
             )
             if (collided) { nodesWithin.push(node); }
         }
-
         return nodesWithin;
     }
 
-    // TODO: (V) Checagem de linha e quadrilátero poderia ser isolada.
+    /** Obtém as arestas que tocam ou estão contidas em uma determinada área. **/
     getEdgesWithin(initialPos, finalPos) {
-        let edgesWithin = [];
-        // Passa por todas as arestas e considera contida caso
-        // um dos nós esteja contido.
+        let edgesWithin = new Set();
+
+        // Considera arestas contidas se um dos nós está contido.
         let nodesWithin = new Set(this.getNodesWithin(initialPos, finalPos));
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             if (nodesWithin.has(nodeA) || nodesWithin.has(nodeB)) {
-                edgesWithin.push(edge);
-                edge.selected = true;
+                edgesWithin.add(edge);
             }
         }
 
-        // Prepara os lados da área de seleção
-        let lines = [
-            [initialPos, {x: finalPos.x, y: initialPos.y}], // Top
-            [{x: initialPos.x, y: finalPos.y}, finalPos],   // Bottom
-            [initialPos, {x: initialPos.x, y: finalPos.y}], // Left
-            [{x: finalPos.x, y: initialPos.y}, finalPos],   // Right
-        ]
         // Passa por todas as arestas restantes e considera contida caso haja
         // uma interseção entre uma das laterais da seleção e a aresta.
-        for (let [edge, nodeStart, nodeEnd] of this.structure.uniqueEdges()) {
-            if (edgesWithin.includes(edge)) continue;
-            for (let [lineStart, lineEnd] of lines) {
-                let edgeSideCollided = checkLineLineCollision(
-                    [nodeStart.pos, nodeEnd.pos],
-                    [lineStart, lineEnd]
-                )
-                if (edgeSideCollided) {
-                    edgesWithin.push(edge);
-                    break;
-                }
+        let rectChecker = createRectangleChecker(initialPos,
+                                                      finalPos);
+        for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
+            if (edgesWithin.has(edge)) continue;
+            if (rectChecker.checkLineCollision(nodeA.pos,
+                                               nodeB.pos)) {
+                edgesWithin.add(edge);
             }
         }
-        return edgesWithin;
+        return Array.from(edgesWithin);
     }
     //endregion
 
@@ -339,11 +313,13 @@ class GraphView {
         return newNode;
     }
 
+    shouldRefreshCollisions = true;
     moveNode(node, pos) {
         // this.requestCanvasRefresh(CanvasType.FAST)
+        this.shouldRefreshCollisions = true;
+        node.pos = pos;
         this.requestFramerateForCanvas(CanvasType.GENERAL, HighFPSFeature.MOVING, 90);
         this.requestCanvasRefresh(CanvasType.SLOW)
-        node.pos = pos;
     }
 
     removeNodeAt(pos) {
@@ -359,6 +335,7 @@ class GraphView {
         }
         this.selectionHandler.clear()
         this.structure.removeNode(frontmostNode);
+
         this.refreshGraph();
         this.registerStep();
     }
@@ -376,7 +353,6 @@ class GraphView {
             console.error('Aresta não pode ser inserida.')
             return;
         }
-
         if (refresh) {
             this.refreshGraph();
             this.registerStep();
@@ -390,6 +366,7 @@ class GraphView {
 
         this.selectionHandler.deselect(edge);
         this.structure.removeEdge(edge);
+        this.refreshGraph();
         this.registerStep();
     }
 
@@ -423,6 +400,9 @@ class GraphView {
         this.fastCanvas.height = newHeight;
         this.slowCanvas.width = newWidth;
         this.slowCanvas.height = newHeight;
+        this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+        this.background.addColorStop(0, "#E5E0FF");
+        this.background.addColorStop(1, "#FFE0F3");
 
         // Ajustando posição dos nós
         let widthRatio = newWidth/originalWidth;
@@ -441,6 +421,7 @@ class GraphView {
         }
         this.blurTimeout = setTimeout(this.removeBlur, 250);
 
+        this.shouldRefreshCollisions = true;
         this.refreshGraph();
     }
     refreshGraph() {
@@ -484,15 +465,18 @@ class GraphView {
         return this.canvas.height;
     }
 
+    overlappingNodes = new Set()
+
     // This function clears the canvas and redraws it.
     redrawGraph(background = false) {
+        if (this.processingScreenshot && background == false) return;
         this.ctx.save();
         // TODO: Esse if é meio gambiarra, o fundo deveria ser transparente
         //       o tempo todo, e o cache deveria saber lidar com isso.
         if (background == false && !this.selectionHandler.shouldDrawSelection) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
-            this.ctx.fillStyle = backgroundGradient;
+            this.ctx.fillStyle = this.background;
             this.ctx.beginPath();
             this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.fill();
@@ -502,22 +486,37 @@ class GraphView {
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             edge.draw(this.ctx, nodeA.pos, nodeB.pos, window.performance.now(),
                       this.structure.checkEdgeBetween(nodeB, nodeA))
-            // console.log(this.mouseHandler.clickedNode)
-            this.ctx.save()
-            this.ctx.fillStyle = "red"
-            this.ctx.beginPath()
-            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, getDistanceOf(nodeA.pos, nodeB.pos), 30);
-            // this.ctx.rect(nodeA.pos.x, nodeA.pos.y, Math.abs(nodeB.pos.x-nodeA.pos.y), 50)
-            this.ctx.fill()
-            this.ctx.restore()
         }
 
         let nodeFPSRequests = [];
+        if (this.shouldRefreshCollisions) {
+            this.overlappingNodes.clear();
+            for (let node of this.structure.nodes()) {
+                for (let otherNode of this.structure.nodes()) {
+                    if (node == otherNode) { continue; }
+                    let collided = checkSquarePointCollision(
+                        node.pos, 70, otherNode.pos
+                    )
+                    if (collided) {
+                        this.overlappingNodes.add(node)
+                        this.overlappingNodes.add(otherNode)
+                    }
+                }
+            }
+        }
+
         for (let node of this.structure.nodes()) {
             nodeFPSRequests.push(
-                node.draw(this.ctx)
+                node.draw(this.ctx, this.background)
             );
+            if (this.overlappingNodes.has(node)
+                || this.mouseHandler.clickedNode?.index == node.index) {
+                node.drawText(this.ctx, this.background, this.nodeLabeling)
+            }
         }
+
+
+        this.shouldRefreshCollisions = false;
         for (let [bx, by] of this.debugBalls) {
             this.ctx.save()
             this.ctx.fillStyle = "red"
@@ -526,7 +525,7 @@ class GraphView {
             this.ctx.fill()
             this.ctx.restore()
         }
-        this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
+        // this.mouseHandler.clickedNode?.drawText(this.ctx, this.nodeLabeling)
 
         let maxFPSRequest = Math.max(...nodeFPSRequests);
         if (maxFPSRequest > 0) {
@@ -666,10 +665,11 @@ class GraphView {
         this.slowCtx.clearRect(0, 0, this.width, this.height)
         // Chamando a cadeia de desenho de textos de cada nó
         for (let node of this.structure.nodes()) {
-            if (node.index == this.mouseHandler.clickedNode?.index) {
+            if (this.overlappingNodes.has(node)
+                || node.index == this.mouseHandler.clickedNode?.index) {
                 continue;
             }
-            node.drawText(this.slowCtx, this.nodeLabeling)
+            node.drawText(this.slowCtx, this.background, this.nodeLabeling)
         }
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
             edge.textDrawChain.call(this.slowCtx, nodeA.pos, nodeB.pos,

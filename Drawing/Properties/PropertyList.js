@@ -1,5 +1,6 @@
 import EdgePropertyRepository from "./EdgePropertyRepository.js";
 import NodePropertyRepository from "./NodePropertyRepository.js";
+import { g } from "../GraphView.js";
 
 class PropertyList extends HTMLElement {
     constructor() {
@@ -62,12 +63,16 @@ class PropertyList extends HTMLElement {
         iElement.setAttribute('class', 'property-input')
         iElement.setAttribute('id', `${this.artifactType}${property}`)
         iElement.setAttribute('placeholder', 'Valor')
+        if (label == "Label") { iElement.setAttribute('maxLength', 2); }
 
         pElement.appendChild(lElement)
         pElement.appendChild(iElement)
 
         iElement.addEventListener('input', (event) => {
-            artifacts.map(a => a[property] = event.target.value)
+            if (type != "text" || event.target.value != "") {
+                artifacts.map(a => a[property] = event.target.value)
+                g.refreshGraph()
+            }
         })
         this.container.appendChild(pElement)
 

@@ -60,7 +60,7 @@ export default function KruskalMST(controller) {
     edges.sort((e1, e2) => e2[0].assignedValue - e1[0].assignedValue)
 
     edges.forEach(([edge,,]) => {
-        edge.highlights.add(HighlightType.ALGORITHM_NOTVISITED)
+        edge.highlights.add(HighlightType.DISABLED)
     })
 
     controller.addStep(graph, `Inicializando uma floresta com ${nodes.length} árvores compostas por nós desconexos. \
@@ -69,13 +69,14 @@ export default function KruskalMST(controller) {
     while(edges.length > 0) {
         let [edge, nodeA, nodeB] = edges.pop()
 
-        edge.highlights.remove(HighlightType.ALGORITHM_NOTVISITED)
-        edge.highlights.add(HighlightType.COLORED_BORDER)
+        edge.highlights.remove(HighlightType.DISABLED)
+        edge.highlights.add(HighlightType.COLORED_A)
         controller.addStep(graph, 'Retirando a aresta remanescente com menor peso.', 'loopStart')
-        edge.highlights.remove(HighlightType.COLORED_BORDER)
+        edge.highlights.remove(HighlightType.COLORED_A)
 
 
         if(unionFind.find(nodeA) !== unionFind.find(nodeB)) {
+            edge.highlights.remove(HighlightType.DISABLED)
             edge.highlights.add(HighlightType.DARK_WITH_BLINK)
 
             nodeA.highlights.add(HighlightType.COLORED_BORDER2)

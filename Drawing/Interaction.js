@@ -1,6 +1,5 @@
 import { Algorithm, GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
-import Graph from "../Structure/Graph.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 import PrimMST from "../Algorithm/PrimMST.js";
@@ -25,39 +24,40 @@ let algorithmSelector = document.getElementById("algorithm")
 
 algorithmSelector.onchange = function () {
     algorithmSelector.blur()
-    let requiredCategories = getRequiredCategoriesForAlgorithm(this.value)
+    let boundCategories = getRequiredCategoriesForAlgorithm(this.value)
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
-        if (requiredCategories[category]) {
-            checkbox.disabled = true;
-            checkbox.checked = true;
-        } else {
+        let boundStatus = boundCategories[category]
+        if (boundStatus == null) {
             checkbox.disabled = false;
+        } else {
+            checkbox.disabled = true;
+            checkbox.checked = boundStatus;
         }
     }
     updateGraph()
 }
 function getRequiredCategoriesForAlgorithm(alg) {
     console.log(alg)
-    let requiredCategory = {};
+    let boundCategories = {};
     switch (alg) {
     case 'PrimMST':
-        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
         break;
     case 'KruskalMST':
-        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
         break;
     case 'EdmondsMSA':
-        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
-        requiredCategory[GraphCategory.DIRECTED_EDGES] = true;
+        boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
+        boundCategories[GraphCategory.DIRECTED_EDGES] = true;
         break;
     case 'FordFulkerson':
-        requiredCategory[GraphCategory.DIRECTED_EDGES] = true;
-        requiredCategory[GraphCategory.WEIGHTED_EDGES] = true;
+        boundCategories[GraphCategory.DIRECTED_EDGES] = true;
+        boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
         break;
     default:
         break;
     }
-    return requiredCategory;
+    return boundCategories;
 }
 let runAlgorithmButton = document.getElementById("run_algorithm")
 export function getAlgorithmFromName(name) {

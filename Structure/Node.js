@@ -1,5 +1,5 @@
 // Node Definition
-import { backgroundGradient, globalNodeIndex } from "../Drawing/General.js";
+import { globalNodeIndex } from "../Drawing/General.js";
 
 import { HighlightType, HighlightsHandler } from "./Highlights.js"
 import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
@@ -79,7 +79,7 @@ export default class Node {
     }
 
     /** Desenho do nó **/
-    drawProcedure = (ctx) => {
+    drawProcedure = (ctx, background) => {
         // Draw circle border
         ctx.save()
         ctx.lineWidth = 8;
@@ -92,12 +92,12 @@ export default class Node {
                                  || this.highlights.has(HighlightType.LIGHTEN)
                                  || this.highlights.has(HighlightType.DARKEN)
         if (!hasHighlightWithBG) {
-            ctx.fillStyle = backgroundGradient;
+            ctx.fillStyle = background;
         } else {
             ctx.fillStyle = this.color;
         }
         ctx.fill();
-        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+        if (this.highlights.has(HighlightType.DISABLED)) {
             ctx.globalAlpha = 0.5;
         }
         ctx.stroke();
@@ -130,7 +130,6 @@ export default class Node {
         if (this.highlights.has(HighlightType.SELECTION)) {
             /* Borda pontilhada */
             ctx.save()
-            console.log(2)
 
             ctx.strokeStyle = "#1050FF"
             ctx.lineWidth = 4
@@ -161,7 +160,7 @@ export default class Node {
             /* Fundo cinza escuro */
             // drawPreservingState(ctx, () => {
             ctx.save();
-            if (this.highlights.has(HighlightType.COLORED_BORDER)) {
+            if (this.highlights.has(HighlightType.COLORED_A)) {
                 let twinkleTime = window.performance.now() / 500;
                 let whiteLayerAlpha = -(Math.sin(twinkleTime) - 0.85);
                 ctx.globalAlpha = whiteLayerAlpha < 0 ? 0 : whiteLayerAlpha;
@@ -190,7 +189,7 @@ export default class Node {
             ctx.restore();
         }
 
-        if (this.highlights.has(HighlightType.COLORED_BORDER)) { /* Borda colorida */
+        if (this.highlights.has(HighlightType.COLORED_A)) { /* Borda colorida */
             ctx.save();
 
             // Configuramos a borda
@@ -242,10 +241,10 @@ export default class Node {
     }
 
     /** Desenho da label **/
-    drawLabel = (ctx, nodeLabeling) => {
+    drawLabel = (ctx, background, nodeLabeling) => {
         ctx.save()
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = this.highlights.has(HighlightType.DARKEN) ? backgroundGradient : this.color;
+        ctx.fillStyle = this.highlights.has(HighlightType.DARKEN) ? background : this.color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
@@ -260,7 +259,7 @@ export default class Node {
             nodeText = String.fromCharCode(this.index+65)
             break;
         }
-        if (this.highlights.has(HighlightType.ALGORITHM_NOTVISITED)) {
+        if (this.highlights.has(HighlightType.DISABLED)) {
             ctx.globalAlpha = 0.5;
         }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);

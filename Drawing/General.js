@@ -1,21 +1,10 @@
 // Canvas
-import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
-import PrimMST from "../Algorithm/PrimMST.js";
-import KruskalMST from "../Algorithm/KruskalMST.js";
-import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
-import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
-import EulerianPath from "../Algorithm/EulerianPath.js";
-
 export var canvas = document.getElementById("mainCanvas");
 export var slowOverlayCanvas = document.getElementById("slowCanvas");
 export var fastOverlayCanvas = document.getElementById("fastCanvas");
 
 let ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
-// TODO: Gradiente deveria atualizar quando o tamanho atualiza
-export const backgroundGradient = ctx.createLinearGradient(0, 0, 700, 0);
-backgroundGradient.addColorStop(0, "#E5E0FF");
-backgroundGradient.addColorStop(1, "#FFE0F3");
 
 export let globalNodeIndex = 0;
 export function incrementGlobalIndex(newValue = null) {

@@ -1,35 +1,8 @@
 import { HighlightType } from "../Structure/Highlights.js"
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
-import Edge from "../Structure/Edge.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
-
-function markAsActive(artifact) {
-    artifact.highlights.add(HighlightType.COLORED_BORDER2)
-}
-function markAsNotActive(artifact) {
-    artifact.highlights.remove(HighlightType.COLORED_BORDER2)
-}
-
-function markAsNotVisited(artifact) {
-    artifact.highlights.setTo(HighlightType.ALGORITHM_NOTVISITED)
-}
-function markAsVisited(artifact) {
-    if (artifact instanceof Edge) {
-        artifact.highlights.remove(HighlightType.ALGORITHM_VISITING)
-        artifact.highlights.add(HighlightType.DARKEN)
-        return;
-    }
-    artifact.highlights.setTo(HighlightType.COLORED_BORDER)
-}
-
-function markAsVisiting(artifact) {
-    if (!(artifact instanceof Edge)) {
-        // if (artifact.highlights.has(HighlightType.DARKEN)) { return; }
-    }
-    artifact.highlights.setTo(HighlightType.ALGORITHM_VISITING)
-}
 
 export default async function DijkstraShortestPath(controller) {
     let initialNode
@@ -78,10 +51,10 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
     // Preparando visualmente as arestas
     for (let node of graph.nodes()) {
-        markAsNotVisited(node)
+        node.highlights.setTo(HighlightType.DISABLED)
     }
     for (let [edge, , ] of graph.uniqueEdges()) {
-        markAsNotVisited(edge)
+        edge.highlights.setTo(HighlightType.DISABLED)
     }
 
     /*
@@ -123,9 +96,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         currentNode = heap.remove();
         if (!currentNode || currentNode.distance === Infinity) { break; }
 
-        // markAsVisited(currentNode)
-        markAsVisiting(currentNode)
-        markAsActive(currentNode)
+        currentNode.highlights.setTo(HighlightType.COLORED_BORDER2)
 
 
         // Checa se o nó tem vizinhos além do que alcançou ele
@@ -158,8 +129,8 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             // Ignora o nó anterior
             if(node === currentNode.previous.node) { continue; }
 
-            markAsVisiting(node)
-            markAsVisiting(edge)
+            node.highlights.clear()
+            edge.highlights.setTo(HighlightType.DARKEN)
 
             let edgeValue = Number.parseFloat(edge?.assignedValue ?? 1)
             let newDistance = currentNode.distance + edgeValue;
@@ -191,24 +162,15 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                                    que a nova distância (${newDistance}) e \
                                    portanto não será atualizada.`)
             }
-            markAsVisited(edge)
+            edge.highlights.clear()
         }
 
+        currentNode.highlights.clear()
         for (let node of graph.nodes()) {
             node.distance = node.distance;
         }
-        markAsNotActive(currentNode)
-        markAsVisited(currentNode)
-        controller.addStep(graph,
-                           `terminando nó X`)
-        if (currentNode === initialNode) {
-            // initialNode.highlights.add(HighlightType.DARK_WITH_BLINK)
-            // initialNode.highlights.add(HighlightType.DARKEN)
-        }
     }
 
-    // finalNode.highlights.add(HighlightType.DARK_WITH_BLINK);
-    // finalNode.highlights.add(HighlightType.DARKEN)
     let textoPassoFinal;
     if(currentNode === finalNode) {
         textoPassoFinal = 'Nó final foi visitado portanto as visitações estão ' +
@@ -218,9 +180,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         // Caminhe pelos nós e pelas arestas anteriores, destacando-os
         currentNode = finalNode
         while(currentNode !== null) {
-            currentNode.highlights.setTo(HighlightType.COLORED_BORDER)
+            currentNode.highlights.setTo(HighlightType.COLORED_BORDER2)
             // currentNode.highlights.remove(HighlightType.DARKEN)
-            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_BORDER)
+            currentNode.previous.edge?.highlights.add(HighlightType.COLORED_A)
             currentNode = currentNode.previous.node
         }
     } else {

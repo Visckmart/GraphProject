@@ -14,20 +14,52 @@ export function checkSquarePointCollision(squareMid, squareLength, point) {
         && squareMid.y - offset < point.y && squareMid.y + offset > point.y;
 }
 
+// /**
+//  * Checa se o retângulo R, definido pelos seus lados, colide com o quadrado S,
+//  * definido pelo ponto central e o tamanho dos lados.
+//  *
+//  *  ┌───────┐
+//  *  │   R   │   ┌───┐
+//  *  └───────┘   │ S │
+//  *              └───┘
+//  */
+// export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rectBottom},
+//                                               squareMid, squareLength) {
+//     let offset = squareLength/2;
+//     return squareMid.x + offset > rectLeft && squareMid.x - offset < rectRight
+//            && squareMid.y + offset > rectTop && squareMid.y - offset < rectBottom;
+// }
 /**
- * Checa se o retângulo R, definido pelos seus lados, colide com o quadrado S,
- * definido pelo ponto central e o tamanho dos lados.
- *
- *  ┌───────┐
- *  │   R   │   ┌───┐
- *  └───────┘   │ S │
- *              └───┘
- */
-export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rectBottom},
+  * Checa se o retângulo R, definido por dois cantos, colide com o quadrado S,
+  * definido pelo ponto central e o tamanho dos lados.
+  *
+  *  ┌───────┐
+  *  │   R   │   ┌───┐
+  *  └───────┘   │ S │
+  *              └───┘
+  */
+export function checkRectangleSquareCollision([rectCornerA, rectCornerB],
                                               squareMid, squareLength) {
     let offset = squareLength/2;
-    return squareMid.x + offset > rectLeft && squareMid.x - offset < rectRight
-           && squareMid.y + offset > rectTop && squareMid.y - offset < rectBottom;
+    let top, left, bottom, right;
+    if (rectCornerA.x < rectCornerB.x) {
+        left  = rectCornerA.x;
+        right = rectCornerB.x;
+    } else {
+        left  = rectCornerB.x;
+        right = rectCornerA.x;
+    }
+    if ((squareMid.x + offset > left && squareMid.x - offset < right) == false) {
+        return false;
+    }
+    if (rectCornerA.y < rectCornerB.y) {
+        top    = rectCornerA.y;
+        bottom = rectCornerB.y;
+    } else {
+        top    = rectCornerB.y;
+        bottom = rectCornerA.y;
+    }
+    return squareMid.y + offset > top && squareMid.y - offset < bottom;
 }
 /**
  * Checa se o retângulo R, definido por dois pontos opostos, colide com o ponto P.
@@ -39,22 +71,67 @@ export function checkRectangleSquareCollision({rectLeft, rectTop, rectRight, rec
 export function checkRectanglePointCollision([cornerA, cornerB], point) {
     let top, left, bottom, right;
     if (cornerA.x < cornerB.x) {
-        left = cornerA.x
-        right = cornerB.x
+        left  = cornerA.x;
+        right = cornerB.x;
     } else {
-        right = cornerA.x
-        left = cornerB.x
+        left  = cornerB.x;
+        right = cornerA.x;
     }
     if (cornerA.y < cornerB.y) {
-        top = cornerA.y
-        bottom = cornerB.y
+        top    = cornerA.y;
+        bottom = cornerB.y;
     } else {
-        bottom = cornerA.y
-        top = cornerB.y
+        top    = cornerB.y;
+        bottom = cornerA.y;
     }
     return left < point.x && top < point.y && right > point.x && bottom > point.y;
 }
+export function createRectangleChecker(cornerA, cornerB) {
+    let checker = {
+        sides: [
+            [cornerA, {x: cornerB.x, y: cornerA.y}], // Top
+            [{x: cornerA.x, y: cornerB.y}, cornerB],   // Bottom
+            [cornerA, {x: cornerA.x, y: cornerB.y}], // Left
+            [{x: cornerB.x, y: cornerA.y}, cornerB],   // Right
+        ],
 
+        checkLineCollision(lineStart, lineEnd) {
+            for (let [sideStart, sideEnd] of this.sides) {
+                let edgeSideCollided = checkLineLineCollision(
+                    [sideStart, sideEnd],
+                    [lineStart, lineEnd]
+                )
+                if (edgeSideCollided) { return true; }
+            }
+            return false;
+        }
+    }
+    return checker;
+}
+
+function checkRectangleBorderLineCollision([cornerA, cornerB], [lineStart, lineEnd]) {
+    let topCollided = checkLineLineCollision(
+        [cornerA, {x: cornerB.x, y: cornerA.y}],
+        [lineStart, lineEnd]
+    )
+    if (topCollided) { return true; }
+    let bottomCollided = checkLineLineCollision(
+        [{x: cornerA.x, y: cornerB.y}, cornerB],
+        [lineStart, lineEnd]
+    )
+    if (bottomCollided) { return true; }
+    let leftCollided = checkLineLineCollision(
+        [cornerA, {x: cornerA.x, y: cornerB.y}],
+        [lineStart, lineEnd]
+    )
+    if (leftCollided) { return true; }
+    let rightCollided = checkLineLineCollision(
+        [{x: cornerB.x, y: cornerA.y}, cornerB],
+        [lineStart, lineEnd]
+    )
+    if (rightCollided) { return true; }
+    return false;
+}
 /**
  * Checa se a linha L, definida pelo ponto de início, fim e espessura,
  * colide com o ponto P.
@@ -93,6 +170,16 @@ export function checkLineLineCollision([startA, endA], [startB, endB]) {
            && uB >= 0 && uB <= 1;
 }
 
+/**
+ * Calcula o ponto que a partir do centro do círculo, dado um ângulo, toca
+ * na borda desse círculo.
+ */
+export function pointFromCircleAngle(circleMid, circleRadius, angle) {
+    return {
+        x: circleMid.x + (circleRadius * Math.cos(angle)),
+        y: circleMid.y + (circleRadius * Math.sin(angle))
+    }
+}
 /**
  * Rotaciona um ponto.
  */
