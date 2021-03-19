@@ -229,11 +229,11 @@ class GraphView {
     getEdgesAt(pos) {
         let allEdges = []
 
+        let undirected = this.structure.categories.has(GraphCategory.DIRECTED_EDGES) == false
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let straightLine = !(this.structure.categories.has(GraphCategory.DIRECTED_EDGES)
-                               || this.structure.checkEdgeBetween(nodeB, nodeA))
+            let straightLine = !this.structure.checkEdgeBetween(nodeB, nodeA)
 
-            if (straightLine) {
+            if (undirected || straightLine) {
                 let collided = checkLinePointCollision(
                     nodeA.pos, nodeB.pos, 1, pos
                 )
