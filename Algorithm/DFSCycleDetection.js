@@ -2,10 +2,58 @@ import {HighlightType} from "../Structure/Highlights.js";
 import Stack from "./Auxiliary/Stack.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 
+const pseudoCode = [
+`\
+<span>Escolhendo um nó arbitrário para iniciar o algoritmo</span>
+primeiroNó = nó arbitrário
 
+<span>Inicializando pilha e inserindo nó corrente</span>
+pilha = Pilha()
+pilha.push(primeiroNó)
+`,
+`\
+while(pilha.size > 0) {
+     nóCorrente = pilha.pop()
+     nóCorrente.visitado = true
+    for aresta, nóDestino in arestasSaindoDe(nóCorrente) {
+`,
+`\
+        if(!nóDestino.visitado) {
+            <span>Salvando nó corrente na pilha para visitação futura</span>
+            pilha.push(nóCorrente)
+            
+            nóDestino.ancestral = nóCorrente
+            <span>Colocando novo nó descoberto no topo da pilha</span>
+            pilha.push(nóDestino)
+            
+            continua para proxima visualização
+        }
+`,
+`\
+        <span>Se o nó destino não foi visitado e seu ancestral é diferente do nó atual</span>
+        else if(nóCorrente.ancestral != nóDestino.ancestral) {
+            <span>Caso o grafo seja direcionado o nó destino também precisa estar na pilha</span>
+            if(grafo não é direcionado || pilha.estáNaPilha(nóDestino)) {
+                ciclo = navegar por ancestrais de nóCorrente até chegar em nóDestino
+                return ciclo
+            }
+        }
+`,
+`
+    }
+    return ciclo não encontrado
+}
+`
+]
+
+const pseudoLabels = ['init', 'loopStart', 'nodeNotVisited', 'nodeVisited', 'noCycle']
 
 export default function DFSCycleDetection(controller, initialNode = null, record = true) {
     let graph = controller.graphView.structure
+    if(record) {
+        controller.setPseudocode(pseudoCode, pseudoLabels)
+    }
+
     const isDirected = graph.mixins.has(GraphDirectedMixin)
 
     let stack = new Stack()
@@ -21,6 +69,9 @@ export default function DFSCycleDetection(controller, initialNode = null, record
         edge.highlights.add(HighlightType.DISABLED)
     }
 
+    if(record) {
+        controller.addStep(graph, `Selecionando o nó ${firstNode.toString()} como inicial e inicializando pilha.`, 'init')
+    }
 
     let currentNode
     mainLoop: while(stack.length > 0){
@@ -32,17 +83,16 @@ export default function DFSCycleDetection(controller, initialNode = null, record
         currentNode.highlights.remove(HighlightType.LIGHTEN)
         currentNode.visited = true
 
+        if(record) {
+            controller.addStep(graph, `Verificando o nó ${currentNode.toString()}.`, 'loopStart')
+        }
+
         // Procurando por nós não visitados
         for(let [edge, node] of graph.edgesFrom(currentNode))
         {
             // Nó não visitado
             if(!node.visited)
             {
-                if(record) {
-                    // Se achou pelo menos um nó novo mandar mensagem de verificação
-                    controller.addStep(graph, `Verificando o nó ${currentNode.label}.`)
-                }
-
                 // Salvando nó atual para verificação posterior e marcando o nó descoberto para visitação
                 node.ancestral = currentNode
 
@@ -55,7 +105,7 @@ export default function DFSCycleDetection(controller, initialNode = null, record
                 edge.highlights.add(HighlightType.DARKEN)
 
                 if(record) {
-                    controller.addStep(graph, `O nó ${node.label} foi descoberto.`)
+                    controller.addStep(graph, `O nó ${node.toString()} foi descoberto.`, 'nodeNotVisited')
                 }
                 // Desmarcando nó como ativo
                 currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
@@ -71,9 +121,9 @@ export default function DFSCycleDetection(controller, initialNode = null, record
                 if(record) {
                     if(isDirected)
                     {
-                        controller.addStep(graph, `Aresta direcionada para o nó ${node.label} que está na pilha encontrada.`)
+                        controller.addStep(graph, `Aresta direcionada para o nó ${node.toString()} que está na pilha encontrada.`, 'nodeVisited')
                     } else {
-                        controller.addStep(graph, `Aresta que aponta para o nó ${node.label} já visitado encontrada.`)
+                        controller.addStep(graph, `Aresta que aponta para o nó ${node.toString()} já visitado encontrada.`, 'nodeVisited')
                     }
                 }
                 edge.highlights.remove(HighlightType.COLORED_A)
@@ -94,7 +144,7 @@ export default function DFSCycleDetection(controller, initialNode = null, record
                     }
                 }
                 if(record) {
-                    controller.addStep(graph, 'Ciclo encontrado. Algoritmo finalizado.')
+                    controller.addStep(graph, 'Ciclo encontrado. Algoritmo finalizado.', 'nodeNotVisited')
                 }
 
                 // Retornando o ciclo revertido já que foi descoberto por backtracking
@@ -103,11 +153,11 @@ export default function DFSCycleDetection(controller, initialNode = null, record
         }
         // Caso nenhum nó tenha sido encontrado, mandar mensagem de nenhum nó encontrado
         if(record) {
-            controller.addStep(graph, `Verificando o nó ${currentNode.label}, nenhum nó novo encontrado.`)
+            controller.addStep(graph, `Verificando o nó ${currentNode.toString()}, nenhum nó novo encontrado.`)
         }
         currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
     }
     if(record) {
-        controller.addStep(graph, "Nenhum loop encontrado. Algoritmo finalizado.")
+        controller.addStep(graph, "Nenhum loop encontrado. Algoritmo finalizado.", 'noCycle')
     }
 }
