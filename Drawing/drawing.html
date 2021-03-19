@@ -16,11 +16,16 @@
         <canvas id="mainCanvas"></canvas>
         <canvas id="slowCanvas"></canvas>
         <canvas id="fastCanvas"></canvas>
+        <noscript>
+            <div id="errorMessage">
+                <h1>JavaScript é necessário para executar a ferramenta</h1>
+            </div>
+        </noscript>
 
         <!--    Ferramentas    -->
         <div id="tray" class="toolTray">
             <div class="toolTrayTab">
-                <a class="toolTrayCaretUp" href="#">
+                <a class="toolTrayCaretUp" href="#" tabindex="1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                     </svg>
@@ -33,14 +38,14 @@
             </div>
             <div class="toolTrayBody" id="tool_tray">
                 <div id="leftItems">
-                    <input type="radio" name="tool" value="move" id="move_input" checked/>
+                    <input tabindex="2" type="radio" name="tool" value="move" id="move_input" checked/>
                     <label for="move_input">
                         <div class="tool-icon icon">
                             <span style="font-size: 25pt">•</span>
                         </div>
                         <p class="name">Nós</p>
                     </label>
-                    <input type="radio" name="tool" value="connect" id="connect_input"/>
+                    <input tabindex="3" type="radio" name="tool" value="connect" id="connect_input"/>
                     <label for="connect_input">
                         <div class="tool-icon icon">
                             <span style="font-size: 25pt; margin-top: -1pt;">⧟</span>
@@ -160,7 +165,7 @@
                             <option value="DFS" disabled>Busca em Profundidade</option>
                         </optgroup>
                         <optgroup label="Menor Caminho">
-                            <option value="Dijkstra" selected>Dijkstra (Menor Caminho)</option>
+                            <option value="Dijkstra" >Dijkstra (Menor Caminho)</option>
                         </optgroup>
                         <optgroup label="Árvore Geradora Mínima">
                             <option value="PrimMST">Prim (Árvore Geradora Mínima)</option>
@@ -170,7 +175,7 @@
                             <option value="DFSCycleDetection">DFS (Detecção de ciclo)</option>
                         </optgroup>
                         <optgroup label="Trajeto Euleriano">
-                            <option value="EulerianPath">Hierholzer's Algorithm (Trajeto Euleriano)</option>
+                            <option value="EulerianPath" selected>Hierholzer's Algorithm (Trajeto Euleriano)</option>
                         </optgroup>
                         <optgroup label="Arborescência Mínima">
                             <option value="EdmondsMSA">Algoritmo de Edmond (Arborescência Mínima)</option>
@@ -196,7 +201,7 @@
                     <h4 class="sectionSubtitle">
                         <label for="nodeLabeling">Nomenclatura dos nós</label>
                     </h4>
-                    <select id="nodeLabeling">
+                    <select id="nodeLabeling" tabindex="0" >
                         <option value="numbers">Números (Em Ordem Crescente)</option>
                         <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
                         <option value="letters_randomized" selected>Letras (Aleatórias)</option>
