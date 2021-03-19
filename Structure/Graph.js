@@ -339,6 +339,9 @@ class Graph {
     }
     //endregion
 
+    getAnyNode() {
+        return this.nodes().next().value;
+    }
     //region Iteradores
     *nodes() {
         // yield* this.data.keys()

@@ -230,8 +230,8 @@ class GraphView {
         let allEdges = []
 
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let straightLine = !this.structure.categories.has(GraphCategory.DIRECTED_EDGES)
-                               || !this.structure.checkEdgeBetween(nodeB, nodeA)
+            let straightLine = !(this.structure.categories.has(GraphCategory.DIRECTED_EDGES)
+                               || this.structure.checkEdgeBetween(nodeB, nodeA))
 
             if (straightLine) {
                 let collided = checkLinePointCollision(

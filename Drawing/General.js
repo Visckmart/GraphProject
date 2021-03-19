@@ -3,7 +3,6 @@ export var canvas = document.getElementById("mainCanvas");
 export var slowOverlayCanvas = document.getElementById("slowCanvas");
 export var fastOverlayCanvas = document.getElementById("fastCanvas");
 
-let ctx = canvas.getContext("2d");
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
 
 export let globalNodeIndex = 0;
