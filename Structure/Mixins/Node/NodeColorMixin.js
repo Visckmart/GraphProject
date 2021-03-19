@@ -18,8 +18,10 @@ let NodeColorMixin = (superclass) => {
             } else {
                 this._color = nodeColorList[colorRotation++ % nodeColorList.length];
             }
+        }
 
-            this.mixins.add(NodeColorMixin)
+        static getMixins() {
+            return super.getMixins().add(NodeColorMixin)
         }
 
         get color() {

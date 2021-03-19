@@ -204,32 +204,28 @@ class Graph {
 
     //region Serialização
 
-    // TODO: Organizar o código da serialização e desserialização
+    serializeCategories() {
+        let serialized = "";
+        let nodeMixins = this.NodeConstructor.getMixins();
+        if (nodeMixins.has(NodeColorMixin)) { serialized += "c"; }
+
+        let edgeMixins = this.EdgeConstructor.getMixins();
+        if (edgeMixins.has(EdgeDirectedMixin))      { serialized += "D"; }
+        if (edgeMixins.has(EdgeAssignedValueMixin)) { serialized += "V"; }
+
+        return serialized;
+    }
     serialize() {
-        let graphType = "";
-        let anyNode = this.nodes().next().value;
-        if (anyNode) {
-            for (let m of anyNode.mixins) {
-                if (m == NodeColorMixin) {
-                    graphType += "c"
-                }
-            }
-        }
-        let edges = Array.from(this.edges())
-        if (edges.length > 0) {
-            for (let m of edges.map(e => e[0])[0].mixins) {
-                if (m == EdgeAssignedValueMixin) { graphType += "W"; }
-                if (m == EdgeDirectedMixin)      { graphType += "D"; }
-            }
-        }
+        let graphType = this.serializeCategories();
+
         let serializedNodes = "";
         for(let node of this.nodes()) {
-            serializedNodes += `${node.serialize()}.`
+            serializedNodes += `${node.serialize()}.`;
         }
 
         let serializedEdges = "";
         for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
-            serializedEdges += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`
+            serializedEdges += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`;
         }
 
         return graphType + serializedNodes + "~" + serializedEdges;

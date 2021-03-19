@@ -6,9 +6,12 @@ let EdgeDirectedMixin = (superclass) => {
         constructor(args) {
             super(args);
 
-            this.mixins.add(EdgeDirectedMixin);
             this.drawChain.clearChain()
             this.drawChain.addLink(this.drawProcedure)
+        }
+
+        static getMixins() {
+            return super.getMixins().add(EdgeDirectedMixin)
         }
 
         // TODO: Organizar

@@ -13,9 +13,12 @@ let EdgeAssignedValueMixin = (superclass) => {
             this.assignedValue = assignedValue ?? Math.floor(Math.random()*100);
 
             this.textDrawChain.addLink(this.drawText);
-
-            this.mixins.add(EdgeAssignedValueMixin);
         }
+
+        static getMixins() {
+            return super.getMixins().add(EdgeAssignedValueMixin)
+        }
+
         _assignedValue;
         styledValue;
         set assignedValue(newValue) {
