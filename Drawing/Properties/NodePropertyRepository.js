@@ -6,7 +6,7 @@ export default {
             type: 'text',
             selected: true
         },
-        color: {
+        _color: {
             label: 'Cor',
             type: 'color'
         }
