@@ -53,6 +53,7 @@ export default class AlgorithmPseudocode {
         this._current = this.codeElements[index]
         this._currentLabel = label
         this._current?.setAttribute('current', true)
+        this._current?.scrollIntoView({behavior: "smooth"})
     }
 
     finish() {
