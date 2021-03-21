@@ -34,6 +34,7 @@ algorithmSelector.onchange = function () {
             checkbox.checked = boundStatus;
         }
     }
+    window.localStorage.setItem("selectedAlgorithm", algorithmSelector.value)
     updateGraph()
 }
 function getRequiredCategoriesForAlgorithm(alg) {
@@ -92,6 +93,7 @@ document.body.onblur = function() {
 function updateGraph() {
     let enabledCategories = []
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        window.localStorage.setItem(category, checkbox.checked)
         if (checkbox.checked) { enabledCategories.push(category) }
     }
     g.updateGraphConstructors(enabledCategories)
@@ -102,6 +104,17 @@ export function refreshInterfaceCategories() {
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         checkbox.checked = categoriesState.has(category);
     }
+}
+for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+    let storedState = window.localStorage.getItem(category)
+    checkbox.checked = storedState == "true"
+    if (category == GraphCategory.COLORED_NODES && storedState == null) {
+        checkbox.checked = true
+    }
+}
+let storedAlgorithm = window.localStorage.getItem("selectedAlgorithm")
+if (storedAlgorithm) {
+    algorithmSelector.value = storedAlgorithm
 }
 //Opções de formato de grafo
 categoryCheckboxes[GraphCategory.COLORED_NODES].addEventListener('change', updateGraph)
