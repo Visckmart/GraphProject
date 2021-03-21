@@ -42,6 +42,7 @@ function getRequiredCategoriesForAlgorithm(alg) {
     switch (alg) {
     case 'PrimMST':
         boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
+        boundCategories[GraphCategory.DIRECTED_EDGES] = false;
         break;
     case 'KruskalMST':
         boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
