@@ -2,11 +2,11 @@
 #algorithmMenu {
     display: flex;
     flex-direction: row;
-    align-items: center;
     position: absolute;
     left: 0;
     top: 10%;
     height: fit-content;
+    max-height: 80%;
     z-index: 15;
     transform: translateX(calc(-100% + 8pt - 1px));
     transition: all 0.1s ease-in-out;
@@ -17,6 +17,8 @@
     display: flex;
     flex-direction: column;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
+    overflow: auto;
+    max-height: 100%;
 }
 
 #algorithmMenu:hover, #algorithmMenu:target{
@@ -66,6 +68,7 @@
 #algorithmMenuTabs {
     display: flex;
     justify-content: flex-start;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
 }
 
 #algorithmMenuTabs > div {
