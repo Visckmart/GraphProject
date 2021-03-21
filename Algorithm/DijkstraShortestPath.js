@@ -4,6 +4,84 @@ import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMi
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
 
+const pseudocode = [
+`\
+<span>Inicializando minimum heap com os</span> 
+<span>nós classificados por distância</span>
+heap = MinHeap()
+
+<span>Inicializando todos os nós</span>
+for(nó de grafo) {
+    nó.distancia = ∞
+    nó.anterior = null
+    nó.visitado = false
+    
+    heap.insert(nó)  
+}
+<span>Inicializando nó inicial</span>
+nóInicial.distancia = 0
+
+
+nóCorrente = null
+`,
+`\
+while (nóCorrente !== nóFinal) {
+    <span>Recupera o nó com menor distância do heap</span>
+    nóCorrente = heap.remove()
+    
+    <span>Finaliza o loop caso o nó corrente não exista ou</span>
+    <span>tenha distância ∞</span>
+    if(nóCorrente == null || nóCorrente.distancia = ∞) {
+        break
+    }
+`,
+`\
+    for(aresta saindo de nóCorrente) {
+        nóDestino = destino(aresta)
+        
+        <span>Ignora essa aresta caso leve para o nó anterior</span>
+        if(nóDestino === nóCorrente.anterior) {
+            continue
+        }
+        
+        <span>Calculando nova distância hipotética entre</span>
+        <span>nóInicial e o nóDestino</span>
+        novaDistância = nóCorrente.distancia + aresta.peso
+`,
+`\
+        if(novaDistância < nóDestino.distancia) {
+            <span>Atualizando distância do nó destino já que</span>
+            <span>a distância encontrada é menor</span>
+            nóDestino.distancia = novaDistância
+            nóDestino.anterior = nóCorrente
+            
+            heap.atualizaPeso(nóDestino, nóDestino.distancia)            
+        }
+`,
+`\
+        else {
+            <span>Ignorando aresta já que a distância encontrada</span>
+            <span>é maior que a distância atual</span>
+            ignora aresta
+        }
+    }
+`,
+`\
+}
+<span>Se chegamos ao nó final então encontramos um caminho</span>
+if(nóCorrente === nóFinal) {
+    return caminho encontrado de nóInicial à nóFinal
+} 
+<span>Caso contrário não havia caminho</span>
+else {
+    return null
+}
+`
+]
+
+const pseudolabels = ['init', 'startLoop', 'selectEdge', 'newDistance', 'noNewDistance', 'end']
+
+
 export default async function DijkstraShortestPath(controller) {
     let initialNode
     /* Esse algoritmo usa nós com assignedValue para visualização */
@@ -24,6 +102,7 @@ export default async function DijkstraShortestPath(controller) {
 
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graphView.structure
+    controller.setPseudocode(pseudocode, pseudolabels)
 
     // Preparando a relação entre distance e assignedValue
     for (let node of graph.nodes()) {
@@ -81,7 +160,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     controller.addStep(graph,
                        `Marcando <em>todos</em> os nós menos o nó inicial como não \
                        visitados e colocando suas distâncias como ∞.
-                       O nó inicial é marcado com distância 0.`)
+                       O nó inicial é marcado com distância 0.`, 'init')
 
 
     /*
@@ -108,12 +187,12 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         }
         if (hasInterestingNeighbours) {
             controller.addStep(graph,
-                               `Começando a visitação do nó ${currentNode.label}.`)
+                               `Começando a visitação do nó ${currentNode.label}.`, 'startLoop')
         } else {
             controller.addStep(graph,
                                `Começando a visitação do nó ${currentNode.label}. \
                                Como o nó ${currentNode.label} não tem mais \
-                               vizinhos, não há mais nada a fazer.`)
+                               vizinhos, não há mais nada a fazer.`, 'startLoop')
         }
 
         /*
@@ -134,6 +213,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
             let edgeValue = Number.parseFloat(edge?.assignedValue ?? 1)
             let newDistance = currentNode.distance + edgeValue;
+
+            controller.addStep(graph, `Analisando a aresta de peso ${edgeValue}`, 'selectEdge')
+
             // Se a distância atual é menor que a registrada
             if (newDistance < node.distance) {
                 let oldDistanceStr = node.distance === Infinity ? '∞' : node.distance
@@ -151,7 +233,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                                    que é menor que a distância atual \
                                    (${oldDistanceStr}), e salvando a aresta \
                                    destacada como a aresta anterior no caminho \
-                                   até ${node.label}.`)
+                                   até ${node.label}.`, 'newDistance')
 
             // Se a distância atual NÃO é menor que a registrada
             } else {
@@ -160,7 +242,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
                                    ${currentNode.label} até ${node.label}.
                                    Sua distância (${node.distance}) não é maior \
                                    que a nova distância (${newDistance}) e \
-                                   portanto não será atualizada.`)
+                                   portanto não será atualizada.`, 'noNewDistance')
             }
             edge.highlights.clear()
         }
@@ -189,7 +271,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância ' +
                           'menor que ∞, portanto a visitação foi concluída.'
     }
-    controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.')
+    controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.', 'end')
 
     // Removendo a relação entre distance e assignedValue
     for (let node of graph.nodes()) { delete node.distance; }
