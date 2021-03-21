@@ -299,7 +299,7 @@ export default class Node {
     }
 
     toString() {
-        return `${this.label} (${this.index})`;
+        return this.label;
     }
     //endregion
 }
