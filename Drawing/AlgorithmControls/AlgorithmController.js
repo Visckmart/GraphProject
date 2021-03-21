@@ -231,7 +231,6 @@ class AlgorithmController {
         if(showcase) {
             this.inputHandler.showcase.style.display = ''
             this.inputHandler.showcaseTab.style.display = ''
-            this.menuHandler.selectedTab = this.inputHandler.showcaseTab
         } else {
             this.inputHandler.showcase.style.display = 'none'
             this.inputHandler.showcaseTab.style.display = 'none'
