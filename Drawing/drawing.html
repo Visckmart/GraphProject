@@ -38,21 +38,26 @@
             </div>
             <div class="toolTrayBody" id="tool_tray">
                 <div id="leftItems">
-                    <input tabindex="2" type="radio" name="tool" value="move" id="move_input" checked/>
-                    <label for="move_input">
+                    <div class="trayItem">
+                        <input tabindex="2" type="radio" name="tool" value="move" id="move_input" checked/>
                         <div class="tool-icon icon">
                             <span style="font-size: 25pt">•</span>
                         </div>
-                        <p class="name">Nós</p>
-                    </label>
-                    <input tabindex="3" type="radio" name="tool" value="connect" id="connect_input"/>
-                    <label for="connect_input">
+                        <p class="name">
+                            <label for="move_input">Nós</label>
+                        </p>
+                    </div>
+                    <div class="trayItem">
+                        <input tabindex="3" type="radio" name="tool" value="connect" id="connect_input"/>
                         <div class="tool-icon icon">
                             <span style="font-size: 25pt; margin-top: -1pt;">⧟</span>
                         </div>
-                        <p class="name">Arestas</p>
-                    </label>
+                        <p class="name">
+                            <label for="connect_input">Arestas</label>
+                        </p>
+                    </div>
                 </div>
+
                 <div id="rightItems">
                     <input type="radio" name="feature" value="connect_all" id="connect_all_input"/>
                     <label for="connect_all_input">
@@ -159,7 +164,7 @@
                         <label for="algorithm">Algoritmo</label>
                     </h4>
                     <select id="algorithm">
-                        <option value="none">Nenhum</option>
+                        <option value="none" selected>Nenhum</option>
                         <optgroup label="Busca">
                             <option value="BFS" disabled>Busca em Largura</option>
                             <option value="DFS" disabled>Busca em Profundidade</option>
@@ -175,7 +180,7 @@
                             <option value="DFSCycleDetection">DFS (Detecção de ciclo)</option>
                         </optgroup>
                         <optgroup label="Trajeto Euleriano">
-                            <option value="EulerianPath" selected>Hierholzer's Algorithm (Trajeto Euleriano)</option>
+                            <option value="EulerianPath">Hierholzer's Algorithm (Trajeto Euleriano)</option>
                         </optgroup>
                         <optgroup label="Arborescência Mínima">
                             <option value="EdmondsMSA">Algoritmo de Edmond (Arborescência Mínima)</option>
@@ -190,7 +195,7 @@
                 <div class="settingsSection">
                     <h4 class="sectionTitle">Características</h4>
                     <h5 class="sectionSubtitle">Nós</h5>
-                    <input type="checkbox" id="coloredNodes" checked /><label for="coloredNodes">Coloridos</label>
+                    <input type="checkbox" id="coloredNodes" /><label for="coloredNodes">Coloridos</label>
                     <h5 class="sectionSubtitle">Arestas</h5>
                     <input type="checkbox" id="directedEdges"/><label for="directedEdges">Direcionadas</label>
                     <br>

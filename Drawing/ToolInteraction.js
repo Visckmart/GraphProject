@@ -9,12 +9,20 @@ nodeLabelingSelector.onchange = function(e) {
 }
 
 let tray = document.querySelector("#tool_tray");
+let trayItems = tray.getElementsByClassName("trayItem");
 let trayInputs = tray.getElementsByTagName("input");
 let trayIcons = tray.getElementsByClassName("icon");
 
+
+for (let item of trayItems) {
+    let c = item.getElementsByTagName("input")[0];
+    item.addEventListener("click", () => {
+        c.checked = true;
+    });
+}
 for (let inputElement of trayInputs) {
     let eventHandler;
-
+    console.log(inputElement)
     switch (inputElement.name) {
     case "tool":
         eventHandler = function() {
