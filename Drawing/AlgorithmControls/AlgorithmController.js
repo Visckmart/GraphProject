@@ -31,9 +31,6 @@ class AlgorithmController {
         this.inputHandler.progressBar.setAttribute("min", "0")
         this.inputHandler.progressBar.setAttribute("max", this.numberOfSteps.toString())
 
-        // Instanciando handler do menu lateral
-        this.menuHandler = new AlgorithmMenu()
-
         this.progress = 0
         this.speed = 0
         this.hide()
@@ -313,8 +310,16 @@ class AlgorithmController {
         this.progress = 0
         this.isBlocked = false
 
-        for (let element of document.getElementsByClassName('menuContent')) {
-            element.style.display = 'none'
+        if(this.showcasing || this.pseudocode)
+        {
+            // Instanciando handler do menu de algoritmos
+            this.menuHandler = new AlgorithmMenu()
+            if(this.showcasing) {
+                this.menuHandler.selectedTab = document.getElementById('showcaseTab')
+            }
+            else if(this.pseudocode) {
+                this.menuHandler.selectedTab = document.getElementById('pseudocodeTab')
+            }
         }
     }
 
@@ -343,10 +348,6 @@ class AlgorithmController {
         this.inputHandler.finish()
         this.menuHandler.finish()
         this?.pseudocode?.finish()
-
-        for (let element of document.getElementsByClassName('menuContent')) {
-            element.style.display = 'unset'
-        }
     }
 }
 
