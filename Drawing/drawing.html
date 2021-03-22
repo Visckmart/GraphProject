@@ -1,6 +1,7 @@
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <title>GraphProject</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="./tool_tray.css">
     <link rel="stylesheet" href="AlgorithmControls/algorithm_controls.css">
@@ -47,6 +48,7 @@
                             <label for="move_input">Nós</label>
                         </p>
                     </div>
+
                     <div class="trayItem">
                         <input tabindex="3" type="radio" name="tool" value="connect" id="connect_input"/>
                         <div class="tool-icon icon">
@@ -59,34 +61,43 @@
                 </div>
 
                 <div id="rightItems">
-                    <input type="radio" name="feature" value="connect_all" id="connect_all_input"/>
-                    <label for="connect_all_input">
+                    <div class="trayItem">
+                        <input type="radio" name="feature" value="connect_all" id="connect_all_input"/>
                         <div class="feature-icon icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                             </svg>
                         </div>
-                        <p class="name">Conectar</p>
-                    </label>
-                    <input type="radio" name="feature" value="disconnect_all" id="disconnect_all_input"/>
-                    <label for="disconnect_all_input">
+                        <p class="name">
+                            <label for="connect_all_input">Conectar</label>
+                        </p>
+                    </div>
+
+                    <div class="trayItem">
+                        <input type="radio" name="feature" value="disconnect_all" id="disconnect_all_input"/>
                         <div class="feature-icon icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-scissors" viewBox="0 0 16 16">
                                 <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"/>
                             </svg>
                         </div>
-                        <p class="name">Desconectar</p>
-                    </label>
-                    <input type="radio" name="feature" value="delete_all" id="delete_all_input"/>
-                    <label for="delete_all_input">
+                        <p class="name">
+                            <label for="disconnect_all_input">Desconectar</label>
+                        </p>
+                    </div>
+
+                    <div class="trayItem">
+                        <input type="radio" name="feature" value="delete_all" id="delete_all_input"/>
                         <div class="feature-icon icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
                                 <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                             </svg>
                         </div>
-                        <p class="name">Remover</p>
-                    </label>
+                        <p class="name">
+                            <label for="delete_all_input">Remover</label>
+                        </p>
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -103,7 +114,7 @@
 
             <div id="executionContainer">
                 <div id="speedContainer">
-                    <label id="speedGauge"></label>
+                    <label for="speedInput" id="speedGauge">Velocidade do Algoritmo</label>
                     <input type="range" id="speedInput" min="-2" max="2" step="1" value="0">
                 </div>
 
@@ -128,6 +139,7 @@
                             <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.713 3.31 4 3.655 4 4.308v7.384c0 .653.713.998 1.233.696L11.5 8.752V12a.5.5 0 0 0 1 0V4zM5 4.633L10.804 8 5 11.367V4.633z"/>
                         </svg>
                     </a>
+                    <label for="timelineInput" style="display: none">Timeline</label>
                     <input type="range" id="timelineInput">
                 </div>
             </div>
