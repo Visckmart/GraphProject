@@ -417,8 +417,10 @@ class GraphView {
         if (this.blurTimeout) {
             clearTimeout(this.blurTimeout);
         } else {
-            this.canvas.classList.add("blurred");
-            this.slowCanvas.classList.add("blurred");
+            if (window.performance.now() > 1000) {
+                this.canvas.classList.add("blurred");
+                this.slowCanvas.classList.add("blurred");
+            }
         }
         this.blurTimeout = setTimeout(this.removeBlur, 250);
 
