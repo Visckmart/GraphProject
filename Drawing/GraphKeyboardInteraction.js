@@ -101,7 +101,9 @@ class GraphKeyboardHandler {
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
             let chosenAlgorithm = getAlgorithmFromName(algorithmSelector.value);
-            algorithmController.setup(chosenAlgorithm);
+            if (chosenAlgorithm) {
+                algorithmController.setup(chosenAlgorithm);
+            }
             break;
 
         case "e":
