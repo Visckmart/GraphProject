@@ -6,17 +6,20 @@ import {getFormattedTime} from "../Structure/Utilities.js";
 
 // Exportar Arquivo
 let exportFileButton = document.getElementById("exportFile");
-exportFileButton.onclick = function () {
-    let name = `Grafo ${getFormattedTime()}.gp`;
+function saveAsFile(name) {
     let content = g.structure.serialize();
     let encodedContent = 'data:text/plain;charset=utf-8,'
-        + encodeURIComponent(content);
+                         + encodeURIComponent(content);
 
     let element = document.createElement('a');
     element.download = name;
     element.href = encodedContent;
 
     element.click();
+}
+exportFileButton.onclick = function () {
+    let name = `Grafo ${getFormattedTime()}.gp`;
+    saveAsFile(name);
 }
 
 
