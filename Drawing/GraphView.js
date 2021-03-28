@@ -38,8 +38,9 @@ const NodeLabeling = {
 }
 
 // Graph
-class GraphView {
-    constructor (canvas, slowCanvas, fastCanvas) {
+export class GraphView {
+    constructor (delegate, canvas, slowCanvas, fastCanvas) {
+        this.delegate = delegate;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
@@ -116,7 +117,7 @@ class GraphView {
         if (this.primaryTool !== Tool.CONNECT) {
             this.mouseHandler.shouldDrawTemporaryEdge = false;
         }
-        this.refreshTrayIcons()
+        this.delegate.didChangeTool(anotherTool);
     }
 
 
@@ -137,12 +138,12 @@ class GraphView {
     }
 
     /* Atualiza os botões para que eles reflitam o estado das ferramentas */
-    refreshTrayIcons() {
-        for (let element of toolTrayElement.getElementsByTagName("input")) {
-            if (element.value === this.primaryTool) { element.click(); }
-        }
-        this.mouseHandler.refreshCursorStyle();
-    }
+    // refreshTrayIcons() {
+    //     for (let element of toolTrayElement.getElementsByTagName("input")) {
+    //         if (element.value === this.primaryTool) { element.click(); }
+    //     }
+    //     this.mouseHandler.refreshCursorStyle();
+    // }
 
     selectAllNodes() {
         let allElements = [];
@@ -734,10 +735,10 @@ class GraphView {
     //endregion
 }
 
-export let g = new GraphView(canvas, slowOverlayCanvas, fastOverlayCanvas);
+// export let g = new GraphView();
 let tray = document.querySelector("#tool_tray");
-let gi = new GraphInterface(g, tray);
-
+let gi = new GraphInterface([canvas, slowOverlayCanvas, fastOverlayCanvas], tray);
+export let g = gi.view
 // export let g = gi;
 // g.refreshFastCanvas()
 g.requestCanvasRefresh(CanvasType.GENERAL)

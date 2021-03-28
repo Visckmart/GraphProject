@@ -1,10 +1,10 @@
 import { TrayHandler } from "./ToolInteraction.js";
-import { g } from "./GraphView.js";
+import { GraphView } from "./GraphView.js";
 import ToolRepository from "./ToolRepository.js";
 
 export class GraphInterface {
     constructor(view, tray) {
-        this.view = view;
+        this.view = new GraphView(this, view[0], view[1], view[2]);
         this.tray = new TrayHandler(tray, this);
     }
 
@@ -15,9 +15,16 @@ export class GraphInterface {
             this.view.primaryTool = targetElement.value;
             break;
         case "feature":
-            ToolRepository[targetElement.value].bind(g)();
+            ToolRepository[targetElement.value].bind(this.view)();
             targetElement.checked = false;
             break;
         }
     }
+
+    didChangeTool(tool) {
+        this.tray.refreshIcons(tool);
+        this.view.mouseHandler.refreshCursorStyle();
+    }
+
+
 }

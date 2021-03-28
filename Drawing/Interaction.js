@@ -87,7 +87,6 @@ document.body.onblur = function() {
     if (!g.lastToolChoice || g.lastToolChoice == Tool.MOVE) {
         g.primaryTool = Tool.MOVE;
     }
-    g.refreshTrayIcons()
 }
 
 function updateGraph() {
@@ -122,4 +121,4 @@ categoryCheckboxes[GraphCategory.WEIGHTED_EDGES].addEventListener('change', upda
 categoryCheckboxes[GraphCategory.DIRECTED_EDGES].addEventListener('change', updateGraph)
 
 // Executa a primeira vez
-g.refreshTrayIcons();
+// g.refreshTrayIcons();

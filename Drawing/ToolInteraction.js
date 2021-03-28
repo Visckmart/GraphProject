@@ -37,6 +37,12 @@ export class TrayHandler {
         // }
     }
 
+    refreshIcons(primaryTool) {
+        for (let element of this.trayInputs) {
+            if (element.value === primaryTool) { element.click(); }
+        }
+    }
+
     // EXTRA: Fazer hover para outras ferramentas
     //        Comentado enquanto o hover das outras ferramentas não está implementado
     // hoverHandler(mouseEvent) {
