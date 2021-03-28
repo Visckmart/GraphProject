@@ -36,14 +36,14 @@
             /*align-items: flex-end;*/
         }
         .history p, .history a {
-            font-size: 13pt;
+            font-size: 14pt;
             max-width: 42em;
             margin-top: 0;
             margin-left: auto;
             margin-right: auto;
             margin-bottom: 5pt;
             text-align: justify;
-            line-height: 1.5;
+            line-height: 1.3;
             letter-spacing: 0.25pt;
             color: #333;
         }
@@ -90,12 +90,13 @@
             color: #777;
             transition: 0.2s;
         }
-        .authorSection:hover {
+        .authorSection:hover, .authorSection:focus-within {
             /*transform: translateY(-10pt);*/
+            /*background: red;*/
             transform: scale(1.025);
             box-shadow: 0px 0px 35px 5px #eee;
         }
-        .authorSection:hover .contact a {
+        .authorSection:hover .contact a, .authorSection .contact a:focus {
             color: revert;
         }
         .authorSection > img {
@@ -134,7 +135,7 @@
 
 
         .aboutSection {
-            padding: 15pt 50pt;
+            padding: 10pt 50pt;
         }
         .aboutSection h2 {
             margin-top: 0;
@@ -182,15 +183,14 @@
     </p>
     <div class="history">
         <p>
-            O projeto começou como um desafio de férias,
-            e um bom motivo para aprender tecnologias diferentes,
-            e se tornou uma ferramenta útil para o aprendizado de outros estudantes.
+            A ferramenta permite a exploração e manipulação de
+            grafos e facilita o aprendizado do funcionamento de diversos
+            algoritmos que atuam sobre eles.
         </p>
         <p>
-            Enquanto dois estudantes de computação passavam por disciplinas que
-            exploravam o conceito de grafos, eles sentiram a
-            falta de uma ferramenta didática para entender melhor o que estava
-            sendo ensinado e então resolveram criar uma.
+            Tudo começou como um desafio de férias
+            e um bom motivo para aprender tecnologias diferentes,
+            e se tornou uma ferramenta útil para o aprendizado de outros estudantes.
         </p>
     </div>
     <div id="sidebyside">
@@ -233,13 +233,48 @@
                     e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
                 </p>
             </div>
-            <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br">victormartins@aluno.puc-rio.br</a></div>
+            <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br?subject=Graph Project">victormartins@aluno.puc-rio.br</a></div>
         </div>
     </div>
     <div class="aboutSection">
-        <h2>Proposta e Objetivos</h2>
+        <h2>História</h2>
         <ul>
             <li>
+                <p style="margin-top: -10pt; margin-bottom: 8pt">
+                    <span style="font-size: 14pt">
+                    Enquanto dois estudantes de computação passavam por disciplinas que
+                    exploravam o conceito de grafos, eles sentiram a
+                    falta de uma ferramenta didática para entender melhor o que estava
+                        sendo ensinado, e então resolveram criar uma do zero.
+                    </span>
+                </p>
+                <p>
+                    Durante as férias o projeto começou a ser discutido e
+                    implementado. Conversamos sobre o foco principal e os
+                    recursos essenciais, e discutimos sobre os primeiros passos
+                    da implementação.
+                </p>
+                <p>
+                    Com o passar das semanas fomos continuamente adicionando e
+                    aprimorando a ferramenta de acordo com o que fomos conversando
+                    ao longo do tempo.
+                </p>
+                <p>
+                    Ainda que seja um projeto no qual temos total liberdade para
+                    tomar decisões, inclusive com relação ao tempo que dedicamos
+                    a ele, escolhemos como uma meta ideal termos os recursos
+                    essenciais funcionando antes da volta às aulas (já que
+                    nosso tempo livre diminui bastante).
+                    Conseguimos fazer isso, e continuamos aprimorando a ferramenta
+                    e desenvolvendo novos recursos no tempo livre que temos.
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="aboutSection">
+        <h2>Fundamentos</h2>
+        <ul>
+           <li>
                 <h3 id="grafo">O que são grafos?</h3>
                 <p>
                     Grafos são estruturas matemáticas definidas por um conjunto
@@ -261,25 +296,30 @@
                     de alunos, o tamanho de cada sala e outros diversos fatores.
                 </p>
             </li>
+        </ul>
+    </div>
+    <div class="aboutSection">
+        <h2>Recursos</h2>
+        <ul>
             <li>
-                <h3>Qual a proposta da ferramenta?</h3>
-                <p>
-                    Nossa ideia é permitir a exploração de grafos para que alunos
-                    possam entender o funcionamento de certos algoritmos na
-                    prática. Para isso, precisamos permitir a criação e
-                    manipulação de grafos com diversas características, além do
-                    compartilhamento desses grafos e a visualização didática da
-                    execução dos algoritmos.
-                </p>
-            </li>
-            <li>
-                <h3>Quais recursos estão disponíveis?</h3>
+                <h3>Manipular Grafos</h3>
                 <p>
                     É possível criar e manipular livremente grafos de várias
                     categorias, como grafos com peso nas arestas, arestas
-                    direcionadas, e etc. Além disso os usuários podem
+                    direcionadas, e etc.
+                </p>
+            </li>
+            <li>
+                <h3>Executar Algoritmos</h3>
+                <p>
+                    Além disso os usuários podem
                     executar uma série de algoritmos nos próprios grafos e
-                    acompanhar o passo a passo com explicações no processo.<br>
+                    acompanhar o passo a passo com explicações no processo.
+                </p>
+            </li>
+            <li>
+                <h3>Compartilhar</h3>
+                <p>
                     O compartilhamento de grafos pode ser feito de diversas
                     maneiras, como por meio de uma imagem ou mesmo
                     por meio de um link ou arquivo que pode ser enviado a outra
@@ -336,7 +376,7 @@
                     as mais relevantes de cada um dos módulos. Além disso,
                     procuramos usar <code>design patterns</code> que
                     melhor se adequam às necessidades, como herança que
-                    aprendemos em aula, e <code>mixin</code>, que aprendemos
+                    aprendemos em aula, e <code>mixin</code> e <code>delegate</code>, que aprendemos
                     por conta própria.
                 </p>
             </li>

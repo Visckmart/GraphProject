@@ -25,6 +25,7 @@ import {
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
     checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
+import { GraphInterface } from "./GraphInterface.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 const toolTrayElement = document.querySelector("#tool_tray")
@@ -37,8 +38,9 @@ const NodeLabeling = {
 }
 
 // Graph
-class GraphView {
-    constructor (canvas, slowCanvas, fastCanvas) {
+export class GraphView {
+    constructor (delegate, canvas, slowCanvas, fastCanvas) {
+        this.delegate = delegate;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
 
@@ -115,7 +117,7 @@ class GraphView {
         if (this.primaryTool !== Tool.CONNECT) {
             this.mouseHandler.shouldDrawTemporaryEdge = false;
         }
-        this.refreshTrayIcons()
+        this.delegate.didChangeTool(anotherTool);
     }
 
 
@@ -136,12 +138,12 @@ class GraphView {
     }
 
     /* Atualiza os botões para que eles reflitam o estado das ferramentas */
-    refreshTrayIcons() {
-        for (let element of toolTrayElement.getElementsByTagName("input")) {
-            if (element.value === this.primaryTool) { element.click(); }
-        }
-        this.mouseHandler.refreshCursorStyle();
-    }
+    // refreshTrayIcons() {
+    //     for (let element of toolTrayElement.getElementsByTagName("input")) {
+    //         if (element.value === this.primaryTool) { element.click(); }
+    //     }
+    //     this.mouseHandler.refreshCursorStyle();
+    // }
 
     selectAllNodes() {
         let allElements = [];
@@ -229,11 +231,11 @@ class GraphView {
     getEdgesAt(pos) {
         let allEdges = []
 
+        let undirected = this.structure.categories.has(GraphCategory.DIRECTED_EDGES) == false
         for (let [edge, nodeA, nodeB] of this.structure.uniqueEdges()) {
-            let straightLine = !(this.structure.categories.has(GraphCategory.DIRECTED_EDGES)
-                               || this.structure.checkEdgeBetween(nodeB, nodeA))
+            let straightLine = !this.structure.checkEdgeBetween(nodeB, nodeA)
 
-            if (straightLine) {
+            if (undirected || straightLine) {
                 let collided = checkLinePointCollision(
                     nodeA.pos, nodeB.pos, 1, pos
                 )
@@ -416,8 +418,10 @@ class GraphView {
         if (this.blurTimeout) {
             clearTimeout(this.blurTimeout);
         } else {
-            this.canvas.classList.add("blurred");
-            this.slowCanvas.classList.add("blurred");
+            if (window.performance.now() > 1000) {
+                this.canvas.classList.add("blurred");
+                this.slowCanvas.classList.add("blurred");
+            }
         }
         this.blurTimeout = setTimeout(this.removeBlur, 250);
 
@@ -731,7 +735,11 @@ class GraphView {
     //endregion
 }
 
-export let g = new GraphView(canvas, slowOverlayCanvas, fastOverlayCanvas);
+// export let g = new GraphView();
+let tray = document.querySelector("#tool_tray");
+let gi = new GraphInterface([canvas, slowOverlayCanvas, fastOverlayCanvas], tray);
+export let g = gi.view
+// export let g = gi;
 // g.refreshFastCanvas()
 g.requestCanvasRefresh(CanvasType.GENERAL)
 g.requestCanvasRefresh(CanvasType.SLOW)

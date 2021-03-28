@@ -15,9 +15,6 @@ export default class Edge {
         this.index = index ?? globalEdgeIndex
         globalEdgeIndex = Math.max(globalEdgeIndex, index ?? globalEdgeIndex)+1;
 
-        // Lista de mixins
-        this.mixins = new Set()
-
         // Instanciando cadeias de responsabilidade
         if (!this.drawChain) {
         this.drawChain = new ResponsibilityChain();}
@@ -25,6 +22,10 @@ export default class Edge {
 
         // Instanciando cadeias de responsabilidade
         this.textDrawChain = new ResponsibilityChain();
+    }
+
+    static getMixins() {
+        return new Set()
     }
 
     get _args() {

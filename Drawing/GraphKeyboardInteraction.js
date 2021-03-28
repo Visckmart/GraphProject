@@ -1,6 +1,8 @@
 import { Tool } from "./General.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
 import { getAlgorithmFromName } from "./Interaction.js";
+import { getFormattedTime } from "../Structure/Utilities.js";
+import { g } from "./GraphView.js";
 
 class GraphKeyboardHandler {
 
@@ -69,6 +71,26 @@ class GraphKeyboardHandler {
         case "2":
             this.graphView.primaryTool = Tool.CONNECT;
             break;
+
+        case "s": // TODO: Organizar atalho de salvamento
+            if (metaPressed) {
+                keyboardEvent.preventDefault();
+                let filename = prompt("Nome do arquivo:",
+                                      `Grafo ${getFormattedTime()}`)
+                if (filename == null) break;
+                let content = this.graphView.structure.serialize();
+                let encodedContent = 'data:text/plain;charset=utf-8,'
+                                     + encodeURIComponent(content);
+
+                let element = document.createElement('a');
+                element.download = filename+".gp";
+                element.href = encodedContent;
+
+                element.click();
+            } else {
+                console.log(this.graphView.structure.serialize());
+            }
+            break;
         }
     }
 
@@ -101,7 +123,9 @@ class GraphKeyboardHandler {
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
             let chosenAlgorithm = getAlgorithmFromName(algorithmSelector.value);
-            algorithmController.setup(chosenAlgorithm);
+            if (chosenAlgorithm) {
+                algorithmController.setup(chosenAlgorithm);
+            }
             break;
 
         case "e":
@@ -109,10 +133,6 @@ class GraphKeyboardHandler {
             break;
         case "m":
             this.graphView.snapNodesToGrid();
-            break;
-
-        case "s":
-            console.log(this.graphView.structure.serialize());
             break;
 
         case "z":

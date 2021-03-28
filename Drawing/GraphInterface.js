@@ -1,0 +1,30 @@
+import { TrayHandler } from "./ToolInteraction.js";
+import { GraphView } from "./GraphView.js";
+import ToolRepository from "./ToolRepository.js";
+
+export class GraphInterface {
+    constructor(view, tray) {
+        this.view = new GraphView(this, view[0], view[1], view[2]);
+        this.tray = new TrayHandler(tray, this);
+    }
+
+    didUpdateTray(targetElement) {
+        // console.log(type, name)
+        switch (targetElement.name) {
+        case "tool":
+            this.view.primaryTool = targetElement.value;
+            break;
+        case "feature":
+            ToolRepository[targetElement.value].bind(this.view)();
+            targetElement.checked = false;
+            break;
+        }
+    }
+
+    didChangeTool(tool) {
+        this.tray.refreshIcons(tool);
+        this.view.mouseHandler.refreshCursorStyle();
+    }
+
+
+}

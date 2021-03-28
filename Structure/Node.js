@@ -33,11 +33,11 @@ export default class Node {
 
         /* Destaques */
         this.highlights = new HighlightsHandler(highlights)
-
-        /* Lista de mixins */
-        this.mixins = new Set()
     }
 
+    static getMixins() {
+        return new Set()
+    }
     /** Cor **/
     get color() {
         // Retorna um valor estático porque a coloração é feita pelo componente
@@ -299,7 +299,7 @@ export default class Node {
     }
 
     toString() {
-        return `${this.label} (${this.index})`;
+        return this.label;
     }
     //endregion
 }

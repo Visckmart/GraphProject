@@ -98,18 +98,23 @@
   display: flex;
   flex-direction: row;
 }
-.toolTrayBody > div label {
-  cursor: pointer;
-  color: white;
-  text-decoration: none;
+.trayItem > input {
+  display: none;
+}
+.trayItem {
+  cursor: default;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  /*background-color: lightblue;*/
   margin-left: 4pt;
   margin-right: 4pt;
+}
+.trayItem label {
+  cursor: default;
+  color: white;
+  text-decoration: none;
 }
 
 :root {
@@ -133,11 +138,12 @@
   border: 2pt solid white;
 }
 
-.tool-icon:hover {
+.trayItem:hover .icon {
   background-color: #FFF4;
 }
 
-.tool-icon:active, .toolTrayBody > div > input:checked+label > *:first-child {
+.trayItem input:checked ~ .icon,
+.trayItem:active input ~ .icon {
   background-color: white;
   color: black;
 }
