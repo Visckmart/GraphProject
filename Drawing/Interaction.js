@@ -1,14 +1,14 @@
 import { Algorithm, GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
 import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
-import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
-import PrimMST from "../Algorithm/PrimMST.js";
-import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
-import KruskalMST from "../Algorithm/KruskalMST.js";
-import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
+// import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
+// import PrimMST from "../Algorithm/PrimMST.js";
+// import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
+// import KruskalMST from "../Algorithm/KruskalMST.js";
+// import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
 import {updateFavorites} from "./FavoritesHandler.js";
-import EulerianPath from "../Algorithm/EulerianPath.js";
-import FordFulkerson from "../Algorithm/FordFulkerson.js";
+// import EulerianPath from "../Algorithm/EulerianPath.js";
+// import FordFulkerson from "../Algorithm/FordFulkerson.js";
 
 updateFavorites()
 
@@ -61,21 +61,41 @@ function getRequiredCategoriesForAlgorithm(alg) {
     return boundCategories;
 }
 let runAlgorithmButton = document.getElementById("run_algorithm")
-export function getAlgorithmFromName(name) {
+export async function getAlgorithmFromName(name) {
+    let algModuleName;
     switch (name) {
-        case Algorithm.DIJKSTRA:           return DijkstraShortestPath;
-        case Algorithm.MST_PRIM:           return PrimMST;
-        case Algorithm.MST_KRUSKAL:        return KruskalMST;
-        case Algorithm.DFS_CYCLEDETECTION: return DFSCycleDetection;
-        case Algorithm.MSA_EDMONDS:        return EdmondsMSA;
-        case Algorithm.EULERIANPATH:       return EulerianPath;
-        case Algorithm.FORD_FULKERSON:     return FordFulkerson;
+        case Algorithm.DIJKSTRA:
+            algModuleName = "DijkstraShortestPath";
+            break;
+        case Algorithm.MST_PRIM:
+            algModuleName = "PrimMST";
+            break;
+        case Algorithm.MST_KRUSKAL:
+            algModuleName = "KruskalMST";
+            break;
+        case Algorithm.DFS_CYCLEDETECTION:
+            algModuleName = "DFSCycleDetection";
+            break;
+        case Algorithm.MSA_EDMONDS:
+            algModuleName = "EdmondsMSA";
+            break;
+        case Algorithm.EULERIANPATH:
+            algModuleName = "EulerianPath";
+            break;
+        case Algorithm.FORD_FULKERSON:
+            algModuleName = "FordFulkerson";
+            break;
+    }
+    if (algModuleName) {
+        let algModule = await import("../Algorithm/"+algModuleName+".js");
+        return algModule.default;
     }
     return null;
 }
 runAlgorithmButton.onclick = async () => {
     let algorithmController = new AlgorithmController(g);
-    let algorithm = getAlgorithmFromName(algorithmSelector.value);
+    let algorithm = await getAlgorithmFromName(algorithmSelector.value);
+    if (!algorithm) return;
     await algorithmController.setup(algorithm);
 }
 

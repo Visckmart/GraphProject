@@ -122,10 +122,11 @@ class GraphKeyboardHandler {
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
-            let chosenAlgorithm = getAlgorithmFromName(algorithmSelector.value);
-            if (chosenAlgorithm) {
-                algorithmController.setup(chosenAlgorithm);
-            }
+            getAlgorithmFromName(algorithmSelector.value)
+                .then(algorithm => {
+                    if (!algorithm) return;
+                    algorithmController.setup(algorithm);
+                });
             break;
 
         case "e":
