@@ -1,0 +1,40 @@
+#pseudocode {
+    position: relative;
+}
+
+#pseudoPopup {
+    margin-left: 8px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#pseudoWrapper {
+    overflow: auto;
+}
+
+#pseudoContainer {
+    width: max-content;
+}
+
+#pseudoContainer > pre {
+    margin: 0;
+    width: 100%;
+    padding-left:5px;
+    color: #D9D9D9;
+    transition: all 0.3s ease-in-out;
+}
+
+#pseudoContainer > pre[current="true"] {
+    background-color: lightgray;
+    color: #333;
+}
+
+#pseudoContainer > pre > span {
+    color: #999;
+}
+
+#pseudoContainer > pre > span::before {
+    color: darkgray;
+    content: '# ';
+}

@@ -1,4 +1,4 @@
-import AlgorithmShowcase from "../../Drawing/AlgorithmControls/AlgorithmShowcase.js";
+import AlgorithmShowcase from "../../Drawing/AlgorithmControls/Showcase/AlgorithmShowcase.js";
 
 const elementSize = 50
 const paddingTop = 30

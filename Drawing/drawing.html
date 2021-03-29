@@ -1,10 +1,24 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>GraphProject</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="./tool_tray.css">
-    <link rel="stylesheet" href="AlgorithmControls/algorithm_controls.css">
+
+    <!--  Stylesheets de algoritmos não precisam ser carregadas sincronamente  -->
+    <link rel="preload" href="AlgorithmControls/algorithm_controls.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="AlgorithmControls/algorithm_controls.css"></noscript>
+
+    <link rel="preload" href="AlgorithmControls/algorithm_menu.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="AlgorithmControls/algorithm_menu.css"></noscript>
+
+    <link rel="preload" href="AlgorithmControls/Pseudocode/algorithm_pseudocode.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="AlgorithmControls/Pseudocode/algorithm_pseudocode.css"></noscript>
+
+    <link rel="preload" href="AlgorithmControls/Showcase/algorithm_showcase.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="AlgorithmControls/Showcase/algorithm_showcase.css"></noscript>
+
     <script type="module" src="General.js" crossorigin="anonymous"></script>
     <script type="module" src="Interaction.js" crossorigin="anonymous"></script>
     <script type="module" src="InteractionShare.js" crossorigin="anonymous"></script>
@@ -26,14 +40,10 @@
         <div id="tray" class="toolTray">
             <div class="toolTrayTab">
                 <a class="toolTrayCaretUp" href="#" tabindex="1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                    </svg>
+                    <img width="16" height="16" src="../assets/img/caret_up.svg" alt="caret_up">
                 </a>
                 <a class="toolTrayCaretDown" href="#tray">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                    </svg>
+                    <img width="16" height="16" src="../assets/img/caret_down.svg" alt="caret_down">
                 </a>
             </div>
             <div class="toolTrayBody" id="tool_tray">
@@ -63,9 +73,7 @@
                     <div class="trayItem">
                         <input type="radio" name="feature" value="connect_all" id="connect_all_input"/>
                         <div class="feature-icon icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
-                            </svg>
+                            <img width="25" height="25" src="../assets/img/connect.svg" alt="conectar"/>
                         </div>
                         <p class="name">
                             <label for="connect_all_input">Conectar</label>
@@ -75,9 +83,7 @@
                     <div class="trayItem">
                         <input type="radio" name="feature" value="disconnect_all" id="disconnect_all_input"/>
                         <div class="feature-icon icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-scissors" viewBox="0 0 16 16">
-                                <path d="M3.5 3.5c-.614-.884-.074-1.962.858-2.5L8 7.226 11.642 1c.932.538 1.472 1.616.858 2.5L8.81 8.61l1.556 2.661a2.5 2.5 0 1 1-.794.637L8 9.73l-1.572 2.177a2.5 2.5 0 1 1-.794-.637L7.19 8.61 3.5 3.5zm2.5 10a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0zm7 0a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0z"/>
-                            </svg>
+                            <img width="25" height="25" src="../assets/img/disconnect.svg" alt="desconectar"/>
                         </div>
                         <p class="name">
                             <label for="disconnect_all_input">Desconectar</label>
@@ -87,9 +93,7 @@
                     <div class="trayItem">
                         <input type="radio" name="feature" value="delete_all" id="delete_all_input"/>
                         <div class="feature-icon icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
-                                <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
-                            </svg>
+                            <img width="25" height="25" src="../assets/img/remove.svg" alt="remover"/>
                         </div>
                         <p class="name">
                             <label for="delete_all_input">Remover</label>
@@ -102,10 +106,9 @@
 
         <!--    Controle de Algoritmos  -->
         <div id="algorithmController" style="display: none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-x-circle" viewBox="0 0 16 16" id="exit_button">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-            </svg>
+            <a href="#" id="exit_button">
+                <img src="../assets/img/exit.svg" width="20" height="20" alt="exit" loading=lazy/>
+            </a>
             <div id="tutorialContainer">
                 <label><span>Selecione o nó inicial.</span></label>
             </div>
@@ -119,24 +122,16 @@
 
                 <div id="timelineContainer">
                     <a class="timelineButton" id="back_button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-skip-start" viewBox="0 0 16 16">
-                            <path d="M4 4a.5.5 0 0 1 1 0v3.248l6.267-3.636c.52-.302 1.233.043 1.233.696v7.384c0 .653-.713.998-1.233.696L5 8.752V12a.5.5 0 0 1-1 0V4zm7.5.633L5.696 8l5.804 3.367V4.633z"/>
-                        </svg>
+                        <img width="25" height="25" src="../assets/img/back.svg" alt="back" loading=lazy/>
                     </a>
                     <a class="timelineButton" id="play_button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-play" viewBox="0 0 16 16">
-                            <path d="M10.804 8L5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
-                        </svg>
+                        <img width="25" height="25" src="../assets/img/play.svg" alt="play" loading=lazy/>
                     </a>
                     <a class="timelineButton" style="display: none;" id="stop_button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-pause" viewBox="0 0 16 16">
-                            <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5zm4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z"/>
-                        </svg>
+                        <img width="25" height="25" src="../assets/img/pause.svg" alt="pause" loading=lazy/>
                     </a>
                     <a class="timelineButton" id="forward_button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" class="bi bi-skip-end" viewBox="0 0 16 16">
-                            <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.713 3.31 4 3.655 4 4.308v7.384c0 .653.713.998 1.233.696L11.5 8.752V12a.5.5 0 0 0 1 0V4zM5 4.633L10.804 8 5 11.367V4.633z"/>
-                        </svg>
+                        <img width="25" height="25" src="../assets/img/forward.svg" alt="forward" loading=lazy/>
                     </a>
                     <label for="timelineInput" style="display: none">Timeline</label>
                     <input type="range" id="timelineInput">
@@ -144,26 +139,50 @@
             </div>
         </div>
 
-        <!--    Showcase de Algoritmos  -->
-        <div id="algorithmShowcase" style="display: none">
-            <div id="showcaseContainer">
-                <a id="showcasePin" href="#algorithmShowcase">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">
-                        <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.92 5.92 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
-                    </svg>
-                </a>
-                <a id="showcaseUnpin" href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle" viewBox="0 0 16 16">
-                        <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.92 5.92 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
-                    </svg>
-                </a>
-                <h1 id="showcaseTitle"></h1>
-                <span id="showcaseMessage"></span>
-                <div id="showcaseBody">
-                    <canvas id="showcase"></canvas>
+        <!--    Menu do algoritmo    -->
+        <div id="algorithmMenu" style="display: none">
+            <a id="algorithmMenuPin" href="#algorithmMenu">
+                <img width="16" height="16" src="../assets/img/pin.svg" alt="pin" loading=lazy>
+            </a>
+            <a id="algorithmMenuUnpin" href="#">
+                <img width="16" height="16" src="../assets/img/pin.svg" alt="pin" loading=lazy>
+            </a>
+
+            <div>
+
+                <div id="algorithmMenuTabs">
+                    <div id="showcaseTab" value="algorithmShowcase" style="display: none">Estruturas de dados</div>
+                    <div id="pseudocodeTab" value="pseudocode" style="display: none">
+                        Pseudocódigo
+                        <a href="#" id="pseudoPopup">
+                            <img width="16" height="16" src="../assets/img/popup.svg" alt="popup" loading=lazy/>
+                        </a>
+                    </div>
+                </div>
+                <div id="algorithmMenuBody">
+                    <!--    Showcase de Algoritmos  -->
+                    <div id="algorithmShowcase">
+                        <div id="showcaseContainer">
+
+                            <h1 id="showcaseTitle"></h1>
+                            <span id="showcaseMessage"></span>
+                            <div id="showcaseBody">
+                                <canvas id="showcase"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--    Pseudocódigo    -->
+                    <div id="pseudocode" style="display: none">
+                        <div id="pseudoWrapper">
+                            <div id="pseudoContainer">
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="showcaseTab"></div>
+            <div id="algorithmMenuTab"></div>
         </div>
     </div>
     <div id="menuArea">

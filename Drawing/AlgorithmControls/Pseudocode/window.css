@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    height: 100vh;
+}
+
+#pseudocode {
+    height: 100%;
+    width: 100%;
+    font-size: 12pt;
+    background-color: #eee;
+}
+
+#pseudocode > h2 {
+    margin-bottom: 0;
+}
+
+#pseudoWrapper {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+}
+
+#pseudoContainer {
+    width: max-content;
+    padding-left: 5px;
+}
+
+#pseudoContainer > pre {
+    margin: 0;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
+
+#pseudoContainer > pre[current="true"] {
+    background-color: lightgray;
+    box-shadow: 0 0 3px 0 gray;
+    border-radius: 5px;
+}
+
+#pseudoContainer > pre > span {
+    color: #666;
+}
+
+#pseudoContainer > pre > span::before {
+    color: darkgray;
+    content: '# ';
+}

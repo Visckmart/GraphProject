@@ -1,11 +1,15 @@
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
+import {canvas} from "../General.js";
+import AlgorithmPseudocode from "./Pseudocode/AlgorithmPseudocode.js";
+import AlgorithmMenu from "./AlgorithmMenu.js";
 
 
 class Step {
-    constructor(graph, message = "", isWarning, isHighlight) {
+    constructor(graph, message = "", pseudoLabel, isWarning, isHighlight) {
         this.graphState = graph.clone()
         this.message = message
+        this.pseudoLabel = pseudoLabel
         this.isWarning = isWarning
         this.isHighlight = isHighlight
     }
@@ -126,6 +130,12 @@ class AlgorithmController {
                 {
                     this.inputHandler.tutorialContainer.style.display = 'block'
                     this.inputHandler.message.innerHTML = this.steps[value].message
+
+                    if(this.pseudocode && this.steps[value].pseudoLabel)
+                    {
+                        this.pseudocode.current = this.steps[value].pseudoLabel
+                    }
+
                     this.messageIsWarning = this.steps[value].isWarning
                     this.messageIsHighlighted = this.steps[value].isHighlight
                 } else {
@@ -157,7 +167,7 @@ class AlgorithmController {
             this.inputHandler.playButton.style.display = 'none'
             this.inputHandler.stopButton.style.display = 'block'
 
-            if(this.progress === this.numberOfSteps) {
+            if(this.progress === this.numberOfSteps - 1) {
                 this.progress = 0
             }
 
@@ -219,14 +229,21 @@ class AlgorithmController {
     set showcasing(showcase) {
         this._showcasing = showcase
         if(showcase) {
-            this.inputHandler.showcase.style.display = 'flex'
+            this.inputHandler.showcase.style.display = ''
+            this.inputHandler.showcaseTab.style.display = ''
         } else {
             this.inputHandler.showcase.style.display = 'none'
+            this.inputHandler.showcaseTab.style.display = 'none'
             this.showcasing?.finish?.()
         }
     }
     //#endregion
 
+    //#region Comportamento de pseudo-código
+    setPseudocode(code, labels) {
+        this.pseudocode = new AlgorithmPseudocode(code, labels)
+    }
+    //#endregion
     // Esconde a barra de play
     hide() {
         this.inputHandler.controls.style.display = 'none'
@@ -244,8 +261,8 @@ class AlgorithmController {
     }
 
     // Adiciona uma nova etapa
-    addStep(graph, message, isWarning = false, isHighlighted = false) {
-        this.steps.push(new Step(graph, message, isWarning, isHighlighted))
+    addStep(graph, message, pseudoLabel = null, isWarning = false, isHighlighted = false) {
+        this.steps.push(new Step(graph, message, pseudoLabel, isWarning, isHighlighted))
         this.inputHandler.progressBar.setAttribute("max", (this.numberOfSteps - 1).toString())
 
         this.showcasing?.addStep()
@@ -291,6 +308,18 @@ class AlgorithmController {
         this.playing = true
         this.progress = 0
         this.isBlocked = false
+
+        if(this.showcasing || this.pseudocode)
+        {
+            // Instanciando handler do menu de algoritmos
+            this.menuHandler = new AlgorithmMenu()
+            if(this.showcasing) {
+                this.menuHandler.selectedTab = document.getElementById('showcaseTab')
+            }
+            else if(this.pseudocode) {
+                this.menuHandler.selectedTab = document.getElementById('pseudocodeTab')
+            }
+        }
     }
 
 
@@ -316,6 +345,8 @@ class AlgorithmController {
         this.adjustNodePositions()
 
         this.inputHandler.finish()
+        this.menuHandler.finish()
+        this?.pseudocode?.finish()
     }
 }
 
