@@ -55,6 +55,9 @@ function getRequiredCategoriesForAlgorithm(alg) {
         boundCategories[GraphCategory.DIRECTED_EDGES] = true;
         boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
         break;
+    case 'GreedyNodeColoring':
+        boundCategories[GraphCategory.COLORED_NODES] = true;
+        break;
     default:
         break;
     }
@@ -84,6 +87,9 @@ export async function getAlgorithmFromName(name) {
             break;
         case Algorithm.FORD_FULKERSON:
             algModuleName = "FordFulkerson";
+            break;
+        case Algorithm.GREEDY_NODE_COLOR:
+            algModuleName = "GreedyNodeColoring";
             break;
     }
     if (algModuleName) {
