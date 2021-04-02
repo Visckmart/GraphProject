@@ -1,8 +1,6 @@
 import { HighlightType } from "../Structure/Highlights.js"
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
-import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
-import {MinHeap} from "./Auxiliary/Heap.js";
 import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
 import { nodeColorList } from "../Drawing/General.js";
 
@@ -30,8 +28,8 @@ function executeGreedyNodeColoring(controller, initialNode) {
     let usedColors = 1
     initialNode.color = nodeColorList[usedColors]
     initialNode.colorIndex = usedColors
-    controller.addStep(graph, "Escolhendo uma cor inicial.")
-
+    controller.addStep(graph, "Removendo a cor de todos os nós.<br>Colorindo o nó inicial.")
+    let maxColor = 1
     for (let node of graph.nodes()) {
         if (node == initialNode) continue;
         if (node.color != "#000") continue;
@@ -42,16 +40,19 @@ function executeGreedyNodeColoring(controller, initialNode) {
                 neighbourColors.push(ci)
             }
         }
-        console.log(">", node.label)
+        let stepText;
+        // console.log(">", node.label)
         let maiorCor;
         if (neighbourColors.length == 0) {
-            console.log("\tA")
+            // console.log("\tA")
             maiorCor = 0
+            stepText = `Não há vizinhos coloridos, a primeira cor foi escolhida para o nó <strong style='color:${nodeColorList[maiorCor+1]}'>${node.label}</strong>.`
         } else if (neighbourColors.length == 1) {
-            console.log("\tB")
+            // console.log("\tB")
             maiorCor = neighbourColors[0] == 1 ? 1 : 0
+            stepText = `Há um vizinho colorido, uma cor diferente da dele foi escolhida para o nó <strong style='color:${nodeColorList[maiorCor+1]}'>${node.label}</strong>.`
         } else {
-            console.log("\tC")
+            // console.log("\tC")
             // = Math.max(...neighbourColors)
             // console.log(neighbourColors)
             neighbourColors.sort()
@@ -63,11 +64,18 @@ function executeGreedyNodeColoring(controller, initialNode) {
                     maiorCor = neighbourColors[i]
                 }
             }
+            stepText = `Uma cor diferente de todos os vizinhos coloridos foi escolhida para o nó <strong style='color:${nodeColorList[maiorCor+1]}'>${node.label}</strong>.`
+        }
+        if (maiorCor+1 > maxColor) {
+            maxColor = maiorCor+1
         }
         node.color = nodeColorList[maiorCor+1]
         node.colorIndex = maiorCor+1
+        node.highlights.add(HighlightType.ALGORITHM_VISITING)
         console.log(node.label, node.colorIndex)
-        controller.addStep(graph, "Escolhendo uma cor inicial.")
+        controller.addStep(graph, stepText)
+        node.highlights.remove(HighlightType.ALGORITHM_VISITING)
     }
+    controller.addStep(graph, `Grafo colorido com ${maxColor} cores.<br><i>Nota: ${maxColor} não necessariamente é o número cromático, uma vez que podem haver colorações melhores.</i>`)
     // console.log(1)
 }
