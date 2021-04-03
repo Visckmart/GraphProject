@@ -39,7 +39,7 @@ const NodeLabeling = {
 
 // Graph
 export class GraphView {
-    constructor (delegate, canvas, slowCanvas, fastCanvas) {
+    constructor (delegate, canvas, slowCanvas, fastCanvas, interactive = true) {
         this.delegate = delegate;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
@@ -55,30 +55,31 @@ export class GraphView {
         this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
-
+        this.ctx.imageSmoothingEnabled = false;
 
         this.structure = new Graph();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
         this.selectionHandler = new GraphSelection(this);
-        this.mouseHandler     = new GraphMouseHandler(this);
-        this.keyboardHandler  = new GraphKeyboardHandler(this);
+        this.mouseHandler = new GraphMouseHandler(this);
+        this.keyboardHandler = new GraphKeyboardHandler(this);
 
-        // Mouse
-        canvas.onmousedown  = this.mouseHandler.mouseDownEvent;
-        canvas.onmousemove  = this.mouseHandler.mouseDragEvent;
-        canvas.onmouseup    = this.mouseHandler.mouseUpEvent;
-        canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+        if (interactive) {
+            // Mouse
+            canvas.onmousedown = this.mouseHandler.mouseDownEvent;
+            canvas.onmousemove = this.mouseHandler.mouseDragEvent;
+            canvas.onmouseup = this.mouseHandler.mouseUpEvent;
+            canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
 
-        // Evite abrir o menu de contexto para não haver conflito com o gesto
-        // de deletar nós.
-        canvas.oncontextmenu = event => event.preventDefault();
+            // Evite abrir o menu de contexto para não haver conflito com o gesto
+            // de deletar nós.
+            canvas.oncontextmenu = event => event.preventDefault();
 
-        // Keyboard
-        document.body.onkeydown = this.keyboardHandler.keyPressed;
-        document.body.onkeyup = this.keyboardHandler.keyReleased;
-
+            // Keyboard
+            document.body.onkeydown = this.keyboardHandler.keyPressed;
+            document.body.onkeyup = this.keyboardHandler.keyReleased;
+        }
         // HISTORY
         this.history = new HistoryTracker();
         // this.history.registerStep(this.structure.clone())
@@ -405,7 +406,6 @@ export class GraphView {
         this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
-
         // Ajustando posição dos nós
         let widthRatio = newWidth/originalWidth;
         let heightRatio = newHeight/originalHeight;
@@ -438,6 +438,7 @@ export class GraphView {
         if (!deserializedGraph) { return; }
         this.structure = deserializedGraph;
         refreshInterfaceCategories();
+        this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();
     }

@@ -1,4 +1,3 @@
-import {g} from "./GraphView.js";
 import {getFormattedTime} from "../Structure/Utilities.js";
 
 //region Exportação
@@ -27,13 +26,11 @@ export function exportAsText(graph) {
 
 // Exportar Link
 export function exportAsURL(graph) {
-    console.log(graph)
-    let serializedGraph = graph.structure.serialize();
-    console.log(serializedGraph)
+    let serializedGraph = graph.serialize();
     let shareLink = window.location.protocol + "//"
         + window.location.host + window.location.pathname
         + "?graph=" + serializedGraph;
-    // history.pushState(null, null, shareLink);
+    history.pushState(null, null, shareLink);
 }
 
 
@@ -64,11 +61,11 @@ export function exportViewAsImage(graphView) {
 //region Importação
 
 // Importar por Link
-export function deserializeURL() {
+export function deserializeURL(graph) {
     const urlParams = new URLSearchParams(location.search);
     if (urlParams.has("graph") && urlParams.get("graph") !== "") {
         console.log("Deserializing graph " + urlParams.get("graph"));
-        g.loadSerializedGraph(urlParams.get("graph"));
+        graph.loadSerializedGraph(urlParams.get("graph"));
     }
 }
 
