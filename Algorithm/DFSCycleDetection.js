@@ -1,11 +1,15 @@
 import {HighlightType} from "../Structure/Highlights.js";
 import Stack from "./Auxiliary/Stack.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
+import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
+import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
+import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 
 const pseudoCode = [
 `\
-<span>Escolhendo um nó arbitrário para iniciar o algoritmo</span>
-primeiroNó = nó arbitrário
+<span>Escolhendo um nó arbitrário para iniciar o algoritmo caso um nó</span>
+<span>não tenha sido escolhido</span>
+primeiroNó = nó escolhido || nó arbitrário
 
 <span>Inicializando pilha e inserindo nó corrente</span>
 pilha = Pilha()
@@ -48,8 +52,33 @@ while(pilha.size > 0) {
 
 const pseudoLabels = ['init', 'loopStart', 'nodeNotVisited', 'nodeVisited', 'noCycle']
 
-export default function DFSCycleDetection(controller, initialNode = null, record = true) {
+export default async function DFSCycleDetection(controller) {
+    let initialNode = null
+
+    // Capturando nó inicial
+    controller.addRequirement(RequirementType.SELECT_NODE,
+        "Selecione um nó de inicio. (Pular esse requisito implica na escolha de um nó arbitrário)",
+        node => initialNode = node,
+        true)
+    await controller.resolveRequirements()
+
+    ExecuteDFSCycleDetection(controller, initialNode)
+}
+
+
+export function ExecuteDFSCycleDetection(controller,
+                                  firstNode = null,
+                                  record = true) {
+
     let graph = controller.graphView.structure
+
+    if(!firstNode) {
+        firstNode = graph.nodes().next().value
+
+        if(!firstNode) return
+    }
+
+
     if(record) {
         controller.setPseudocode(pseudoCode, pseudoLabels)
     }
@@ -59,7 +88,6 @@ export default function DFSCycleDetection(controller, initialNode = null, record
     let stack = new Stack()
     controller.showcasing = stack
 
-    let firstNode = initialNode ?? graph.nodes().next().value
     if(firstNode) {
         stack.push(firstNode)
     }
