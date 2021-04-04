@@ -149,7 +149,7 @@ class AlgorithmController {
             {
                 if(this.steps[value].message)
                 {
-                    this.inputHandler.tutorialContainer.style.display = 'block'
+                    this.inputHandler.tutorialContainer.style.display = ''
                     this.inputHandler.message.innerHTML = this.steps[value].message
 
                     if(this.pseudocode && this.steps[value].pseudoLabel)
@@ -272,7 +272,7 @@ class AlgorithmController {
 
     // Mostra a barra de play
     show() {
-        this.inputHandler.controls.style.display = 'block'
+        this.inputHandler.controls.style.display = ''
     }
 
     // Adiciona um novo requisito
@@ -304,6 +304,7 @@ class AlgorithmController {
         }
         this.messageIsHighlighted = false
         this.messageIsWarning = false
+        this.messageIsOptional = false
         this.isBlocked = false
         this._currentRequirement = null
     }
@@ -329,6 +330,10 @@ class AlgorithmController {
 
     // Inicializa a demonstração do algoritmo
     ready() {
+        if(this._finished) {
+            return
+        }
+
         this.graphView.redrawGraph()
         this.playing = true
         this.progress = 0
@@ -349,7 +354,10 @@ class AlgorithmController {
 
 
     // Finaliza a demonstração do algoritmo
+    _finished = false
     finish () {
+        this._finished = true
+
         this.graphView.mouseHandler.enable()
         this.graphView.keyboardHandler.enable()
 
@@ -364,14 +372,18 @@ class AlgorithmController {
         this.messageIsHighlighted = false
         this.messageIsWarning = false
 
+        // Pulando requirement atual para evitar disparo posterior
+        this._currentRequirement?.skipRequirement()
+
+
+        this.inputHandler?.finish()
+        this.menuHandler?.finish()
+        this?.pseudocode?.finish()
+
         // Restaurando grafo ao estado inicial
         this.graphView.structure = this.initialGraph
         this.graphView.refreshGraph()
         this.adjustNodePositions()
-
-        this.inputHandler.finish()
-        this.menuHandler.finish()
-        this?.pseudocode?.finish()
     }
 }
 
