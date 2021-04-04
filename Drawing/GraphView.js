@@ -39,7 +39,7 @@ const NodeLabeling = {
 
 // Graph
 export class GraphView {
-    constructor (delegate, canvas, slowCanvas, fastCanvas) {
+    constructor (delegate, canvas, slowCanvas, fastCanvas, interactive = true) {
         this.delegate = delegate;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
@@ -55,30 +55,93 @@ export class GraphView {
         this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
-
+        this.ctx.imageSmoothingEnabled = false;
 
         this.structure = new Graph();
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
         this.selectionHandler = new GraphSelection(this);
-        this.mouseHandler     = new GraphMouseHandler(this);
-        this.keyboardHandler  = new GraphKeyboardHandler(this);
+        this.mouseHandler = new GraphMouseHandler(this);
+        this.keyboardHandler = new GraphKeyboardHandler(this);
 
-        // Mouse
-        canvas.onmousedown  = this.mouseHandler.mouseDownEvent;
-        canvas.onmousemove  = this.mouseHandler.mouseDragEvent;
-        canvas.onmouseup    = this.mouseHandler.mouseUpEvent;
-        canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+        if (interactive) {
+            // Mouse
+            canvas.onmousedown = this.mouseHandler.mouseDownEvent;
+            canvas.onmousemove = this.mouseHandler.mouseDragEvent;
+            canvas.onmouseup = this.mouseHandler.mouseUpEvent;
+            canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
 
-        // Evite abrir o menu de contexto para não haver conflito com o gesto
-        // de deletar nós.
-        canvas.oncontextmenu = event => event.preventDefault();
+            // Evite abrir o menu de contexto para não haver conflito com o gesto
+            // de deletar nós.
+            canvas.oncontextmenu = event => event.preventDefault();
 
-        // Keyboard
-        document.body.onkeydown = this.keyboardHandler.keyPressed;
-        document.body.onkeyup = this.keyboardHandler.keyReleased;
+            // Keyboard
+            document.body.onkeydown = this.keyboardHandler.keyPressed;
+            document.body.onkeyup = this.keyboardHandler.keyReleased;
+        } else {
+            // The item (or items) to press and hold on
+            let item = this.canvas;
 
+            let timerID;
+            let counter = 0;
+
+            let pressHoldEvent = new CustomEvent("pressHold");
+
+            // Increase or decreae value to adjust how long
+            // one should keep pressing down before the pressHold
+            // event fires
+            let pressHoldDuration = 50;
+
+            // Listening for the mouse and touch events
+            item.addEventListener("mousedown", pressingDown, false);
+            item.addEventListener("mouseup", notPressingDown, false);
+            item.addEventListener("mouseleave", notPressingDown, false);
+
+            item.addEventListener("touchstart", pressingDown, false);
+            item.addEventListener("touchend", notPressingDown, false);
+
+            // Listening for our custom pressHold event
+            item.addEventListener("pressHold", doSomething, false);
+
+            function pressingDown(e) {
+                // Start the timer
+                requestAnimationFrame(timer);
+
+                e.preventDefault();
+
+                console.log("Pressing!");
+            }
+
+            function notPressingDown(e) {
+                // Stop the timer
+                cancelAnimationFrame(timerID);
+                counter = 0;
+
+                console.log("Not pressing!");
+            }
+
+            //
+            // Runs at 60fps when you are pressing down
+            //
+            function timer() {
+                console.log("Timer tick!");
+
+                if (counter < pressHoldDuration) {
+                    timerID = requestAnimationFrame(timer);
+                    counter++;
+                } else {
+                    console.log("Press threshold reached!");
+                    item.dispatchEvent(pressHoldEvent);
+                }
+            }
+
+            function doSomething(e) {
+                console.log("pressHold event fired!");
+                let shareModal = document.getElementById("shareModal")
+                shareModal.style.display = "flex";
+            }
+        }
         // HISTORY
         this.history = new HistoryTracker();
         // this.history.registerStep(this.structure.clone())
@@ -405,7 +468,6 @@ export class GraphView {
         this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
-
         // Ajustando posição dos nós
         let widthRatio = newWidth/originalWidth;
         let heightRatio = newHeight/originalHeight;
@@ -437,7 +499,10 @@ export class GraphView {
         let deserializedGraph = Graph.deserialize(serialized);
         if (!deserializedGraph) { return; }
         this.structure = deserializedGraph;
+        let shareModal = document.getElementById("shareModal")
+        shareModal.style.display = "none";
         refreshInterfaceCategories();
+        this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();
     }

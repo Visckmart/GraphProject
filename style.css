@@ -7,6 +7,37 @@ body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
 }
+.modalDiv {
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #AAA8;
+  z-index: 100;
+}
+#shareModal {
+  display: none;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+#shareModal h1 {
+  margin-bottom: 50pt;
+}
+#shareModal button {
+  width: fit-content;
+  padding: 0 10pt;
+  height: 35pt;
+  appearance: none;
+  background: #dadada;
+  border: 2pt solid #bbb;
+  border-radius: 8pt;
+  font-size: 18pt;
+  text-align: center;
+}
+#shareModal button:hover {
+  background: #ccc;
+}
 #errorMessage {
   position: absolute;
   background: #AAA4;
