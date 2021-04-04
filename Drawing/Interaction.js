@@ -142,6 +142,7 @@ let storedAlgorithm = window.localStorage.getItem("selectedAlgorithm")
 if (storedAlgorithm) {
     algorithmSelector.value = storedAlgorithm
 }
+updateGraph()
 //Opções de formato de grafo
 categoryCheckboxes[GraphCategory.COLORED_NODES].addEventListener('change', updateGraph)
 categoryCheckboxes[GraphCategory.WEIGHTED_EDGES].addEventListener('change', updateGraph)
