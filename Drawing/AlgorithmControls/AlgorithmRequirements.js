@@ -6,7 +6,7 @@ export const RequirementType = {
 
 
 export class Requirement {
-    constructor(inputHandler, type, message, callback) {
+    constructor(inputHandler, type, message, callback, optional = false) {
         // Tipo de requisito
         this.type = type
         // Mensagem informativa sobre o requisito
@@ -14,6 +14,7 @@ export class Requirement {
 
         this.inputHandler = inputHandler
 
+        this.optional = optional
         this.resolve = () => {
             return this._handleRequirement().then(callback)
         }
@@ -41,6 +42,13 @@ export class Requirement {
                         }
                     }
                     this.inputHandler.canvas.addEventListener("mouseup", handler)
+
+                    // Definindo função de skip para requisitos opcionais
+                    this.skipRequirement = () => {
+                        this.inputHandler.canvas.removeEventListener("mouseup", handler)
+                        resolve()
+                    }
+
                     break
                 }
                 // Requisito de criação de node
@@ -61,6 +69,12 @@ export class Requirement {
                         }
                     }
                     this.inputHandler.canvas.addEventListener("mouseup", handler)
+
+                    // Definindo função de skip para requisitos opcionais
+                    this.skipRequirement = () => {
+                        this.inputHandler.canvas.removeEventListener("mouseup", handler)
+                        resolve()
+                    }
                     break
                 }
                 // Requisito de criação de aresta
@@ -127,6 +141,14 @@ export class Requirement {
                             this.inputHandler.changeCursorStyle("pointer")
                             this.inputHandler.canvas.addEventListener("mousedown", mouseDownHandler)
                         }
+                    }
+
+                    // Definindo função de skip para requisitos opcionais
+                    this.skipRequirement = () => {
+                        this.inputHandler.canvas.removeEventListener("mousedown", mouseDownHandler)
+                        this.inputHandler.canvas.removeEventListener("mouseup", mouseUpHandler)
+                        this.inputHandler.canvas.removeEventListener("mousemove", mouseMoveHandler)
+                        resolve()
                     }
                     break
                 default:

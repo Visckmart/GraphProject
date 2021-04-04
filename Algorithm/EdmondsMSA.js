@@ -2,7 +2,7 @@ import {cloneTransformNodes, mapNewNodesOrEdges} from "./Auxiliary/GraphTransfor
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
 import {HighlightType} from "../Structure/Highlights.js";
-import DFSCycleDetection from "./DFSCycleDetection.js";
+import {ExecuteDFSCycleDetection} from "./DFSCycleDetection.js";
 
 export default async function EdmondsMSA(controller) {
     // Capturando nó inicial
@@ -88,7 +88,7 @@ function executeEdmondsMSA(controller, initialNode) {
         newNode.highlights.add(HighlightType.COLORED_A)
         controller.addStep(controller.graphView.structure, `Chamando a detecção de ciclo DFS no nó ${node.toString()}.`)
 
-        let foundCycle = DFSCycleDetection(controller, newNode, false)
+        let foundCycle = ExecuteDFSCycleDetection(controller, newNode, false)
         //TODO: Pensar em como incluir o showcase
         controller.showcasing = null
         controller.graphView.structure = graph

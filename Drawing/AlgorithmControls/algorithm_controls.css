@@ -54,6 +54,9 @@ input[type="range"]::-webkit-slider-thumb {
 
     padding: 2pt;
     /*background-color: #FF04;*/
+
+    display: flex;
+    flex-direction: column;
 }
 
 #tutorialContainer[highlighted="true"] {
@@ -62,6 +65,28 @@ input[type="range"]::-webkit-slider-thumb {
 
 #tutorialContainer[warning="true"] {
     border: 2pt solid #FF4500;
+}
+
+#tutorialContainer[optional="true"] {
+    border: 2pt solid skyblue;
+    position: relative;
+    pointer-events: none;
+}
+
+#tutorialContainer > a {
+    color: white;
+    border: 1px solid white;
+    border-radius: 3px;
+    cursor: pointer;
+    pointer-events: all;
+    display: none;
+    margin: 3px 0 3px auto;
+    padding: 3px;
+    font-weight: bold;
+}
+
+#tutorialContainer[optional="true"] > a {
+    display: block;
 }
 
 #tutorialContainer > label {
