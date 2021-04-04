@@ -27,10 +27,16 @@ if (!isMobile) {
 
     let fileInputElement = document.getElementById("inputFile");
     fileInputElement.onchange = importFromFile.bind(null, g)
-    let importFileButton = document.getElementById("importFile");
-    importFileButton.onclick = () => fileInputElement.click();
-    let importTextButton = document.getElementById("importText");
-    importTextButton.onclick = importFromText.bind(null, g)
+    let importFileButton = document.getElementsByClassName("importFile");
+    for (let x of importFileButton) {
+        console.log(x)
+        x.onclick = () => fileInputElement.click();
+    }
+    let importTextButton = document.getElementsByClassName("importText");
+    for (let x of importFileButton) {
+        console.log(x)
+        x.onclick = importFromText.bind(null, g)
+    }
 } else {
 
     let menuArea = document.getElementById("menuArea")
@@ -43,6 +49,28 @@ if (!isMobile) {
     let ic = document.getElementById("interfaceContainer")
     ic.style.height = "80vh";
     ic.style.maxHeight = "80vh";
+    let fileInputElement = document.getElementById("inputFile");
+    fileInputElement.onchange = (e) => {
+        importFromFile(g, e, () => exportAsURL(g.structure))
+    }
+    let importFileButton = document.getElementsByClassName("importFile");
+    for (let x of importFileButton) {
+        console.log(x)
+        x.onclick = () => fileInputElement.click();
+    }
+    let importTextButton = document.getElementsByClassName("importText");
+    for (let x of importTextButton) {
+        console.log(x)
+        x.onclick = () => {
+            importFromText(g)
+            exportAsURL(g.structure)
+        }
+    }
+    let importCancelButton = document.getElementsByClassName("importCancel")[0];
+    importCancelButton.onclick = () => {
+        let shareModal = document.getElementById("shareModal")
+        shareModal.style.display = "none";
+    }
     window.addEventListener("load", deserializeURL.bind(null, g));
     // g.recalculateLayout()
 }

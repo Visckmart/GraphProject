@@ -109,7 +109,7 @@ export function prepareCanvasSharing(graphView) {
 //endregion
 
 // Importar Arquivo
-export function importFromFile(graphView, event) {
+export function importFromFile(graphView, event, completionHandler = null) {
     let file = event.target.files[0];
     if (!file) {
         return;
@@ -118,6 +118,9 @@ export function importFromFile(graphView, event) {
     let reader = new FileReader();
     reader.onload = function (evt) {
         graphView.loadSerializedGraph(evt.target.result);
+        if (completionHandler) {
+            completionHandler()
+        }
     }
     reader.readAsText(file, "UTF-8");
 }
