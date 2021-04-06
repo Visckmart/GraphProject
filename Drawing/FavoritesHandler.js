@@ -144,7 +144,7 @@ function makeNewFavoriteRow() {
          */
         let offset = 1;
         do {
-            newName = `Favorito ${window.localStorage.length + offset}`;
+            newName = `Favorito ${offset}`;
             offset += 1;
         } while (window.localStorage.getItem("fav" + newName) != null);
 
