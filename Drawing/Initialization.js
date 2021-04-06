@@ -25,6 +25,7 @@ if (!isMobile) {
 
     prepareCanvasSharing(g)
 
+    // TODO: Organizar
     let fileInputElement = document.getElementById("inputFile");
     fileInputElement.onchange = importFromFile.bind(null, g)
     let importFileButton = document.getElementsByClassName("importFile");
@@ -33,12 +34,12 @@ if (!isMobile) {
         x.onclick = () => fileInputElement.click();
     }
     let importTextButton = document.getElementsByClassName("importText");
-    for (let x of importFileButton) {
+    for (let x of importTextButton) {
         console.log(x)
         x.onclick = importFromText.bind(null, g)
     }
 } else {
-
+    // TODO: Organizar
     let menuArea = document.getElementById("menuArea")
     menuArea.style.display = "none";
     let canvasArea = document.getElementById("canvasArea")
