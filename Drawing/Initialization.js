@@ -1,8 +1,6 @@
 import { prepareCanvasSharing } from "./InteractionShare.js";
 import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeURL, importFromFile, importFromText} from "./InteractionShare.js"
-import {g} from "./GraphView.js";
-
-let isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+import { g, isMobile } from "./GraphView.js";
 
 if (!isMobile) {
     console.log("Inicializando...");
@@ -73,5 +71,5 @@ if (!isMobile) {
         shareModal.style.display = "none";
     }
     window.addEventListener("load", deserializeURL.bind(null, g));
-    // g.recalculateLayout()
+    g.recalculateLayout()
 }

@@ -37,6 +37,10 @@ const NodeLabeling = {
     LETTERS_ORD: "letters_ordered"
 }
 
+export let isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+
+// isMobile = !isMobile
+
 // Graph
 export class GraphView {
     constructor (delegate, canvas, slowCanvas, fastCanvas, interactive = true) {
