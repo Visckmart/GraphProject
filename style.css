@@ -24,14 +24,24 @@ body {
 #shareModal h1 {
   margin-bottom: 50pt;
 }
-#shareModal button {
+
+button {
   width: fit-content;
+  appearance: none;
+  background: #fdfdfd;
+  border: 1pt solid #aaa;
+  border-radius: 4pt;
+}
+button:hover {
+  background: #eee;
+}
+button:active {
+  background: #aaa;
+}
+#shareModal button {
   padding: 0 10pt;
   height: 35pt;
-  appearance: none;
-  background: #dadada;
-  border: 2pt solid #bbb;
-  border-radius: 8pt;
+
   font-size: 18pt;
   text-align: center;
 }
