@@ -1,9 +1,9 @@
-import {HighlightType} from "../Structure/Highlights.js";
+import {HighlightType} from "../Utilities/Highlights.js";
 import Stack from "./Auxiliary/Stack.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
-import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
+import {RequirementType} from "./Control/AlgorithmRequirements.js";
 
 const pseudoCode = [
 `\

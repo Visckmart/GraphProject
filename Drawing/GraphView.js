@@ -3,7 +3,7 @@ import {
     CanvasType, incrementGlobalIndex, GraphCategory
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
-import {HighlightType} from "../Structure/Highlights.js";
+import {HighlightType} from "../Utilities/Highlights.js";
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
@@ -11,12 +11,12 @@ import GraphSelection from "./GraphSelection.js"
 
 import {
     colorFromComponents,
-} from "../Structure/Utilities.js";
-import PropertyList from "./Properties/PropertyList.js";
+} from "../Utilities/Utilities.js";
+import PropertyList from "../Structure/Properties/PropertyList.js";
 import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
 import {regularNodeRadius} from "../Structure/Node.js";
 
-import HistoryTracker from "./HistoryTracker.js"
+import HistoryTracker from "../Utilities/HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
 import { refreshInterfaceCategories } from "./Interaction.js";
@@ -36,6 +36,10 @@ const NodeLabeling = {
     LETTERS_RAND: "letters_randomized",
     LETTERS_ORD: "letters_ordered"
 }
+
+export let isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+
+// isMobile = !isMobile
 
 // Graph
 export class GraphView {

@@ -1,4 +1,4 @@
-import {g} from "./GraphView.js";
+import {g} from "../Drawing/GraphView.js";
 
 let favoritesList = document.getElementById("favoritesList");
 let menuBody = document.getElementsByClassName("menuBody")[0];
@@ -144,7 +144,7 @@ function makeNewFavoriteRow() {
          */
         let offset = 1;
         do {
-            newName = `Favorito ${window.localStorage.length + offset}`;
+            newName = `Favorito ${offset}`;
             offset += 1;
         } while (window.localStorage.getItem("fav" + newName) != null);
 

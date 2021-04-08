@@ -1,5 +1,5 @@
-import { HighlightType } from "../Structure/Highlights.js"
-import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
+import { HighlightType } from "../Utilities/Highlights.js"
+import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import NodeColorMixin from "../Structure/Mixins/Node/NodeColorMixin.js";
 import { nodeColorList } from "../Drawing/General.js";

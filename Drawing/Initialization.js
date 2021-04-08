@@ -1,8 +1,6 @@
 import { prepareCanvasSharing } from "./InteractionShare.js";
 import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeURL, importFromFile, importFromText} from "./InteractionShare.js"
-import {g} from "./GraphView.js";
-
-let isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+import { g, isMobile } from "./GraphView.js";
 
 if (!isMobile) {
     console.log("Inicializando...");
@@ -25,6 +23,7 @@ if (!isMobile) {
 
     prepareCanvasSharing(g)
 
+    // TODO: Organizar
     let fileInputElement = document.getElementById("inputFile");
     fileInputElement.onchange = importFromFile.bind(null, g)
     let importFileButton = document.getElementsByClassName("importFile");
@@ -33,12 +32,12 @@ if (!isMobile) {
         x.onclick = () => fileInputElement.click();
     }
     let importTextButton = document.getElementsByClassName("importText");
-    for (let x of importFileButton) {
+    for (let x of importTextButton) {
         console.log(x)
         x.onclick = importFromText.bind(null, g)
     }
 } else {
-
+    // TODO: Organizar
     let menuArea = document.getElementById("menuArea")
     menuArea.style.display = "none";
     let canvasArea = document.getElementById("canvasArea")
@@ -72,5 +71,5 @@ if (!isMobile) {
         shareModal.style.display = "none";
     }
     window.addEventListener("load", deserializeURL.bind(null, g));
-    // g.recalculateLayout()
+    g.recalculateLayout()
 }

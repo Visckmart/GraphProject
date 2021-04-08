@@ -1,6 +1,6 @@
 import EdgePropertyRepository from "./EdgePropertyRepository.js";
 import NodePropertyRepository from "./NodePropertyRepository.js";
-import { g } from "../GraphView.js";
+import { g } from "../../Drawing/GraphView.js";
 
 class PropertyList extends HTMLElement {
     constructor() {

@@ -1,4 +1,4 @@
-import {HighlightType} from "../Structure/Highlights.js";
+import {HighlightType} from "../Utilities/Highlights.js";
 import Node from "../Structure/Node.js";
 import Edge from "../Structure/Edge.js";
 import {generateRandomNodes} from "./GraphViewDebugHelper.js";
