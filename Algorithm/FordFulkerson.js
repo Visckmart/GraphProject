@@ -1,7 +1,7 @@
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
-import {RequirementType} from "../Drawing/AlgorithmControls/AlgorithmRequirements.js";
-import {HighlightType} from "../Structure/Highlights.js";
+import {RequirementType} from "./Control/AlgorithmRequirements.js";
+import {HighlightType} from "../Utilities/Highlights.js";
 
 
 const pseudocode = [

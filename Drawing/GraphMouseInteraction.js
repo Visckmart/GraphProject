@@ -1,6 +1,6 @@
 import {CanvasType, Tool} from "./General.js"
-import { HighlightType } from "../Structure/Highlights.js"
-import { getDistanceOf } from "../Structure/Utilities.js"
+import { HighlightType } from "../Utilities/Highlights.js"
+import { getDistanceOf } from "../Utilities/Utilities.js"
 import Edge from "../Structure/Edge.js";
 
 class GraphMouseHandler {

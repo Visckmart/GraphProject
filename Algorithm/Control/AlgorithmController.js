@@ -1,7 +1,7 @@
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
-import {canvas} from "../General.js";
-import AlgorithmPseudocode from "./Pseudocode/AlgorithmPseudocode.js";
+import {canvas} from "../../Drawing/General.js";
+import AlgorithmPseudocode from "../../Drawing/AlgorithmVisualizations/Pseudocode/AlgorithmPseudocode.js";
 import AlgorithmMenu from "./AlgorithmMenu.js";
 
 

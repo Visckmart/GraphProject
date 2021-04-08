@@ -1,4 +1,4 @@
-import {colorFromComponents} from "../../Utilities.js";
+import {colorFromComponents} from "../../../Utilities/Utilities.js";
 
 function roundRect(ctx, x, y, width, height, radius) {
     let r = x + width;

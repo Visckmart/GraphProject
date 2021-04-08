@@ -1,6 +1,6 @@
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
-import {HighlightType} from "../Structure/Highlights.js";
+import {HighlightType} from "../Utilities/Highlights.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
 
 function markArtifactAsUnreached(artifact) {

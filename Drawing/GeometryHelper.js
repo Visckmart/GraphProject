@@ -1,4 +1,4 @@
-import { getDistanceOf } from "../Structure/Utilities.js";
+import { getDistanceOf } from "../Utilities/Utilities.js";
 
 /**
  * Checa se o quadrado S, definido pelo ponto central e o tamanho dos lados

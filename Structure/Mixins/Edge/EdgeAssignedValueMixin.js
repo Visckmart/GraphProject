@@ -1,6 +1,6 @@
 import Edge from "../../Edge.js";
-import { deserializeAssignedValue, serializeAssignedValue } from "../../EdgeSerialization.js";
-import { HighlightType } from "../../Highlights.js";
+import { deserializeAssignedValue, serializeAssignedValue } from "../../Serialization/EdgeSerialization.js";
+import { HighlightType } from "../../../Utilities/Highlights.js";
 
 let EdgeAssignedValueMixin = (superclass) => {
     // if (!(superclass instanceof Edge || superclass == Edge)) {

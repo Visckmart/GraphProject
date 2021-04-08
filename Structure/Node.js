@@ -1,11 +1,11 @@
 // Node Definition
 import { globalNodeIndex } from "../Drawing/General.js";
 
-import { HighlightType, HighlightsHandler } from "./Highlights.js"
-import { generateNewRandomLabel, colorFromComponents } from "./Utilities.js";
+import { HighlightType, HighlightsHandler } from "../Utilities/Highlights.js"
+import { generateNewRandomLabel, colorFromComponents } from "../Utilities/Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
-import { deserializeNode, serializeNode } from "./NodeSerialization.js";
+import { deserializeNode, serializeNode } from "./Serialization/NodeSerialization.js";
 
 export const regularNodeRadius = 28;
 export default class Node {

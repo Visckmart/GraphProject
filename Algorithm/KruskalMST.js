@@ -1,5 +1,5 @@
 import UnionFind from "./Auxiliary/UnionFind.js";
-import {HighlightType} from "../Structure/Highlights.js";
+import {HighlightType} from "../Utilities/Highlights.js";
 
 
 let pseudoCode = [

@@ -1,4 +1,4 @@
-import {g} from "./GraphView.js";
+import {g} from "../Drawing/GraphView.js";
 
 let favoritesList = document.getElementById("favoritesList");
 let menuBody = document.getElementsByClassName("menuBody")[0];

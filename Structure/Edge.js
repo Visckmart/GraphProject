@@ -1,8 +1,8 @@
-import { serializeEdge, deserializeEdge } from "./EdgeSerialization.js";
+import { serializeEdge, deserializeEdge } from "./Serialization/EdgeSerialization.js";
 
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
-import { generateNewRandomLabel } from "./Utilities.js";
-import { HighlightType, HighlightsHandler } from "./Highlights.js";
+import { generateNewRandomLabel } from "../Utilities/Utilities.js";
+import { HighlightType, HighlightsHandler } from "../Utilities/Highlights.js";
 
 let globalEdgeIndex = 0
 export default class Edge {

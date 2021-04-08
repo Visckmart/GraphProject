@@ -1,4 +1,4 @@
-import Edge from "./Edge.js";
+import Edge from "../Edge.js";
 
 //region Serialização de Arestas
 

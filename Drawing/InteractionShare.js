@@ -1,4 +1,4 @@
-import {getFormattedTime} from "../Structure/Utilities.js";
+import {getFormattedTime} from "../Utilities/Utilities.js";
 
 //region Exportação
 

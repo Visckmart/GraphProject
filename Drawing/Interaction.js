@@ -1,12 +1,12 @@
 import { Algorithm, GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
-import AlgorithmController from "./AlgorithmControls/AlgorithmController.js";
+import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 // import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 // import PrimMST from "../Algorithm/PrimMST.js";
 // import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 // import KruskalMST from "../Algorithm/KruskalMST.js";
 // import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
-import {updateFavorites} from "./FavoritesHandler.js";
+import {updateFavorites} from "../Utilities/FavoritesHandler.js";
 // import EulerianPath from "../Algorithm/EulerianPath.js";
 // import FordFulkerson from "../Algorithm/FordFulkerson.js";
 

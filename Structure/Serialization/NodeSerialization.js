@@ -1,8 +1,8 @@
-import {canvas, nodeColorList} from "../Drawing/General.js";
-import {HighlightsHandler} from "./Highlights.js";
-import {positionAlphabet} from "./Utilities.js";
-import Node from "./Node.js"
-import Edge from "./Edge.js";
+import {canvas, nodeColorList} from "../../Drawing/General.js";
+import {HighlightsHandler} from "../../Utilities/Highlights.js";
+import {positionAlphabet} from "../../Utilities/Utilities.js";
+import Node from "../Node.js"
+import Edge from "../Edge.js";
 
 
 //region Position Encoding

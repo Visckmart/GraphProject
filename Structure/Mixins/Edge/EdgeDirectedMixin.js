@@ -1,4 +1,4 @@
-import {HighlightType} from "../../Highlights.js";
+import {HighlightType} from "../../../Utilities/Highlights.js";
 import { pointFromCircleAngle } from "../../../Drawing/GeometryHelper.js";
 
 let EdgeDirectedMixin = (superclass) => {

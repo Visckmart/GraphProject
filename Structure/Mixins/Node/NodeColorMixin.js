@@ -1,8 +1,8 @@
-import {colorFromComponents} from "../../Utilities.js";
+import {colorFromComponents} from "../../../Utilities/Utilities.js";
 import Node from "../../Node.js";
 import {nodeColorList} from "../../../Drawing/General.js";
-import {deserializeAssignedValue, serializeAssignedValue} from "../../EdgeSerialization.js";
-import {deserializeColor, serializeColor} from "../../NodeSerialization.js";
+import {deserializeAssignedValue, serializeAssignedValue} from "../../Serialization/EdgeSerialization.js";
+import {deserializeColor, serializeColor} from "../../Serialization/NodeSerialization.js";
 
 let colorRotation = 0
 
