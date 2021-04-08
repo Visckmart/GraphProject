@@ -810,6 +810,8 @@ g.requestCanvasRefresh(CanvasType.GENERAL)
 g.requestCanvasRefresh(CanvasType.SLOW)
 g.slowCtx.fillStyle = "red"
 g.slowCtx.fillRect(150, 150, 200, 200)
+window.onresize = g.recalculateLayout.bind(g)
+g.recalculateLayout()
 
 // testSelection(g)
 // testNodeHighlights(g)

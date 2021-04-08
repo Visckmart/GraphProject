@@ -38,7 +38,6 @@ algorithmSelector.onchange = function () {
     updateGraph()
 }
 function getRequiredCategoriesForAlgorithm(alg) {
-    console.log(alg)
     let boundCategories = {};
     switch (alg) {
     case 'PrimMST':
@@ -107,8 +106,8 @@ runAlgorithmButton.onclick = async () => {
 }
 
 // Window Resizing
-window.onresize = g.recalculateLayout.bind(g)
-g.recalculateLayout()
+// window.onresize = g.recalculateLayout.bind(g)
+// g.recalculateLayout()
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
 document.body.onblur = function() {
     if (!g.lastToolChoice || g.lastToolChoice == Tool.MOVE) {
