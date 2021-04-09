@@ -1,3 +1,6 @@
+// Arquivos css
+import "../Pages/tool_tray.css"
+
 import { Algorithm, GraphCategory, Tool } from "./General.js"
 import { g } from "./GraphView.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";

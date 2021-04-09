@@ -1,3 +1,6 @@
+// Arquivos CSS
+import "./algorithm_pseudocode.css"
+
 export default class AlgorithmPseudocode {
     constructor(code, labels) {
         this.code = code

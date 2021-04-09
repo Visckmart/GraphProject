@@ -2,7 +2,6 @@ import { Tool } from "./General.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 import { getAlgorithmFromName } from "./Interaction.js";
 import { getFormattedTime } from "../Utilities/Utilities.js";
-import { g } from "./GraphView.js";
 
 class GraphKeyboardHandler {
 

@@ -1,7 +1,12 @@
+// Arquivos CSS
+import "./algorithm_showcase.css"
+
 /*
 * Classe base para um showcase
 * Utilizado para visualizar estruturas auxiliares
  */
+
+
 export default class AlgorithmShowcase {
     constructor() {
         this.canvas = document.getElementById('showcase')

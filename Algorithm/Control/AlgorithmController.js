@@ -1,3 +1,7 @@
+// Arquivos CSS
+import "./algorithm_controls.css"
+import "./algorithm_menu.css"
+
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
 import {canvas} from "../../Drawing/General.js";
