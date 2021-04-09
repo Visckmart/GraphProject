@@ -127,12 +127,22 @@ function updateGraph() {
     g.updateGraphConstructors(enabledCategories)
 }
 
-export function refreshInterfaceCategories() {
+
+// Proxy para atualização de categorias quando o grafo muda
+let graphChangeProxy = new Proxy(g.structure.getCategories(), {
+    set: () => {
+        refreshInterfaceCategories()
+    }
+})
+
+function refreshInterfaceCategories() {
     let categoriesState = g.structure.getCategories();
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         checkbox.checked = categoriesState.has(category);
     }
 }
+
+
 for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
     let storedState = window.localStorage.getItem(category)
     checkbox.checked = storedState == "true"

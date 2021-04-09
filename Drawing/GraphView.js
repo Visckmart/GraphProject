@@ -19,7 +19,6 @@ import {regularNodeRadius} from "../Structure/Node.js";
 import HistoryTracker from "../Utilities/HistoryTracker.js"
 import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
-import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLineLineCollision,
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
@@ -504,7 +503,6 @@ export class GraphView {
         this.structure = deserializedGraph;
         let shareModal = document.getElementById("shareModal")
         shareModal.style.display = "none";
-        refreshInterfaceCategories();
         this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();
