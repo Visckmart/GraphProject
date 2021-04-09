@@ -2,7 +2,7 @@
 import "../Pages/tool_tray.css"
 
 import { Algorithm, GraphCategory, Tool } from "./General.js"
-import { g } from "./GraphView.js"
+import { g } from "../index.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 // import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
 // import PrimMST from "../Algorithm/PrimMST.js";

@@ -1,5 +1,5 @@
 import {nodeLabelingSelector} from "./General.js";
-import {g} from "./GraphView.js";
+import {g} from "../index.js";
 import ToolRepository from "./ToolRepository.js";
 import {HighlightType} from "../Utilities/Highlights.js";
 
