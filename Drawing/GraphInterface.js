@@ -26,6 +26,4 @@ export class GraphInterface {
         this.tray.refreshIcons(tool);
         this.view.mouseHandler.refreshCursorStyle();
     }
-
-
 }

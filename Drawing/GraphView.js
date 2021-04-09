@@ -25,7 +25,6 @@ import {
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
     checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
-import { GraphInterface } from "./GraphInterface.js";
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 const toolTrayElement = document.querySelector("#tool_tray")
@@ -805,18 +804,6 @@ export class GraphView {
 }
 
 // export let g = new GraphView();
-let tray = document.querySelector("#tool_tray");
-let gi = new GraphInterface([canvas, slowOverlayCanvas, fastOverlayCanvas], tray);
-export let g = gi.view
-// export let g = gi;
-// g.refreshFastCanvas()
-g.requestCanvasRefresh(CanvasType.GENERAL)
-g.requestCanvasRefresh(CanvasType.SLOW)
-g.slowCtx.fillStyle = "red"
-g.slowCtx.fillRect(150, 150, 200, 200)
-window.onresize = g.recalculateLayout.bind(g)
-g.recalculateLayout()
-
 // testSelection(g)
 // testNodeHighlights(g)
 // testBasicRoutine(g)
