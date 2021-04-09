@@ -4,7 +4,6 @@ import "./algorithm_menu.css"
 
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
 import {Requirement} from "./AlgorithmRequirements.js";
-import {canvas} from "../../Drawing/General.js";
 import AlgorithmPseudocode from "../../Drawing/AlgorithmVisualizations/Pseudocode/AlgorithmPseudocode.js";
 import AlgorithmMenu from "./AlgorithmMenu.js";
 
