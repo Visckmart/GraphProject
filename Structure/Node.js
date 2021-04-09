@@ -275,7 +275,7 @@ export default class Node {
         return serializeNode.bind(this)();
     }
 
-    static deserialize(...arg) { return deserializeNode(...arg) };
+    static deserialize(...arg) { return deserializeNode.bind(this)(...arg) };
 
     // Lista de argumentos para clonagem
     get _args() {

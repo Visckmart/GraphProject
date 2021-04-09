@@ -1,9 +1,5 @@
 import {canvas, nodeColorList} from "../../Drawing/General.js";
-import {HighlightsHandler} from "../../Utilities/Highlights.js";
 import {positionAlphabet} from "../../Utilities/Utilities.js";
-import Node from "../Node.js"
-import Edge from "../Edge.js";
-
 
 //region Position Encoding
 function encodePosition(relativeX, relativeY, alphabet = positionAlphabet) {
@@ -84,7 +80,7 @@ export function deserializeNode(serializedNode, partially = false) {
     let yPos = relativeY * canvas.height;
 
     if (partially == false) {
-        return new Node({
+        return new this({
                             x: xPos, y: yPos, label, index, randomStart: true
                         });
     } else {
