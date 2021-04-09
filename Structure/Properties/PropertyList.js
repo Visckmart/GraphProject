@@ -1,6 +1,5 @@
 import EdgePropertyRepository from "./EdgePropertyRepository.js";
 import NodePropertyRepository from "./NodePropertyRepository.js";
-import { g } from "../../index.js";
 
 class PropertyList extends HTMLElement {
     constructor() {
@@ -71,7 +70,6 @@ class PropertyList extends HTMLElement {
         iElement.addEventListener('input', (event) => {
             if (type != "text" || event.target.value != "") {
                 artifacts.map(a => a[property] = event.target.value)
-                g.refreshGraph()
             }
         })
         this.container.appendChild(pElement)
