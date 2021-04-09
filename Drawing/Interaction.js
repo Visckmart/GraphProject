@@ -152,3 +152,10 @@ categoryCheckboxes[GraphCategory.DIRECTED_EDGES].addEventListener('change', upda
 
 // Executa a primeira vez
 // g.refreshTrayIcons();
+
+// Seletor de label de nó
+export let nodeLabelingSelector = document.getElementById("nodeLabeling")
+nodeLabelingSelector.onchange = function(e) {
+    g.nodeLabeling = e.target.value;
+    g.refreshGraph();
+}
