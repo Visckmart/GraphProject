@@ -1,12 +1,3 @@
-import {nodeLabelingSelector} from "./General.js";
-import {g} from "../index.js";
-import ToolRepository from "./ToolRepository.js";
-import {HighlightType} from "../Utilities/Highlights.js";
-
-nodeLabelingSelector.onchange = function(e) {
-    g.nodeLabeling = e.target.value;
-    g.refreshGraph();
-}
 export class TrayHandler {
 
     constructor(trayElement, delegate) {

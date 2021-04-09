@@ -1,9 +1,15 @@
 // Canvas
+import { g } from "../index.js";
+
 export var canvas = document.getElementById("mainCanvas");
 export var slowOverlayCanvas = document.getElementById("slowCanvas");
 export var fastOverlayCanvas = document.getElementById("fastCanvas");
 
 export let nodeLabelingSelector = document.getElementById("nodeLabeling")
+nodeLabelingSelector.onchange = function(e) {
+    g.nodeLabeling = e.target.value;
+    g.refreshGraph();
+}
 
 export let globalNodeIndex = 0;
 export function incrementGlobalIndex(newValue = null) {
