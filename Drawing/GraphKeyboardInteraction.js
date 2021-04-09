@@ -1,6 +1,4 @@
 import { Tool } from "./General.js"
-import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
-import { getAlgorithmFromName } from "./Interaction.js";
 import { getFormattedTime } from "../Utilities/Utilities.js";
 
 class GraphKeyboardHandler {
@@ -116,16 +114,6 @@ class GraphKeyboardHandler {
         case "a":
             this.graphView.selectAllNodes();
             keyboardEvent.preventDefault();
-            break;
-
-        case "d":
-            let algorithmController = new AlgorithmController(this.graphView);
-            let algorithmSelector = document.getElementById("algorithm")
-            getAlgorithmFromName(algorithmSelector.value)
-                .then(algorithm => {
-                    if (!algorithm) return;
-                    algorithmController.setup(algorithm);
-                });
             break;
 
         case "e":
