@@ -127,14 +127,7 @@ function updateGraph() {
     g.updateGraphConstructors(enabledCategories)
 }
 
-
-// Proxy para atualização de categorias quando o grafo muda
-let graphChangeProxy = new Proxy(g.structure.getCategories(), {
-    set: () => {
-        refreshInterfaceCategories()
-    }
-})
-
+// TODO: Quebrei isso pra tirar a dependência
 function refreshInterfaceCategories() {
     let categoriesState = g.structure.getCategories();
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
