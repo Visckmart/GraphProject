@@ -1,5 +1,3 @@
-import Edge from "../Edge.js";
-
 //region Serialização de Arestas
 
 export function serializeEdge() {
@@ -30,7 +28,7 @@ export function deserializeEdge(serializedEdge, partially = false) {
     // }
 
     if (partially == false) {
-        return new Edge({ label });
+        return new this({ label });
     } else {
         return [{ label }, rest];
     }
