@@ -1,6 +1,3 @@
-// Arquivos CSS
-import "./Pages/style.css"
-
 import {GraphInterface} from "./Drawing/GraphInterface.js";
 import {canvas, CanvasType, fastOverlayCanvas, slowOverlayCanvas} from "./Drawing/General.js";
 

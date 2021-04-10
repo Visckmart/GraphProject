@@ -170,7 +170,6 @@ export default class Interaction {
 
     refreshInterfaceCategories = () => {
         let categoriesState = this.graphView.structure.getCategories();
-        console.log(categoriesState)
         for (let [category, checkbox] of Object.entries(this.categoryCheckboxes)) {
             checkbox.checked = categoriesState.has(category);
         }
