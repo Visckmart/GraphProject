@@ -1,10 +1,13 @@
 const CircularDependencyPlugin = require("circular-dependency-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './Drawing/Initialization.js',
     module: {
         rules: [
             {
+                test: /\.js/,
                 exclude: /(node_modules)/,
                 use: {
                     loader: 'babel-loader'
@@ -12,11 +15,26 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: ["style-loader", "css-loader"],
+                use: [{
+                    loader: MiniCssExtractPlugin.loader,
+                    options: {}
+                }, "css-loader"],
             },
+            {
+                test: /\.(png|svg)/,
+                type: 'asset'
+            },
+            {
+                test: /\.html$/i,
+                loader: 'html-loader'
+            }
         ]
     },
     plugins: [
+        new MiniCssExtractPlugin(),
+        new HtmlWebpackPlugin({
+            template: "./Pages/Drawing.html"
+        }),
         new CircularDependencyPlugin({
             // exclude detection of files based on a RegExp
             exclude: /a\.js|node_modules/,
