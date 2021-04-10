@@ -1,6 +1,7 @@
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -51,12 +52,11 @@ module.exports = {
     optimization: {
         minimize: true,
         minimizer: [
-            // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-            // `...`,
             new CssMinimizerPlugin(),
+            new HtmlMinimizerPlugin(),
         ],
     },
-    mode: "development",
+    mode: "production",
     output: {
         publicPath: '/'
     }
