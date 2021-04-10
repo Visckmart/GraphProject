@@ -4,13 +4,14 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+
 module.exports = {
     entry: './Drawing/Initialization.js',
     module: {
         rules: [
             {
                 test: /\.js/,
-                exclude: /(node_modules)/,
+                exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader'
                 }
@@ -55,6 +56,9 @@ module.exports = {
             new CssMinimizerPlugin(),
             new HtmlMinimizerPlugin(),
         ],
+    },
+    devServer: {
+        compress: true,
     },
     mode: "production",
     output: {

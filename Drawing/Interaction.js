@@ -2,7 +2,6 @@
 import "../Pages/tool_tray.css"
 
 import { Algorithm, GraphCategory, Tool } from "./General.js"
-import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 
 export default class Interaction {
     constructor(g) {
@@ -58,10 +57,12 @@ export default class Interaction {
         let runAlgorithmButton = document.getElementById("run_algorithm")
 
         runAlgorithmButton.onclick = async () => {
-            let algorithmController = new AlgorithmController(this.graphView);
-            let algorithm = await this.getAlgorithmFromName(this.algorithmSelector.value);
-            if (!algorithm) return;
-            await algorithmController.setup(algorithm);
+            import('../Algorithm/Control/AlgorithmController.js').then(async ({default: AlgorithmController}) => {
+                let algorithmController = new AlgorithmController(this.graphView);
+                let algorithm = await this.getAlgorithmFromName(this.algorithmSelector.value);
+                if (!algorithm) return;
+                await algorithmController.setup(algorithm);
+            })
         }
     }
 
