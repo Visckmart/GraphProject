@@ -17,7 +17,6 @@ updateFavorites()
 
 export let categoryCheckboxes = {
     [GraphCategory.COLORED_NODES]:  document.getElementById('coloredNodes'),
-
     [GraphCategory.DIRECTED_EDGES]: document.getElementById('directedEdges'),
     [GraphCategory.WEIGHTED_EDGES]: document.getElementById('weightedEdges'),
     [GraphCategory.COLORED_EDGES]:  document.getElementById('coloredEdges')
@@ -96,7 +95,7 @@ export async function getAlgorithmFromName(name) {
             break;
     }
     if (algModuleName) {
-        let algModule = await import("../Algorithm/"+algModuleName+".js");
+        let algModule = await import(`../Algorithm/${algModuleName}.js`);
         return algModule.default;
     }
     return null;

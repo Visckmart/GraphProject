@@ -2,6 +2,7 @@ import {
     canvas, Tool, HighFPSFeature, fastOverlayCanvas, slowOverlayCanvas,
     CanvasType, incrementGlobalIndex, GraphCategory
 } from "./General.js"
+
 import Graph from "../Structure/Graph.js"
 import {HighlightType} from "../Utilities/Highlights.js";
 
@@ -24,6 +25,7 @@ import {
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
     checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
+
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
 const toolTrayElement = document.querySelector("#tool_tray")
@@ -192,14 +194,14 @@ export class GraphView {
     updateGraphConstructors(categories) {
         let [GraphType, NodeType, EdgeType] = Graph.getConstructorsFromCategories(categories)
 
-        if (g.structure.constructor != GraphType) {
-            g.structure = GraphType.from(g.structure);
+        if (this.structure.constructor != GraphType) {
+            this.structure = GraphType.from(this.structure);
         }
-        g.structure = g.structure.cloneAndTransform({
+        this.structure = this.structure.cloneAndTransform({
                                                       NodeConstructor: NodeType,
                                                       EdgeConstructor: EdgeType
         });
-        g.refreshGraph();
+        this.refreshGraph();
     }
 
     /* Atualiza os botões para que eles reflitam o estado das ferramentas */

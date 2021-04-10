@@ -1,7 +1,7 @@
 const CircularDependencyPlugin = require("circular-dependency-plugin");
 
 module.exports = {
-    entry: './index.js',
+    entry: './Drawing/Initialization.js',
     module: {
         rules: [
             {
@@ -31,6 +31,6 @@ module.exports = {
     ],
     mode: "development",
     output: {
-        publicPath: ''
+        publicPath: '/Pages'
     }
 };

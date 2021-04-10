@@ -1,6 +1,8 @@
 import { prepareCanvasSharing } from "./InteractionShare.js";
 import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeURL, importFromFile, importFromText} from "./InteractionShare.js"
-import { g, isMobile } from "./GraphView.js";
+import { g } from '../index.js'
+import { isMobile } from "./GraphView.js";
+import "./Interaction.js"
 
 if (!isMobile) {
     console.log("Inicializando...");
