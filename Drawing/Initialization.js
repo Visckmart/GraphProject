@@ -3,6 +3,10 @@ import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeUR
 import { g } from '../index.js'
 import { isMobile } from "./GraphView.js";
 import "./Interaction.js"
+import { updateFavorites } from "../Utilities/FavoritesHandler.js";
+
+// Inicializa a lista de favoritos
+updateFavorites()
 
 if (!isMobile) {
     console.log("Inicializando...");

@@ -211,6 +211,7 @@ class Graph {
 
         let edgeMixins = this.EdgeConstructor.getMixins();
         if (edgeMixins.has(EdgeDirectedMixin))      { serialized += "D"; }
+        if (edgeMixins.has(EdgeAssignedValueMixin))      { serialized += "W"; }
         if (edgeMixins.has(EdgeAssignedValueMixin)) { serialized += "V"; }
 
         return serialized;

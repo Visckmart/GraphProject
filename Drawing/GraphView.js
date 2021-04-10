@@ -25,6 +25,7 @@ import {
     checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
     checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
 } from "./GeometryHelper.js";
+import Interaction from "./Interaction.js";
 
 // Registrando componente custom
 customElements.define('property-list', PropertyList)
@@ -68,6 +69,7 @@ export class GraphView {
         this.selectionHandler = new GraphSelection(this);
         this.mouseHandler = new GraphMouseHandler(this);
         this.keyboardHandler = new GraphKeyboardHandler(this);
+        this.interactionHandler = new Interaction(this);
 
         if (interactive) {
             // Mouse
@@ -508,6 +510,7 @@ export class GraphView {
         this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();
+        this.interactionHandler.refreshInterfaceCategories()
     }
 
     //endregion
