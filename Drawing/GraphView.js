@@ -501,7 +501,7 @@ export class GraphView {
 
     loadSerializedGraph(serialized) {
         let deserializedGraph = Graph.deserialize(serialized);
-        if (!deserializedGraph) { return; }
+        if (!deserializedGraph) { return false; }
         this.structure = deserializedGraph;
         let shareModal = document.getElementById("shareModal")
         shareModal.style.display = "none";
@@ -509,6 +509,7 @@ export class GraphView {
         this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();
+        return true;
     }
 
     //endregion

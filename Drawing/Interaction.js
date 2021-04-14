@@ -22,9 +22,12 @@ export let categoryCheckboxes = {
 
 let algorithmSelector = document.getElementById("algorithm")
 
-algorithmSelector.onchange = function () {
+algorithmSelector.onchange = (event) => refreshCheckboxesFromAlgorithm(event.target.value)
+
+function refreshCheckboxesFromAlgorithm(selectedAlgorithm) {
+    console.log("s", selectedAlgorithm)
     algorithmSelector.blur()
-    let boundCategories = getRequiredCategoriesForAlgorithm(this.value)
+    let boundCategories = getRequiredCategoriesForAlgorithm(selectedAlgorithm)
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         let boundStatus = boundCategories[category]
         if (boundStatus == null) {
@@ -34,7 +37,7 @@ algorithmSelector.onchange = function () {
             checkbox.checked = boundStatus;
         }
     }
-    window.localStorage.setItem("selectedAlgorithm", algorithmSelector.value)
+    window.localStorage.setItem("selectedAlgorithm", selectedAlgorithm)
     updateGraph()
 }
 function getRequiredCategoriesForAlgorithm(alg) {
@@ -117,6 +120,8 @@ document.body.onblur = function() {
 }
 
 function updateGraph() {
+    console.log("updateGraph")
+    // console.trace()
     let enabledCategories = []
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         window.localStorage.setItem(category, checkbox.checked)
@@ -126,23 +131,29 @@ function updateGraph() {
 }
 
 export function refreshInterfaceCategories() {
+    console.log("ric")
     let categoriesState = g.structure.getCategories();
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         checkbox.checked = categoriesState.has(category);
     }
 }
-for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
-    let storedState = window.localStorage.getItem(category)
-    checkbox.checked = storedState == "true"
-    if (category == GraphCategory.COLORED_NODES && storedState == null) {
-        checkbox.checked = true
+// updateGraph()
+export function loadCategoriesFromStorage() {
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        let storedState = window.localStorage.getItem(category)
+        checkbox.checked = storedState == "true"
+        if (category == GraphCategory.COLORED_NODES && storedState == null) {
+            checkbox.checked = true
+        }
+    }
+
+
+    let storedAlgorithm = window.localStorage.getItem("selectedAlgorithm")
+    if (storedAlgorithm) {
+        algorithmSelector.value = storedAlgorithm
+        refreshCheckboxesFromAlgorithm(storedAlgorithm)
     }
 }
-let storedAlgorithm = window.localStorage.getItem("selectedAlgorithm")
-if (storedAlgorithm) {
-    algorithmSelector.value = storedAlgorithm
-}
-updateGraph()
 //Opções de formato de grafo
 categoryCheckboxes[GraphCategory.COLORED_NODES].addEventListener('change', updateGraph)
 categoryCheckboxes[GraphCategory.WEIGHTED_EDGES].addEventListener('change', updateGraph)

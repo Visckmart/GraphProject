@@ -1,4 +1,5 @@
 import {getFormattedTime} from "../Utilities/Utilities.js";
+import { loadCategoriesFromStorage } from "./Interaction.js";
 
 //region Exportação
 
@@ -66,6 +67,9 @@ export function deserializeURL(graph) {
     if (urlParams.has("graph") && urlParams.get("graph") !== "") {
         console.log("Deserializing graph " + urlParams.get("graph"));
         graph.loadSerializedGraph(urlParams.get("graph"));
+    } else {
+        console.log("load from storage")
+        loadCategoriesFromStorage()
     }
 }
 
