@@ -82,7 +82,7 @@ export default class AlgorithmPseudocode {
             this._popup = null
         }
 
-        this._popup = window.open('./AlgorithmControls/Pseudocode/window.html',
+        this._popup = window.open('../Drawing/AlgorithmVisualizations/Pseudocode/window.html',
             'window',
             `toolbar=no,scrollbars=yes,resizable=yes,top=200,left=200`)
 
