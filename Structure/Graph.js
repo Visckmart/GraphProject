@@ -248,7 +248,7 @@ class Graph {
                 cat.add(GraphCategory.COLORED_NODES);
             }
 
-            if (serializedCategories.includes("W")) {
+            if (serializedCategories.includes("V")) {
                 edgeConstructor = EdgeAssignedValueMixin(edgeConstructor)
                 cat.add(GraphCategory.WEIGHTED_EDGES);
             }
