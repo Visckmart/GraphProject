@@ -28,12 +28,12 @@ if (!isMobile) {
     fileInputElement.onchange = importFromFile.bind(null, g)
     let importFileButton = document.getElementsByClassName("importFile");
     for (let x of importFileButton) {
-        console.log(x)
+        // console.log(x)
         x.onclick = () => fileInputElement.click();
     }
     let importTextButton = document.getElementsByClassName("importText");
     for (let x of importTextButton) {
-        console.log(x)
+        // console.log(x)
         x.onclick = importFromText.bind(null, g)
     }
 } else {
@@ -54,12 +54,12 @@ if (!isMobile) {
     }
     let importFileButton = document.getElementsByClassName("importFile");
     for (let x of importFileButton) {
-        console.log(x)
+        // console.log(x)
         x.onclick = () => fileInputElement.click();
     }
     let importTextButton = document.getElementsByClassName("importText");
     for (let x of importTextButton) {
-        console.log(x)
+        // console.log(x)
         x.onclick = () => {
             importFromText(g)
             exportAsURL(g.structure)
