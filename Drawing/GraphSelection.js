@@ -8,8 +8,9 @@ const movementTolerance = 20
 
 export default class GraphSelection {
 
-    constructor(graphView) {
+    constructor(graphView, debug = false) {
         this.graphView = graphView;
+        this.debug = debug;
     }
 
     selected = {
@@ -32,6 +33,7 @@ export default class GraphSelection {
     }
 
     invertSelection(element) {
+        if (this.debug) { console.log(`Inverting selection of ${element}`); }
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
             if (nodeIndex >= 0) {
@@ -62,6 +64,7 @@ export default class GraphSelection {
     }
 
     select(element) {
+        if (this.debug) { console.log(`Selecionando o elemento ${element}.`); }
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
             if (nodeIndex == -1) {
@@ -81,6 +84,7 @@ export default class GraphSelection {
     }
 
     selectMultiple(elements) {
+        if (this.debug) { console.log(`Selecionando os elementos ${elements}.`); }
         let newNodes = elements.filter(e => e instanceof Node
                                             && !this.selected.nodes.includes(e));
         this.selected.nodes = this.selected.nodes.concat(...newNodes);
@@ -94,6 +98,7 @@ export default class GraphSelection {
     }
 
     deselect(element) {
+        if (this.debug) { console.log(`Deselecionando o elemento ${element}.`); }
         if (element instanceof Node) { // Caso seja um nó
             let nodeIndex = this.selected.nodes.indexOf(element);
             if (nodeIndex >= 0) {
@@ -115,6 +120,7 @@ export default class GraphSelection {
 
     quickSelect(node) {
         if (this.additionOnlyMode) { return; }
+        if (this.debug) { console.log(`Selecionando temporariamente o nó ${node}.`); }
 
         this.clear(false);
         this.selected.nodes = [node];
@@ -125,6 +131,7 @@ export default class GraphSelection {
     }
 
     clear(propagate = true) {
+        if (this.debug) { console.log("Limpando a seleção."); }
         this.selected.nodes = [];
         this.selected.edges = [];
         this.isQuickSelection = false;

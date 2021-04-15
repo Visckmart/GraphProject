@@ -65,7 +65,7 @@ export class GraphView {
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
-        this.selectionHandler = new GraphSelection(this);
+        this.selectionHandler = new GraphSelection(this, true);
         this.mouseHandler = new GraphMouseHandler(this);
         this.keyboardHandler = new GraphKeyboardHandler(this);
 
