@@ -19,6 +19,10 @@ function getTargetElements(graphView) {
 }
 
 export default {
+    [Tool.SNAP_TO_GRID]: function () {
+        let [targetNodes,] = getTargetElements(this);
+        this.snapNodesToGrid(targetNodes);
+    },
     [Tool.CONNECT_ALL]: function () {
         let [targetNodes,] = getTargetElements(this);
 

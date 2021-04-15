@@ -27,6 +27,7 @@ export const CanvasType = {
 export const Tool = {
     MOVE: "move",
     CONNECT: "connect",
+    SNAP_TO_GRID: "snap_to_grid",
     CONNECT_ALL: "connect_all",
     DISCONNECT_ALL: "disconnect_all",
     DELETE_ALL: "delete_all"
