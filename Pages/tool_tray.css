@@ -98,6 +98,10 @@
   display: flex;
   flex-direction: row;
 }
+#rightItems .icon {
+  margin-left: 4pt;
+  margin-right: 4pt;
+}
 .trayItem > input {
   display: none;
 }
