@@ -241,7 +241,6 @@ class Graph {
         let graphConstructor = Graph
         if(serializedPrefix) {
             let [, serializedCategories] = serializedPrefix;
-            console.log(serializedCategories)
 
             if (serializedCategories.includes("c")) {
                 nodeConstructor = NodeColorMixin(nodeConstructor)

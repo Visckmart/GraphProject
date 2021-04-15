@@ -65,7 +65,7 @@ export class GraphView {
         this.nodeLabeling = NodeLabeling.LETTERS_RAND;
 
         // INTERACTION
-        this.selectionHandler = new GraphSelection(this, true);
+        this.selectionHandler = new GraphSelection(this, false);
         this.mouseHandler = new GraphMouseHandler(this);
         this.keyboardHandler = new GraphKeyboardHandler(this);
 
@@ -439,9 +439,9 @@ export class GraphView {
         this.registerStep();
     }
 
-    snapNodesToGrid() {
+    snapNodesToGrid(nodes) {
         let gridCellSide = 2*regularNodeRadius + 20;
-        for (let node of this.structure.nodes()) {
+        for (let node of nodes ?? this.structure.nodes()) {
             node.pos.x = Math.round(node.pos.x / gridCellSide) * gridCellSide;
             node.pos.y = Math.round(node.pos.y / gridCellSide) * gridCellSide;
         }

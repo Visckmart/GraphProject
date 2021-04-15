@@ -159,7 +159,6 @@ class GraphMouseHandler {
         // SELEÇÃO
         let distanceFromClick = getDistanceOf(this.clickPosition, pos);
         if (this.clickPosition && distanceFromClick < 5) {
-            console.log(this.selection.additionOnlyMode, this.selection.isQuickSelection, this.clickedNode)
             if (this.selection.additionOnlyMode == false && this.selection.isQuickSelection == false) {
                 this.selection.clear();
             }
