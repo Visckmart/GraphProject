@@ -1,6 +1,6 @@
 import {CanvasType, Tool} from "./General.js"
 import { HighlightType } from "../Utilities/Highlights.js"
-import { getDistanceOf } from "../Utilities/Utilities.js"
+import { getDistanceOf, isLeftClick, isRightClick } from "../Utilities/Utilities.js"
 import Edge from "../Structure/Edge.js";
 
 class GraphMouseHandler {
@@ -8,7 +8,7 @@ class GraphMouseHandler {
     constructor(graphView) {
         this.graphView = graphView;
         this.selection = graphView.selectionHandler;
-        this._enabled = true
+        this._enabled = true;
         this.canvasRect = this.graphView.canvas.getBoundingClientRect();
     }
 
@@ -30,16 +30,17 @@ class GraphMouseHandler {
     set clickPosition(pos) {
         this._clickPosition = pos;
         this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
-        if (this.graphView.primaryTool != Tool.MOVE) {
+        if (this.graphView.primaryTool == Tool.CONNECT) {
             this.clickedEdge = this.graphView.getEdgesAt(pos).pop();
         }
     }
 
     // Mouse DOWN event
     justClearedSelection = false;
+    currentMousePos = null;
     mouseDownEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
-        if(!this._enabled) { return; }
+        if (!this._enabled) { return; }
 
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
@@ -48,26 +49,26 @@ class GraphMouseHandler {
         // Registrando posição do mouseDown
         this.clickPosition = pos;
         this.justClearedSelection = false;
-        
+
         // console.log(this.clickedEdge)
         // console.log(this.graphView.primaryTool, this.clickedNode, this.clickedEdge)
 
         // Se o botão direito foi o levantado
-        if (mouseEvent.button == 2
-            && this.selection.shouldDrawSelection == false) {
-            // Tente remover um nó, se o mouse estiver sobre algum
-            this.graphView.removeNodeAt(pos);
-            // Tente remover uma arestas, se o mouse estiver sobre alguma
-            this.graphView.removeEdgeAt(pos);
-        } else if (this.clickedNode) {
-            let clickedNotSelected = !this.selection.isSelected(this.clickedNode);
-            if (clickedNotSelected) {
-                if (this.selection.isEmpty) {
-                    this.selection.quickSelect(this.clickedNode);
-                } else if (this.selection.additionOnlyMode) {
-                    this.selection.select(this.clickedNode);
-                }
+        if (isRightClick(mouseEvent) && !this.selection.shouldDrawSelection) {
+            if (this.graphView.primaryTool == Tool.MOVE) {
+                // Tente remover um nó, se o mouse estiver sobre algum
+                this.graphView.removeNodeAt(pos);
+            } else if (this.graphView.primaryTool == Tool.CONNECT) {
+                // Tente remover uma arestas, se o mouse estiver sobre alguma
+                this.graphView.removeEdgeAt(pos);
             }
+        }
+        if (isLeftClick(mouseEvent) && this.clickedNode != null
+            && this.selection.isSelected(this.clickedNode) == false) {
+            if (this.selection.additionOnlyMode == false) {
+                this.selection.clear();
+            }
+            this.selection.quickSelect(this.clickedNode);
         }
         if (this.selection.isEmpty == false) {
             this.justClearedSelection = true;
@@ -76,20 +77,18 @@ class GraphMouseHandler {
     }
 
     lastHoveredEdge = null;
-    checkEdgeHover(pos) {
-        if (this.lastHoveredEdge) {
-            this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
-        }
+    handleEdgeHover(pos) {
+        this.lastHoveredEdge?.highlights.remove(HighlightType.LIGHTEN);
+        if (this.graphView.primaryTool != Tool.CONNECT) { return; }
 
         // NODE COLISION
-        if (this.graphView.primaryTool != Tool.CONNECT) { return; }
         if (this.graphView.checkIfNodeAt(this.currentMousePos)) { return; }
 
         let edgeHover = this.graphView.getEdgesAt(pos).pop();
-        this.lastHoveredEdge = edgeHover;
         if (edgeHover && !this.selection.isSelected(edgeHover)) {
             edgeHover.highlights.add(HighlightType.LIGHTEN);
         }
+        this.lastHoveredEdge = edgeHover;
     }
 
     // Mouse DRAG event
@@ -99,7 +98,7 @@ class GraphMouseHandler {
 
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
-        this.checkEdgeHover(pos);
+        this.handleEdgeHover(pos);
 
         if (mouseEvent.buttons == 0
             || mouseEvent.buttons == 2
@@ -133,8 +132,6 @@ class GraphMouseHandler {
                     this.graphView.moveNode(this.selection.selected.nodes[nodeIndex],
                                             newPosition);
                 }
-            } else {
-                this.selection.quickSelect(this.clickedNode)
             }
             break;
         }
@@ -155,13 +152,14 @@ class GraphMouseHandler {
 
         let pos = this.getMousePos(mouseEvent);
 
-        if (mouseEvent.button == 2
+        if (isRightClick(mouseEvent)
             && this.selection.shouldDrawSelection == false) {
             return;
         }
         // SELEÇÃO
         let distanceFromClick = getDistanceOf(this.clickPosition, pos);
         if (this.clickPosition && distanceFromClick < 5) {
+            console.log(this.selection.additionOnlyMode, this.selection.isQuickSelection, this.clickedNode)
             if (this.selection.additionOnlyMode == false && this.selection.isQuickSelection == false) {
                 this.selection.clear();
             }
@@ -172,7 +170,7 @@ class GraphMouseHandler {
                 }
             } else if (this.clickedEdge && Tool.CONNECT == this.graphView.primaryTool) {
                 this.selection.invertSelection(this.clickedEdge);
-                this.checkEdgeHover(pos);
+                this.handleEdgeHover(pos);
             }
         } else {
             if (this.selection.isQuickSelection) {
@@ -267,9 +265,9 @@ class GraphMouseHandler {
             cursorStyle = "crosshair";
         } else {
             grabCheck:if (this.graphView.primaryTool == Tool.MOVE) {
-                let isHoveringNode = this.graphView.checkIfNodeAt(this.currentMousePos);
-                if (!isHoveringNode) { break grabCheck; }
-                if (this.selection.hasSelectedNodes && this.clickPosition) {
+                let isHoveringNode = this.graphView.getNodesAt(this.currentMousePos);
+                if (isHoveringNode.length == 0) { break grabCheck; }
+                if (this.selection.hasSelectedNodes && isHoveringNode.includes(this.clickedNode)) {
                     cursorStyle = "grabbing";
                 } else {
                     cursorStyle = "grab";
