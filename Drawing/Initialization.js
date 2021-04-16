@@ -1,9 +1,9 @@
 // Arquivos CSS
-import "../Pages/style.css"
+//import "../Pages/style.css"
 
 import { prepareCanvasSharing } from "./InteractionShare.js";
 import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeURL, importFromFile, importFromText} from "./InteractionShare.js"
-import { g } from '../index.js'
+import { g } from './Instantiation.js'
 import { isMobile } from "./GraphView.js";
 import "./Interaction.js"
 import { updateFavorites } from "../Utilities/FavoritesHandler.js";

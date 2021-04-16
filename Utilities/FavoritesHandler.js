@@ -1,4 +1,4 @@
-import {g} from "../index.js";
+import {g} from "../Drawing/Instantiation.js";
 
 let favoritesList = document.getElementById("favoritesList");
 let menuBody = document.getElementsByClassName("menuBody")[0];

@@ -1,5 +1,5 @@
 // Arquivos css
-import "../Pages/tool_tray.css"
+//import "../Pages/tool_tray.css"
 
 import { Algorithm, GraphCategory, Tool } from "./General.js"
 

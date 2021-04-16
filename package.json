@@ -2,7 +2,7 @@
   "name": "graphproject",
   "version": "1.0.0",
   "description": "Exploração de algoritmos em grafos de forma didática",
-  "main": "index.js",
+  "main": "Drawing/Instantiation.js",
   "scripts": {
     "test": "node tests",
     "asbuild:untouched": "asc assembly/index.ts --target debug",

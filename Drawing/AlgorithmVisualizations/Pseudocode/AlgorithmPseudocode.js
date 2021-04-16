@@ -1,5 +1,5 @@
 // Arquivos CSS
-import "./algorithm_pseudocode.css"
+//import "./algorithm_pseudocode.css"
 
 export default class AlgorithmPseudocode {
     constructor(code, labels) {

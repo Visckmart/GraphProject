@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
 module.exports = {
-    entry: './Drawing/Initialization.js',
+    entry: './index.js',
     module: {
         rules: [
             {
@@ -29,7 +29,16 @@ module.exports = {
             },
             {
                 test: /\.html$/i,
-                loader: 'html-loader'
+                loader: 'html-loader',
+                options: {
+                    preprocessor: (content, loaderContext) => {
+                        let linkPattern = /.*<link.*>.*/g
+                        let scriptPattern = /.*<script.*src.*>/g
+                        content = content.replace(linkPattern, '')
+                        content = content.replace(scriptPattern, '')
+                        return content
+                    }
+                }
             }
         ]
     },
@@ -54,7 +63,7 @@ module.exports = {
         minimize: true,
         minimizer: [
             new CssMinimizerPlugin(),
-            new HtmlMinimizerPlugin(),
+            new HtmlMinimizerPlugin()
         ],
     },
     devServer: {
@@ -62,6 +71,6 @@ module.exports = {
     },
     mode: "production",
     output: {
-        publicPath: '/'
+        publicPath: '/compat'
     }
 };
