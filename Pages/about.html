@@ -20,6 +20,10 @@
             margin-bottom: 10pt;
             margin-top: 0;
         }
+        h1 a {
+            text-decoration: none;
+            color: inherit;
+        }
         .subhead {
             text-align: center;
             margin-top: 0;
@@ -152,7 +156,19 @@
             background-color: lightskyblue;
             /*cursor: pointer;*/
         }
-        .aboutSection li {
+        .aboutSection h2 a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .aboutSection h2 a:hover::before {
+            content:"#";
+            display: inline-block;
+            color: gray;
+            margin-left: -15pt;
+            font-weight: normal;
+            float:left;
+        }
+        .aboutSection > ul > li {
             padding-top: 20pt;
         }
         .aboutSection > ul {
@@ -240,7 +256,7 @@
 
 <body>
 <div id="bg">
-    <h1 style="text-align: center">Sobre o Projeto</h1>
+    <h1 style="text-align: center"><a href="">Sobre o Projeto</a></h1>
     <p class="subhead">
         Ferramenta de manipulação de grafos e exploração de algoritmos.
     </p>
@@ -300,8 +316,8 @@
             <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br?subject=Graph Project">victormartins@aluno.puc-rio.br</a></div>
         </div>
     </div>
-    <div class="aboutSection">
-        <h2>História</h2>
+    <div class="aboutSection" id="História">
+        <h2><a href="#História">História</a></h2>
         <ul>
             <li>
                 <p style="margin-top: -10pt; margin-bottom: 8pt">
@@ -335,8 +351,8 @@
             </li>
         </ul>
     </div>
-    <div class="aboutSection">
-        <h2>Fundamentos</h2>
+    <div class="aboutSection" id="Fundamentos">
+        <h2><a href="#Fundamentos">Fundamentos</a></h2>
         <ul>
            <li>
                 <h3 id="grafo">O que são grafos?</h3>
@@ -362,8 +378,8 @@
             </li>
         </ul>
     </div>
-    <div class="aboutSection">
-        <h2>Recursos</h2>
+    <div class="aboutSection" id="Recursos">
+        <h2><a href="#Recursos">Recursos</a></h2>
         <ul>
             <li>
                 <h3>Manipular Grafos</h3>
@@ -458,8 +474,8 @@
 
         </ul>
     </div>
-    <div class="aboutSection">
-        <h2>Desafios e Aprendizados</h2>
+    <div class="aboutSection" id="DesafiosEAprendizados">
+        <h2><a href="#DesafiosEAprendizados">Desafios e Aprendizados</a></h2>
         <ul>
             <li>
                 <h3>Trabalho em Equipe</h3>
