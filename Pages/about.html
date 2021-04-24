@@ -146,14 +146,29 @@
             margin-top: 0;
             font-size: 25pt;
             margin-bottom: 0;
+            width: fit-content;
+        }
+        .aboutSection h2:hover {
+            background-color: lightskyblue;
+            /*cursor: pointer;*/
         }
         .aboutSection li {
             padding-top: 20pt;
         }
-        .aboutSection ul {
+        .aboutSection > ul {
             list-style-type: none;
             padding-left: 3em;
             margin-top: 0;
+        }
+        .aboutSection > ul > li ul {
+            padding-left: 2em;
+            /*margin-top: 4pt;*/
+        }
+        .aboutSection > ul > li li {
+            padding-top: 4pt;
+        }
+        .aboutSection > ul > li > ul > li {
+            padding-top: 8pt;
         }
         .aboutSection h3, .aboutSection p {
             margin: 0;
@@ -357,6 +372,49 @@
                     categorias, como grafos com peso nas arestas, arestas
                     direcionadas, e etc.
                 </p>
+                <ul style="padding-left: 15pt">
+<!--                    <li>Criar nós e arestas.</li>-->
+<!--                    <li>Editar nós e arestas.</li>-->
+<!--                    <li>Mover nós.</li>-->
+<!--                    <li>Selecionar nós e arestas.</li>-->
+<!--                    <li>Apagar nós e arestas.</li>-->
+                    <li>
+                        Tipos de Grafos
+                        <ul>
+                            <li>Direcionados e não-direcionados</li>
+                            <li>Nós coloridos e não-coloridos</li>
+                            <li>Arestas com valor associado (peso, custo, etc.) e sem valor associado</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Ações em Nós
+                        <ul>
+                            <li>Criar</li>
+                            <li>Mover</li>
+                            <li>Selecionar</li>
+                            <li>Apagar</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Ações em Arestas
+                        <ul>
+                            <li>Criar</li>
+                            <li>Selecionar</li>
+                            <li>Apagar</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Ferramentas Auxiliares
+                        <p style="font-size: smaller"><i>As ações ocorrem sobre o grafo como um todo ou sobre os elementos selecionados, se houver algum.</i></p>
+                        <ul>
+                            <li>Alinhar nós</li>
+                            <li>Conectar nós</li>
+                            <li>Desconectar nós</li>
+                            <li>Remover nós e arestas</li>
+                        </ul>
+                    </li>
+                    <li>Desfazer e refazer ações</li>
+                </ul>
             </li>
             <li>
                 <h3>Executar Algoritmos</h3>
@@ -376,7 +434,28 @@
                     Isso permite que colegas de turma discutam com facilidade
                     uma execução em algoritmos criados por eles próprios.
                 </p>
+                <ul style="padding-left: 15pt">
+                    <li>
+                        Exportação
+                        <ul>
+                            <li>Arquivo</li>
+                            <li>Texto</li>
+                            <li>Link</li>
+                            <li>Imagem</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Importação
+                        <ul>
+                            <li>Arquivo</li>
+                            <li>Texto</li>
+                            <li>Link</li>
+                        </ul>
+                    </li>
+                    <li>Favoritos (armazenamento local)</li>
+                </ul>
             </li>
+
         </ul>
     </div>
     <div class="aboutSection">
@@ -444,6 +523,16 @@
             </li>
         </ul>
     </div>
+    <div class="aboutSection">
+        <h2>Direitos Autorais e Código Fonte</h2>
+        <ul>
+            <li>
+                <p>
+                </p>
+            </li>
+        </ul>
+    </div>
+
     <script>
         // document.body.onscroll = function(a) {
         //     // console.log(!!( a.offsetWidth || a.offsetHeight || a.getClientRects().length ));
