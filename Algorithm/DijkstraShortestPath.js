@@ -173,7 +173,10 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let currentNode = null;
     while (currentNode !== finalNode) {
         currentNode = heap.remove();
-        if (!currentNode || currentNode.distance === Infinity) { break; }
+        if (!currentNode || currentNode.distance === Infinity) {
+            currentNode = null;
+            break;
+        }
 
         currentNode.highlights.setTo(HighlightType.COLORED_BORDER2)
 
@@ -271,7 +274,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         textoPassoFinal = 'Não sobrou nenhum nó alcançável com distância ' +
                           'menor que ∞, portanto a visitação foi concluída.'
     }
-    controller.addStep(graph, textoPassoFinal + ' Algoritmo concluído.', 'end')
+    controller.addStep(graph, textoPassoFinal + ' Execução concluída.', 'end')
 
     // Removendo a relação entre distance e assignedValue
     for (let node of graph.nodes()) { delete node.distance; }
