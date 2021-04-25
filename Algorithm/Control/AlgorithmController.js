@@ -299,7 +299,7 @@ class AlgorithmController {
             this.messageIsHighlighted = true
             this.messageIsOptional = this._currentRequirement?.optional
 
-            this.inputHandler.message.textContent = this._currentRequirement?.message
+            this.inputHandler.message.innerHTML = this._currentRequirement?.message
             await this._currentRequirement?.resolve()
         }
         this.messageIsHighlighted = false

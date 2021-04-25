@@ -57,7 +57,8 @@ export default async function DFSCycleDetection(controller) {
 
     // Capturando nó inicial
     controller.addRequirement(RequirementType.SELECT_NODE,
-        "Selecione um nó de inicio. (Pular esse requisito implica na escolha de um nó arbitrário)",
+        "Selecione um nó inicial.<br><i>Pular esse requisito implica na escolha de um nó" +
+        " arbitrário</i>",
         node => initialNode = node,
         true)
     await controller.resolveRequirements()
@@ -72,14 +73,13 @@ export function ExecuteDFSCycleDetection(controller,
 
     let graph = controller.graphView.structure
 
-    if(!firstNode) {
+    if (!firstNode) {
         firstNode = graph.nodes().next().value
-
-        if(!firstNode) return
+        if(!firstNode) return;
     }
 
 
-    if(record) {
+    if (record) {
         controller.setPseudocode(pseudoCode, pseudoLabels)
     }
 
@@ -88,12 +88,12 @@ export function ExecuteDFSCycleDetection(controller,
     let stack = new Stack()
     controller.showcasing = stack
 
-    if(firstNode) {
+    if (firstNode) {
         stack.push(firstNode)
     }
 
     /* Marcando todas as arestas como não visitadas */
-    for(let [edge,,] of graph.edges()) {
+    for (let [edge,,] of graph.edges()) {
         edge.highlights.add(HighlightType.DISABLED)
     }
 
@@ -101,14 +101,14 @@ export function ExecuteDFSCycleDetection(controller,
         controller.addStep(graph, `Selecionando o nó ${firstNode.toString()} como inicial e inicializando pilha.`, 'init')
     }
 
-    let currentNode
+    let currentNode;
     mainLoop: while(stack.length > 0){
         // Retirando novo nó do topo da pilha
         currentNode = stack.pop()
         // Destacando nó como visitado
-        currentNode.highlights.add(HighlightType.DARK_WITH_BLINK)
+        currentNode.highlights.add(HighlightType.COLORED_BORDER2)
         // Removendo destaque de nós na stack
-        currentNode.highlights.remove(HighlightType.LIGHTEN)
+        currentNode.highlights.remove(HighlightType.DARKEN)
         currentNode.visited = true
 
         if(record) {
@@ -116,27 +116,25 @@ export function ExecuteDFSCycleDetection(controller,
         }
 
         // Procurando por nós não visitados
-        for(let [edge, node] of graph.edgesFrom(currentNode))
-        {
+        for(let [edge, node] of graph.edgesFrom(currentNode)) {
             // Nó não visitado
-            if(!node.visited)
-            {
+            if(!node.visited) {
                 // Salvando nó atual para verificação posterior e marcando o nó descoberto para visitação
                 node.ancestral = currentNode
 
                 // Colocando nós na stack e adicionando highlight de nós na stack
                 stack.push(currentNode)
                 stack.push(node)
-                currentNode.highlights.add(HighlightType.LIGHTEN)
-                currentNode.highlights.add(HighlightType.LIGHTEN)
+                currentNode.highlights.add(HighlightType.DARKEN)
 
-                edge.highlights.add(HighlightType.DARKEN)
+                edge.highlights.remove(HighlightType.DISABLED)
+                // edge.highlights.add(HighlightType.DARKEN)
 
                 if(record) {
                     controller.addStep(graph, `O nó ${node.toString()} foi descoberto.`, 'nodeNotVisited')
                 }
                 // Desmarcando nó como ativo
-                currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
+                currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
 
                 // Prosseguindo para o nó descoberto
                 continue mainLoop
@@ -145,7 +143,10 @@ export function ExecuteDFSCycleDetection(controller,
             // No caso de um grafo direcionado é um nó que aponta para outro nó que ainda está na pilha
             // No caso de um grafo não direcionado é um nó que aponta para outro já visitado
             } else if(currentNode.ancestral !== node && node.ancestral !== currentNode && (!isDirected || stack.isInStack(node))) {
-                edge.highlights.add(HighlightType.COLORED_A)
+                edge.highlights.remove(HighlightType.DISABLED)
+                edge.highlights.add(HighlightType.DARKEN)
+                currentNode.highlights.add(HighlightType.DARKEN)
+                currentNode.highlights.add(HighlightType.COLORED_BORDER2)
                 if(record) {
                     if(isDirected)
                     {
@@ -154,15 +155,18 @@ export function ExecuteDFSCycleDetection(controller,
                         controller.addStep(graph, `Aresta que aponta para o nó ${node.toString()} já visitado encontrada.`, 'nodeVisited')
                     }
                 }
-                edge.highlights.remove(HighlightType.COLORED_A)
-                edge.highlights.add(HighlightType.DARK_WITH_BLINK)
-
+                edge.highlights.remove(HighlightType.DARKEN)
+                // edge.highlights.remove(HighlightType.COLORED_A)
+                // edge.highlights.add(HighlightType.DARK_WITH_BLINK)
+                edge.highlights.add(HighlightType.COLORED_A)
+                node.highlights.add(HighlightType.COLORED_BORDER2)
                 // Fazendo backtracking para detectar o ciclo
                 let backtrackNode = currentNode
                 let cycle = [backtrackNode]
                 while(backtrackNode !== node) {
                     let edge = graph.getEdgeBetween(backtrackNode.ancestral, backtrackNode)
-                    edge.highlights.add(HighlightType.DARK_WITH_BLINK)
+                    edge.highlights.add(HighlightType.COLORED_A)
+                    backtrackNode.highlights.add(HighlightType.COLORED_BORDER2)
                     backtrackNode = backtrackNode.ancestral
                     cycle.push(backtrackNode)
 
@@ -171,6 +175,7 @@ export function ExecuteDFSCycleDetection(controller,
                         break mainLoop
                     }
                 }
+                // currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
                 if(record) {
                     controller.addStep(graph, 'Ciclo encontrado. Algoritmo finalizado.', 'nodeNotVisited')
                 }
@@ -183,7 +188,7 @@ export function ExecuteDFSCycleDetection(controller,
         if(record) {
             controller.addStep(graph, `Verificando o nó ${currentNode.toString()}, nenhum nó novo encontrado.`)
         }
-        currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
+        currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
     }
     if(record) {
         controller.addStep(graph, "Nenhum loop encontrado. Algoritmo finalizado.", 'noCycle')
