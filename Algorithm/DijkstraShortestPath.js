@@ -106,17 +106,20 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
     // Preparando a relação entre distance e assignedValue
     for (let node of graph.nodes()) {
+        node.refreshDistanceLabel = function(newDistance) {
+            let newDistanceText = newDistance == Infinity ? "∞" : newDistance.toString();
+            if (node.assignedValue && newDistance != node._distance) {
+                node.assignedValue = `${node.assignedValue} ➞ ${newDistanceText}`;
+            } else {
+                node.assignedValue = newDistanceText;
+            }
+        }
         Object.defineProperty(node, 'distance', {
             get: function () {
                 return node._distance;
             },
             set: function (dist) {
-                let newDistance = dist == Infinity ? "∞" : dist.toString();
-                if (node.assignedValue && dist != node._distance) {
-                    node.assignedValue = `${node.assignedValue} ➞ ${newDistance}`;
-                } else {
-                    node.assignedValue = newDistance;
-                }
+                node.refreshDistanceLabel(dist);
                 node._distance = dist;
             },
             configurable: true
@@ -252,7 +255,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
 
         currentNode.highlights.clear()
         for (let node of graph.nodes()) {
-            node.distance = node.distance;
+            node.refreshDistanceLabel(node.distance);
         }
     }
 
