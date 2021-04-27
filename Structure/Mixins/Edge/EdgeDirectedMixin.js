@@ -57,7 +57,7 @@ let EdgeDirectedMixin = (superclass) => {
         }
         getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
             if (!doubled) return super.getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd})
-            let offset = 45;
+            let offset = 40;
             let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
             // if (theta > Math.PI/2) {
             //     offset = 1000;
@@ -67,11 +67,15 @@ let EdgeDirectedMixin = (superclass) => {
             return [cpX, cpY, 7.5]
         }
         getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
-            if (!doubled) return super.getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd});
-            let theta = Math.atan2(yEnd - yStart, xEnd - xStart);
+            if (doubled == false) {
+                return super.getTextAngle(x, y, {x: xStart, y: yStart}, {x: xEnd, y: yEnd});
+            }
+            let deltaX = xEnd - xStart;
+            let deltaY = yEnd - yStart;
+            let theta = Math.atan2(deltaY, deltaX);
             // Não permite que o texto fique de cabeça para baixo
             if (Math.abs(theta) > Math.PI/2) {
-                theta = Math.atan2(-(yEnd - yStart), -(xEnd - xStart))
+                theta = Math.atan2(-deltaY, -deltaX)
             }
             return theta;
         }
@@ -95,24 +99,6 @@ let EdgeDirectedMixin = (superclass) => {
             ctx.stroke();
 
             ctx.restore()
-
-
-        }
-        _drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, doubled) {
-            if (this.highlights.has(HighlightType.SELECTION)) {
-                ctx.save()
-
-                ctx.setLineDash([10, 7]);
-                ctx.lineWidth = 7
-                ctx.lineDashOffset = -window.performance.now()/200;
-                ctx.strokeStyle = "#3344FF";
-                this.prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled)
-                ctx.stroke();
-
-                ctx.restore()
-            } else {
-                // super._drawHighlight(ctx, highlight, xStart, yStart, xEnd, yEnd, this.prepareLine, doubled)
-            }
         }
         serialize() {
             // A informação de ser direcionada vai pelo grafo
