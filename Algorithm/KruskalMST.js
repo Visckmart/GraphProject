@@ -1,56 +1,10 @@
 import UnionFind from "./Auxiliary/UnionFind.js";
 import {HighlightType} from "../Utilities/Highlights.js";
 
-
-let pseudoCode = [
-`\
-<span>Inicializando estrutura de union-find com todos os 
-nós sozinhos em seus grupos representando as florestas</span>
-unionFind = UnionFind(nós) 
-<span>Ordenando as arestas pelo seus pesos em ordem 
-decrescente para acelerar a busca pela menor aresta</span>
-arestas = ordenar(arestas, peso) 
-`,
-`\
-while(arestas.length > 0) {
-  <span>Retirando a última (e menor) aresta da lista</span>
-  menorAresta = arestas.pop() 
-`,
-`\
-  <span>Caso as pontas da menorAresta estejam em grupos diferentes</span>
-  if (!unionFind.mesmoGrupo(nós que menorAresta liga)) {
-      <span>Unindo os nós na ponta da aresta, incluindo ela na floresta</span>
-      unionFind.une(nós que a menorAresta liga)
-  }
-`,
-`\
-  <span>Caso as pontas da menorAresta estejam no MESMO grupo</span>
-  else {
-      Aresta não incluída
-  }
-`,
-`\
-}
-`,
-`\
-if(todos os nós foram alcançados) {
-  A MST foi encontrada
-}
-`,
-`\
-else {
- O grafo era desconexo e uma MST não foi encontrada
-}
-`
-]
-let pseudoLabels = [
-    'init', 'loopStart', 'include', 'notInclude', '', 'found', 'notFound'
-]
-
 export default function KruskalMST(controller) {
     let graph = controller.graphView.structure
 
-    controller.setPseudocode(pseudoCode, pseudoLabels)
+    controller.setPseudocode('../Algorithm/Pseudocodes/KruskalMST.html')
 
     let nodes = Array.from(graph.nodes())
     let unionFind = new UnionFind(nodes)
@@ -105,13 +59,14 @@ export default function KruskalMST(controller) {
             nodeB.highlights.remove(HighlightType.COLORED_BORDER2)
 
             edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
+            edge.highlights.add(HighlightType.DISABLED)
         }
     }
 
     let parent = unionFind.find(nodes[0], false)
     if(nodes.some(node => unionFind.find(node, false) !== parent)) {
-        controller.addStep(graph, 'O grafo era desconexo e uma MST não foi encontrada.', 'found')
+        controller.addStep(graph, 'O grafo era desconexo e uma MST não foi encontrada.', 'notFound')
     } else {
-        controller.addStep(graph, 'Todas as florestas foram unidas e a MST foi encontrada.', 'notFound')
+        controller.addStep(graph, 'Todas as florestas foram unidas e a MST foi encontrada.', 'found')
     }
 }

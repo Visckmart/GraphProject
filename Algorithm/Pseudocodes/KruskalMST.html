@@ -1,0 +1,39 @@
+<pre label="init">
+<span>Inicializando estrutura de union-find com todos os 
+nós sozinhos em seus grupos representando as florestas</span>
+unionFind = UnionFind(nós) 
+<span>Ordenando as arestas pelo seus pesos em ordem 
+decrescente para acelerar a busca pela menor aresta</span>
+arestas = ordenar(arestas, peso) 
+</pre>
+<pre label="loopStart">
+while(arestas.length > 0) {
+  <span>Retirando a última (e menor) aresta da lista</span>
+  menorAresta = arestas.pop() 
+</pre>
+<pre label="include">
+  <span>Caso as pontas da menorAresta estejam em grupos diferentes</span>
+  if (!unionFind.mesmoGrupo(nós que menorAresta liga)) {
+      <span>Unindo os nós na ponta da aresta, incluindo ela na floresta</span>
+      unionFind.une(nós que a menorAresta liga)
+  }
+</pre>
+<pre label="notInclude">
+  <span>Caso as pontas da menorAresta estejam no MESMO grupo</span>
+  else {
+      Aresta não incluída
+  }
+</pre>
+<pre>
+}
+</pre>
+<pre label="found">
+if(todos os nós foram alcançados) {
+  A MST foi encontrada
+}
+</pre>
+<pre label="notFound">
+else {
+ O grafo era desconexo e uma MST não foi encontrada
+}
+</pre>
