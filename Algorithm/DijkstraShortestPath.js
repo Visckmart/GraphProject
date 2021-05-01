@@ -174,9 +174,9 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
         ...
      */
     let currentNode = null;
-    while (currentNode !== finalNode) {
+    while (heap._heapSize >= 0) {
         currentNode = heap.remove();
-        if (!currentNode || currentNode.distance === Infinity) {
+        if (currentNode == finalNode || !currentNode || currentNode.distance === Infinity) {
             currentNode = null;
             break;
         }
@@ -217,7 +217,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             node.highlights.clear()
             edge.highlights.setTo(HighlightType.DARKEN)
 
-            let edgeValue = Number.parseFloat(edge?.assignedValue ?? 1)
+            let edgeValue = Number.parseFloat(edge.assignedValue)
             let newDistance = currentNode.distance + edgeValue;
 
             controller.addStep(graph, `Analisando a aresta de peso ${edgeValue}`, 'selectEdge')
@@ -260,7 +260,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     }
 
     let textoPassoFinal;
-    if(currentNode === finalNode) {
+    if(finalNode.distance != Infinity) {
         textoPassoFinal = 'Nó final foi visitado portanto as visitações estão ' +
                           'concluídas.\nCaminhando pelas distâncias mais curtas ' +
                           'para encontrar o menor caminho.'
