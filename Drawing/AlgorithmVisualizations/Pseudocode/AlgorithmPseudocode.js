@@ -70,6 +70,7 @@ export default class AlgorithmPseudocode {
         let manager =  new AlgorithmPseudocode(code)
 
         manager.current = localStorage.getItem('pseudo__message-label')
+        manager.wrapper.style.display = ''
 
         window.onstorage = (event) => {
             if(event.key === 'pseudo__message-label') {
