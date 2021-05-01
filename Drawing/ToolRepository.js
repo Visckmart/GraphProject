@@ -22,6 +22,7 @@ export default {
     [Tool.SNAP_TO_GRID]: function () {
         let [targetNodes,] = getTargetElements(this);
         this.snapNodesToGrid(targetNodes);
+        this.refreshGraph();
     },
     [Tool.CONNECT_ALL]: function () {
         let [targetNodes,] = getTargetElements(this);
@@ -32,6 +33,8 @@ export default {
                 this.insertEdgeBetween(node, innerNode, false)
             }
         }
+
+        this.refreshGraph();
     },
 
     [Tool.DISCONNECT_ALL]: function () {
@@ -45,6 +48,7 @@ export default {
             }
         }
         console.groupEnd();
+        this.refreshGraph();
     },
 
     [Tool.DELETE_ALL]: function () {
@@ -56,5 +60,6 @@ export default {
             this.structure.removeNode(node);
         }
         this.selectionHandler.clear();
+        this.refreshGraph();
     }
 }
