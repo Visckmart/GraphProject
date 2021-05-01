@@ -4,122 +4,6 @@ import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import {HighlightType} from "../Utilities/Highlights.js";
 
 
-const pseudocode = [
-`\
-<span>Função responsável por achar um novo caminho da fonte até o destino</span>
-<span>para passar mais fluxo.</span>
-function achaCaminho(fonte, final) {
-    <span>Inicializa a fila somente com a fonte</span>
-    fila = [fonte]
-    marca fonte como visitado
-    
-    while(fila.length > 0) {
-        nóCorrente = primeiro da fila
-    
-        <span>Visita as arestas saindo do nóCorrente</span>    
-        for(arestaCorrente saindo de nóCorrente)
-        {
-            nóDestino = nó destino da arestaCorrente
-            
-            <span>Caso nóDestino seja um nó novo, o marca como visitado e</span>
-            <spano insere na fila</span>
-            <span>Desconsidera nós com residual 0, já que não tem como passar mais</span>
-            <span>fluxo por eles</span>
-            if(nóDestino não foi visitado && nóDestino.residual > 0) {
-                if(nóDestino === final) {
-                    return caminho até nóDestino
-                }
-                
-                marca nóDestino como visitado
-                fila.insere(nóDestino)
-            }
-        }
-    }
-}
-
-
-`,
-`\
-<span>Inicializando arestas com fluxo 0</span>
-for(aresta de grafo) {
-    aresta.fluxo = 0
-    aresta.capacidade = aresta.peso
-}
-`,
-`\
-<span>Inicializando rede residual</span>
-for(arestaCorrente de grafo) {
-    aresta.fluxo = 0
-    
-    <span>O residual de uma aresta é quanto falta para ela chegar a sua</span>
-    <span>capacidade, como o fluxo é inicializado como 0 o residual é</span>
-    <span>inicialmente a capacidade.</span>
-    arestaCorrente.residual = arestaCorrente.capacidade
-    
-    nóInicio = nó inicial da arestaCorrente
-    nóDestino = nó final da arestaCorrente
-`,
-`\
-    <span>Checa se existe uma aresta na direção contrária da arestaCorrente</span>
-    if(!existe aresta entre nóDestino e nóInicio) {
-        <span>Cria uma aresta temporária caso não haja aresta inversa</span>
-        <span>Essa aresta tem fluxo total e portanto, residual 0</span>
-        novaAresta = criaAresta(nóDestino, nóInicio)
-        novaAresta.capacidade = arestaCorrente.capacidade
-        novaAresta.flow = arestaCorrente.capacidade
-        novaAresta.residual = 0
-    }
-`,
-`\
-}
-`,
-`\
-<span>Procura um novo caminho no inicio de cada loop e quebra caso</span>
-<span>não exista</span>
-while(caminho = findPath(fonte, final)) {
-`,
-`\
-    <span>O menor residual no caminho representa o máximo de fluxo</span>
-    <span>que pode ser passado por esse caminho.</span>
-    menorResidual = menor residual de caminho
-    
-    for(aresta em caminho) {
-        arestaInversa = inverso de aresta
-        
-        <span>Propagando o fluxo pelo caminho</span>
-        aresta.residual = aresta.residual - menorResidual
-        aresta.fluxo = aresta.fluxo + menorResidual
-        
-        <span>Retirando o fluxo do caminho inverso</span>
-        arestaInversa.residual = arestaInversa.residual + menorResidual
-        arestaInversa.fluxo = arestaInversa.fluxo - menorResidual
-    }
-`,
-`\
-}
-<span>Revertendo conversão para rede residual</span>
-for(aresta em grafo) {
-    if(aresta é temporária) {
-        grafo.remove(aresta)
-    }
-    else {
-        deleta aresta.residual 
-    }
-}
-`,
-`\
-fluxoMáximo = 0
-for(aresta inicdente no nó final) {
-    fluxoMáximo = fluxoMáximo + aresta.fluxo
-}
-return fluxoMáximo
-`
-]
-
-const pseudolabels = ['findPath', 'init', 'initResidual', 'residualEdge', '',
-    'loopInit', 'propagate', 'revertResidual', 'end']
-
-
 export default async function FordFulkerson(controller) {
     controller.graphView.structure = cloneTransformNodes(controller.graphView.structure, NodeAssignedValueMixin)
 
@@ -173,7 +57,7 @@ function findPath(graph, source, sink) {
 
 function executeFordFulkerson(controller, source, sink) {
     let graph = controller.graphView.structure
-    controller.setPseudocode(pseudocode, pseudolabels)
+    controller.setPseudocode('../Algorithm/Pseudocodes/FordFulkerson.html')
 
     // Verificando nós de entrada e saída
     if(graph.edgesFrom(sink).next().value) {
