@@ -7,7 +7,6 @@ export default class AlgorithmPseudocode {
         this.container = document.getElementById("pseudoContainer")
         this.container.innerHTML = code
 
-        this.wrapper.style.display = ''
         this.tab = document.getElementById("pseudocodeTab")
 
         if(this.tab) {
