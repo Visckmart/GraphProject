@@ -252,6 +252,10 @@ class AlgorithmController {
         if(showcase) {
             this.inputHandler.showcase.style.display = ''
             this.inputHandler.showcaseTab.style.display = ''
+
+            if(!this.menuHandler) {
+                this.menuHandler = new AlgorithmMenu()
+            }
         } else {
             this.inputHandler.showcase.style.display = 'none'
             this.inputHandler.showcaseTab.style.display = 'none'
@@ -270,6 +274,9 @@ class AlgorithmController {
             }
             else {
                 throw Error("Pseudo-código não pode ser recuperado.")
+            }
+            if(!this.menuHandler) {
+                this.menuHandler = new AlgorithmMenu()
             }
         })
         request.send()
@@ -348,12 +355,6 @@ class AlgorithmController {
         this.playing = true
         this.progress = 0
         this.isBlocked = false
-
-        if(this.showcasing || this.pseudocode)
-        {
-            // Instanciando handler do menu de algoritmos
-            this.menuHandler = new AlgorithmMenu()
-        }
     }
 
 
