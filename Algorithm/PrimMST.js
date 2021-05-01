@@ -29,93 +29,10 @@ function toggleArtifactExploring(artifact) {
     }
 }
 
-
-const pseudocode = [
-`\
-<span>Inicializando nós com distância ∞ e sem aresta anterior</span>
-for(nó em grafo) {
-    nó.distancia = ∞
-    nó.anterior = null
-}
-
-<span>Colocando nó arbitrário como inicial</span>
-nóArbitrário = nó qualquer do grafo
-nóArbitrário.distancia = 0
-
-<span>Inicializando heap mínimo, os nós serão pesados</span>
-<span>por suas distâncias</span>
-heap = MinHeap()
-
-for(nó em grafo) {
-    heap.insere(nó)
-}
-`,
-`\
-while(true) {
-    <span>Removendo nó no topo do heap que é o nó com menor distância</span>
-    nóCorrente = heap.remove()
-    
-    <span>Quebra o loop se não há mais nós no heap ou se o menor nó</span>
-    <span>tem distância ∞</span>
-    if(nóCorrente == null || nóCorrente.distancia = ∞) {
-        break
-    }
-    
-    nóCorrente.incluso = true
-`,
-`\
-    for(arestaCorrente saindo de nóCorrente) {
-        nóDestino = nó destino de ArestaCorrente
-        
-        <span>Se a arestaCorrente é a aresta pelo qual chegamos em nóCorrente ou</span>
-        <span>se o nóCorrente já foi incluso, ignore arestaCorrente</span>
-        if(arestaCorrente === nóCorrente.anterior || nóDestino.incluso == true)
-        {
-            continue
-        }
-        
-        novaDistância = arestaCorrente.distancia
-`,
-`\
-        <span>Se a nova distância é menor do que a distância atual do nó</span>
-        <span>atualiza sua distância e aresta anterior.</span>
-        if(novaDistância < nóDestino.distancia) {
-            nóDestino.distancia = novaDistância
-            nóDestino.anterior = arestaCorrente
-            
-            heap.mudaPeso(nóDestino, novaDistância)
-        }
-`,
-`\
-        else {
-            ignora arestaCorrente
-        }
-`,
-`\
-    }
-}
-`,
-`\
-<span>Uma árvore não foi encontrada pois um nó não foi alcançado</span>
-if(algum nó ainda tem distância ∞)
-{
-    return null
-}
-`,
-`\
-else {
-    return árvore encontrada
-}
-`
-]
-
-const pseudoLabels = ['init', 'initLoop', 'inspectEdge', 'update', 'noUpdate', '', 'notFount', 'found']
-
-
 export default function PrimMST(controller) {
     /* Esse algoritmo usa nós com assignedValue para visualização */
     controller.graphView.structure = cloneTransformNodes(controller.graphView.structure, NodeAssignedValueMixin)
-    controller.setPseudocode(pseudocode, pseudoLabels)
+    controller.setPseudocode('../Algorithm/Pseudocodes/PrimMST.html')
 
     let graph = controller.graphView.structure
 
