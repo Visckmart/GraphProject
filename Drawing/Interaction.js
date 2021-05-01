@@ -51,10 +51,10 @@ function getRequiredCategoriesForAlgorithm(alg) {
     case 'KruskalMST':
         boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
         break;
-    case 'EdmondsMSA':
-        boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
-        boundCategories[GraphCategory.DIRECTED_EDGES] = true;
-        break;
+    // case 'EdmondsMSA':
+    //     boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
+    //     boundCategories[GraphCategory.DIRECTED_EDGES] = true;
+    //     break;
     case 'FordFulkerson':
         boundCategories[GraphCategory.DIRECTED_EDGES] = true;
         boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
@@ -83,9 +83,9 @@ export async function getAlgorithmFromName(name) {
         case Algorithm.DFS_CYCLEDETECTION:
             algModuleName = "DFSCycleDetection";
             break;
-        case Algorithm.MSA_EDMONDS:
-            algModuleName = "EdmondsMSA";
-            break;
+        // case Algorithm.MSA_EDMONDS:
+        //     algModuleName = "EdmondsMSA";
+        //     break;
         case Algorithm.EULERIANPATH:
             algModuleName = "EulerianPath";
             break;

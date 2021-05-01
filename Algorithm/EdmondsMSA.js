@@ -1,3 +1,4 @@
+// DESABILITADO
 import {cloneTransformNodes, mapNewNodesOrEdges} from "./Auxiliary/GraphTransformations.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
