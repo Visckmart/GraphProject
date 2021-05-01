@@ -38,21 +38,21 @@
     margin-bottom: auto;
 }
 
-#algorithmMenuPin, #algorithmMenuUnPin {
+#algorithmMenuPin, #algorithmMenuUnpin {
     position: absolute;
     top: 5px;
     right: 5px;
     color: white;
     opacity: 0.4;
     z-index: 20;
-    display: none
+    display: none;
 }
 
-#algorithmMenu:hover #algorithmMenuPin, #algorithmMenu:hover #algorithmMenuUnPin {
+#algorithmMenu:hover #algorithmMenuPin, #algorithmMenu:hover #algorithmMenuUnpin {
     display: block;
 }
 
-#algorithmMenuUnPin {
+#algorithmMenuUnpin {
     display: none !important;
     opacity: 1;
 }
@@ -61,7 +61,7 @@
     display: none;
 }
 
-#algorithmMenu:target #algorithmMenuUnPin {
+#algorithmMenu:target #algorithmMenuUnpin {
     display: block !important;
 }
 

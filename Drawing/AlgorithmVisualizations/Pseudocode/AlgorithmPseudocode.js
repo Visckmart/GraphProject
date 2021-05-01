@@ -1,12 +1,11 @@
 export default class AlgorithmPseudocode {
-    constructor(code, labels) {
+    constructor(code) {
         this.code = code
-        this.labels = labels
-        this.labelMap = {}
 
         /* Capturando elementos do documento */
         this.wrapper = document.getElementById("pseudocode")
         this.container = document.getElementById("pseudoContainer")
+        this.container.innerHTML = code
 
         this.wrapper.style.display = ''
         this.tab = document.getElementById("pseudocodeTab")
@@ -15,45 +14,24 @@ export default class AlgorithmPseudocode {
             this.tab.style.display = ''
         }
 
-        this.codeElements = []
-        this._initCode()
-
-        for(let i=0;i<labels.length;i++) {
-            this.labelMap[labels[i]] =  i
-        }
-
-
         // Adicionando evento de popup
         document.getElementById("pseudoPopup")?.addEventListener('click', this.popup.bind(this))
     }
 
-    _initCode() {
-        for(let line of this.code) {
-            let pre = document.createElement("pre")
-            pre.innerHTML = line
-            this.codeElements.push(pre)
-            this.container.appendChild(pre)
-        }
-    }
-
-    _current = null
     _currentLabel = null
     get current() {
-        return this._current
+        return document.querySelector('*[current=true]')
     }
     set current(label) {
-        let index = this.labelMap[label]
-
+        this._currentLabel = label
         if(this._popup) {
             localStorage.setItem('pseudo__message-label', label)
         }
+        this.current?.removeAttribute('current')
 
-        this._current?.removeAttribute('current')
-
-        this._current = this.codeElements[index]
-        this._currentLabel = label
-        this._current?.setAttribute('current', true)
-        this._current?.scrollIntoView({behavior: "smooth"})
+        let highlighted =  document.querySelector(`#pseudoContainer *[label=${label}]`)
+        highlighted?.setAttribute('current', 'true')
+        highlighted?.scrollIntoView({behavior: "smooth"})
     }
 
     finish() {
@@ -75,7 +53,6 @@ export default class AlgorithmPseudocode {
     popup() {
         // Preparando dados para inicialização do popup
         localStorage.setItem('pseudo__code', JSON.stringify(this.code))
-        localStorage.setItem('pseudo__labels', JSON.stringify(this.labels))
         localStorage.setItem('pseudo__message-label', this._currentLabel)
 
         window.onPseudoClose = () => {
@@ -91,9 +68,7 @@ export default class AlgorithmPseudocode {
     /* Função chamada pelo popup para se conectar com a janela principal */
     static connect() {
         let code = JSON.parse(localStorage.getItem('pseudo__code'))
-        let labels = JSON.parse(localStorage.getItem('pseudo__labels'))
-
-        let manager =  new AlgorithmPseudocode(code, labels)
+        let manager =  new AlgorithmPseudocode(code)
 
         manager.current = localStorage.getItem('pseudo__message-label')
 
