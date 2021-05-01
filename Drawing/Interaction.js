@@ -17,7 +17,7 @@ export let categoryCheckboxes = {
 
     [GraphCategory.DIRECTED_EDGES]: document.getElementById('directedEdges'),
     [GraphCategory.WEIGHTED_EDGES]: document.getElementById('weightedEdges'),
-    [GraphCategory.COLORED_EDGES]:  document.getElementById('coloredEdges')
+    // [GraphCategory.COLORED_EDGES]:  document.getElementById('coloredEdges')
 }
 
 let algorithmSelector = document.getElementById("algorithm")

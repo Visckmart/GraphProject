@@ -25,13 +25,13 @@ export default function KruskalMST(controller) {
 
         edge.highlights.remove(HighlightType.DISABLED)
         edge.highlights.add(HighlightType.COLORED_A)
-        controller.addStep(graph, 'Retirando a aresta remanescente com menor peso.', 'loopStart')
-        edge.highlights.remove(HighlightType.COLORED_A)
+        controller.addStep(graph, 'Observando a aresta remanescente com menor peso.', 'loopStart')
+        // edge.highlights.remove(HighlightType.COLORED_A)
 
 
         if(unionFind.find(nodeA) !== unionFind.find(nodeB)) {
             edge.highlights.remove(HighlightType.DISABLED)
-            edge.highlights.add(HighlightType.DARK_WITH_BLINK)
+            // edge.highlights.add(HighlightType.DARKEN)
 
             nodeA.highlights.add(HighlightType.COLORED_BORDER2)
             nodeB.highlights.add(HighlightType.COLORED_BORDER2)
@@ -43,17 +43,16 @@ export default function KruskalMST(controller) {
 
             nodeA.highlights.remove(HighlightType.COLORED_BORDER2)
             nodeB.highlights.remove(HighlightType.COLORED_BORDER2)
-
-            edge.highlights.remove(HighlightType.DARK_WITH_BLINK)
+            // edge.highlights.remove(HighlightType.DARKEN)
         } else {
             edge.highlights.add(HighlightType.FEATURE_PREVIEW)
 
             nodeA.highlights.add(HighlightType.COLORED_BORDER2)
             nodeB.highlights.add(HighlightType.COLORED_BORDER2)
 
-            controller.addStep(graph, `A aresta conecta dois s nós \
+            controller.addStep(graph, `A aresta conecta dois nós \
             ${nodeA.toString()} e ${nodeB.toString()} da mesma floresta \
-             e portanto não será inclusa.`, 'notInclude')
+             e portanto não será incluída.`, 'notInclude')
 
             nodeA.highlights.remove(HighlightType.COLORED_BORDER2)
             nodeB.highlights.remove(HighlightType.COLORED_BORDER2)
@@ -61,6 +60,7 @@ export default function KruskalMST(controller) {
             edge.highlights.remove(HighlightType.FEATURE_PREVIEW)
             edge.highlights.add(HighlightType.DISABLED)
         }
+        edge.highlights.remove(HighlightType.COLORED_A)
     }
 
     let parent = unionFind.find(nodes[0], false)
