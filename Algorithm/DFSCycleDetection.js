@@ -1,57 +1,7 @@
 import {HighlightType} from "../Utilities/Highlights.js";
 import Stack from "./Auxiliary/Stack.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
-import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
-import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
-
-const pseudoCode = [
-`\
-<span>Escolhendo um nó arbitrário para iniciar o algoritmo caso um nó</span>
-<span>não tenha sido escolhido</span>
-primeiroNó = nó escolhido || nó arbitrário
-
-<span>Inicializando pilha e inserindo nó corrente</span>
-pilha = Pilha()
-pilha.push(primeiroNó)
-`,
-`\
-while(pilha.size > 0) {
-     nóCorrente = pilha.pop()
-     nóCorrente.visitado = true
-    for aresta, nóDestino in arestasSaindoDe(nóCorrente) {
-`,
-`\
-        if(!nóDestino.visitado) {
-            <span>Salvando nó corrente na pilha para visitação futura</span>
-            pilha.push(nóCorrente)
-            
-            nóDestino.ancestral = nóCorrente
-            <span>Colocando novo nó descoberto no topo da pilha</span>
-            pilha.push(nóDestino)
-            
-            continua para proxima visualização
-        }
-`,
-`\
-        <span>Se o nó destino não foi visitado e seu ancestral é diferente do nó atual</span>
-        else if(nóCorrente.ancestral != nóDestino.ancestral) {
-            <span>Caso o grafo seja direcionado o nó destino também precisa estar na pilha</span>
-            if(grafo não é direcionado || pilha.estáNaPilha(nóDestino)) {
-                ciclo = navegar por ancestrais de nóCorrente até chegar em nóDestino
-                return ciclo
-            }
-        }
-`,
-`
-    }
-    return ciclo não encontrado
-}
-`
-]
-
-const pseudoLabels = ['init', 'loopStart', 'nodeNotVisited', 'nodeVisited', 'noCycle']
-
 export default async function DFSCycleDetection(controller) {
     let initialNode = null
 
@@ -80,7 +30,7 @@ export function ExecuteDFSCycleDetection(controller,
 
 
     if (record) {
-        controller.setPseudocode(pseudoCode, pseudoLabels)
+        controller.setPseudocode('../Algorithm/Pseudocodes/DFSCycleDetection.html')
     }
 
     const isDirected = graph.mixins.has(GraphDirectedMixin)

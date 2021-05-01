@@ -1,0 +1,41 @@
+<pre label="init">
+<span>Escolhendo um nó arbitrário para iniciar o algoritmo caso um nó</span>
+<span>não tenha sido escolhido</span>
+primeiroNó = nó escolhido || nó arbitrário
+
+<span>Inicializando pilha e inserindo nó corrente</span>
+pilha = Pilha()
+pilha.push(primeiroNó)
+</pre>
+<pre label="loopStart">
+while(pilha.size > 0) {
+    nóCorrente = pilha.pop()
+    nóCorrente.visitado = true
+    for aresta, nóDestino in arestasSaindoDe(nóCorrente) {
+</pre>
+<pre label="nodeVisited">
+        if(!nóDestino.visitado) {
+            <span>Salvando nó corrente na pilha para visitação futura</span>
+            pilha.push(nóCorrente)
+
+            nóDestino.ancestral = nóCorrente
+            <span>Colocando novo nó descoberto no topo da pilha</span>
+            pilha.push(nóDestino)
+
+            continua para proxima visualização
+        }
+</pre>
+<pre label="nodeNotVisited">
+        <span>Se o nó destino não foi visitado e seu ancestral é diferente do nó atual</span>
+        else if(nóCorrente.ancestral != nóDestino.ancestral) {
+            <span>Caso o grafo seja direcionado o nó destino também precisa estar na pilha</span>
+            if(grafo não é direcionado || pilha.estáNaPilha(nóDestino)) {
+            ciclo = navegar por ancestrais de nóCorrente até chegar em nóDestino
+            return ciclo
+        }
+    }
+</pre>
+<pre label="noCycle">
+    return ciclo não encontrado
+}
+</pre>
