@@ -368,7 +368,7 @@ class AlgorithmController {
 
         document.querySelector(".toolTray").style.display = 'unset'
 
-        for (let [input, originalState] of this.enabledInputs) {
+        for (let [input, originalState] of this?.enabledInputs ?? []) {
             input.disabled = originalState
         }
         this.hide()
@@ -383,7 +383,7 @@ class AlgorithmController {
 
         this.inputHandler?.finish()
         this.menuHandler?.finish()
-        this?.pseudocode?.finish()
+        this.pseudocode?.finish()
 
         // Restaurando grafo ao estado inicial
         this.graphView.structure = this.initialGraph
