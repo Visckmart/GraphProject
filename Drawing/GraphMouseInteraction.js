@@ -132,6 +132,7 @@ class GraphMouseHandler {
                     this.graphView.moveNode(this.selection.selected.nodes[nodeIndex],
                                             newPosition);
                 }
+                this.graphView.requestCanvasRefresh(CanvasType.GENERAL)
             }
             break;
         }
