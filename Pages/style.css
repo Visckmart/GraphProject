@@ -23,12 +23,14 @@
 
 :root {
   --interfaceMargin: 10pt;
-  --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 15pt);
+  --navigationBarHeight: 20pt;
+  --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 20pt - var(--navigationBarHeight));
   --menuWidth: 200pt;
 }
 body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
+  background-color: #f8f8f8;
 }
 .modalDiv {
   top: 0;
@@ -89,6 +91,7 @@ button:active {
   z-index: 0;
 
   margin: var(--interfaceMargin);
+  margin-top: 5pt;
   margin-bottom: 5pt;
   height: var(--maxHeight);
   max-height: var(--maxHeight);
@@ -238,7 +241,9 @@ button:active {
 .favoriteEmpty {
   background-color: transparent;
 }
-
+footer {
+  font-weight: normal;
+}
 footer p, footer a {
   color: #444;
   text-decoration: none;

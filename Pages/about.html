@@ -31,7 +31,7 @@
         body {
             font-family: sans-serif;
             margin: 0 18pt;
-            max-width: 70em;
+            /*max-width: 70em;*/
             background-color: #f8f8f8;
         }
         #bg {
@@ -167,7 +167,7 @@
 
 
         .aboutSection {
-            padding: 10pt 50pt;
+            padding: 10pt 70pt;
         }
         .aboutSection h2 {
             margin-top: 0;
@@ -199,12 +199,21 @@
             padding-left: 3em;
             margin-top: 0;
         }
+        .aboutSection > ul > li > ul + ul {
+            margin-top: 8pt;
+        }
         .aboutSection > ul > li ul {
-            padding-left: 2em;
+            padding-left: 15pt;
             /*margin-top: 4pt;*/
+            column-rule: 2pt dotted #aaa;
+        }
+        .aboutSection > ul > li > ul > li:not(:first-child) {
+            margin-left: 20pt;
         }
         .aboutSection > ul > li li {
             padding-top: 4pt;
+            /*background: red;*/
+            break-inside: avoid-column;
         }
         .aboutSection > ul > li > ul > li {
             padding-top: 8pt;
@@ -220,7 +229,7 @@
             font-size: 13pt;
             line-height: 1.3;
             text-align: justify;
-            max-width: 45em;
+            max-width: 55em;
         }
         .aboutSection p code {
             /*font-size: 13pt;*/
@@ -411,7 +420,7 @@
                     categorias, como grafos com peso nas arestas, arestas
                     direcionadas, e etc.
                 </p>
-                <ul style="padding-left: 15pt">
+                <ul>
 <!--                    <li>Criar nós e arestas.</li>-->
 <!--                    <li>Editar nós e arestas.</li>-->
 <!--                    <li>Mover nós.</li>-->
@@ -425,6 +434,8 @@
                             <li>Arestas com valor associado (peso, custo, etc.) e sem valor associado</li>
                         </ul>
                     </li>
+                </ul>
+                <ul style="columns: 2; max-width: 25em;">
                     <li>
                         Ações em Nós
                         <ul>
@@ -442,17 +453,17 @@
                             <li>Apagar</li>
                         </ul>
                     </li>
+                </ul>
+            <ul>
                     <li>
                         Ferramentas Auxiliares
-                        <p style="font-size: smaller"><i>As ações ocorrem sobre o grafo como um todo ou sobre os elementos selecionados, se houver algum.</i></p>
+<!--                        <p style="font-size: smaller"><i>As ações ocorrem sobre o grafo como um todo ou sobre os elementos selecionados, se houver algum.</i></p>-->
                         <ul>
                             <li>Alinhar nós</li>
-                            <li>Conectar nós</li>
-                            <li>Desconectar nós</li>
-                            <li>Remover nós e arestas</li>
+                            <li>Conectar desconectar nós</li>
+                            <li>Desfazer e refazer ações</li>
                         </ul>
                     </li>
-                    <li>Desfazer e refazer ações</li>
                 </ul>
             </li>
             <li>
@@ -473,7 +484,7 @@
                     Isso permite que colegas de turma discutam com facilidade
                     uma execução em algoritmos criados por eles próprios.
                 </p>
-                <ul style="padding-left: 15pt">
+                <ul style="padding-left: 15pt; columns: 2; max-width: 25em;">
                     <li>
                         Exportação
                         <ul>
@@ -562,14 +573,17 @@
             </li>
         </ul>
     </div>
-    <div class="aboutSection">
-        <h2>Direitos Autorais e Código Fonte</h2>
+    <div class="aboutSection" id="DireitosAutoraisECodigoFonte">
+        <h2><a href="#DireitosAutoraisECodigoFonte">Direitos Autorais e Código Fonte</a></h2>
         <ul>
             <li>
                 <h3>Código Fonte</h3>
                 <p>
                     Todo o código fonte da ferramenta está disponível no
-                    repositório e qualquer um pode explorá-lo.<br>
+                    <a href="https://github.com/Visckmart/GraphProject">repositório público</a>
+                    <a href="https://github.com/Visckmart/GraphProject" target="_blank" rel=noopener><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" /></a>
+                    e qualquer um pode explorá-lo.
+                    <br>
                     Nossa proposta é que os alunos que usam a ferramenta possam
                     ver como ela foi feita. Isso vai desde a leitura do código
                     até a exploração do histórico de alterações, possibilitando
