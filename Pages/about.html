@@ -26,7 +26,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sobre Nós</title>
+    <title>GraphTeacher – Sobre Nós</title>
     <style>
         body {
             font-family: sans-serif;
@@ -284,9 +284,31 @@
             }
         }
     </style>
+    <style>
+        #navigationBar {
+            /*background: #eee;*/
+            padding: var(--interfaceMargin);
+            padding-bottom: 0;
+            padding-top: 8pt;
+            /*margin-bottom: var(--interfaceMargin);*/
+            height: var(--navigationBarHeight);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #navigationBar > #title {
+            margin: 0 -8pt;
+        }
+        #navigationBar a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
 </head>
-
 <body>
+<div id="navigationBar">
+    <h2 id="title"><a href="./drawing.html">GraphTeacher</a></h2>
+</div>
 <div id="bg">
     <h1 style="text-align: center"><a href="">Sobre o Projeto</a></h1>
     <p class="subhead">

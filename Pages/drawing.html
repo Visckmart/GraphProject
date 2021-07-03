@@ -20,14 +20,13 @@
   ~ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
   ~ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <!--	<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">-->
 <!--	<meta content="ISO-8859-1" http-equiv="encoding">-->
     <meta charset="UTF-8">
-    <title>GraphProject</title>
+    <title>GraphTeacher</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tool_tray.css">
     <meta name="viewport" content="height=device-height, initial-scale=1">
@@ -48,8 +47,32 @@
     <script type="module" src="../Drawing/Interaction.js" crossorigin="anonymous"></script>
     <script type="module" src="../Drawing/GraphView.js" crossorigin="anonymous"></script>
     <script type="module" src="../Drawing/Initialization.js" crossorigin="anonymous"></script>
+
+    <style>
+        #navigationBar {
+            /*background: #eee;*/
+            padding: var(--interfaceMargin);
+            padding-bottom: 0;
+            padding-top: 8pt;
+            /*margin-bottom: var(--interfaceMargin);*/
+            height: var(--navigationBarHeight);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #navigationBar > #title {
+            margin: 0 0;
+        }
+        #navigationBar a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
 </head>
 <body>
+<div id="navigationBar">
+    <h2 id="title"><a href="./drawing.html">GraphTeacher</a></h2>
+</div>
 <div id="interfaceContainer">
     <div id="canvasArea">
         <canvas id="mainCanvas"></canvas>
@@ -150,7 +173,7 @@
 
         <!--    Controle de Algoritmos  -->
         <div id="algorithmController" style="display: none">
-            <a href="#" id="exit_button">
+            <a id="exit_button">
                 <img src="../assets/img/exit.svg" width="20" height="20" alt="exit" loading=lazy />
             </a>
             <div id="tutorialContainer">
