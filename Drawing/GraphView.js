@@ -634,6 +634,7 @@ export class GraphView {
     }
 
     drawCurrentMaxFPS(ctx, fps, name = "", vertOffset = 0) {
+        return;
         ctx.save()
         ctx.fillStyle = "#AAA8";
         ctx.font = "12pt Arial";
