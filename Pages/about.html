@@ -26,271 +26,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="about.css">
     <title>GraphTeacher – Sobre Nós</title>
     <style>
-        body {
-            font-family: sans-serif;
-            margin: 0 18pt;
-            /*max-width: 70em;*/
-            background-color: #f8f8f8;
-        }
-        #bg {
-            padding-top:20pt;
-            padding-bottom: 40pt;
-        }
-        h1 {
-            font-size: 30pt;
-            margin-bottom: 10pt;
-            margin-top: 0;
-        }
-        h1 a {
-            text-decoration: none;
-            color: inherit;
-        }
-        .subhead {
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 8pt;
-            font-size: 17pt;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-        }
 
-
-        .history {
-            display: flex;
-            flex-direction: column;
-            /*margin-bottom: 0pt;*/
-            /*align-items: flex-end;*/
-        }
-        .history p, .history a {
-            font-size: 14pt;
-            max-width: 42em;
-            margin-top: 0;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 5pt;
-            text-align: justify;
-            line-height: 1.3;
-            letter-spacing: 0.25pt;
-            color: #333;
-        }
-
-
-        #authorsTitle {
-            display: none;
-        }
-        #sidebyside {
-            margin: 5pt;
-            display: flex;
-            flex-direction: row;
-            /*width: calc(100vw - 10pt);*/
-            justify-content: space-evenly;
-        }
-        #sidebyside > div {
-            max-width: 40%;
-            width: 25em;
-        }
-        .authorSection {
-            scroll-snap-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #fff;
-            /*border: 2pt #FFE0F3 solid;*/
-            border-radius: 20pt;
-            box-shadow: 0px 0px 20px 0px #eee;
-            padding: 25pt;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 20pt;
-            margin-bottom: 20pt;
-        }
-        .authorSection > * {
-            margin: 15pt 5pt;
-        }
-        .authorSection .contact {
-            margin-top: auto;
-            padding-top: 10pt;
-            font-weight: bold;
-            font-size: 13pt;
-            /*color: #777;*/
-            margin-bottom: 0;
-        }
-        .authorSection .contact a {
-            text-decoration: none;
-            color: #777;
-            transition: 0.2s;
-        }
-        .authorSection:hover, .authorSection:focus-within {
-            /*transform: translateY(-10pt);*/
-            /*background: red;*/
-            transform: scale(1.025);
-            box-shadow: 0px 0px 35px 5px #eee;
-        }
-        .authorSection:hover .contact a, .authorSection .contact a:focus {
-            color: revert;
-        }
-        .authorSection > img {
-            width: 100pt;
-            height: 100pt;
-            background-color: #eee;
-            border-radius: 50%;
-            margin-top: 0;
-        }
-        .name, .name h3, .subtitle, .subtitle p {
-            margin: 0;
-        }
-        .name {
-            font-size: 15pt;
-            letter-spacing: 0.25pt;
-            margin-bottom: 4pt;
-        }
-        .subtitle {
-            font-size: 13pt;
-            color: #777;
-        }
-        .description {
-            font-size: 13.5pt;
-            line-height: 1.3;
-            color: #333;
-            margin-bottom: 0;
-        }
-        .description p {
-            font-style: italic;
-            margin: 0;
-            margin-bottom: 8pt;
-        }
-        .description p:last-of-type {
-            margin-bottom: 0
-        }
-
-
-        .aboutSection {
-            padding: 10pt 70pt;
-        }
-        .aboutSection h2 {
-            margin-top: 0;
-            font-size: 25pt;
-            margin-bottom: 0;
-            width: fit-content;
-        }
-        .aboutSection h2:hover {
-            background-color: lightskyblue;
-            /*cursor: pointer;*/
-        }
-        .aboutSection h2 a {
-            text-decoration: none;
-            color: inherit;
-        }
-        .aboutSection h2 a:hover::before {
-            content:"#";
-            display: inline-block;
-            color: gray;
-            margin-left: -15pt;
-            font-weight: normal;
-            float:left;
-        }
-        .aboutSection > ul > li {
-            padding-top: 20pt;
-        }
-        .aboutSection > ul {
-            list-style-type: none;
-            padding-left: 3em;
-            margin-top: 0;
-        }
-        .aboutSection > ul > li > ul + ul {
-            margin-top: 8pt;
-        }
-        .aboutSection > ul > li ul {
-            padding-left: 15pt;
-            /*margin-top: 4pt;*/
-            column-rule: 2pt dotted #aaa;
-        }
-        .aboutSection > ul > li > ul > li:not(:first-child) {
-            margin-left: 20pt;
-        }
-        .aboutSection > ul > li li {
-            padding-top: 4pt;
-            /*background: red;*/
-            break-inside: avoid-column;
-        }
-        .aboutSection > ul > li > ul > li {
-            padding-top: 8pt;
-        }
-        .aboutSection h3, .aboutSection p {
-            margin: 0;
-        }
-        .aboutSection h3 {
-            font-size: 15.5pt;
-        }
-        .aboutSection p {
-            color: #333;
-            font-size: 13pt;
-            line-height: 1.3;
-            text-align: justify;
-            max-width: 55em;
-        }
-        .aboutSection p code {
-            /*font-size: 13pt;*/
-            font-family: sans-serif;
-            font-style: italic;
-            /*background-color: red;*/
-        }
-        .aboutSection p+p {
-            padding-top: 5pt;
-        }
-
-        pre {
-            max-width: fit-content;
-            border: 1pt solid #bbb;
-            border-radius: 4pt;
-            padding: 8pt;
-            padding-right: 40pt;
-            background-color: #eaeaea;
-        }
-        @media only screen and (max-width: 800px) {
-            body {
-                margin: 0 18pt;
-            }
-            #authorsTitle {
-                padding: 10pt 18pt;
-                padding-bottom: 0;
-                margin-top: 0;
-                font-size: 25pt;
-                margin-bottom: 0;
-                display: initial;
-            }
-            #sidebyside {
-                margin: 5pt;
-                display: flex;
-                flex-direction: column;
-                /*width: calc(100vw - 10pt);*/
-                justify-content: space-evenly;
-            }
-            #sidebyside > div {
-                max-width: 80%;
-            }
-            .authorSection {
-                margin-top: 8pt;
-                margin-bottom: 8pt;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            .authorSection > *:not(img, .name, .subtitle, .contact) {
-                display: none;
-            }
-
-            .authorSection:hover > *:not(img, .name, .subtitle, .contact) {
-                display: initial;
-            }
-            .aboutSection {
-                padding: 10pt 15pt;
-            }
-            .aboutSection ul {
-                padding-left: 1em;
-            }
-        }
     </style>
     <style>
         #navigationBar {
@@ -334,74 +73,72 @@
             e se tornou uma ferramenta útil para o aprendizado de outros estudantes.
         </p>
     </div>
-    <h2 id="authorsTitle">Autores</h2>
-    <div id="sidebyside">
-        <div class="authorSection">
-            <img src="../assets/img/thiago.jpeg" class="profilePicture" alt="Foto do Thiago Lamenza"/>
-            <div class="name"><h3>Thiago Lamenza</h3></div>
-            <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
-            <div class="description">
-                <p>
-                    Sempre tive muita afinidade por computadores e vontade de entender como eles
-                    funcionavam então a escolha de computação foi natural para mim.
-                </p>
-                <p>
-                    Diversas áreas da computação me atraem, as principais são:
-                    Desenvolvimento web, inteligência artificial e ciência de dados.
-                </p>
-                <p>
-                    A faculdade me deu o insumo necessário para aprender sobre computação e
-                    a oportunidade para colocar meus conhecimentos em prática.
-                </p>
+    <div style="margin-left:auto;margin-right:auto;max-width:65em;">
+        <h2 id="authorsTitle">Autores</h2>
+        <div id="sidebyside">
+            <div class="authorSection">
+                <img src="../assets/img/thiago.jpeg" class="profilePicture" alt="Foto do Thiago Lamenza"/>
+                <div class="name"><h3>Thiago Lamenza</h3></div>
+                <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+                <div class="description">
+                    <p>
+                        Sempre tive muita afinidade por computadores e vontade de entender como eles
+                        funcionavam então a escolha de computação foi natural para mim.
+                    </p>
+                    <p>
+                        Diversas áreas da computação me atraem, as principais são:
+                        Desenvolvimento web, inteligência artificial e ciência de dados.
+                    </p>
+                    <p>
+                        A faculdade me deu o insumo necessário para aprender sobre computação e
+                        a oportunidade para colocar meus conhecimentos em prática.
+                    </p>
+                </div>
+                <div class="contact"><a href="a">thiago.lamenza@aluno.puc-rio.br</a></div>
             </div>
-            <div class="contact"><a href="a">thiago.lamenza@aluno.puc-rio.br</a></div>
-        </div>
 
-        <div class="authorSection">
-            <img src="../assets/img/victor_foto.jpeg" class="profilePicture" alt="Foto do Victor Martins"/>
-            <div class="name"><h3>Victor Martins</h3></div>
-            <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
-            <div class="description">
-                <p>
-                    Sou apaixonado por computação desde que eu era bem novo.
-                    Mesmo entendendo pouco do que eu procurava, a vontade de entender estava lá.
-                </p>
-                <p>
-                    Tenho interesse em muitas áreas distintas, algumas delas são:
-                    linguagens de programação, desenvolvimento de aplicativos móveis, privacidade e acessibilidade.
-                </p>
-                <p>
-                    Desde que entrei na faculdade, recebi um suporte incrível dos meus professores
-                    e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
-                </p>
+            <div class="authorSection">
+                <img src="../assets/img/victor_foto.jpeg" class="profilePicture" alt="Foto do Victor Martins"/>
+                <div class="name"><h3>Victor Martins</h3></div>
+                <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+                <div class="description">
+                    <p>
+                        Sou apaixonado por computação desde que eu era bem novo.
+                        Mesmo entendendo pouco do que eu procurava, a vontade de entender estava lá.
+                    </p>
+                    <p>
+                        Tenho interesse em muitas áreas distintas, algumas delas são:
+                        linguagens de programação, desenvolvimento de aplicativos móveis, privacidade e acessibilidade.
+                    </p>
+                    <p>
+                        Desde que entrei na faculdade, recebi um suporte incrível dos meus professores
+                        e das minhas professoras e tenho certeza que é isso o que eu amo estudar.
+                    </p>
+                </div>
+                <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br?subject=Graph Project">victormartins@aluno.puc-rio.br</a></div>
             </div>
-            <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br?subject=Graph Project">victormartins@aluno.puc-rio.br</a></div>
         </div>
-    </div>
-    <div class="aboutSection" id="História">
-        <h2><a href="#História">História</a></h2>
-        <ul>
-            <li>
-                <p style="margin-top: -10pt; margin-bottom: 8pt">
-                    <span style="font-size: 14pt">
+        <div class="aboutSection" id="História">
+            <h2 class="aboutTitle"><a href="#História">História</a></h2>
+            <div class="aboutContent">
+                <p class="topic-content" style="font-size: 14pt">
                     Enquanto dois estudantes de computação passavam por disciplinas que
                     exploravam o conceito de grafos, eles sentiram a
                     falta de uma ferramenta didática para entender melhor o que estava
                         sendo ensinado, e então resolveram criar uma do zero.
-                    </span>
                 </p>
-                <p>
+                <p class="topic-content">
                     Durante as férias o projeto começou a ser discutido e
                     implementado. Conversamos sobre o foco principal e os
                     recursos essenciais, e discutimos sobre os primeiros passos
                     da implementação.
                 </p>
-                <p>
+                <p class="topic-content">
                     Com o passar das semanas fomos continuamente adicionando e
                     aprimorando a ferramenta de acordo com o que fomos conversando
                     ao longo do tempo.
                 </p>
-                <p>
+                <p class="topic-content">
                     Ainda que seja um projeto no qual temos total liberdade para
                     tomar decisões, inclusive com relação ao tempo que dedicamos
                     a ele, escolhemos como uma meta ideal termos os recursos
@@ -410,23 +147,19 @@
                     Conseguimos fazer isso, e continuamos aprimorando a ferramenta
                     e desenvolvendo novos recursos no tempo livre que temos.
                 </p>
-            </li>
-        </ul>
-    </div>
-    <div class="aboutSection" id="Fundamentos">
-        <h2><a href="#Fundamentos">Fundamentos</a></h2>
-        <ul>
-           <li>
-                <h3 id="grafo">O que são grafos?</h3>
-                <p>
+            </div>
+        </div>
+        <div class="aboutSection" id="Fundamentos">
+            <h2 class="aboutTitle"><a href="#Fundamentos">Fundamentos</a></h2>
+            <div class="aboutContent">
+                <h3 class="topic-title">O que são grafos?</h3>
+                <p class="topic-content">
                     Grafos são estruturas matemáticas definidas por um conjunto
                     de objetos e pelas relações entre eles. Os objetos são
                     usualmente chamados de nós, e as relações chamadas de arestas.
                 </p>
-            </li>
-            <li>
-                <h3>Para que servem os grafos na prática?</h3>
-                <p>
+                <h3 class="topic-title">Para que servem os grafos na prática?</h3>
+                <p class="topic-content">
                     Essas estruturas podem representar diversas situações reais,
                     dessa forma algoritmos que atuam sobre grafos podem resultar
                     em soluções para problemas reais. <br>Representar um mapa por
@@ -437,25 +170,18 @@
                     aulas sejam alocadas nas salas ideais considerando o número
                     de alunos, o tamanho de cada sala e outros diversos fatores.
                 </p>
-            </li>
-        </ul>
-    </div>
-    <div class="aboutSection" id="Recursos">
-        <h2><a href="#Recursos">Recursos</a></h2>
-        <ul>
-            <li>
-                <h3>Manipular Grafos</h3>
-                <p>
+            </div>
+        </div>
+        <div class="aboutSection" id="Recursos">
+            <h2 class="aboutTitle"><a href="#Recursos">Recursos</a></h2>
+            <div class="aboutContent">
+                <h3 class="topic-title">Manipular Grafos</h3>
+                <p class="topic-content">
                     É possível criar e manipular livremente grafos de várias
                     categorias, como grafos com peso nas arestas, arestas
                     direcionadas, e etc.
                 </p>
                 <ul>
-<!--                    <li>Criar nós e arestas.</li>-->
-<!--                    <li>Editar nós e arestas.</li>-->
-<!--                    <li>Mover nós.</li>-->
-<!--                    <li>Selecionar nós e arestas.</li>-->
-<!--                    <li>Apagar nós e arestas.</li>-->
                     <li>
                         Tipos de Grafos
                         <ul>
@@ -484,29 +210,25 @@
                         </ul>
                     </li>
                 </ul>
-            <ul>
-                    <li>
-                        Ferramentas Auxiliares
-<!--                        <p style="font-size: smaller"><i>As ações ocorrem sobre o grafo como um todo ou sobre os elementos selecionados, se houver algum.</i></p>-->
-                        <ul>
-                            <li>Alinhar nós</li>
-                            <li>Conectar desconectar nós</li>
-                            <li>Desfazer e refazer ações</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <h3>Executar Algoritmos</h3>
-                <p>
+                <ul>
+                <li>
+                    Ferramentas Auxiliares
+    <!--                        <p style="font-size: smaller"><i>As ações ocorrem sobre o grafo como um todo ou sobre os elementos selecionados, se houver algum.</i></p>-->
+                    <ul>
+                        <li>Alinhar nós</li>
+                        <li>Conectar desconectar nós</li>
+                        <li>Desfazer e refazer ações</li>
+                    </ul>
+                </li>
+            </ul>
+                <h3 class="topic-title">Executar Algoritmos</h3>
+                <p class="topic-content">
                     Além disso os usuários podem
                     executar uma série de algoritmos nos próprios grafos e
                     acompanhar o passo a passo com explicações no processo.
                 </p>
-            </li>
-            <li>
-                <h3>Compartilhar</h3>
-                <p>
+                <h3 class="topic-title">Compartilhar</h3>
+                <p class="topic-content">
                     O compartilhamento de grafos pode ser feito de diversas
                     maneiras, como por meio de uma imagem ou mesmo
                     por meio de um link ou arquivo que pode ser enviado a outra
@@ -534,101 +256,88 @@
                     </li>
                     <li>Favoritos (armazenamento local)</li>
                 </ul>
-            </li>
-
-        </ul>
-    </div>
-    <div class="aboutSection" id="DesafiosEAprendizados">
-        <h2><a href="#DesafiosEAprendizados">Desafios e Aprendizados</a></h2>
-        <ul>
-            <li>
-                <h3>Trabalho em Equipe</h3>
-                <p>
-                    O projeto serviu como um exercício para nossa comunicação e
-                    organização. A divisão das tarefas foi ocorrendo de forma
-                    natural, seguindo nossa empolgação e a dedicação necessária
-                    para cada recurso.
-                    Conversávamos frequentemente para alinhar os
-                    próximos passos e pensar em como resolver problemas complexos
-                    ou que um de nós acreditava ter uma solução mais elegante.
-                </p>
-            </li>
-            <li>
-                <h3>Linguagem e Desenvolvimento</h3>
-                <p>
-                    Decidimos desenvolver tudo a partir do zero e usando apenas
-                    JavaScript puro.
-                    Do desenho dos nós e das arestas, ao tratamento de eventos
-                    do mouse, ao passo a passo dos algoritmos e todo o resto,
-                    tudo foi feito manualmente e cuidadosamente por nós dois,
-                    sem dependências externas.
-                    Fizemos uso de alguns recursos mais avançados da
-                    linguagem como <code>regular expressions</code> e
-                    <code>promises</code> nos momentos apropriados.<br>
-                    Durante o desenvolvimento nós buscamos boas práticas,
-                    exemplos de implementação de algoritmos e soluções para
-                    problemas encontrados. Partes (pequenas)
-                    dos resultados eventualmente foram usadas no projeto.
-                    Nenhuma porção significativa de código foi feita por alguém
-                    além de nós dois.<br>
-                    Para a publicação nós utilizamos dependências externas afim
-                    de estender a compatibilidade do nosso código. Além disso,
-                    para a interface utilizamos ícones do Bootstrap Icons.
-                </p>
-            </li>
-            <li>
-                <h3>Organização</h3>
-                <p>
-                    O código-fonte do projeto é bastante modularizado.
-                    Documentamos diversas partes do código, principalmente
-                    as mais relevantes de cada um dos módulos. Além disso,
-                    procuramos usar <code>design patterns</code> que
-                    melhor se adequam às necessidades, como herança que
-                    aprendemos em aula, e <code>mixin</code> e <code>delegate</code>, que aprendemos
-                    por conta própria.
-                </p>
-            </li>
-            <li>
-                <h3>Versionamento</h3>
-                <p>
-                    Nós já conhecíamos e sabíamos usar o Git, mas aprofundamos
-                    nosso conhecimento durante o desenvolvimento. Isso se deu
-                    nos momentos em que recursos como <code>branches</code> e <code>stashes</code> se
-                    encaixavam bem com as nossas necessidades, e também nos
-                    momentos em que algo inesperado acontecia e tínhamos a
-                    liberdade cometer erros ao tentar consertar, afinal aprender
-                    mais sobre desenvolvimento era um dos principais objetivos
-                    do projeto.
-                </p>
-            </li>
-        </ul>
+            </div>
+        </div>
+        <div class="aboutSection" id="DesafiosEAprendizados">
+        <h2 class="aboutTitle"><a href="#DesafiosEAprendizados">Desafios e Aprendizados</a></h2>
+        <div class="aboutContent">
+            <h3 class="topic-title">Trabalho em Equipe</h3>
+            <p class="topic-content">
+                O projeto serviu como um exercício para nossa comunicação e
+                organização. A divisão das tarefas foi ocorrendo de forma
+                natural, seguindo nossa empolgação e a dedicação necessária
+                para cada recurso.
+                Conversávamos frequentemente para alinhar os
+                próximos passos e pensar em como resolver problemas complexos
+                ou que um de nós acreditava ter uma solução mais elegante.
+            </p>
+            <h3 class="topic-title">Linguagem e Desenvolvimento</h3>
+            <p class="topic-content">
+                Decidimos desenvolver tudo a partir do zero e usando apenas
+                JavaScript puro.
+                Do desenho dos nós e das arestas, ao tratamento de eventos
+                do mouse, ao passo a passo dos algoritmos e todo o resto,
+                tudo foi feito manualmente e cuidadosamente por nós dois,
+                sem dependências externas.
+                Fizemos uso de alguns recursos mais avançados da
+                linguagem como <code>regular expressions</code> e
+                <code>promises</code> nos momentos apropriados.<br>
+                Durante o desenvolvimento nós buscamos boas práticas,
+                exemplos de implementação de algoritmos e soluções para
+                problemas encontrados. Partes (pequenas)
+                dos resultados eventualmente foram usadas no projeto.
+                Nenhuma porção significativa de código foi feita por alguém
+                além de nós dois.<br>
+                Para a publicação nós utilizamos dependências externas afim
+                de estender a compatibilidade do nosso código. Além disso,
+                para a interface utilizamos ícones do Bootstrap Icons.
+            </p>
+            <h3 class="topic-title">Organização</h3>
+            <p class="topic-content">
+                O código-fonte do projeto é bastante modularizado.
+                Documentamos diversas partes do código, principalmente
+                as mais relevantes de cada um dos módulos. Além disso,
+                procuramos usar <code>design patterns</code> que
+                melhor se adequam às necessidades, como herança que
+                aprendemos em aula, e <code>mixin</code> e <code>delegate</code>, que aprendemos
+                por conta própria.
+            </p>
+            <h3 class="topic-title">Versionamento</h3>
+            <p class="topic-content">
+                Nós já conhecíamos e sabíamos usar o Git, mas aprofundamos
+                nosso conhecimento durante o desenvolvimento. Isso se deu
+                nos momentos em que recursos como <code>branches</code> e <code>stashes</code> se
+                encaixavam bem com as nossas necessidades, e também nos
+                momentos em que algo inesperado acontecia e tínhamos a
+                liberdade cometer erros ao tentar consertar, afinal aprender
+                mais sobre desenvolvimento era um dos principais objetivos
+                do projeto.
+            </p>
+        </div>
     </div>
     <div class="aboutSection" id="DireitosAutoraisECodigoFonte">
-        <h2><a href="#DireitosAutoraisECodigoFonte">Direitos Autorais e Código Fonte</a></h2>
-        <ul>
-            <li>
-                <h3>Código Fonte</h3>
-                <p>
-                    Todo o código fonte da ferramenta está disponível no
-                    <a href="https://github.com/Visckmart/GraphProject">repositório público</a>
-                    <a href="https://github.com/Visckmart/GraphProject" target="_blank" rel=noopener><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" /></a>
-                    e qualquer um pode explorá-lo.
-                    <br>
-                    Nossa proposta é que os alunos que usam a ferramenta possam
-                    ver como ela foi feita. Isso vai desde a leitura do código
-                    até a exploração do histórico de alterações, possibilitando
-                    que vejam na prática como o projeto foi sendo construído
-                    aos poucos e como é natural que partes do código sejam
-                    reescritas (refatoradas) durante o desenvolvimento.
-                </p>
-            </li>
-            <li>
-                <h3>Licença</h3>
-                <p>
-                    O GraphTeacher utiliza a licença MIT, ela está presente no cabeçalho
-                    dos arquivos do projeto.<br>
-                </p>
-                    <pre>MIT License
+        <h2 class="aboutTitle"><a href="#DireitosAutoraisECodigoFonte">Direitos Autorais e Código Fonte</a></h2>
+        <div class="aboutContent">
+            <h3 class="topic-title">Código Fonte</h3>
+            <p class="topic-content">
+                Todo o código fonte da ferramenta está disponível no
+                <a href="https://github.com/Visckmart/GraphProject">repositório público</a>
+                <a href="https://github.com/Visckmart/GraphProject" target="_blank" rel=noopener><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" /></a>
+                e qualquer um pode explorá-lo.
+                <br>
+                Nossa proposta é que os alunos que usam a ferramenta possam
+                ver como ela foi feita. Isso vai desde a leitura do código
+                até a exploração do histórico de alterações, possibilitando
+                que vejam na prática como o projeto foi sendo construído
+                aos poucos e como é natural que partes do código sejam
+                reescritas (refatoradas) durante o desenvolvimento.
+            </p>
+            <h3 class="topic-title">Licença</h3>
+            <p class="topic-content">
+                O GraphTeacher utiliza a licença MIT, ela está presente no cabeçalho
+                dos arquivos do projeto.<br>
+            </p>
+                <pre>MIT License
 
 Copyright (c) 2021 Thiago Lamenza e Victor Martins
 
@@ -648,11 +357,10 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-            </pre>
-            </li>
-        </ul>
+                </pre>
+        </div>
     </div>
-
+    </div>
     <script>
         // document.body.onscroll = function(a) {
         //     // console.log(!!( a.offsetWidth || a.offsetHeight || a.getClientRects().length ));
