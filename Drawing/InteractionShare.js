@@ -30,6 +30,9 @@ import { loadCategoriesFromStorage } from "./Interaction.js";
 export function exportAsFile(graph) {
     let filename = prompt("Nome do arquivo:",
                           `Grafo ${getFormattedTime()}`)
+    if (filename == null) {
+        return;
+    }
     let content = graph.serialize();
     let encodedContent = 'data:text/plain;charset=utf-8,'
                          + encodeURIComponent(content);
