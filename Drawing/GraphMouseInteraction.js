@@ -58,6 +58,16 @@ class GraphMouseHandler {
         }
     }
 
+    canSelectItems() {
+        return this.clickedNode != null
+               && this.selection.isSelected(this.clickedNode) == false
+    }
+
+    canDeleteItems() {
+        return this.selection.shouldDrawSelection == false
+               && this.selection.isQuickSelection == false;
+    }
+
     // Mouse DOWN event
     justClearedSelection = false;
     currentMousePos = null;
@@ -65,33 +75,37 @@ class GraphMouseHandler {
         // Eventos de mouse desabilitados
         if (!this._enabled) { return; }
 
+        // Atualizando posição do mouse
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         this.refreshCursorStyle();
 
-        // Registrando posição do mouseDown
-        this.clickPosition = pos;
-        this.justClearedSelection = false;
+        // Se o botão esquerdo foi o apertado
+        if (isLeftClick(mouseEvent)) {
+            // Registrando posição do mouseDown
+            this.clickPosition = pos;
+            this.justClearedSelection = false;
 
-        // console.log(this.clickedEdge)
-        // console.log(this.graphView.primaryTool, this.clickedNode, this.clickedEdge)
-
-        // Se o botão direito foi o levantado
-        if (isRightClick(mouseEvent) && !this.selection.shouldDrawSelection) {
-            if (this.graphView.primaryTool == Tool.MOVE) {
-                // Tente remover um nó, se o mouse estiver sobre algum
-                this.graphView.removeNodeAt(pos);
-            } else if (this.graphView.primaryTool == Tool.CONNECT) {
-                // Tente remover uma arestas, se o mouse estiver sobre alguma
-                this.graphView.removeEdgeAt(pos);
+            // Se puder selecionar
+            if (this.canSelectItems()) {
+                if (this.selection.additionOnlyMode == false) {
+                    this.selection.clear();
+                }
+                this.selection.quickSelect(this.clickedNode);
             }
         }
-        if (isLeftClick(mouseEvent) && this.clickedNode != null
-            && this.selection.isSelected(this.clickedNode) == false) {
-            if (this.selection.additionOnlyMode == false) {
-                this.selection.clear();
+        // Se o botão direito foi o apertado
+        else if (isRightClick(mouseEvent)) {
+            // Se puder remover
+            if (this.canDeleteItems()) {
+                if (this.graphView.primaryTool == Tool.MOVE) {
+                    // Tente remover um nó, se o mouse estiver sobre algum
+                    this.graphView.removeNodeAt(pos);
+                } else if (this.graphView.primaryTool == Tool.CONNECT) {
+                    // Tente remover uma arestas, se o mouse estiver sobre alguma
+                    this.graphView.removeEdgeAt(pos);
+                }
             }
-            this.selection.quickSelect(this.clickedNode);
         }
         if (this.selection.isEmpty == false) {
             this.justClearedSelection = true;
@@ -115,7 +129,7 @@ class GraphMouseHandler {
     }
 
     // Mouse DRAG event
-    mouseDragEvent = (mouseEvent) => {
+    mouseMoveEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
 

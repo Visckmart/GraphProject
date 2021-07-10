@@ -31,7 +31,7 @@ function simulateClick(x, y, graphView, button = 0) {
     )
 }
 function simulateHover(x, y, graphView) {
-    graphView.mouseHandler.mouseDragEvent(
+    graphView.mouseHandler.mouseMoveEvent(
         {clientX: x, clientY: y})
 }
 function simulateClickAndDrag(clientX, clientY, endX, endY, graphView, time = 1) {
@@ -52,7 +52,7 @@ function simulateClickAndDrag(clientX, clientY, endX, endY, graphView, time = 1)
                 clientY: clientY + distY / steps * i,
                 button: 0
             }
-            graphView.mouseHandler.mouseDragEvent(dragEvent)
+            graphView.mouseHandler.mouseMoveEvent(dragEvent)
         }, 22.5*i);
     }
     setTimeout(() => {

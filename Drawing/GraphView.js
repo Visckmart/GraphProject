@@ -95,7 +95,7 @@ export class GraphView {
         if (interactive) {
             // Mouse
             canvas.onmousedown = this.mouseHandler.mouseDownEvent;
-            canvas.onmousemove = this.mouseHandler.mouseDragEvent;
+            canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
             canvas.onmouseup = this.mouseHandler.mouseUpEvent;
             canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
 
@@ -800,6 +800,7 @@ export class GraphView {
 
         // Desenhar aresta temporária
         if (this.mouseHandler.shouldDrawTemporaryEdge) {
+            console.log(1)
             let startPos = this.mouseHandler.clickedNode?.pos;
             let endPos   = this.mouseHandler.currentMousePos;
             if (startPos == null || endPos == null) {
