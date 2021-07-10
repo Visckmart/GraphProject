@@ -162,7 +162,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
             node.highlights.clear()
             edge.highlights.setTo(HighlightType.DARKEN)
 
-            let edgeValue = Number.parseFloat(edge.assignedValue)
+            let edgeValue = Number.parseFloat(edge.assignedValue) || 1
             let newDistance = currentNode.distance + edgeValue;
 
             controller.addStep(graph, `Analisando a aresta de peso ${edgeValue}`, 'selectEdge')
