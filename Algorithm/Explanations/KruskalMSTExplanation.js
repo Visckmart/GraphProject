@@ -43,7 +43,7 @@ export default {
 
     conclusion: (onlyOneTree) => {
         let end = onlyOneTree
-                ? "uma flortesta com uma única árvore geradora mínima."
+                ? "uma floresta com uma única árvore geradora mínima."
                 : "uma floresta geradora mínima, ou seja, um conjunto de árvores geradoras mínimas."
 
         return "Todas as arestas foram observadas. O resultado é " + end
