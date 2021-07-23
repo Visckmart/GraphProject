@@ -39,6 +39,35 @@ if (!isMobile) {
     let exportImageButton = document.getElementById("exportImage");
     exportImageButton.onclick = () => exportViewAsImage(g);
 
+    let tutorialOverlay = document.getElementById("tutorial-overlay");
+    console.log(window.localStorage.getItem("tutorial-quit"))
+    if (window.localStorage.getItem("tutorial-quit") != "true") {
+        tutorialOverlay.style.visibility = "visible";
+    }
+    let quitTutorialButton = document.getElementById("quit-tutorial");
+    quitTutorialButton.onclick = () => {
+        tutorialOverlay.style.display = "none";
+        window.localStorage.setItem("tutorial-quit", true);
+    }
+
+    let undoButton = document.getElementById("undo-button");
+    undoButton.onclick = () => {
+        let step = g.history.goToStep(-1);
+        if (step) {
+            g.structure = step;
+            g.refreshGraph();
+        }
+    }
+    let redoButton = document.getElementById("redo-button");
+    redoButton.onclick = () => {
+        let step = g.history.goToStep(1);
+        if (step) {
+            g.structure = step;
+            g.refreshGraph();
+        }
+    }
+
+
     window.addEventListener("load", deserializeURL.bind(null, g));
     window.onpopstate = (event) => {
         if (event.state) { deserializeURL(g) }

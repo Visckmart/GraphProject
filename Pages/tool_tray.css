@@ -22,7 +22,7 @@
  */
 
 /* Gaveta de ferramentas */
-.toolTray {
+#tray {
   color: white;
   position: absolute;
   left: 0;

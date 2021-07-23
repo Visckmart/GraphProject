@@ -356,7 +356,9 @@ class AlgorithmController {
         this.graphView.mouseHandler.disable()
         this.graphView.keyboardHandler.disable()
 
-        document.querySelector(".toolTray").style.display = 'none'
+        for (let tray of document.getElementsByClassName("toolTray")) {
+            tray.style.display = 'none';
+        }
         this.show()
         this.playing = false
         let inputElements = document.getElementById("menuArea").getElementsByTagName("input")
@@ -389,7 +391,9 @@ class AlgorithmController {
         this.graphView.mouseHandler.enable()
         this.graphView.keyboardHandler.enable()
 
-        document.querySelector(".toolTray").style.display = 'unset'
+        for (let tray of document.getElementsByClassName("toolTray")) {
+            tray.style.display = 'unset';
+        }
 
         for (let [input, originalState] of this?.enabledInputs ?? []) {
             input.disabled = originalState
