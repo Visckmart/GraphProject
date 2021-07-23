@@ -88,9 +88,11 @@ if (!isMobile) {
             exportAsURL(g.structure)
         }
     }
+    let shareModal = document.getElementById("shareModal");
+    shareModal.style.display = "flex";
     let importCancelButton = document.getElementsByClassName("importCancel")[0];
     importCancelButton.onclick = () => {
-        let shareModal = document.getElementById("shareModal")
+        let shareModal = document.getElementById("shareModal");
         shareModal.style.display = "none";
     }
     window.addEventListener("load", deserializeURL.bind(null, g));

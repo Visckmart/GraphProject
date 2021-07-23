@@ -40,14 +40,97 @@ body {
   background: #AAA8;
   z-index: 100;
 }
+.modalDiv p {
+  margin: 0 20pt 50pt 20pt;
+  font-size: 14pt;
+}
 #shareModal {
   display: none;
   flex-direction: column;
   text-align: center;
   align-items: center;
+  justify-content: center;
+}
+#shareModal p {
+  margin-bottom: 20pt;
+}
+#shareModal button {
+  padding: 0 10pt;
+  margin-top: 5pt;
+  height: 35pt;
+  width: 100pt;
+
+  font-size: 15pt;
+  text-align: center;
+}
+#shareModal button:hover {
+  background: #ccc;
 }
 #shareModal h1 {
-  margin-bottom: 50pt;
+  margin-top: 0;
+  margin-bottom: 15pt;
+}
+.modalDiv2 {
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #E5E0FFdd, #FFE0F3dd);
+  z-index: 100;
+  visibility: hidden;
+  margin: auto;
+  /*mix-blend-mode: hard-light;*/
+}
+#tutorial-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /*background: lightblue;*/
+  /*height: 100%;*/
+  margin: 50pt 50pt;
+  height: calc(100% - 100pt);
+}
+#tutorial-wrapper h1 {
+  margin-bottom: 0;
+}
+.instructions-list {
+  margin: 20pt auto;
+}
+.instruction {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10pt;
+  /*margin-left: 25pt;*/
+  /*margin-right: 25pt;*/
+  /*margin: 5% auto;*/
+}
+.instruction svg {
+  width: 50pt;
+  margin-left: 4pt;
+  margin-right: 4pt;
+}
+.instruction p {
+  font-size: 14pt;
+  width: 100%;
+}
+
+#quit-tutorial {
+  height: 30pt;
+  width: 100pt;
+  font-size: 13pt;
+  border: none;
+  background: #1947FF;
+  color: white;
+  font-weight: bold;
+}
+
+#quit-tutorial:hover {
+  background: #0033FF;
+}
+#quit-tutorial:active {
+  background: #240DFF;
 }
 
 button {
@@ -62,16 +145,6 @@ button:hover {
 }
 button:active {
   background: #aaa;
-}
-#shareModal button {
-  padding: 0 10pt;
-  height: 35pt;
-
-  font-size: 18pt;
-  text-align: center;
-}
-#shareModal button:hover {
-  background: #ccc;
 }
 #errorMessage {
   position: absolute;
@@ -104,7 +177,7 @@ button:active {
   position: relative;
   flex: 0 1 auto;
   z-index: 1;
-  height: var(--maxHeight);
+  height: 100%;
   max-height: var(--maxHeight);
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -133,7 +206,40 @@ button:active {
   filter: blur(10pt);
   /*background-color: red;*/
 }
-
+#history-tray {
+  bottom: 0;
+  right: 10pt;
+  position: absolute;
+  padding: 5pt 5pt 5pt 5pt;
+  background-color: rgba(0, 0, 0, 0.65);
+  border-top-left-radius: 8pt;
+  border-top-right-radius: 8pt;
+}
+#history-tray button + button {
+  margin-left: 2.5pt;
+}
+#history-tray button:hover {
+  background: #fff4;
+}
+#history-tray button:active {
+  background: #fff;
+  color: black;
+}
+#history-tray button {
+  font-size: 14pt;
+  /*font-weight: bold;*/
+  /*margin-left: 2.5pt;*/
+  width: 25pt;
+  height: 25pt;
+  border: 1.5pt solid white;
+  background: transparent;
+  color: white;
+}
+#history-tray svg {
+  stroke-width: 30;
+  width: 13pt;
+  height: 13pt;
+}
 /* MENU */
 #menuArea {
   flex: 1 1 auto;
@@ -241,6 +347,10 @@ button:active {
 .favoriteEmpty {
   background-color: transparent;
 }
+#authors {
+
+  white-space: nowrap;
+}
 footer {
   font-weight: normal;
 }
@@ -251,6 +361,7 @@ footer p, footer a {
   margin-right: auto;
   margin-top: 0;
   margin-bottom: 0;
+  text-align: center;
 }
 footer a:hover > #authors {
   background-color: greenyellow;
@@ -264,7 +375,7 @@ footer a:hover > #authors {
     width: 100%;
     max-width: 100%;
   }
-  #tray {
+  .toolTray {
     display: none;
   }
 }

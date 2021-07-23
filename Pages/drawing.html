@@ -27,6 +27,7 @@
 <!--	<meta content="ISO-8859-1" http-equiv="encoding">-->
     <meta charset="UTF-8">
     <title>GraphTeacher</title>
+<!--    <base href="http://graphteacher.inf.puc-rio.br/GraphProject/Pages/" />-->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="tool_tray.css">
     <meta name="viewport" content="height=device-height, initial-scale=1">
@@ -81,11 +82,46 @@
         <div id="shareModal" class="modalDiv">
             <h1>Importar grafo</h1>
             <br>
+            <p>Somente a visualização de grafos está habilitada na versão para celular.</p>
             <button style="margin-left: 0pt; margin-right: 2pt;" class="importFile">Arquivo...</button>
             <br>
             <button style="margin-right: 2pt;" class="importText">Texto...</button>
             <br>
-            <button style="margin-right: 2pt;" class="importCancel">Cancelar</button>
+            <button style="margin-right: 2pt; font-size: 14pt; margin-top: 10pt; height: 30pt;" class="importCancel">Cancelar</button>
+        </div>
+        <div id="tutorial-overlay" class="modalDiv2">
+            <div id="tutorial-wrapper">
+                <h1 style="text-align:center">Tutorial</h1>
+                <div class="instructions-list">
+                    <div class="instruction">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-mouse2" viewBox="0 0 16 16">
+                            <path d="M3 5.188C3 2.341 5.22 0 8 0s5 2.342 5 5.188v5.625C13 13.658 10.78 16 8 16s-5-2.342-5-5.188V5.189zm4.5-4.155C5.541 1.289 4 3.035 4 5.188V5.5h3.5V1.033zm1 0V5.5H12v-.313c0-2.152-1.541-3.898-3.5-4.154zM12 6.5H4v4.313C4 13.145 5.81 15 8 15s4-1.855 4-4.188V6.5z"/>
+                        </svg>
+                        <p>Clique para adicionar um nó.</p>
+                    </div>
+                    <div class="instruction">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-bounding-box-circles" viewBox="0 0 16 16">
+                            <path d="M2 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM0 2a2 2 0 0 1 3.937-.5h8.126A2 2 0 1 1 14.5 3.937v8.126a2 2 0 1 1-2.437 2.437H3.937A2 2 0 1 1 1.5 12.063V3.937A2 2 0 0 1 0 2zm2.5 1.937v8.126c.703.18 1.256.734 1.437 1.437h8.126a2.004 2.004 0 0 1 1.437-1.437V3.937A2.004 2.004 0 0 1 12.063 2.5H3.937A2.004 2.004 0 0 1 2.5 3.937zM14 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM2 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm12 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+                        </svg>
+                        <p>Configure as características do grafo no menu lateral.</p>
+                    </div>
+                    <div class="instruction">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+                        </svg>
+                        <p>Execute algoritmos no grafo construído.</p>
+                    </div>
+                    <div class="instruction">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-box-arrow-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1h-2z"/>
+                            <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 1.707V10.5a.5.5 0 0 1-1 0V1.707L5.354 3.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                        </svg>
+                        <p>Compartilhe os grafos construídos.</p>
+                    </div>
+                </div>
+                <button id="quit-tutorial">Começar</button>
+            </div>
         </div>
         <noscript>
             <div id="errorMessage">
@@ -93,7 +129,10 @@
             </div>
         </noscript>
 
-
+        <div id="history-tray" class="toolTray">
+            <button id="undo-button">↺</button>
+            <button id="redo-button">↻</button>
+        </div>
         <!--    Ferramentas    -->
         <div id="tray" class="toolTray">
             <div class="toolTrayTab">
