@@ -366,6 +366,12 @@ class AlgorithmController {
         for (let [input, ] of this.enabledInputs) {
             input.disabled = true
         }
+        // TODO: Organizar
+        let menuArea = document.getElementById("menuArea");
+        menuArea.style.display = "none";
+        menuArea.style.width = "0";
+        let canvasArea = document.getElementById("canvasArea");
+        canvasArea.style.minWidth = "100%";
         await algorithm(this)
         this.ready()
     }
@@ -394,6 +400,12 @@ class AlgorithmController {
         for (let tray of document.getElementsByClassName("toolTray")) {
             tray.style.display = 'unset';
         }
+        // TODO: Organizar
+        let menuArea = document.getElementById("menuArea");
+        menuArea.style.display = "unset";
+        menuArea.style.width = "unset";
+        let canvasArea = document.getElementById("canvasArea");
+        canvasArea.style.minWidth = "unset";
 
         for (let [input, originalState] of this?.enabledInputs ?? []) {
             input.disabled = originalState
