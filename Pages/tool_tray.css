@@ -30,6 +30,7 @@
   margin: 0 auto;
   transition: bottom ease-in-out 150ms;
   width: 65%;
+  max-width: 750px;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;

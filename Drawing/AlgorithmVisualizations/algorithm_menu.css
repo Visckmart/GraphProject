@@ -27,9 +27,9 @@
     flex-direction: row;
     position: absolute;
     left: 0;
-    top: 10%;
+    top: 3%;
     height: fit-content;
-    max-height: 80%;
+    max-height: 60%;
     z-index: 15;
     transform: translateX(calc(-100% + 8pt - 1px));
     transition: all 0.1s ease-in-out;
