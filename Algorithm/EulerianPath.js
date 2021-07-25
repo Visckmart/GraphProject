@@ -58,11 +58,12 @@ export default async function EulerianPath(controller) {
 
     // Capturando nó inicial
     controller.addRequirement(RequirementType.SELECT_NODE,
-        "Selecione o nó de inicio.",
-        node => {
-            executeEulerianPath(controller, node)
-        })
+        "Selecione um nó inicial.<br><i>Pular esse requisito implica na escolha de um nó" +
+        " arbitrário</i>",
+        node => initialNode = node,
+        true)
     await controller.resolveRequirements()
+    executeEulerianPath(controller, initialNode)
 }
 
 function getConnectedComponent(graph, startNode) {
@@ -98,8 +99,14 @@ function checkNodeDegrees(controller, graph) {
     return oddCount;
 }
 
-function executeEulerianPath(controller, initialNode, finalNode) {
+function executeEulerianPath(controller, initialNode = null, finalNode) {
     let graph = controller.graphView.structure;
+
+    if (!initialNode) {
+        initialNode = graph.nodes().next().value
+        if(!initialNode) return;
+    }
+
 
     let allNodes = Array.from(graph.nodes())
 

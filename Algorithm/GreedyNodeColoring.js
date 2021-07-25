@@ -31,18 +31,24 @@ export default async function GreedyNodeColoring(controller) {
     let initialNode
     /* Esse algoritmo usa nós com assignedValue para visualização */
     controller.graphView.structure = cloneTransformNodes(controller.graphView.structure, NodeColorMixin)
-
     // Capturando nó inicial
     controller.addRequirement(RequirementType.SELECT_NODE,
-                              "Selecione o nó inicial.",
-                              node => {
-                                  executeGreedyNodeColoring(controller, node)
-                              })
+        "Selecione um nó inicial.<br><i>Pular esse requisito implica na escolha de um nó" +
+        " arbitrário</i>",
+        node => initialNode = node,
+        true)
     await controller.resolveRequirements()
+    executeGreedyNodeColoring(controller, initialNode)
 }
 
-function executeGreedyNodeColoring(controller, initialNode) {
+function executeGreedyNodeColoring(controller, initialNode = null) {
     let graph = controller.graphView.structure
+
+    if (!initialNode) {
+        initialNode = graph.nodes().next().value
+        if(!initialNode) return;
+    }
+
 
     for (let node of graph.nodes()) {
         console.log(node)
