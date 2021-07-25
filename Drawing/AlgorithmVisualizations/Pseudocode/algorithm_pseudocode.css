@@ -53,11 +53,14 @@
     color: #333;
 }
 
-#pseudoContainer > pre > span {
+#pseudoContainer > pre > .comment {
     color: #999;
 }
 
-#pseudoContainer > pre > span::before {
+#pseudoContainer > pre > .comment::before {
     color: darkgray;
     content: '# ';
+}
+.keyword {
+    color: hotpink;
 }

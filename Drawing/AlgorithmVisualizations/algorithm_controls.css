@@ -31,6 +31,7 @@
     left: 0;
     right: 0;
     width: 65%;
+    max-width: 500pt;
     /*border-radius: 8pt;*/
     border-top-right-radius: 8pt;
     border-top-left-radius: 8pt;

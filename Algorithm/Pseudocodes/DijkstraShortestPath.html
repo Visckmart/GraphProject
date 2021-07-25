@@ -1,72 +1,67 @@
 <pre label="init">
-<span>Inicializando minimum heap com os</span>
-<span>nós classificados por distância</span>
+<span class="comment">Inicializando minimum heap com os</span>
+<span class="comment">nós classificados por distância</span>
 heap = MinHeap()
 
-<span>Inicializando todos os nós</span>
-for(nó de grafo) {
+<span class="comment">Inicializando todos os nós</span>
+para cada nó do grafo {
     nó.distancia = ∞
-    nó.anterior = null
+    nó.anterior = nenhum
     nó.visitado = false
 
     heap.insert(nó)
 }
-<span>Inicializando nó inicial</span>
+<span class="comment">Inicializando nó inicial</span>
 nóInicial.distancia = 0
 
 
-nóCorrente = null
+nóCorrente = nenhum
 </pre>
 <pre label="startLoop">
-while (nóCorrente !== nóFinal) {
-    <span>Recupera o nó com menor distância do heap</span>
+<span class="keyword">enquanto</span> nóCorrente != nóFinal {
+    <span class="comment">Recupera o nó com menor distância do heap</span>
     nóCorrente = heap.remove()
 
-    <span>Finaliza o loop caso o nó corrente não exista ou</span>
-    <span>tenha distância ∞</span>
-    if(nóCorrente == null || nóCorrente.distancia = ∞) {
-        break
+    <span class="comment">Finaliza o loop caso o nó corrente não exista ou</span>
+    <span class="comment">tenha distância ∞</span>
+    se não houver nóCorrente ou nóCorrente.distancia = ∞ {
+        interromper o loop
     }
     </pre>
     <pre label="selectEdge">
-    for(aresta saindo de nóCorrente) {
-        nóDestino = destino(aresta)
+    para cada aresta saindo do nóCorrente {
+        nóDestino = aresta.destino
 
-        <span>Ignora essa aresta caso leve para o nó anterior</span>
-        if(nóDestino === nóCorrente.anterior) {
-        continue
+        <span class="comment">Ignora essa aresta caso leve para o nó anterior</span>
+        se nóDestino = nóCorrente.anterior {
+            pular essa iteração
         }
 
-        <span>Calculando nova distância hipotética entre</span>
-        <span>nóInicial e o nóDestino</span>
+        <span class="comment">Calculando nova distância hipotética entre</span>
+        <span class="comment">nóInicial e o nóDestino</span>
         novaDistância = nóCorrente.distancia + aresta.peso
         </pre>
         <pre label="newDistance">
-        if(novaDistância < nóDestino.distancia) {
-            <span>Atualizando distância do nó destino já que</span>
-            <span>a distância encontrada é menor</span>
+        se novaDistância < nóDestino.distancia {
+            <span class="comment">Atualizando distância do nó destino já que</span>
+            <span class="comment">a distância encontrada é menor</span>
             nóDestino.distancia = novaDistância
             nóDestino.anterior = nóCorrente
 
             heap.atualizaPeso(nóDestino, nóDestino.distancia)
-        }
-        </pre>
+        }</pre>
         <pre label="noNewDistance">
-        else {
-            <span>Ignorando aresta já que a distância encontrada</span>
-            <span>é maior que a distância atual</span>
+        senão {
+            <span class="comment">Ignorando aresta já que a distância encontrada</span>
+            <span class="comment">é maior que a distância atual</span>
             ignora aresta
         }
     }
 </pre>
 <pre label="end">
 }
-<span>Se chegamos ao nó final então encontramos um caminho</span>
-if(nóCorrente === nóFinal) {
-    return caminho encontrado de nóInicial à nóFinal
-}
-<span>Caso contrário não havia caminho</span>
-else {
-    return null
+<span class="comment">Se chegamos ao nó final então encontramos um caminho</span>
+se nóCorrente = nóFinal {
+    retorna o caminho encontrado de nóInicial à nóFinal
 }
 </pre>
