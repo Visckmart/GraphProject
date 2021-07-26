@@ -21,6 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+:root {
+    --tabWidth: 15pt;
+}
 /* Showcase de algoritmos */
 #algorithmMenu {
     display: flex;
@@ -31,7 +34,7 @@
     height: fit-content;
     max-height: 60%;
     z-index: 15;
-    transform: translateX(calc(-100% + 8pt - 1px));
+    transform: translateX(calc(-100% + var(--tabWidth) - 1px));
     transition: all 0.1s ease-in-out;
     backdrop-filter: blur(3px)
 }
@@ -53,10 +56,10 @@
 }
 
 #algorithmMenuTab {
-    width: 8pt;
+    width: var(--tabWidth);
     height: 50pt;
-    border-top-right-radius: 3pt;
-    border-bottom-right-radius: 3pt;
+    border-top-right-radius: 5pt;
+    border-bottom-right-radius: 5pt;
     background-color: rgba(0, 0, 0, 0.7);
     margin-bottom: auto;
 }

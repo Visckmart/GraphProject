@@ -46,6 +46,8 @@
     padding-left:5px;
     color: #D9D9D9;
     transition: all 0.3s ease-in-out;
+    font-size: 11pt;
+    background: #0004;
 }
 
 #pseudoContainer > pre[current="true"] {
@@ -54,13 +56,21 @@
 }
 
 #pseudoContainer > pre > .comment {
-    color: #999;
+    color: #57D957;
+}
+#pseudoContainer > pre[current="true"] > .comment {
+    color: #2B6B2B;
 }
 
 #pseudoContainer > pre > .comment::before {
-    color: darkgray;
+    color: #57D957;
     content: '# ';
+}
+
+#pseudoContainer > pre[current="true"] > .comment::before {
+    color: #2B6B2B;
 }
 .keyword {
     color: hotpink;
+    font-weight: bold;
 }

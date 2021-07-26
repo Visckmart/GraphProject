@@ -35,6 +35,7 @@
 #showcaseTitle {
     text-align: center;
     flex: 0 1 auto;
+    font-size: 15pt;
 }
 
 #showcaseMessage {

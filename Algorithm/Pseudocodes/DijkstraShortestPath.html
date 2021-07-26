@@ -4,7 +4,7 @@
 heap = MinHeap()
 
 <span class="comment">Inicializando todos os nós</span>
-para cada nó do grafo {
+<span class="keyword">para cada</span> nó do grafo {
     nó.distancia = ∞
     nó.anterior = nenhum
     nó.visitado = false
@@ -24,16 +24,16 @@ nóCorrente = nenhum
 
     <span class="comment">Finaliza o loop caso o nó corrente não exista ou</span>
     <span class="comment">tenha distância ∞</span>
-    se não houver nóCorrente ou nóCorrente.distancia = ∞ {
+    <span class="keyword">se</span> não houver nóCorrente ou nóCorrente.distancia = ∞ {
         interromper o loop
     }
     </pre>
     <pre label="selectEdge">
-    para cada aresta saindo do nóCorrente {
+    <span class="keyword">para cada</span> aresta saindo do nóCorrente {
         nóDestino = aresta.destino
 
         <span class="comment">Ignora essa aresta caso leve para o nó anterior</span>
-        se nóDestino = nóCorrente.anterior {
+        <span class="keyword">se</span> nóDestino = nóCorrente.anterior {
             pular essa iteração
         }
 
@@ -42,7 +42,7 @@ nóCorrente = nenhum
         novaDistância = nóCorrente.distancia + aresta.peso
         </pre>
         <pre label="newDistance">
-        se novaDistância < nóDestino.distancia {
+        <span class="keyword">se</span> novaDistância < nóDestino.distancia {
             <span class="comment">Atualizando distância do nó destino já que</span>
             <span class="comment">a distância encontrada é menor</span>
             nóDestino.distancia = novaDistância
@@ -51,17 +51,17 @@ nóCorrente = nenhum
             heap.atualizaPeso(nóDestino, nóDestino.distancia)
         }</pre>
         <pre label="noNewDistance">
-        senão {
+        <span class="keyword">senão</span> {
             <span class="comment">Ignorando aresta já que a distância encontrada</span>
             <span class="comment">é maior que a distância atual</span>
             ignora aresta
         }
     }
+}
 </pre>
 <pre label="end">
-}
 <span class="comment">Se chegamos ao nó final então encontramos um caminho</span>
-se nóCorrente = nóFinal {
-    retorna o caminho encontrado de nóInicial à nóFinal
+<span class="keyword">se</span> nóCorrente = nóFinal {
+    <span class="keyword">retorna</span> o caminho encontrado de nóInicial à nóFinal
 }
 </pre>
