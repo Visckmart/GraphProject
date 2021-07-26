@@ -163,12 +163,9 @@ button:active {
   align-items: stretch;
   z-index: 0;
 
-  margin: var(--interfaceMargin);
-  margin-top: 5pt;
-  margin-bottom: 5pt;
+  margin: 5pt 0;
   height: var(--maxHeight);
   max-height: var(--maxHeight);
-  border-radius: 8pt;
   overflow: hidden;
 }
 
