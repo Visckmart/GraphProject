@@ -22,7 +22,7 @@
  */
 
 #showcaseContainer {
-    width: 250pt;
+    /*width: 250pt;*/
     height: 75vh;
     overflow: hidden;
     position: relative;
@@ -35,23 +35,34 @@
 #showcaseTitle {
     text-align: center;
     flex: 0 1 auto;
-    font-size: 15pt;
+    font-size: 14pt;
+    margin-bottom: 0;
 }
-
+#algorithmMenuBody p {
+    margin-left: 10pt;
+    margin-right: 10pt;
+    margin-bottom: 0;
+    padding-left: 8pt;
+    padding-right: 8pt;
+    padding-bottom: 0pt;
+}
 #showcaseMessage {
     flex: 0 1 auto;
     height: 100pt;
-    max-height: 100pt;
+    max-height: 250pt;
     overflow: auto;
-    margin: 10px;
-    padding: 5px;
-    border:3px solid white;
-    border-radius: 5px;
+    margin: 10pt;
+    margin-top: 5pt;
+    padding: 4pt;
+    border: 2pt solid #888;
+    border-radius: 4pt;
 }
 
 #showcaseBody {
+    font-size: 11pt;
     flex: 1 1 auto;
     overflow: auto;
+    height: fit-content;
 }
 
 #showcase {

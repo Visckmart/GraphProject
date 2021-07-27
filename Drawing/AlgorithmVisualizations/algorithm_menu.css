@@ -30,21 +30,22 @@
     flex-direction: row;
     position: absolute;
     left: 0;
-    top: 3%;
+    top: 10pt;
     height: fit-content;
-    max-height: 60%;
+    max-height: calc(100% - 150pt);
     z-index: 15;
-    transform: translateX(calc(-100% + var(--tabWidth) - 1px));
-    transition: all 0.1s ease-in-out;
-    backdrop-filter: blur(3px)
+    transform: translateX(calc(-100% + var(--tabWidth)));
+    transition: all 0.2s ease-in-out;
 }
 
 #algorithmMenuBody {
     display: flex;
     flex-direction: column;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
+    background-color: #2F2D32;
     overflow: auto;
     max-height: 100%;
+    width: 425pt;
+    border-bottom-right-radius: 12pt;
 }
 
 #algorithmMenu:hover, #algorithmMenu:target{
@@ -53,19 +54,22 @@
 
 #algorithmMenuTab {
     width: var(--tabWidth);
-    height: 50pt;
-    border-top-right-radius: 5pt;
-    border-bottom-right-radius: 5pt;
-    background-color: rgba(0, 0, 0, 0.7);
+    height: 100pt;
+    border-top-right-radius: 8pt;
+    border-bottom-right-radius: 8pt;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-left: 2pt solid #aaa;
+    /*margin-left: -2pt;*/
     margin-bottom: auto;
 }
 
 #algorithmMenuPin, #algorithmMenuUnpin {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+    /*position: absolute;*/
+    /*top: 5px;*/
+    /*right: 5px;*/
     color: white;
-    opacity: 0.4;
+    width: 20pt;
+    /*opacity: 0.4;*/
     z-index: 20;
     display: none;
 }
@@ -76,7 +80,8 @@
 
 #algorithmMenuUnpin {
     display: none !important;
-    opacity: 1;
+    /*opacity: 1;*/
+    fill: white;
 }
 
 #algorithmMenu:target #algorithmMenuPin {
@@ -89,19 +94,52 @@
 
 #algorithmMenuTabs {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-around;
+    align-content: center;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8) 80%);
+    border-bottom: 2pt solid #888;
+}
+#algorithmMenuTabs > div {
+    border-left: 2pt solid #888;
+    height: 15pt;
+}
+#algorithmMenuTabs > #pin {
+    border-left: none;
 }
 
 #algorithmMenuTabs > div {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     color:white;
-    background-color: #666;
+    /*background-color: red;*/
     padding: 8px;
-    font-size: .8rem;
+    font-size: 0.9rem;
     text-align: center;
-    position: relative;
+    /*position: relative;*/
+    width: 50%;
     z-index: 100;
 }
 #algorithmMenuTabs > div[active="true"] {
     background-color: #888;
+}
+
+#algorithmMenuTabs p {
+    margin: 0;
+    width: fit-content;
+    height: fit-content;
+}
+.tab, #pin {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+#pin {
+    flex: 0 0 15pt;
+    margin-left: auto;
+    margin-right: auto;
+    /*background: #888;*/
+    /*background-color: #555;*/
+}
+#pin {
+    background-color: #555;
 }

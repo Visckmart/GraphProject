@@ -26,7 +26,7 @@ import AlgorithmShowcase from "../../Drawing/AlgorithmVisualizations/Showcase/Al
 const elementRadius = 15
 const distanceBetweenLevels = 50
 const distanceBetweenElements = 38
-const paddingTop = 50
+const paddingTop = 30
 
 class Heap extends AlgorithmShowcase{
     constructor() {
@@ -50,7 +50,8 @@ class Heap extends AlgorithmShowcase{
         this._elementMap.set(element, this._heapSize - 1)
 
         this._siftUp(this._heapSize - 1)
-        this._messages.push(`Inserindo o elemento ${element.toString()} com valor ${value} no heap e ajustando para cima.`)
+        let valueText = value == Infinity ? "∞" : value;
+        this._messages.push(`Inserindo o elemento ${element.toString()} com valor ${valueText} no heap e ajustando para cima.`)
     }
 
     remove() {
@@ -164,9 +165,10 @@ class Heap extends AlgorithmShowcase{
     //#endregion
     //#region Funções de showcase
     addStep() {
-        let fullMessage = this._messages.length > 0 ? 'Ações dessa etapa:\n' : 'Nenhuma ação feita nessa etapa'
+        let fullMessage = this._messages.length > 0 ? '' : 'Nenhuma ação feita nessa etapa'
+        var c = 1;
         for(let message of this._messages) {
-            fullMessage += '• ' + message + '\n\n'
+            fullMessage += c++ + ") " + message + '\n'
         }
 
         this._steps.push({
@@ -197,14 +199,14 @@ class Heap extends AlgorithmShowcase{
         if(this._heapSize > 0)
         {
             let ctx = this.ctx
-            ctx.save()
-            ctx.beginPath()
-            ctx.textAlign = 'center'
-            ctx.textBaseline = 'top'
-            ctx.fillStyle = '#ffffff'
-            ctx.font = '20px Arial'
-            ctx.fillText('Estado atual do heap:', this.canvas.width/2, 0)
-            ctx.restore()
+            // ctx.save()
+            // ctx.beginPath()
+            // ctx.textAlign = 'center'
+            // ctx.textBaseline = 'top'
+            // ctx.fillStyle = '#ffffff'
+            // ctx.font = '20px Arial'
+            // ctx.fillText('Estado atual do heap:', this.canvas.width/2, 0)
+            // ctx.restore()
             this.drawHeapElement(this._heap[0], 0, this.canvas.width/2, paddingTop, false)
         }
     }
@@ -314,7 +316,7 @@ class Heap extends AlgorithmShowcase{
 export class MaxHeap extends Heap {
     constructor() {
         super();
-        this.showcaseTitle = 'Max Heap Binário'
+        this.showcaseTitle = 'Heap Binária Mínima'
     }
 
     _compare(value1, value2) {
@@ -326,7 +328,7 @@ export class MinHeap extends Heap {
     constructor() {
         super();
 
-        this.showcaseTitle = 'Min Heap Binário'
+        this.showcaseTitle = 'Heap Binária Máxima'
     }
 
     _compare(value1, value2) {

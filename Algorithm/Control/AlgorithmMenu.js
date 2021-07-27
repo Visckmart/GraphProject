@@ -27,7 +27,7 @@ export default class AlgorithmMenu {
 
         this.menu.style.display = ''
 
-        this.tabElements = Array.from(document.getElementById('algorithmMenuTabs').children)
+        this.tabElements = Array.from(document.getElementsByClassName("tab"))
 
         // Inicializando evento de click para mudar de aba
         // Reverte o array para selecionar a primeira aba visível, não a última

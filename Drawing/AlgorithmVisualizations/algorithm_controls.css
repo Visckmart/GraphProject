@@ -33,8 +33,8 @@
     width: 65%;
     max-width: 500pt;
     /*border-radius: 8pt;*/
-    border-top-right-radius: 8pt;
-    border-top-left-radius: 8pt;
+    border-top-right-radius: 12pt;
+    border-top-left-radius: 12pt;
     margin: 15pt auto 0;
     padding: 10pt 15pt 5pt;
     /*background-color: rgba(0, 0, 0, 0.65);*/
@@ -43,8 +43,8 @@
 
 #exit_button {
     float: right;
-    margin-top: -5pt;
-    margin-right: -9.5pt;
+    margin-top: -4pt;
+    margin-right: -8.5pt;
     cursor: pointer;
 }
 

@@ -23,7 +23,6 @@
 
 #pseudocode {
     position: relative;
-    background-color: #2F2D32;
 }
 
 #pseudoPopup {
@@ -38,39 +37,41 @@
 }
 
 #pseudoContainer {
-    width: max-content;
+    /*width: max-content;*/
 }
 
 #pseudoContainer > pre {
     margin: 0;
-    width: 100%;
-    padding-left:5px;
+    padding: 4pt;
     color: #D9D9D9;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.4s ease-in-out;
+    border-left: 4pt solid transparent;
     font-size: 11pt;
-    background: #0004;
 }
 
 #pseudoContainer > pre[current="true"] {
-    background-color: lightgray;
-    color: #333;
+    /*background-color: #eee;*/
+    border-left: 4pt solid #eee;
+    background: #444;
+    /*padding-left: 4pt;*/
+    /*color: #333;*/
 }
 
 #pseudoContainer > pre > .comment {
     color: #57D957;
 }
-#pseudoContainer > pre[current="true"] > .comment {
-    color: #2B6B2B;
-}
+/*#pseudoContainer > pre[current="true"] > .comment {*/
+/*    color: #2B6B2B;*/
+/*}*/
 
 #pseudoContainer > pre > .comment::before {
     color: #57D957;
     content: '# ';
 }
 
-#pseudoContainer > pre[current="true"] > .comment::before {
-    color: #2B6B2B;
-}
+/*#pseudoContainer > pre[current="true"] > .comment::before {*/
+/*    color: #2B6B2B;*/
+/*}*/
 .keyword {
     color: hotpink;
     font-weight: bold;
