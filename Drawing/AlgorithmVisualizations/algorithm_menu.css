@@ -24,7 +24,7 @@
 :root {
     --tabWidth: 15pt;
 }
-/* Showcase de algoritmos */
+/* Menu de algoritmos */
 #algorithmMenu {
     display: flex;
     flex-direction: row;
