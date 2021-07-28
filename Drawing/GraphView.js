@@ -96,8 +96,11 @@ export class GraphView {
             // Mouse
             canvas.onmousedown = this.mouseHandler.mouseDownEvent;
             canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
-            canvas.onmouseup = this.mouseHandler.mouseUpEvent;
+            canvas.onmouseup =   this.mouseHandler.mouseUpEvent;
             canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+            canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
+            canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
+            canvas.ontouchend = this.mouseHandler.mouseUpEvent;
 
             // Evite abrir o menu de contexto para não haver conflito com o gesto
             // de deletar nós.

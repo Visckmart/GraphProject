@@ -36,9 +36,15 @@ class GraphMouseHandler {
     }
 
     getMousePos(mouseEvent) {
+        let rawX = mouseEvent.clientX;
+        let rawY = mouseEvent.clientY;
+        if (mouseEvent instanceof TouchEvent) {
+            rawX = mouseEvent.changedTouches[0].clientX;
+            rawY = mouseEvent.changedTouches[0].clientY;
+        }
         return {
-            x: mouseEvent.clientX - this.canvasRect.left,
-            y: mouseEvent.clientY - this.canvasRect.top
+            x: rawX - this.canvasRect.left,
+            y: rawY - this.canvasRect.top
         };
     }
 
@@ -136,10 +142,12 @@ class GraphMouseHandler {
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         this.handleEdgeHover(pos);
-
-        if (mouseEvent.buttons == 0
-            || mouseEvent.buttons == 2
-            || mouseEvent.button != 0) {
+        console.log(mouseEvent);
+        console.log(mouseEvent.buttons == 0, mouseEvent.buttons == 2, mouseEvent.button != 0);
+        if ((mouseEvent instanceof TouchEvent) == false
+            && (mouseEvent.buttons == 0
+                || mouseEvent.buttons == 2
+                || mouseEvent.button != 0)) {
             this.refreshCursorStyle();
             return;
         }
@@ -187,7 +195,7 @@ class GraphMouseHandler {
     mouseUpEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
-
+        console.log(mouseEvent);
         let pos = this.getMousePos(mouseEvent);
 
         if (isRightClick(mouseEvent)
