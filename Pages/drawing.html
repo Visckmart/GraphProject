@@ -29,7 +29,13 @@
     <title>GraphTeacher</title>
 <!--    <base href="http://graphteacher.inf.puc-rio.br/GraphProject/Pages/" />-->
 <!--    <link rel="stylesheet" href="style.css">-->
-    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<!--    <link rel="preload" href="style.css?a=c" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
+    <link rel="stylesheet" data-href="dynamic-stylesheet">
+
+    <script>
+        const link = document.querySelector('link[data-href="dynamic-stylesheet"]');
+        link.href = `style.css?cb=${Math.random() || 'defaultValue'}`;
+    </script>
     <link rel="stylesheet" href="tool_tray.css">
     <meta name="viewport" content="height=device-height, initial-scale=1">
     <!--  Stylesheets de algoritmos não precisam ser carregadas sincronamente  -->
@@ -162,6 +168,9 @@
                 bottom: 125%;
                 left: 50%;
                 margin-left: calc(-55pt/2); /* Use half of the width (120/2 = 60), to center the tooltip */
+            }
+            .tooltip button {
+                border-radius: 4pt;
             }
         </style>
         <div id="history-tray" class="toolTray">
@@ -346,37 +355,38 @@
                     <h4 class="sectionTitle">
                         <label for="algorithm">Algoritmo</label>
                     </h4>
-                    <select id="algorithm">
-                        <option value="none" selected>Nenhum</option>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="BFS" disabled>Busca em Largura</option>
-                            <option value="DFS" disabled>Busca em Profundidade</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="Dijkstra" >Dijkstra (Menor Caminho)</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="PrimMST">Prim (Árvore Geradora Mínima)</option>
-                            <option value="KruskalMST">Kruskal (Árvore Geradora Mínima)</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="DFSCycleDetection">DFS (Detecção de ciclo)</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="EulerianPath">Hierholzer's Algorithm (Trajeto Euleriano)</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option disabled value="EdmondsMSA">Algoritmo de Edmond (Arborescência Mínima)</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="FordFulkerson">Algoritmo de Ford Fukerson (Fluxo Máximo)</option>
-                        </optgroup>
-                        <optgroup label="- - - - - - - - - - - - - - -">
-                            <option value="GreedyNodeColoring">Greedy Node Coloring</option>
-                        </optgroup>
-                    </select>
-                    <button id="run_algorithm">Run</button>
-                    <br>
+                    <div class="settingsRow">
+                        <select id="algorithm">
+                            <option value="none" selected>Nenhum</option>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="BFS" disabled>Busca em Largura</option>
+                                <option value="DFS" disabled>Busca em Profundidade</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="Dijkstra" >Dijkstra (Menor Caminho)</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="PrimMST">Prim (Árvore Geradora Mínima)</option>
+                                <option value="KruskalMST">Kruskal (Árvore Geradora Mínima)</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="DFSCycleDetection">DFS (Detecção de ciclo)</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="EulerianPath">Hierholzer's Algorithm (Trajeto Euleriano)</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option disabled value="EdmondsMSA">Algoritmo de Edmond (Arborescência Mínima)</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="FordFulkerson">Algoritmo de Ford Fukerson (Fluxo Máximo)</option>
+                            </optgroup>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="GreedyNodeColoring">Greedy Node Coloring</option>
+                            </optgroup>
+                        </select>
+                        <button id="run_algorithm">Executar</button>
+                    </div>
                 </div>
                 <div class="settingsSection">
                     <h4 class="sectionTitle">Características</h4>
@@ -392,23 +402,29 @@
                     <h4 class="sectionSubtitle">
                         <label for="nodeLabeling">Nomenclatura dos nós</label>
                     </h4>
-                    <select id="nodeLabeling" tabindex="0" >
-                        <option value="numbers">Números (Em Ordem Crescente)</option>
-                        <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
-                        <option value="letters_randomized" selected>Letras (Aleatórias)</option>
-                    </select>
+                    <div class="settingsRow">
+                        <select id="nodeLabeling" tabindex="0" >
+                            <option value="numbers">Números (Em Ordem Crescente)</option>
+                            <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
+                            <option value="letters_randomized" selected>Letras (Aleatórias)</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="settingsSection">
                     <h4 class="sectionTitle">Compartilhar</h4>
                     <h4 class="sectionSubtitle">Exportar como...</h4>
-                    <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
-                    <button style="margin-right: 2pt;" id="exportText">Texto</button>
-                    <button style="margin-right: 2pt;" id="exportLink">Link</button>
-                    <button style="margin-right: 2pt;" id="exportImage">Imagem</button>
+                    <div class="settingsRow">
+                        <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
+                        <button style="margin-right: 2pt;" id="exportText">Texto</button>
+                        <button style="margin-right: 2pt;" id="exportLink">Link</button>
+                        <button style="margin-right: 2pt;" id="exportImage">Imagem</button>
+                    </div>
                     <h4 class="sectionSubtitle">Importar como...</h4>
+                    <div class="settingsRow">
                     <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
-                    <button style="margin-left: 0pt; margin-right: 2pt;" class="importFile">Arquivo</button>
-                    <button style="margin-right: 2pt;" class="importText">Texto</button>
+                        <button style="margin-left: 0pt; margin-right: 2pt;" class="importFile">Arquivo</button>
+                        <button style="margin-right: 2pt;" class="importText">Texto</button>
+                    </div>
                 </div>
                 <div class="settingsSection">
                     <h4 class="sectionTitle">Favoritos</h4>

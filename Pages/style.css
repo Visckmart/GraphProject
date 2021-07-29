@@ -31,6 +31,16 @@ body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
   background-color: #f8f8f8;
+  /*max-height: 50vh;*/
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 .modalDiv {
   top: 0;
@@ -133,19 +143,6 @@ body {
   background: #240DFF;
 }
 
-button {
-  width: fit-content;
-  appearance: none;
-  background: #fdfdfd;
-  border: 1pt solid #aaa;
-  border-radius: 4pt;
-}
-button:hover {
-  background: #eee;
-}
-button:active {
-  background: #aaa;
-}
 #errorMessage {
   position: absolute;
   background: #AAA4;
@@ -165,7 +162,6 @@ button:active {
 
   margin: 5pt 0;
   height: var(--maxHeight);
-  max-height: var(--maxHeight);
   overflow: hidden;
 }
 
@@ -237,6 +233,7 @@ button:active {
   width: 13pt;
   height: 13pt;
 }
+
 /* MENU */
 #menuArea {
   flex: 1 1 auto;
@@ -257,6 +254,7 @@ button:active {
   margin: 10pt;
   margin-right: 5pt;
   height: calc(100% - 10pt);
+  /*width: auto;*/
 }
 .menuTitle {
   flex: 0 1 auto;
@@ -277,9 +275,11 @@ button:active {
 
 /* SECTION */
 .settingsSection {
-  color: #444;
   padding-top: 5pt;
   padding-bottom: 5pt;
+
+  color: #444;
+
   border-bottom: 1pt solid gray;
 }
 .settingsSection:last-of-type {
@@ -290,6 +290,7 @@ button:active {
   margin-top: 0pt;
   margin-bottom: 2pt;
   margin-left: 2pt;
+
   font-size: 13pt;
   font-weight: bold;
 }
@@ -297,27 +298,55 @@ button:active {
   margin-top: 5pt;
   margin-bottom: 2pt;
   margin-left: 2pt;
+
   font-size: 11pt;
 }
 
-.settingsSection select {
-  margin-left: 2pt;
-  width: 140pt;
-  font-size: 12pt;
-}
-.settingsSection input {
-  font-size: 12pt;
-  /*display: none;*/
-}
 .settingsSection > label {
   margin-left: 2pt;
   margin-right: 4pt;
   font-size: 11pt;
 }
-.settingsSection > button {
+
+.settingsSection select {
+  margin-left: 1pt;
+  min-width: 0;
+
+  font-size: 12pt;
+}
+.settingsSection input {
+  font-size: 12pt;
+}
+.settingsSection button {
   margin: 0;
+  padding: 3pt 5pt;
+  appearance: none;
+
+  flex: 0 1 auto;
+  background: #fdfdfd;
+  border: 1pt solid #999;
+  border-radius: 4.5pt;
+}
+.settingsSection button:hover {
+  background: #eee;
+}
+.settingsSection button:active {
+  background: #aaa;
 }
 
+.settingsRow {
+  display: flex;
+  justify-content: flex-start;
+
+  max-width: 100%;
+  margin: 0 1pt;
+  gap: 2.5pt;
+}
+#run_algorithm {
+  width: 32.5%;
+}
+
+/* FAVORITOS */
 .favorite {
   display: flex;
   justify-content: space-between;
@@ -326,12 +355,14 @@ button:active {
   margin-bottom: 4pt;
   padding: 2pt;
   padding-left: 4pt;
+
   border-radius: 4pt;
   background-color: #FFFA;
   font-family: monospace;
 }
-.favorite div {
+.favorite > div {
   display: flex;
+  gap: 2pt;
   align-items: center;
 }
 .favorite input[type=text] {
@@ -345,7 +376,6 @@ button:active {
   background-color: transparent;
 }
 #authors {
-
   white-space: nowrap;
 }
 footer {

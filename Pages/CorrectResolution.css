@@ -1,0 +1,189 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 Thiago Lamenza e Victor Martins
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+:root {
+    --interfaceMargin: 10pt;
+    --navigationBarHeight: 20pt;
+    --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 20pt - var(--navigationBarHeight));
+    --menuWidth: 200pt;
+}
+
+body {
+    margin: 0;
+    font-family: Helvetica Neue, sans-serif;
+    background-color: #f8f8f8;
+    /*max-height: 50vh;*/
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+/* MENU */
+#menuArea {
+    flex: 1 1 auto;
+    overflow: hidden;
+    z-index: 1;
+    max-height: 100%;
+
+    border-left: 2pt solid #444;
+    width: var(--menuWidth);
+    max-width: var(--menuWidth);
+    background: linear-gradient(to right, #EBEBEB, #D9D9D9);
+}
+.menuContent {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    margin: 10pt;
+    margin-right: 5pt;
+    height: calc(100% - 10pt);
+    /*width: auto;*/
+}
+.menuTitle {
+    flex: 0 1 auto;
+
+    width: fit-content;
+    margin-top: 0;
+    margin-bottom: 4pt;
+    border-bottom: 2pt solid darkgray;
+}
+.menuBody {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding-right: 10pt;
+}
+.menuBodyScrolled {
+    border-top: 1pt solid lightgray;
+}
+
+/* SECTION */
+.settingsSection {
+    padding-top: 5pt;
+    padding-bottom: 5pt;
+
+    color: #444;
+
+    border-bottom: 1pt solid gray;
+}
+.settingsSection:last-of-type {
+    border-bottom: none;
+}
+
+.sectionTitle {
+    margin-top: 0pt;
+    margin-bottom: 2pt;
+    margin-left: 2pt;
+
+    font-size: 13pt;
+    font-weight: bold;
+}
+.sectionSubtitle {
+    margin-top: 5pt;
+    margin-bottom: 2pt;
+    margin-left: 2pt;
+
+    font-size: 11pt;
+}
+
+.settingsSection > label {
+    margin-left: 2pt;
+    margin-right: 4pt;
+    font-size: 11pt;
+}
+
+.settingsSection select {
+    margin-left: 1pt;
+    min-width: 0;
+
+    font-size: 12pt;
+}
+.settingsSection input {
+    font-size: 12pt;
+}
+.settingsSection button {
+    margin: 0;
+    padding: 3pt 5pt;
+    appearance: none;
+
+    flex: 0 1 auto;
+    background: #fdfdfd;
+    border: 1pt solid #999;
+    border-radius: 4.5pt;
+}
+.settingsSection button:hover {
+    background: #eee;
+}
+.settingsSection button:active {
+    background: #aaa;
+}
+
+.settingsRow {
+    display: flex;
+    justify-content: flex-start;
+
+    max-width: 100%;
+    margin: 0 1pt;
+    gap: 2.5pt;
+}
+#run_algorithm {
+    width: 32.5%;
+}
+
+/* FAVORITOS */
+.favorite {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 4pt;
+    padding: 2pt;
+    padding-left: 4pt;
+
+    border-radius: 4pt;
+    background-color: #FFFA;
+    font-family: monospace;
+}
+.favorite > div {
+    display: flex;
+    background: blue;
+    width: 100pt;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5pt;
+}
+.favorite input[type=text] {
+    font-family: monospace;
+    font-size: initial;
+    width: 70pt;
+    background: transparent;
+    border: 0;
+}
+.favoriteEmpty {
+    background-color: transparent;
+}

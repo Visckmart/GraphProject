@@ -1,0 +1,149 @@
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2021 Thiago Lamenza e Victor Martins
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of
+  ~ this software and associated documentation files (the "Software"), to deal in
+  ~ the Software without restriction, including without limitation the rights to
+  ~ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+  ~ the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  ~ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  ~ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  ~ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  ~ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<html>
+<head>
+    <title>a</title>
+    <link rel="stylesheet" href="CorrectResolution.css">
+    <style>
+        #c {
+            /*background: blue;*/
+        }
+    </style>
+    <script>
+        window.addEventListener('load', (event) => {
+            let canv = document.getElementById("c");
+            console.log(document.body.clientWidth, document.body.clientHeight);
+            console.log(canv.clientWidth, canv.clientHeight);
+            let w = document.body.clientWidth*0.9;
+            let h = document.body.clientHeight*0.8;
+            canv.style.backgroundColor = "green";
+            canv.style.width = w;
+            canv.style.height = h;
+            canv.width = w*2;
+            canv.height = h*2;
+            let context = canv.getContext("2d");
+            // context.scale(350/300, 500/150);
+            // context.scale(300/600, 150/300);
+            context.rect(50, 15, 200, 500);
+            context.lineWidth = 11;
+            context.stroke();
+        });
+    </script>
+    <meta name="viewport" content="height=device-height, initial-scale=1">
+</head>
+<body>
+<!--    <h1>a</h1>-->
+<!--        <canvas id="c"></canvas>-->
+<!--    <h1>a</h1>-->
+    <div id="menuArea">
+        <div class="menuContent" id="GraphSettings">
+            <h2 class="menuTitle">Grafo</h2>
+            <div class="menuBody">
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">
+                        <label for="algorithm">Algoritmo</label>
+                    </h4>
+                    <div class="settingsRow">
+                        <select id="algorithm">
+                            <option value="none" selected>Nenhum</option>
+                            <optgroup label="- - - - - - - - - - - - - - -">
+                                <option value="BFS" disabled>Busca em Largura</option>
+                                <option value="DFS" disabled>Busca em Profundidade</option>
+                            </optgroup>
+                        </select>
+                        <button id="run_algorithm">Executar</button>
+                    </div>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Características</h4>
+                    <h5 class="sectionSubtitle">Nós</h5>
+                    <input type="checkbox" id="coloredNodes" /><label for="coloredNodes">Coloridos</label>
+                    <h5 class="sectionSubtitle">Arestas</h5>
+                    <input type="checkbox" id="directedEdges"/><label for="directedEdges">Direcionadas</label>
+                    <br>
+                    <input type="checkbox" id="weightedEdges"/><label for="weightedEdges">Pesado</label>
+                    <!--                    <br>-->
+                    <!--                    <input type="checkbox" id="coloredEdges" /><label for="coloredEdges">Coloridas</label>-->
+
+                    <h4 class="sectionSubtitle">
+                        <label for="nodeLabeling">Nomenclatura dos nós</label>
+                    </h4>
+                    <div class="settingsRow">
+                        <select id="nodeLabeling" tabindex="0" >
+                            <option value="numbers">Números (Em Ordem Crescente)</option>
+                            <option value="letters_ordered">Letras (Em Ordem Alfabética)</option>
+                            <option value="letters_randomized" selected>Letras (Aleatórias)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Compartilhar</h4>
+                    <h4 class="sectionSubtitle">Exportar como...</h4>
+                    <div class="settingsRow">
+                        <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
+                        <button style="margin-right: 2pt;" id="exportText">Texto</button>
+                        <button style="margin-right: 2pt;" id="exportLink">Link</button>
+                        <button style="margin-right: 2pt;" id="exportImage">Imagem</button>
+                    </div>
+                    <h4 class="sectionSubtitle">Importar como...</h4>
+                    <div class="settingsRow">
+                        <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
+                        <button style="margin-left: 0pt; margin-right: 2pt;" class="importFile">Arquivo</button>
+                        <button style="margin-right: 2pt;" class="importText">Texto</button>
+                    </div>
+                </div>
+                <div class="settingsSection">
+                    <h4 class="sectionTitle">Favoritos</h4>
+                    <div id="favoritesList">
+                        <template id="favoriteRow">
+                            <div class="favorite">
+                                <label><input type="text" id="inputLabel" value="Favorito 1"></label>
+                                <div>
+                                    <button id="loadFavorite" name="1"><strong>Abrir</strong></button>
+                                    <button id="removeFavorite" name="1">Apagar…</button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template id="favoriteDeleteConfirmationRow">
+                            <div class="favorite">
+                                <label style="font-family:sans-serif;font-size: 10.5pt;font-weight: bold;">Apagar?</label>
+                                <div>
+                                    <button id="cancelDeletion">Não</button>
+                                    <button id="confirmDeletion">Sim</button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template id="favoriteNewRow">
+                            <button style="width: 100%;font-size:10pt;margin-bottom:8pt;" id="newFavorite">Novo favorito <strong>+</strong></button>
+                        </template>
+
+                        <button style="margin-left: 0pt; margin-right: 2pt;" id="clearFavorites">Limpar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
