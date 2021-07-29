@@ -94,13 +94,16 @@ export class GraphView {
 
         if (interactive) {
             // Mouse
-            canvas.onmousedown = this.mouseHandler.mouseDownEvent;
-            canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
-            canvas.onmouseup =   this.mouseHandler.mouseUpEvent;
-            canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
-            canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
-            canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
-            canvas.ontouchend = this.mouseHandler.mouseUpEvent;
+            if (!isMobile) {
+                canvas.onmousedown = this.mouseHandler.mouseDownEvent;
+                canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
+                canvas.onmouseup = this.mouseHandler.mouseUpEvent;
+                canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+            } else {
+                canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
+                canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
+                canvas.ontouchend = this.mouseHandler.mouseUpEvent;
+            }
 
             // Evite abrir o menu de contexto para não haver conflito com o gesto
             // de deletar nós.
@@ -482,13 +485,20 @@ export class GraphView {
         this.blurTimeout = null;
     }
     recalculateLayout() {
+        let scaleFactor = this.backingScale(this.canvas.getContext("2d"));
         let originalWidth = this.canvas.width;
         let originalHeight = this.canvas.height;
 
         // Ajustar tamanho
         let canvasArea = document.getElementById("canvasArea");
-        let newWidth = canvasArea.offsetWidth;
-        let newHeight = canvasArea.offsetHeight;
+        let newWidth = canvasArea.clientWidth * scaleFactor;
+        let newHeight = canvasArea.clientHeight * scaleFactor;
+        this.canvas.style.width = canvasArea.clientWidth;
+        this.canvas.style.height = canvasArea.clientHeight;
+        this.fastCanvas.style.width = canvasArea.clientWidth;
+        this.fastCanvas.style.height = canvasArea.clientHeight;
+        this.slowCanvas.style.width = canvasArea.clientWidth;
+        this.slowCanvas.style.height = canvasArea.clientHeight;
         this.canvas.width = newWidth;
         this.canvas.height = newHeight;
         this.fastCanvas.width = newWidth;
@@ -499,12 +509,12 @@ export class GraphView {
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
         // Ajustando posição dos nós
-        let widthRatio = newWidth/originalWidth;
-        let heightRatio = newHeight/originalHeight;
-        for (let node of this.structure.nodes()) {
-            node.pos.x *= widthRatio;
-            node.pos.y *= heightRatio;
-        }
+        // let widthRatio = newWidth/originalWidth;
+        // let heightRatio = newHeight/originalHeight;
+        // for (let node of this.structure.nodes()) {
+        //     node.pos.x *= widthRatio;
+        //     node.pos.y *= heightRatio;
+        // }
 
         // Blur
         if (this.blurTimeout) {
@@ -519,6 +529,16 @@ export class GraphView {
 
         this.shouldRefreshCollisions = true;
         this.refreshGraph();
+    }
+    backingScale(context) {
+        // return 0.5;
+        return 2;
+        if ('devicePixelRatio' in window) {
+            if (window.devicePixelRatio > 1) {
+                return window.devicePixelRatio;
+            }
+        }
+        return 1;
     }
     refreshGraph() {
         this.requestCanvasRefresh(CanvasType.GENERAL);

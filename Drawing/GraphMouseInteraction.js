@@ -38,7 +38,7 @@ class GraphMouseHandler {
     getMousePos(mouseEvent) {
         let rawX = mouseEvent.clientX;
         let rawY = mouseEvent.clientY;
-        if (mouseEvent instanceof TouchEvent) {
+        if (window.TouchEvent && mouseEvent instanceof TouchEvent) {
             rawX = mouseEvent.changedTouches[0].clientX;
             rawY = mouseEvent.changedTouches[0].clientY;
         }
@@ -142,12 +142,9 @@ class GraphMouseHandler {
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         this.handleEdgeHover(pos);
-        console.log(mouseEvent);
-        console.log(mouseEvent.buttons == 0, mouseEvent.buttons == 2, mouseEvent.button != 0);
-        if ((mouseEvent instanceof TouchEvent) == false
-            && (mouseEvent.buttons == 0
-                || mouseEvent.buttons == 2
-                || mouseEvent.button != 0)) {
+        // console.log(mouseEvent);
+        // console.log(mouseEvent.buttons == 0, mouseEvent.buttons == 2, mouseEvent.button != 0);
+        if (!isLeftClick(mouseEvent)) {
             this.refreshCursorStyle();
             return;
         }
@@ -195,7 +192,7 @@ class GraphMouseHandler {
     mouseUpEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
-        console.log(mouseEvent);
+        // console.log(mouseEvent);
         let pos = this.getMousePos(mouseEvent);
 
         if (isRightClick(mouseEvent)

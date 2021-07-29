@@ -93,8 +93,8 @@ if (!isMobile) {
     let menuArea = document.getElementById("menuArea")
     menuArea.style.display = "none";
     let canvasArea = document.getElementById("canvasArea")
-    canvasArea.style.width = "100%"
-    canvasArea.style.maxWidth = "100%"
+    // canvasArea.style.width = "100%"
+    // canvasArea.style.maxWidth = "100%"
     let tray = document.getElementById("tray")
     tray.style.display = "none";
     let ic = document.getElementById("interfaceContainer")
