@@ -146,7 +146,11 @@ export default class GraphSelection {
         if (this.debug) { console.log(`Selecionando temporariamente o nó ${node}.`); }
 
         this.clear(false);
-        this.selected.nodes = [node];
+        if (Array.isArray(node)) {
+            this.selected.nodes = node;
+        } else {
+            this.selected.nodes = [node];
+        }
         this.registerNodePositions();
         this.isQuickSelection = true;
         this.graphView.selectionChanged();
@@ -174,6 +178,13 @@ export default class GraphSelection {
         this.selectedNodePositions = Array.from(
             this.selected.nodes.map(node => node.pos)
         );
+
+        // for (let edge of this.selected.edges) {
+        //     let [a, b] = this.graphView.structure.getEdgeNodes(edge);
+        //     console.log(a.label, b.label);
+        //     this.selectedNodePositions.push(a.pos);
+        //     this.selectedNodePositions.push(b.pos);
+        // }
     }
 
     //region Checando seleção

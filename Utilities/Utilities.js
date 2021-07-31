@@ -46,7 +46,7 @@ export function generateNewRandomLabel() {
 
 export function isLeftClick(mouseEvent)  {
     // console.log(mouseEvent instanceof TouchEvent);
-    return (window.TouchEvent && mouseEvent instanceof TouchEvent) || mouseEvent.button == 0;
+    return (window.TouchEvent && mouseEvent instanceof TouchEvent) || (mouseEvent.button == 0);
 }
 export function isRightClick(mouseEvent) { return mouseEvent.button == 2; }
 // function drawPreservingState(ctx, drawingOperations) {

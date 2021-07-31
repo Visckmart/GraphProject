@@ -95,10 +95,16 @@ export class GraphView {
         if (interactive) {
             // Mouse
             if (!isMobile) {
-                canvas.onmousedown = this.mouseHandler.mouseDownEvent;
-                canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
-                canvas.onmouseup = this.mouseHandler.mouseUpEvent;
-                canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+                if (!window.TouchEvent) {
+                    canvas.onmousedown = this.mouseHandler.mouseDownEvent;
+                    canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
+                    canvas.onmouseup = this.mouseHandler.mouseUpEvent;
+                    canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+                } else {
+                    canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
+                    canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
+                    canvas.ontouchend = this.mouseHandler.mouseUpEvent;
+                }
             } else {
                 canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
                 canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
@@ -532,7 +538,7 @@ export class GraphView {
     }
     backingScale(context) {
         // return 0.5;
-        return 2;
+        // return 2;
         if ('devicePixelRatio' in window) {
             if (window.devicePixelRatio > 1) {
                 return window.devicePixelRatio;
@@ -657,7 +663,7 @@ export class GraphView {
     }
 
     drawCurrentMaxFPS(ctx, fps, name = "", vertOffset = 0) {
-        return;
+        // return;
         ctx.save()
         ctx.fillStyle = "#AAA8";
         ctx.font = "12pt Arial";
@@ -823,7 +829,6 @@ export class GraphView {
 
         // Desenhar aresta temporária
         if (this.mouseHandler.shouldDrawTemporaryEdge) {
-            console.log(1)
             let startPos = this.mouseHandler.clickedNode?.pos;
             let endPos   = this.mouseHandler.currentMousePos;
             if (startPos == null || endPos == null) {
