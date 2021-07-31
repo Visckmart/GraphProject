@@ -24,19 +24,22 @@
 import { Tool } from "./General.js";
 
 function getTargetElements(graphView) {
-    let targetNodes;
-    if (graphView.selectionHandler.hasSelectedNodes) {
+    let hasSelectedNodes = graphView.selectionHandler.hasSelectedNodes;
+    let hasSelectedEdges = graphView.selectionHandler.hasSelectedEdges;
+
+    let targetNodes = [];
+    if (hasSelectedNodes) {
         targetNodes = graphView.selectionHandler.selected.nodes;
-    } else {
+    } else if (!hasSelectedEdges) {
         targetNodes = Array.from(graphView.structure.nodes());
     }
 
-    let targetEdges;
-    if (graphView.selectionHandler.hasSelectedEdges) {
+    let targetEdges = [];
+    if (hasSelectedEdges) {
         targetEdges = graphView.selectionHandler.selected.edges;
-    } else {
+    } else if (!hasSelectedNodes) {
         targetEdges = Array.from(graphView.structure.uniqueEdges())
-                            .map(edgeInfo => edgeInfo[0]);
+                           .map(edgeInfo => edgeInfo[0]);
     }
     return [targetNodes, targetEdges];
 }
