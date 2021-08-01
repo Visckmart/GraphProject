@@ -511,7 +511,7 @@ export class GraphView {
         this.fastCanvas.height = newHeight;
         this.slowCanvas.width = newWidth;
         this.slowCanvas.height = newHeight;
-        this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+        this.background = this.ctx.createLinearGradient(0, 0, canvasArea.clientWidth, 0);
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
         // Ajustando posição dos nós

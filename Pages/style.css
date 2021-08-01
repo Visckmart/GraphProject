@@ -27,6 +27,7 @@
   --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 20pt - var(--navigationBarHeight));
   --menuWidth: 200pt;
 }
+
 body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
@@ -42,6 +43,12 @@ body {
   top: 0;
   bottom: 0;
   touch-action: pan-x pan-y;
+}
+
+.version {
+  color: #1879F5;
+  /*color: #FA690D;*/
+  font-size: 14pt;
 }
 .modalDiv {
   top: 0;
