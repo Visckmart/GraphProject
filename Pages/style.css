@@ -41,6 +41,7 @@ body {
   right: 0;
   top: 0;
   bottom: 0;
+  touch-action: pan-x pan-y;
 }
 .modalDiv {
   top: 0;
