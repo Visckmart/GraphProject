@@ -21,12 +21,57 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+:root {
+    --background-color: #F8F8F8;
+
+    --text-primary-color: black;
+    --text-secondary-color: #222;
+    --text-tertiary-color: #333;
+    --text-quaternary-color: #777;
+
+    --card-background-color: #FFF;
+    --card-shadow-color: #EEE;
+    --card-contact-highlight-color: #00F;
+
+    --section-title-highlight-color: lightblue;
+    --section-title-hashtag-color: lightgray;
+
+    --license-background-color: #EAEAEA;
+    --license-border-color: #BBB;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #222;
+
+        --text-primary-color: white;
+        --text-secondary-color: #EFEFEF;
+        --text-tertiary-color: #CCC;
+        --text-quaternary-color: #AAA;
+
+        --card-background-color: #333;
+        --card-shadow-color: #111;
+        --card-contact-highlight-color: #09F;
+
+        --section-title-highlight-color: lightblue;
+        --section-title-hashtag-color: lightgray;
+
+        --license-background-color: #333;
+        --license-border-color: #555;
+    }
+}
 body {
     font-family: sans-serif;
     margin: 0 18pt;
     /*max-width: 70em;*/
-    background-color: #f8f8f8;
+    background-color: var(--background-color);
+    color: var(--text-primary-color);
 }
+/*@media (prefers-color-scheme: dark) {*/
+/*    body {*/
+/*        background-color: #222;*/
+/*        color: white;*/
+/*    }*/
+/*}*/
 #bg {
     padding-top:20pt;
     padding-bottom: 40pt;
@@ -50,7 +95,6 @@ h1 a {
     margin-right: auto;
 }
 
-
 .history {
     display: flex;
     flex-direction: column;
@@ -69,7 +113,7 @@ h1 a {
     text-align: justify;
     line-height: 1.3;
     letter-spacing: 0.25pt;
-    color: #333;
+    color: var(--text-secondary-color);
 }
 
 
@@ -92,10 +136,10 @@ h1 a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--card-background-color);
     /*border: 2pt #FFE0F3 solid;*/
     border-radius: 20pt;
-    box-shadow: 0px 0px 20px 0px #eee;
+    box-shadow: 0px 0px 20px 0px var(--card-shadow-color);
     padding: 25pt;
     transition: transform 0.2s, box-shadow 0.2s;
     margin-top: 20pt;
@@ -114,22 +158,22 @@ h1 a {
 }
 .authorSection .contact a {
     text-decoration: none;
-    color: #777;
+    color: var(--text-quaternary-color);
     transition: 0.2s;
 }
 .authorSection:hover, .authorSection:focus-within {
     /*transform: translateY(-10pt);*/
     /*background: red;*/
     transform: scale(1.025);
-    box-shadow: 0px 0px 35px 5px #eee;
+    box-shadow: 0px 0px 35px 5px var(--card-shadow-color);
 }
 .authorSection:hover .contact a, .authorSection .contact a:focus {
-    color: revert;
+    color: var(--card-contact-highlight-color);
 }
 .authorSection > img {
     width: 100pt;
     height: 100pt;
-    background-color: #eee;
+    /*background-color: #eee;*/
     border-radius: 50%;
     margin-top: 0;
 }
@@ -143,12 +187,12 @@ h1 a {
 }
 .subtitle {
     font-size: 13pt;
-    color: #777;
+    color: var(--text-quaternary-color);
 }
 .description {
     font-size: 13.5pt;
     line-height: 1.3;
-    color: #333;
+    color: var(--text-tertiary-color);
     margin-bottom: 0;
 }
 .description p {
@@ -159,6 +203,27 @@ h1 a {
 .description p:last-of-type {
     margin-bottom: 0
 }
+/*@media (prefers-color-scheme: dark) {*/
+/*    .history p, .history a {*/
+/*        color: #efefef;*/
+/*    }*/
+/*    .authorSection {*/
+/*        background-color: #333;*/
+/*        box-shadow: 0px 0px 20px 0px #111;*/
+/*    }*/
+/*    .authorSection:hover, .authorSection:focus-within {*/
+/*        box-shadow: 0px 0px 35px 5px #111;*/
+/*    }*/
+/*    .authorSection .contact a {*/
+/*        color: white;*/
+/*    }*/
+/*    .authorSection:hover .contact a, .authorSection .contact a:focus {*/
+/*        color: #09F;*/
+/*    }*/
+/*    .description {*/
+/*        color: #efefef;*/
+/*    }*/
+/*}*/
 
 
 .aboutSection {
@@ -173,7 +238,7 @@ h1 a {
     width: fit-content;
 }
 .aboutSection .aboutTitle:hover {
-    background-color: lightskyblue;
+    background-color: var(--section-title-highlight-color);
 }
 .aboutSection .aboutTitle a {
     text-decoration: none;
@@ -182,7 +247,7 @@ h1 a {
 .aboutSection .aboutTitle a:hover::before {
     content:"#";
     display: inline-block;
-    color: gray;
+    color: var(--section-title-hashtag-color);
     margin-left: -20pt;
     font-family: monospace;
     /*font-weight: normal;*/
@@ -201,13 +266,22 @@ h1 a {
     margin-bottom: 0;
 }
 .aboutContent .topic-content {
-    color: #222;
+    color: var(--text-secondary-color);
     font-size: 13pt;
     line-height: 1.3;
     text-align: justify;
     max-width: 55em;
     margin-top: 4pt;
 }
+/*@media (prefers-color-scheme: dark) {*/
+/*    .aboutSection .aboutTitle:hover {*/
+/*        background-color: #09F;*/
+/*    }*/
+/*    .aboutContent .topic-content {*/
+/*        !*background-color: #111;*!*/
+/*        color: white;*/
+/*    }*/
+/*}*/
 .aboutContent > ul {
     padding-left: 15pt;
     font-size: 13pt;
@@ -224,15 +298,22 @@ h1 a {
     font-style: italic;
 }
 
-pre {
+.license {
     overflow: scroll;
     max-width: 470pt;
-    border: 1pt solid #bbb;
+    border: 1pt solid var(--license-border-color);
     border-radius: 4pt;
     padding: 8pt;
     /*padding-right: 30pt;*/
-    background-color: #eaeaea;
+    background-color: var(--license-background-color);
 }
+
+/*@media (prefers-color-scheme: dark) {*/
+/*    pre {*/
+/*        background-color: #444;*/
+/*        border: 1pt solid #333;*/
+/*    }*/
+/*}*/
 @media only screen and (max-width: 800px) {
     body {
         margin: 0 18pt;

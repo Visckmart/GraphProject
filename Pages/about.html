@@ -33,15 +33,13 @@
     </style>
     <style>
         #navigationBar {
-            /*background: #eee;*/
-            padding: var(--interfaceMargin);
-            padding-bottom: 0;
-            padding-top: 8pt;
-            /*margin-bottom: var(--interfaceMargin);*/
-            height: var(--navigationBarHeight);
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            padding-top: 8pt;
+            padding-bottom: 0;
+            height: var(--navigationBarHeight);
         }
         #navigationBar > #title {
             margin: 0 -8pt;
@@ -49,6 +47,11 @@
         #navigationBar a {
             text-decoration: none;
             color: black;
+        }
+        @media (prefers-color-scheme: dark) {
+            #navigationBar a {
+                color: white;
+            }
         }
     </style>
 </head>
@@ -337,7 +340,7 @@
                 O GraphTeacher utiliza a licença MIT, ela está presente no cabeçalho
                 dos arquivos do projeto.<br>
             </p>
-                <pre>MIT License
+                <pre class="license">MIT License
 
 Copyright (c) 2021 Thiago Lamenza e Victor Martins
 
