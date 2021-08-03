@@ -1,0 +1,96 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 Thiago Lamenza e Victor Martins
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+body {
+    font-family: sans-serif;
+    margin: 0 18pt;
+    background-color: #f8f8f8;
+    padding-bottom: 100pt;
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #111;
+        color: white;
+    }
+}
+#bg {
+    padding-top:20pt;
+    padding-bottom: 400pt;
+}
+h1 {
+    font-size: 30pt;
+    margin-bottom: 10pt;
+    margin-top: 0;
+}
+h1 a {
+    text-decoration: none;
+    color: inherit;
+}
+.instruction-section {
+    max-width: 700pt;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.instruction-block {
+    /*background-color: #F008;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8pt 0;
+}
+.instruction-title {
+    /*background-color: #00F4;*/
+}
+.instruction-title a {
+    text-decoration: none;
+    color: inherit;
+}
+.instruction-explanation h3 {
+    margin: 0;
+}
+.instruction-explanation {
+    /*background-color: #0F08;*/
+    width: 35em;
+}
+.instruction-demo {
+    width: 200pt;
+    height: 100pt;
+    background-color: black;
+}
+@media (prefers-color-scheme: dark) {
+    .instruction-demo {
+        background-color: #ccc;
+    }
+}
+.click-action {
+    display: none;
+}
+@media(hover: hover) and (pointer: fine) {
+    .touch-action {
+        display: none;
+    }
+    .click-action {
+        display: initial;
+    }
+}
