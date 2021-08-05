@@ -33,28 +33,26 @@
   </style>
   <style>
     #navigationBar {
-      /*background: #eee;*/
-      padding: var(--interfaceMargin);
-      padding-bottom: 0;
-      padding-top: 8pt;
-      /*margin-bottom: var(--interfaceMargin);*/
-      height: var(--navigationBarHeight);
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      padding-top: 8pt;
+      padding-bottom: 0;
+      height: var(--navigationBarHeight);
     }
     #navigationBar > #title {
       margin: 0 -8pt;
     }
     #navigationBar a {
       text-decoration: none;
-      color: inherit;
+      color: black;
     }
-    /*@media (prefers-color-scheme: dark) {*/
-    /*  #navigationBar a {*/
-    /*    color: white;*/
-    /*  }*/
-    /*}*/
+    @media (prefers-color-scheme: dark) {
+      #navigationBar a {
+        color: white;
+      }
+    }
   </style>
 </head>
 <body>
