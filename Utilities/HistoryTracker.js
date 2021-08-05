@@ -27,6 +27,7 @@ export default class HistoryTracker {
     // Marcador do passo atual
     cursor = -1;
 
+    didChange = null;
     // Avança o marcador e armazena um novo passo
     registerStep(newStep) {
         // Anda com o marcador
@@ -35,6 +36,13 @@ export default class HistoryTracker {
         this.steps.splice(this.cursor);
         // Armazena o passo atual
         this.steps[this.cursor] = newStep.clone();
+
+        this.didChange(true);
+    }
+
+    getCurrentStep() {
+// Retorna o passo solicitado
+        return this.steps[this.cursor].clone();
     }
 
     // Move o marcador como solicitado e retorna o conteúdo do passo
@@ -44,11 +52,11 @@ export default class HistoryTracker {
 
         // Não permite o marcador sair dos limites
         if (newCursorPos < 0 || newCursorPos > this.steps.length-1) {
-            return null;
+            return false;
         }
 
         this.cursor = newCursorPos;
-        // Retorna o passo solicitado
-        return this.steps[this.cursor].clone();
+        this.didChange(false);
+        return true;
     }
 }

@@ -189,6 +189,7 @@ export class GraphView {
         }
         // HISTORY
         this.history = new HistoryTracker();
+        this.history.didChange = () => { this.historyDidChange() };
         // this.history.registerStep(this.structure.clone())
         this.registerStep()
         // Debugging
@@ -198,6 +199,23 @@ export class GraphView {
         //     let r = getRandomInt(0, 3)
         //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
+    }
+
+    historyDidChange(isNewStep) {
+        if (!isNewStep) {
+            this.structure = this.history.getCurrentStep();
+            this.refreshGraph();
+        }
+        let serializedGraph = this.structure.serialize();
+        let shareLink = window.location.protocol + "//"
+                        + window.location.host + window.location.pathname
+                        + "?graph=" + serializedGraph;
+        let exportLinkButton = document.getElementById("exportLink");
+        if (exportLinkButton) {
+            exportLinkButton.href = shareLink;
+        } else {
+            console.warn("Botão de exportar como link não foi encontrado.");
+        }
     }
 
     darkModeChanged(isActive) {
@@ -417,7 +435,7 @@ export class GraphView {
     //region Manipulação do Grafo
 
     registerStep() {
-        this.history.registerStep(this.structure.clone())
+        this.history.registerStep(this.structure.clone());
     }
 
     nodeColorIndex = 0;

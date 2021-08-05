@@ -163,8 +163,6 @@ class GraphKeyboardHandler {
             if (keyboardEvent.shiftKey == false) {
                 let step = this.graphView.history.goToStep(-1);
                 if (step) {
-                    this.graphView.structure = step;
-                    this.graphView.refreshGraph();
                     keyboardEvent.preventDefault();
                 }
             }
@@ -173,8 +171,6 @@ class GraphKeyboardHandler {
         case "Z":
             let step = this.graphView.history.goToStep(1);
             if (step) {
-                this.graphView.structure = step;
-                this.graphView.refreshGraph();
                 keyboardEvent.preventDefault();
             }
             break;

@@ -26,21 +26,37 @@ import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeUR
 import { g, isMobile } from "./GraphView.js";
 
 if (!isMobile) {
-    console.log("Inicializando...");
+    // console.log("Inicializando...");
     let exportFileButton = document.getElementById("exportFile");
-    exportFileButton.onclick = () => exportAsFile(g.structure);
+    if (exportFileButton) {
+        exportFileButton.onclick = () => exportAsFile(g.structure);
+    } else {
+        console.warn("Botão de exportar como arquivo não foi encontrado.");
+    }
 
     let exportTextButton = document.getElementById("exportText");
-    exportTextButton.onclick = () => exportAsText(g.structure);
+    if (exportTextButton) {
+        exportTextButton.onclick = () => exportAsText(g.structure);
+    } else {
+        console.warn("Botão de exportar como texto não foi encontrado.");
+    }
 
     let exportLinkButton = document.getElementById("exportLink");
-    exportLinkButton.onclick = () => exportAsURL(g.structure);
+    if (exportLinkButton) {
+        exportLinkButton.onclick = () => exportAsURL(g.structure);
+    } else {
+        console.warn("Botão de exportar como link não foi encontrado.");
+    }
 
     let exportImageButton = document.getElementById("exportImage");
-    exportImageButton.onclick = () => exportViewAsImage(g);
+    if (exportImageButton) {
+        exportImageButton.onclick = () => exportViewAsImage(g);
+    } else {
+        console.warn("Botão de exportar como imagem não foi encontrado.");
+    }
 
     let tutorialOverlay = document.getElementById("tutorial-overlay");
-    console.log(window.localStorage.getItem("tutorial-quit"))
+    // console.log(window.localStorage.getItem("tutorial-quit"))
     if (window.localStorage.getItem("tutorial-quit") != "true") {
         tutorialOverlay.style.visibility = "visible";
     }
