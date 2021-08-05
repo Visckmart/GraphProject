@@ -50,10 +50,30 @@ export default class AlgorithmInputHandler {
 
         // Eventos de input
         document.addEventListener("keydown", this.handleKeydown)
+        window.onwheel = (event) => {
+            event.preventDefault()
+            let deltaX = event.deltaX;
+            let deltaY = event.deltaY;
+            let biggestDelta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : -deltaY;
+
+            if ((this.acc < 0 && biggestDelta > 0) || (this.acc > 0 && biggestDelta < 0)) {
+                this.acc = biggestDelta;
+            } else {
+                this.acc += biggestDelta;
+            }
+            if (Math.abs(this.acc) < 20) { return; }
+            // console.log(biggestDelta);
+            if (this.acc < 0) {
+                this._controller.progress += 1;
+            } else {
+                this._controller.progress -= 1;
+            }
+            this.acc = 0;
+        }
 
         this.initializeControls()
     }
-
+    acc = 0;
     // Inicializa as funcionalidades dos elementos HTML dos controles
     initializeControls() {
         this._playButtonHandler = () => {
