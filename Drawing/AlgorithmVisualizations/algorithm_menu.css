@@ -34,8 +34,12 @@
     height: fit-content;
     max-height: calc(100% - 150pt);
     z-index: 15;
-    transform: translateX(calc(-100% + var(--tabWidth)));
     transition: all 0.2s ease-in-out;
+    transform: translateX(calc(-100% + var(--tabWidth)));
+}
+
+#algorithmMenu:hover, #algorithmMenu.open{
+    transform: unset;
 }
 
 #algorithmMenuBody {
@@ -48,9 +52,6 @@
     border-bottom-right-radius: 12pt;
 }
 
-#algorithmMenu:hover, #algorithmMenu:target{
-    transform: translateX(0);
-}
 
 #algorithmMenuTab {
     width: var(--tabWidth);
@@ -84,13 +85,14 @@
     fill: white;
 }
 
-#algorithmMenu:target #algorithmMenuPin {
+#algorithmMenu.open #algorithmMenuUnpin {
+    display: block !important;
+}
+
+#algorithmMenu.open #algorithmMenuPin {
     display: none;
 }
 
-#algorithmMenu:target #algorithmMenuUnpin {
-    display: block !important;
-}
 
 #algorithmMenuTabs {
     display: flex;
