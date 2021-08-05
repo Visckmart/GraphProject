@@ -69,18 +69,21 @@ export function exportViewAsImage(graphView) {
 
     let textImg = new Image();
     textImg.src = graphView.slowCanvas.toDataURL('image/png');
-    graphView.redrawGraph(true);
-    let ctx = graphView.canvas.getContext("2d");
-    ctx.drawImage(textImg, 0, 0);
-    let image = graphView.canvas.toDataURL();
+    // TODO: Melhorar organização
+    textImg.onload = function() {
+        graphView.redrawGraph(true);
+        let ctx = graphView.canvas.getContext("2d");
+        ctx.drawImage(textImg, 0, 0);
+        let image = graphView.canvas.toDataURL();
 
-    graphView.processingScreenshot = false;
+        graphView.processingScreenshot = false;
 
-    let temporaryLink = document.createElement('a');
-    temporaryLink.download = `Grafo ${getFormattedTime()}.png`;
-    temporaryLink.href = image;
+        let temporaryLink = document.createElement('a');
+        temporaryLink.download = `Grafo ${getFormattedTime()}.png`;
+        temporaryLink.href = image;
 
-    temporaryLink.click();
+        temporaryLink.click();
+    }
 }
 //endregion
 
