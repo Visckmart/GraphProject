@@ -28,10 +28,49 @@
   --menuWidth: 200pt;
 }
 
+
+:root {
+  --background-color: #F8F8F8;
+
+  --text-primary-color: black;
+  --text-secondary-color: #222;
+  --text-tertiary-color: #333;
+  --text-quaternary-color: #777;
+
+  --card-background-color: #FFF;
+  --card-shadow-color: #EEE;
+  --card-contact-highlight-color: #00F;
+
+  --section-title-highlight-color: lightblue;
+  --section-title-hashtag-color: lightgray;
+
+  --license-background-color: #EAEAEA;
+  --license-border-color: #BBB;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #222;
+
+    --text-primary-color: white;
+    --text-secondary-color: #EFEFEF;
+    --text-tertiary-color: #CCC;
+    --text-quaternary-color: #AAA;
+
+    --card-background-color: #333;
+    --card-shadow-color: #111;
+    --card-contact-highlight-color: #09F;
+
+    --section-title-highlight-color: lightblue;
+    --section-title-hashtag-color: lightgray;
+
+    --license-background-color: #333;
+    --license-border-color: #555;
+  }
+}
 body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
-  background-color: #f8f8f8;
+  background-color: var(--background-color);
   /*max-height: 50vh;*/
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   display: flex;
@@ -188,6 +227,11 @@ body {
   max-width: calc(100% - var(--menuWidth));
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
 }
+@media (prefers-color-scheme: dark) {
+  #canvasArea {
+    background: linear-gradient(to right, #B8B4CC, #CCB4C3);
+  }
+}
 #mainCanvas {
   /*background: linear-gradient(to right, #E5E0FF, #FFE0F3);*/
   transition: 0.1s;
@@ -254,6 +298,12 @@ body {
   max-width: var(--menuWidth);
   background: linear-gradient(to right, #EBEBEB, #D9D9D9);
 }
+
+@media (prefers-color-scheme: dark) {
+  #menuArea {
+    background: linear-gradient(to right, #2F2F2F, #222);
+  }
+}
 .menuContent {
   display: flex;
   flex-direction: column;
@@ -270,7 +320,8 @@ body {
   width: fit-content;
   margin-top: 0;
   margin-bottom: 4pt;
-  border-bottom: 2pt solid darkgray;
+  border-bottom: 2pt solid lightgray;
+  color: var(--text-primary-color);
 }
 .menuBody {
   flex: 1 1 auto;
@@ -286,7 +337,7 @@ body {
   padding-top: 5pt;
   padding-bottom: 5pt;
 
-  color: #444;
+  color: var(--text-secondary-color);
 
   border-bottom: 1pt solid gray;
 }
@@ -325,7 +376,7 @@ body {
 .settingsSection input {
   font-size: 12pt;
 }
-.settingsSection button {
+.settingsSection button, .settingsSection a {
   margin: 0;
   padding: 3pt 5pt;
   appearance: none;
@@ -335,8 +386,17 @@ body {
   border: 1pt solid #999;
   border-radius: 4.5pt;
 }
-.settingsSection button:hover {
-  background: #eee;
+.settingsSection a {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.847);
+  text-decoration-color: blue;
+  text-decoration-thickness: 1pt;
+  /*border: 1pt solid blue;*/
+}
+@media(hover: hover) and (pointer: fine) {
+  .settingsSection button:hover {
+    background: #eee;
+  }
 }
 .settingsSection button:active {
   background: #aaa;
@@ -390,7 +450,7 @@ footer {
   font-weight: normal;
 }
 footer p, footer a {
-  color: #444;
+  color: var(--text-secondary-color);
   text-decoration: none;
   margin-left: auto;
   margin-right: auto;
@@ -401,7 +461,12 @@ footer p, footer a {
 footer a:hover > #authors {
   background-color: greenyellow;
 }
+@media (prefers-color-scheme: dark) {
+  footer a:hover > #authors {
+    background-color: forestgreen;
+  }
 
+}
 @media only screen and (max-width: 650pt), only screen and (max-height: 225pt) {
   #menuArea {
     display: none;

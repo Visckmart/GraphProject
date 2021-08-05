@@ -103,6 +103,9 @@ export default class Edge {
         } else if (this.highlights.has(HighlightType.DARKEN)) {
             return "#777";
         }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return "#DFDFDF";
+        }
         return "#aaa";
     }
     get width() {

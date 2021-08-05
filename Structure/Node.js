@@ -120,6 +120,12 @@ export default class Node {
             ctx.fillStyle = this.color;
         }
         ctx.fill();
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            ctx.fillStyle = this.color;
+            ctx.fill();
+            ctx.fillStyle = "#EFEFEFCC";
+            ctx.fill();
+        }
         if (this.highlights.has(HighlightType.DISABLED)) {
             ctx.globalAlpha = 0.5;
         }

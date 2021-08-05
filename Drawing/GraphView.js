@@ -91,6 +91,11 @@ export class GraphView {
         this.selectionHandler = new GraphSelection(this, false);
         this.mouseHandler = new GraphMouseHandler(this);
         this.keyboardHandler = new GraphKeyboardHandler(this);
+        window
+            .matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', (event) => {
+                this.darkModeChanged(event.matches);
+            });
 
         if (interactive) {
             // Mouse
@@ -192,6 +197,18 @@ export class GraphView {
         //     let r = getRandomInt(0, 3)
         //     Array.from(this.structure.nodes())[r].highlights.add(NodeHighlightType.ALGORITHM_FOCUS)
         // }
+    }
+
+    darkModeChanged(isActive) {
+        if (isActive) {
+            this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+            this.background.addColorStop(0, "#B8B4CC");
+            this.background.addColorStop(1, "#CCB4C3");
+        } else {
+            this.background = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+            this.background.addColorStop(0, "#E5E0FF");
+            this.background.addColorStop(1, "#FFE0F3");
+        }
     }
 
     background;
@@ -596,6 +613,7 @@ export class GraphView {
     // This function clears the canvas and redraws it.
     redrawGraph(background = false) {
         if (this.processingScreenshot && background == false) return;
+        this.darkModeChanged(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         this.ctx.save();
         // TODO: Esse if é meio gambiarra, o fundo deveria ser transparente
         //       o tempo todo, e o cache deveria saber lidar com isso.
