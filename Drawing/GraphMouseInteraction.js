@@ -511,17 +511,17 @@ class GraphMouseHandler {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
         // Se está desenhando a área de seleção
-        // if (this.selection.shouldDrawSelection) {
-        //     // Para de desenhar
-        //     this.selection.clearSelectionArea();
-        //     this.selection.refreshMenu()
-        // }
+        if (this.selection.shouldDrawSelection) {
+            // Para de desenhar
+            this.selection.clearSelectionArea();
+            this.selection.refreshMenu()
+        }
         // // Pare de atualizar a aresta temporária
-        // this.shouldDrawTemporaryEdge = false;
+        this.shouldDrawTemporaryEdge = false;
 
         // Atualiza a posição dos nós selecionados, para que o próximo
         // gesto de mover esses nós tenha as posições adequadas.
-        // this.selection.registerNodePositions();
+        this.selection.registerNodePositions();
     }
 
     // Estilo do ponteiro do mouse

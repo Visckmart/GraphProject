@@ -105,6 +105,7 @@ export class GraphView {
                     canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
                     canvas.onmouseup = this.mouseHandler.mouseUpEvent;
                     canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+                    canvas.onmouseout = this.mouseHandler.mouseLeaveEvent;
                 } else {
                     canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
                     canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
