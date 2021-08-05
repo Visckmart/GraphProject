@@ -148,6 +148,9 @@ body {
   margin: 50pt 50pt;
   height: calc(100% - 100pt);
 }
+#tutorial-wrapper button {
+  border-radius: 5pt;
+}
 #tutorial-wrapper h1 {
   margin-bottom: 0;
 }
@@ -390,16 +393,22 @@ body {
   font-size: 11px;
   color: rgba(0, 0, 0, 0.847);
   text-decoration-color: blue;
-  text-decoration-thickness: 1pt;
+  /*text-decoration-thickness: 1pt;*/
   /*border: 1pt solid blue;*/
+  -webkit-user-select: none;
+  user-select: none;
+  /*cursor: default;*/
 }
 @media(hover: hover) and (pointer: fine) {
-  .settingsSection button:hover {
+  .settingsSection button:hover,
+  .settingsSection a:hover {
     background: #eee;
   }
 }
-.settingsSection button:active {
+.settingsSection button:active,
+.settingsSection a:active {
   background: #aaa;
+  color: white;
 }
 
 .settingsRow {
