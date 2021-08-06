@@ -189,7 +189,7 @@ export class GraphView {
         }
         // HISTORY
         this.history = new HistoryTracker();
-        this.history.didChange = () => { this.historyDidChange() };
+        this.history.didChange = this.historyDidChange.bind(this);
         // this.history.registerStep(this.structure.clone())
         this.registerStep()
         // Debugging
