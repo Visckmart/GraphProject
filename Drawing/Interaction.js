@@ -29,7 +29,7 @@ import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 // import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 // import KruskalMST from "../Algorithm/KruskalMST.js";
 // import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
-import {updateFavorites} from "../Utilities/FavoritesHandler.js";
+import { updateFavorites } from "../Utilities/FavoritesHandler.js";
 // import EulerianPath from "../Algorithm/EulerianPath.js";
 // import FordFulkerson from "../Algorithm/FordFulkerson.js";
 
@@ -154,7 +154,6 @@ function updateGraph() {
 }
 
 export function refreshInterfaceCategories() {
-    console.log("ric")
     let categoriesState = g.structure.getCategories();
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         checkbox.checked = categoriesState.has(category);

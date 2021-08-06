@@ -25,7 +25,6 @@ import { Tool } from "./General.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 import { getAlgorithmFromName } from "./Interaction.js";
 import { getFormattedTime } from "../Utilities/Utilities.js";
-import { g } from "./GraphView.js";
 
 class GraphKeyboardHandler {
 
@@ -81,10 +80,13 @@ class GraphKeyboardHandler {
 
         let metaPressed = this.isMetaKey(keyboardEvent)
         if (metaPressed) {
-            if (this.lastToolChoice == null) {
-                this.lastToolChoice = this.graphView.primaryTool;
+            let originalToolChoice = this.lastToolChoice;
+            if (this.lastToolChoice == Tool.MOVE) {
+                this.graphView.primaryTool = Tool.CONNECT;
+            } else if (this.lastToolChoice == Tool.CONNECT) {
+                this.graphView.primaryTool = Tool.MOVE;
             }
-            this.graphView.primaryTool = Tool.CONNECT;
+            this.lastToolChoice = originalToolChoice;
         }
 
         switch (keyboardEvent.key) {
@@ -131,9 +133,10 @@ class GraphKeyboardHandler {
 
 
         let metaPressed = this.isMetaKey(keyboardEvent);
-        if (metaPressed == false && this.lastToolChoice == Tool.MOVE) {
-            this.graphView.primaryTool = Tool.MOVE;
-            this.lastToolChoice = null;
+        if (metaPressed == false) {
+            let originalToolChoice = this.lastToolChoice;
+            this.graphView.primaryTool = this.lastToolChoice;
+            this.lastToolChoice = originalToolChoice;
         }
 
         switch (keyboardEvent.key) {

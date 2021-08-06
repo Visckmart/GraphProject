@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {CanvasType, Tool} from "./General.js"
+import { CanvasType, Tool } from "./General.js"
 import { HighlightType } from "../Utilities/Highlights.js"
 import { getDistanceOf, isLeftClick, isRightClick } from "../Utilities/Utilities.js"
 import Edge from "../Structure/Edge.js";
@@ -510,6 +510,7 @@ class GraphMouseHandler {
     mouseLeaveEvent = () => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
+
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
             // Para de desenhar
