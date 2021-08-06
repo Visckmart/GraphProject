@@ -218,7 +218,7 @@ class Graph {
     checkEdgeBetween(nodeA, nodeB) {
         let connA = this.data.get(nodeA);
         if (connA == null) {
-            console.warn("Houve uma tentativa de checar uma aresta  inexistente.")
+            console.warn("Houve uma tentativa de checar uma aresta inexistente.")
             return false;
         }
         return connA.get(nodeB) != null;
