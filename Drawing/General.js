@@ -71,6 +71,8 @@ export const GraphCategory = {
 }
 
 export const Algorithm = {
+    DFS:                'DFS',
+    BFS:                'BFS',
     DIJKSTRA:           'Dijkstra',
     GREEDY_NODE_COLOR:  'GreedyNodeColoring',
     MST_PRIM:           'PrimMST',
