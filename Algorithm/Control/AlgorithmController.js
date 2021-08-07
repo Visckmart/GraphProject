@@ -22,8 +22,7 @@
  */
 
 import AlgorithmInputHandler from "./AlgorithmInputHandler.js";
-import {Requirement} from "./AlgorithmRequirements.js";
-import {canvas} from "../../Drawing/General.js";
+import { Requirement } from "./AlgorithmRequirements.js";
 import AlgorithmPseudocode from "../../Drawing/AlgorithmVisualizations/Pseudocode/AlgorithmPseudocode.js";
 import AlgorithmMenu from "./AlgorithmMenu.js";
 
@@ -209,7 +208,7 @@ class AlgorithmController {
 
         if(value) {
             this.inputHandler.playButton.style.display = 'none'
-            this.inputHandler.stopButton.style.display = 'block'
+            this.inputHandler.stopButton.style.display = 'flex'
 
             if(this.progress === this.numberOfSteps - 1) {
                 this.progress = 0
@@ -223,7 +222,7 @@ class AlgorithmController {
             }
         }
         else {
-            this.inputHandler.playButton.style.display = 'block'
+            this.inputHandler.playButton.style.display = 'flex'
             this.inputHandler.stopButton.style.display = 'none'
             if(this._interval)
             {
@@ -305,7 +304,7 @@ class AlgorithmController {
         })
         request.open("GET", code)
         request.send()
-        console.warn("2",request.status);
+        // console.warn("2",request.status);
     }
     //#endregion
     // Esconde a barra de play
