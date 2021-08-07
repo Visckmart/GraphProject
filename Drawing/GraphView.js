@@ -22,31 +22,25 @@
  */
 
 import {
-    canvas, Tool, HighFPSFeature, fastOverlayCanvas, slowOverlayCanvas,
-    CanvasType, incrementGlobalIndex, GraphCategory
+    canvas, CanvasType, fastOverlayCanvas, GraphCategory, HighFPSFeature, incrementGlobalIndex, slowOverlayCanvas, Tool
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
-import {HighlightType} from "../Utilities/Highlights.js";
+import { HighlightType } from "../Utilities/Highlights.js";
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
-import {
-    colorFromComponents,
-} from "../Utilities/Utilities.js";
+import { colorFromComponents, } from "../Utilities/Utilities.js";
 import PropertyList from "../Structure/Properties/PropertyList.js";
-import {generateRandomEdges, generateRandomNodes} from "./GraphViewDebugHelper.js";
-import {regularNodeRadius} from "../Structure/Node.js";
+import { regularNodeRadius } from "../Structure/Node.js";
 
 import HistoryTracker from "../Utilities/HistoryTracker.js"
-import {testBasicRoutine} from "./GraphViewTests.js";
 import cacheFrames from "./GraphFrameCaching.js";
 import { refreshInterfaceCategories } from "./Interaction.js";
 import {
-    checkLineLineCollision,
-    checkLinePointCollision, checkRectanglePointCollision, checkRectangleSquareCollision,
-    checkSquarePointCollision, createRectangleChecker, rotatePoint, translateWithAngle
+    checkLinePointCollision, checkRectangleSquareCollision, checkSquarePointCollision, createRectangleChecker,
+    translateWithAngle
 } from "./GeometryHelper.js";
 import { GraphInterface } from "./GraphInterface.js";
 // Registrando componente custom
@@ -189,7 +183,7 @@ export class GraphView {
         }
         // HISTORY
         this.history = new HistoryTracker();
-        this.history.didChange = () => { this.historyDidChange() };
+        this.history.didChange = this.historyDidChange.bind(this);
         // this.history.registerStep(this.structure.clone())
         this.registerStep()
         // Debugging
@@ -551,12 +545,12 @@ export class GraphView {
         this.background.addColorStop(0, "#E5E0FF");
         this.background.addColorStop(1, "#FFE0F3");
         // Ajustando posição dos nós
-        // let widthRatio = newWidth/originalWidth;
-        // let heightRatio = newHeight/originalHeight;
-        // for (let node of this.structure.nodes()) {
-        //     node.pos.x *= widthRatio;
-        //     node.pos.y *= heightRatio;
-        // }
+        let widthRatio = newWidth/originalWidth;
+        let heightRatio = newHeight/originalHeight;
+        for (let node of this.structure.nodes()) {
+            node.pos.x *= widthRatio;
+            node.pos.y *= heightRatio;
+        }
 
         // Blur
         if (this.blurTimeout) {
