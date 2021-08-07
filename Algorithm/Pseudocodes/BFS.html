@@ -1,0 +1,27 @@
+<pre label="init">
+<span class="comment">O algoritmo DFS usa uma fila como estrutura de controle</span>
+fila = Fila()
+<span class="comment">Inserindo o nó inicial na fila para ser o primeiro analisado</span>
+fila.push(nóInicial)
+</pre>
+<pre label="loopStart">
+<span class="keyword">enquanto</span> tamanho da fila > 0 {
+    <span class="comment">Escolhe o nó no fim da fila como nó corrente</span>
+    <span class="comment">e o marca como visitado.</span>
+    nóCorrente = fila.remove()
+    nóCorrente.visitado = true
+</pre>
+<pre label="visitStart">
+    <span class="keyword">para cada</span> nó vizinho de nóCorrente {
+        <span class="keyword">se</span> nó não visitado {
+            <span class="comment">Insere o nó na fila para visitá-lo posteriormente</span>
+            fila.insere(nó)
+
+            <span class="comment">Marca nó como visitado ao ser descoberto</span>
+            nó.visitado = true
+        }
+    }
+</pre>
+<pre>
+}
+</pre>

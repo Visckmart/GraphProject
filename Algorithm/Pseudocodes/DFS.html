@@ -1,0 +1,30 @@
+<pre label="init">
+<span class="comment">O algoritmo DFS usa uma pilha como estrutura de controle</span>
+pilha = Pilha()
+<span class="comment">Inserindo o nó inicial na pilha para ser o primeiro analisado</span>
+pilha.push(nóInicial)
+</pre>
+<pre label="loopStart">
+<span class="keyword">enquanto</span> tamanho da pilha > 0 {
+    <span class="comment">Escolhe o nó no topo da pilha como nó corrente</span>
+    <span class="comment">e o marca como visitado.</span>
+    nóCorrente = pilha.pop()
+    nóCorrente.visitado = true
+</pre>
+<pre label="visitStart">
+    <span class="keyword">para cada</span> nó vizinho de nóCorrente {
+        <span class="keyword">se</span> nó não visitado {
+            <span class="comment">Insere o nó corrente na pilha para</span>
+            <span class="comment">retornar à ele caso haja mais vizinhos.</span>
+            pilha.push(nóCorrente)
+
+            <span class="comment">Insere nó na pilha para visitá-lo em seguida.</span>
+            pilha.push(nó)
+
+            volta ao início do primeiro loop
+        }
+    }
+</pre>
+<pre>
+}
+</pre>

@@ -23,17 +23,17 @@
 
 import { HighlightType } from "../Utilities/Highlights.js"
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
-import Queue from "./Auxiliary/Queue.js";
+import Stack from "./Auxiliary/Stack.js";
 
 // Prepara a execução do BFS
 export default async function BFS(controller)
 {
     let startNode;
     controller.addRequirement(RequirementType.SELECT_NODE,
-        "Selecione o nó de inicio para a o BFS",
+        "Selecione o nó de inicio para a o DFS",
         (node) => startNode = node)
     await controller.resolveRequirements()
-    executeBFS(controller, startNode)
+    executeDFS(controller, startNode)
 }
 
 class nodeEdgePair {
@@ -48,61 +48,62 @@ class nodeEdgePair {
 }
 
 // Executa o BFS
-function executeBFS(controller, startNode)
+function executeDFS(controller, startNode)
 {
-    controller.setPseudocode('../Algorithm/Pseudocodes/BFS.html')
+    controller.setPseudocode('../Algorithm/Pseudocodes/DFS.html')
 
     let graph = controller.graphView.structure
-    let queue = new Queue()
-    queue.insert(new nodeEdgePair(startNode, null))
-    controller.showcasing = queue
-
-    controller.addStep(graph, `Adicionando o nó inicial ${startNode.toString()} na fila.`, 'init')
+    let stack = new Stack()
+    controller.showcasing = stack
+    stack.push(new nodeEdgePair(startNode, null))
 
     // Highlight para nós que não foram descobertos
     for(let node of graph.nodes()) {
         node.highlights.add(HighlightType.DISABLED)
     }
 
+    controller.addStep(graph, `Adicionando o nó inicial ${startNode.toString()} na pilha.`, 'init')
+
     let currentNode, currentEdge
-    while(queue.length > 0){
-        ({node: currentNode, edge: currentEdge} = queue.remove())
+    outerLoop: while(stack.length > 0){
+        ({node: currentNode, edge: currentEdge} = stack.pop())
+
         currentNode.highlights.add(HighlightType.COLORED_BORDER2)
         currentNode.visited = true
 
         if(currentEdge)
         {
             currentEdge.highlights.add(HighlightType.COLORED_A)
-            controller.addStep(graph, `Visitando o nó ${currentNode.label} a partir da aresta ${currentEdge.label}.`, 'loopStart')
+            controller.addStep(graph, `Visitando o nó ${currentNode.toString()}.`, 'loopStart')
             currentEdge.highlights.remove(HighlightType.COLORED_A)
             currentEdge.highlights.add(HighlightType.LIGHTEN)
         } else {
             // Removendo highlight para o primeiro nó
             currentNode.highlights.remove(HighlightType.DISABLED)
 
-            controller.addStep(graph, `Visitando o nó ${currentNode.label}.`, 'loopStart')
+            controller.addStep(graph, `Visitando o nó ${currentNode.toString()}.`, 'loopStart')
         }
         currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
 
-
-
-
         for(let [edge, node] of graph.edgesFrom(currentNode))
         {
+
             if(!node.visited)
             {
-                queue.insert(new nodeEdgePair(node, edge))
+                stack.push(new nodeEdgePair(currentNode, currentEdge))
+                stack.push(new nodeEdgePair(node, edge))
 
                 // Removendo highlight para nós descobertos
                 node.highlights.remove(HighlightType.DISABLED)
 
                 edge.highlights.add(HighlightType.COLORED_A)
-                controller.addStep(graph, `Descobrindo o nó ${node.toString()} e colocando-o na fila.`, 'visitStart')
+                controller.addStep(graph, `Adicionando o nó ${currentNode.toString()} na pilha e partindo para o nó ${node.toString()}.`, 'visitStart')
                 edge.highlights.remove(HighlightType.COLORED_A)
-                node.visited = true
+                continue outerLoop;
             }
         }
-
+        currentNode.highlights.add(HighlightType.COLORED_BORDER2)
+        controller.addStep(graph, `Nó ${currentNode.toString()} não tem mais vizinhos não visitados.`, 'visitStart')
         currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
     }
     currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)

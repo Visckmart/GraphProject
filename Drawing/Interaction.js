@@ -67,6 +67,10 @@ function getRequiredCategoriesForAlgorithm(alg) {
     console.log(alg)
     let boundCategories = {};
     switch (alg) {
+    case 'DFS':
+        break;
+    case 'BFS':
+        break;
     case 'PrimMST':
         boundCategories[GraphCategory.WEIGHTED_EDGES] = true;
         boundCategories[GraphCategory.DIRECTED_EDGES] = false;
@@ -94,6 +98,12 @@ let runAlgorithmButton = document.getElementById("run_algorithm")
 export async function getAlgorithmFromName(name) {
     let algModuleName;
     switch (name) {
+        case Algorithm.DFS:
+            algModuleName = 'DFS'
+            break;
+        case Algorithm.BFS:
+            algModuleName = 'BFS';
+            break;
         case Algorithm.DIJKSTRA:
             algModuleName = "DijkstraShortestPath";
             break;
