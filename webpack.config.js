@@ -12,7 +12,10 @@ module.exports = {
     },
     plugins: [new MiniCssExtractPlugin(),
         new HtmlWebpackPlugin({
-            template: './Pages/drawing.html'
+            template: './Pages/drawing.html',
+            minify: {
+                removeRedundantAttributes: false
+            }
         })
     ],
     module: {
@@ -25,6 +28,7 @@ module.exports = {
                 test: /\.html$/i,
                 loader: "html-loader",
                 options: {
+                    sources: false,
                     preprocessor: (content, loaderContext) => {
                         let array = content.split('\n')
                         array = array.filter(a => {
