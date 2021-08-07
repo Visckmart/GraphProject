@@ -29,12 +29,13 @@ import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 // import DFSCycleDetection from "../Algorithm/DFSCycleDetection.js";
 // import KruskalMST from "../Algorithm/KruskalMST.js";
 // import EdmondsMSA from "../Algorithm/EdmondsMSA.js";
-import { updateFavorites } from "../Utilities/FavoritesHandler.js";
+import FavoritesHandler from "../Utilities/FavoritesHandler.js";
 // import EulerianPath from "../Algorithm/EulerianPath.js";
 // import FordFulkerson from "../Algorithm/FordFulkerson.js";
 
-updateFavorites()
-
+// updateFavorites()
+let fh = new FavoritesHandler(document.getElementById("menuArea"))
+fh.updateFavorites();
 export let categoryCheckboxes = {
     [GraphCategory.COLORED_NODES]:  document.getElementById('coloredNodes'),
 
