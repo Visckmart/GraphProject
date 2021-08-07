@@ -23,19 +23,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<!--	<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">-->
-<!--	<meta content="ISO-8859-1" http-equiv="encoding">-->
+    <!--	<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">-->
+    <!--	<meta content="ISO-8859-1" http-equiv="encoding">-->
     <meta charset="UTF-8">
     <title>GraphTeacher</title>
-<!--    <base href="http://graphteacher.inf.puc-rio.br/GraphProject/Pages/" />-->
-<!--    <link rel="stylesheet" href="style.css">-->
-<!--    <link rel="preload" href="style.css?a=c" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
-    <link rel="stylesheet" data-href="dynamic-stylesheet">
+    <!--    <base href="http://graphteacher.inf.puc-rio.br/GraphProject/Pages/" />-->
+    <!--    <link rel="stylesheet" href="style.css">-->
+    <!--    <link rel="preload" href="style.css?a=c" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
+    <link rel="stylesheet" href="style.css">
 
-    <script>
-        const link = document.querySelector('link[data-href="dynamic-stylesheet"]');
-        link.href = `style.css?cb=${Math.random() || 'defaultValue'}`;
-    </script>
     <link rel="stylesheet" href="tool_tray.css">
     <meta name="viewport" content="height=device-height, initial-scale=1, user-scalable=no">
     <!--  Stylesheets de algoritmos não precisam ser carregadas sincronamente  -->
@@ -51,11 +47,11 @@
     <link rel="preload" href="../Drawing/AlgorithmVisualizations/Showcase/algorithm_showcase.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="../Drawing/AlgorithmVisualizations/Showcase/algorithm_showcase.css"></noscript>
 
-<!--    <script type="module" src="../Drawing/General.js" crossorigin="anonymous"></script>-->
-<!--    <script type="module" src="../Drawing/Interaction.js" crossorigin="anonymous"></script>-->
-<!--    <script type="module" src="../Drawing/GraphView.js" crossorigin="anonymous"></script>-->
-<!--    <script type="module" src="../Drawing/Initialization.js" crossorigin="anonymous"></script>-->
-    <script type="module" src="../dist/main.js"></script>
+    <script type="module" src="../Drawing/General.js" crossorigin="anonymous"></script>
+    <script type="module" src="../Drawing/Interaction.js" crossorigin="anonymous"></script>
+    <script type="module" src="../Drawing/GraphView.js" crossorigin="anonymous"></script>
+    <script type="module" src="../Drawing/Initialization.js" crossorigin="anonymous"></script>
+
     <style>
         #navigationBar {
             /*background: #eee;*/
@@ -86,7 +82,7 @@
 <div id="navigationBar">
     <h2 id="title"><a href="./drawing.html">GraphTeacher <span class="version">αlpha</span></a></h2>
     <h4><a href="./tutorial.html">Abrir Tutorial</a></h4>
-<!--    <span class="version">βeta</span>-->
+    <!--    <span class="version">βeta</span>-->
 </div>
 <div id="interfaceContainer">
     <div id="canvasArea">
@@ -365,16 +361,16 @@
                     <div class="settingsRow">
                         <select id="algorithm">
                             <option value="none" selected>Nenhum</option>
-                                <option value="BFS">Busca em Largura</option>
-                                <option value="DFS">Busca em Profundidade</option>
-                                <option value="Dijkstra" >Menor Caminho – Dijkstra</option>
-                                <option value="PrimMST">Árvore Geradora Mínima – Prim</option>
-                                <option value="KruskalMST">Árvore Geradora Mínima – Kruskal</option>
-                                <option value="DFSCycleDetection">Detecção de ciclo – DFS</option>
-                                <option disabled value="EulerianPath">Trajeto Euleriano – Hierholzer's Algorithm</option>
-                                <option disabled value="EdmondsMSA">Arborescência Mínima – Algoritmo de Edmond</option>
-                                <option value="FordFulkerson">Fluxo Máximo – Algoritmo de Ford Fukerson</option>
-                                <option value="GreedyNodeColoring">Coloração – Greedy Node Coloring</option>
+                            <option value="BFS">Busca em Largura</option>
+                            <option value="DFS">Busca em Profundidade</option>
+                            <option value="Dijkstra" >Menor Caminho – Dijkstra</option>
+                            <option value="PrimMST">Árvore Geradora Mínima – Prim</option>
+                            <option value="KruskalMST">Árvore Geradora Mínima – Kruskal</option>
+                            <option value="DFSCycleDetection">Detecção de ciclo – DFS</option>
+                            <option disabled value="EulerianPath">Trajeto Euleriano – Hierholzer's Algorithm</option>
+                            <option disabled value="EdmondsMSA">Arborescência Mínima – Algoritmo de Edmond</option>
+                            <option value="FordFulkerson">Fluxo Máximo – Algoritmo de Ford Fukerson</option>
+                            <option value="GreedyNodeColoring">Coloração – Greedy Node Coloring</option>
                         </select>
                         <button id="run_algorithm">Executar</button>
                     </div>
@@ -387,8 +383,8 @@
                     <input type="checkbox" id="directedEdges"/><label for="directedEdges">Direcionadas</label>
                     <br>
                     <input type="checkbox" id="weightedEdges"/><label for="weightedEdges">Pesado</label>
-<!--                    <br>-->
-<!--                    <input type="checkbox" id="coloredEdges" /><label for="coloredEdges">Coloridas</label>-->
+                    <!--                    <br>-->
+                    <!--                    <input type="checkbox" id="coloredEdges" /><label for="coloredEdges">Coloridas</label>-->
 
                     <h4 class="sectionSubtitle">
                         <label for="nodeLabeling">Nomenclatura dos nós</label>
@@ -407,13 +403,13 @@
                     <div class="settingsRow">
                         <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
                         <button style="margin-right: 2pt;" id="exportText">Texto</button>
-<!--                        <button style="margin-right: 2pt;" id="exportLink">Link</button>-->
+                        <!--                        <button style="margin-right: 2pt;" id="exportLink">Link</button>-->
                         <a id="exportLink">Link</a>
                         <button style="margin-right: 2pt;" id="exportImage">Imagem</button>
                     </div>
                     <h4 class="sectionSubtitle">Importar como...</h4>
                     <div class="settingsRow">
-                    <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
+                        <input type="file" id="inputFile" accept=".gp, .txt" style="display: none;">
                         <button style="margin-left: 0pt; margin-right: 2pt;" class="importFile">Arquivo</button>
                         <button style="margin-right: 2pt;" class="importText">Texto</button>
                     </div>
@@ -472,7 +468,7 @@
 </div>
 
 <footer style="display:flex;">
-        <p><a href="about.html">Desenvolvido por <span id="authors"><strong>Thiago Lamenza</strong> e <strong>Victor Martins</strong></span></a></p>
+    <p><a href="about.html">Desenvolvido por <span id="authors"><strong>Thiago Lamenza</strong> e <strong>Victor Martins</strong></span></a></p>
 </footer>
 <script>
     updateTopBorder = function (event) {

@@ -27,6 +27,9 @@ import {canvas} from "../../Drawing/General.js";
 import AlgorithmPseudocode from "../../Drawing/AlgorithmVisualizations/Pseudocode/AlgorithmPseudocode.js";
 import AlgorithmMenu from "./AlgorithmMenu.js";
 
+import "../../Drawing/AlgorithmVisualizations/algorithm_controls.css"
+import "../../Drawing/AlgorithmVisualizations/algorithm_menu.css"
+
 
 class Step {
     constructor(graph, message = "", pseudoLabel, isWarning, isHighlight) {

@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import "../Pages/style.css"
+
 // Canvas
 export var canvas = document.getElementById("mainCanvas");
 export var slowOverlayCanvas = document.getElementById("slowCanvas");

@@ -25,6 +25,9 @@
 * Classe base para um showcase
 * Utilizado para visualizar estruturas auxiliares
  */
+
+import "./algorithm_showcase.css"
+
 export default class AlgorithmShowcase {
     constructor() {
         this.canvas = document.getElementById('showcase')

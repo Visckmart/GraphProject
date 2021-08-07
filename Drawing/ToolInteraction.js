@@ -23,8 +23,11 @@
 
 import {nodeLabelingSelector} from "./General.js";
 import {g} from "./GraphView.js";
+import "../Pages/tool_tray.css"
 import ToolRepository from "./ToolRepository.js";
 import {HighlightType} from "../Utilities/Highlights.js";
+
+
 
 nodeLabelingSelector.onchange = function(e) {
     g.nodeLabeling = e.target.value;

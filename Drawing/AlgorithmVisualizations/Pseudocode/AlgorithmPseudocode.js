@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import "./algorithm_pseudocode.css"
+
 export default class AlgorithmPseudocode {
     constructor(code) {
         this.code = code
