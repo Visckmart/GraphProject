@@ -75,7 +75,7 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = true;
         }
 
-        if (document.activeElement.tagName != "BODY") { return; }
+
 
 
         let metaPressed = this.isMetaKey(keyboardEvent)
@@ -88,6 +88,8 @@ class GraphKeyboardHandler {
             }
             this.lastToolChoice = originalToolChoice;
         }
+
+        if (document.activeElement.tagName != "BODY") { return; }
 
         switch (keyboardEvent.key) {
         case "1":
@@ -129,8 +131,6 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = false;
         }
 
-        if (document.activeElement.tagName != "BODY") { return; }
-
 
         let metaPressed = this.isMetaKey(keyboardEvent);
         if (metaPressed == false) {
@@ -138,6 +138,8 @@ class GraphKeyboardHandler {
             this.graphView.primaryTool = this.lastToolChoice;
             this.lastToolChoice = originalToolChoice;
         }
+
+        if (document.activeElement.tagName != "BODY") { return; }
 
         switch (keyboardEvent.key) {
         case "a":

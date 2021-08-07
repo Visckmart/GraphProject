@@ -249,6 +249,7 @@ export class GraphView {
         if (this.primaryTool !== Tool.CONNECT) {
             this.mouseHandler.shouldDrawTemporaryEdge = false;
         }
+        this.keyboardHandler.lastToolChoice = this.primaryTool;
         this.delegate.didChangeTool(anotherTool);
     }
 

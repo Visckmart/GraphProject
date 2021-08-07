@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { Algorithm, GraphCategory, Tool } from "./General.js"
+import { Algorithm, GraphCategory } from "./General.js"
 import { g } from "./GraphView.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
 // import DijkstraShortestPath from "../Algorithm/DijkstraShortestPath.js";
@@ -48,7 +48,7 @@ let algorithmSelector = document.getElementById("algorithm")
 algorithmSelector.onchange = (event) => refreshCheckboxesFromAlgorithm(event.target.value)
 
 function refreshCheckboxesFromAlgorithm(selectedAlgorithm) {
-    console.log("s", selectedAlgorithm)
+    console.log("selectedAlgorithm", selectedAlgorithm)
     algorithmSelector.blur()
     let boundCategories = getRequiredCategoriesForAlgorithm(selectedAlgorithm)
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
@@ -137,9 +137,9 @@ window.onresize = g.recalculateLayout.bind(g)
 g.recalculateLayout()
 /* Caso a página tenha perdido o foco, considere que a tecla meta foi solta */
 document.body.onblur = function() {
-    if (!g.lastToolChoice || g.lastToolChoice == Tool.MOVE) {
-        g.primaryTool = Tool.MOVE;
-    }
+    // if (!g.lastToolChoice || g.lastToolChoice == Tool.MOVE) {
+        g.primaryTool = g.keyboardHandler.lastToolChoice;
+    // }
 }
 
 function updateGraph() {
