@@ -356,7 +356,7 @@ class GraphMouseHandler {
         let a = false;
         if (this.clickPosition) {
             let d = getDistanceOf(this.clickPosition, pos);
-            a = (this.clickedNode && d >= 5) || !this.clickedNode;
+            a = ((this.clickedNode || this.clickedEdge) && d >= 3) || (!this.clickedNode && !this.clickedEdge && d >= 10);
         }
         if (mouseEvent.buttons != 0 && isLeftClick(mouseEvent) && a) {
             this.isMovingLeftClick(pos);
