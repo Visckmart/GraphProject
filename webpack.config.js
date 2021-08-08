@@ -14,6 +14,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './Pages/drawing.html',
             minify: {
+                scriptLoading: 'blocking',
                 removeRedundantAttributes: false
             }
         })
@@ -26,7 +27,9 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ["@babel/preset-env"],
+                        presets: ["@babel/preset-env", {
+
+                        }],
                         plugins: [
                             ["@babel/transform-runtime"]
                         ]
@@ -35,7 +38,14 @@ module.exports = {
             },
             {
                 test: /\.css$/i,
-                use: [MiniCssExtractPlugin.loader, "css-loader"],
+                use: [MiniCssExtractPlugin.loader, "css-loader", {
+                    loader: 'postcss-loader',
+                    options: {
+                        postcssOptions: {
+                            config: path.resolve(__dirname, 'postcss.config.js'),
+                        },
+                    },
+                },],
             },
             {
                 test: /\.html$/i,
