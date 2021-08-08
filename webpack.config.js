@@ -6,12 +6,12 @@ module.exports = {
     mode: "production",
     entry: ['./Drawing/General.js','./Drawing/Interaction.js', './Drawing/GraphView.js', './Drawing/Initialization.js'],
     devServer: {
-        contentBase: '../',
+        contentBase: './dist',
         open: true,
-        openPage: 'GraphProject/dist',
+        hot: true
     },
     output: {
-        publicPath: '../dist/',
+        publicPath: 'auto',
         path: path.resolve(__dirname, 'dist'),
         clean: true
     },
@@ -51,6 +51,10 @@ module.exports = {
                         },
                     },
                 },],
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: 'asset/resource',
             },
             {
                 test: /\.html$/i,
