@@ -267,7 +267,7 @@ export class GraphView {
                                                       NodeConstructor: NodeType,
                                                       EdgeConstructor: EdgeType
         });
-        // TODO: Gambiarra
+        // TODO: Melhorar
         g.structure.categories = new Set(categories);
         g.refreshGraph();
     }
