@@ -5,6 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: "production",
     entry: ['./Drawing/General.js','./Drawing/Interaction.js', './Drawing/GraphView.js', './Drawing/Initialization.js'],
+    devServer: {
+        contentBase: '../',
+    },
     output: {
         publicPath: '../dist/',
         path: path.resolve(__dirname, 'dist'),
