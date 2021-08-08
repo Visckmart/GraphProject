@@ -44,9 +44,12 @@ export function generateNewRandomLabel() {
     return newRandomLabel;
 }
 
+export function isTouchEnvironment() {
+    return window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+}
 export function isLeftClick(mouseEvent)  {
     // console.log(mouseEvent instanceof TouchEvent);
-    return (window.TouchEvent && mouseEvent instanceof TouchEvent) || (mouseEvent.button == 0);
+    return isTouchEnvironment(mouseEvent) || (mouseEvent.button == 0);
 }
 export function isRightClick(mouseEvent) { return mouseEvent.button == 2; }
 // function drawPreservingState(ctx, drawingOperations) {

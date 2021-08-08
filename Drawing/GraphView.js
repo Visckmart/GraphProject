@@ -31,7 +31,7 @@ import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
-import { colorFromComponents, } from "../Utilities/Utilities.js";
+import { colorFromComponents, isTouchEnvironment } from "../Utilities/Utilities.js";
 import PropertyList from "../Structure/Properties/PropertyList.js";
 import { regularNodeRadius } from "../Structure/Node.js";
 
@@ -94,16 +94,16 @@ export class GraphView {
         if (interactive) {
             // Mouse
             if (!isMobile) {
-                if (!window.TouchEvent) {
+                if (isTouchEnvironment()) {
+                    canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
+                    canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
+                    canvas.ontouchend = this.mouseHandler.mouseUpEvent;
+                } else {
                     canvas.onmousedown = this.mouseHandler.mouseDownEvent;
                     canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
                     canvas.onmouseup = this.mouseHandler.mouseUpEvent;
                     canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
                     canvas.onmouseout = this.mouseHandler.mouseLeaveEvent;
-                } else {
-                    canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
-                    canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
-                    canvas.ontouchend = this.mouseHandler.mouseUpEvent;
                 }
             } else {
                 canvas.ontouchstart = this.mouseHandler.mouseDownEvent;

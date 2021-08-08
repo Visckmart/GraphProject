@@ -23,7 +23,7 @@
 
 import { CanvasType, Tool } from "./General.js"
 import { HighlightType } from "../Utilities/Highlights.js"
-import { getDistanceOf, isLeftClick, isRightClick } from "../Utilities/Utilities.js"
+import { getDistanceOf, isLeftClick, isRightClick, isTouchEnvironment } from "../Utilities/Utilities.js"
 import Edge from "../Structure/Edge.js";
 
 class GraphMouseHandler {
@@ -38,7 +38,7 @@ class GraphMouseHandler {
     getMousePos(mouseEvent) {
         let rawX = mouseEvent.clientX;
         let rawY = mouseEvent.clientY;
-        if (window.TouchEvent && mouseEvent instanceof TouchEvent) {
+        if (isTouchEnvironment()) {
             rawX = mouseEvent.changedTouches[0].clientX;
             rawY = mouseEvent.changedTouches[0].clientY;
         }
