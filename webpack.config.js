@@ -7,6 +7,8 @@ module.exports = {
     entry: ['./Drawing/General.js','./Drawing/Interaction.js', './Drawing/GraphView.js', './Drawing/Initialization.js'],
     devServer: {
         contentBase: '../',
+        open: true,
+        openPage: 'GraphProject/dist',
     },
     output: {
         publicPath: '../dist/',
