@@ -39,6 +39,8 @@ class Graph {
                     categories = null, debug = true } = {}) {
         this.data = new Map();
         this.importData(data)
+        // console.log("constructor", categories);
+        // console.trace();
         this.categories = categories ?? new Set();
         this.debug = debug;
 
@@ -57,6 +59,7 @@ class Graph {
             data: this.data,
             EdgeConstructor: this.EdgeConstructor,
             NodeConstructor: this.NodeConstructor,
+            categories: this.categories
         }
     }
 
@@ -335,7 +338,7 @@ class Graph {
         let newGraph = new this.constructor({
                                                 EdgeConstructor: EdgeConstructor,
                                                 NodeConstructor: NodeConstructor,
-            debug: this.debug, categories: this.categories
+                                                categories: this.categories, debug: this.debug,
                                             })
         newGraph.debug = false;
         let newNodeMap = new Map()

@@ -27,6 +27,7 @@ let GraphDirectedMixin = (superclass) => {
             super(args);
 
             this.mixins.add(GraphDirectedMixin)
+            this.categories.add("directed_edges");
         }
 
         // Inserção

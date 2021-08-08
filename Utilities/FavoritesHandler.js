@@ -28,8 +28,7 @@ export default class FavoritesHandler {
 
     deletingFavorite = null;
 
-    constructor(favoritesContainer) {
-        // console.log(favoritesContainer)
+    constructor() {
         this.favoritesList = document.getElementById("favoritesList");
         this.menuBody = document.getElementsByClassName("menuBody")[0];
 
