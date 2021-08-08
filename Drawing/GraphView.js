@@ -267,6 +267,8 @@ export class GraphView {
                                                       NodeConstructor: NodeType,
                                                       EdgeConstructor: EdgeType
         });
+        // TODO: Gambiarra
+        g.structure.categories = new Set(categories);
         g.refreshGraph();
     }
 
@@ -370,14 +372,14 @@ export class GraphView {
 
             if (undirected || straightLine) {
                 let collided = checkLinePointCollision(
-                    nodeA.pos, nodeB.pos, 1, pos
+                    nodeA.pos, nodeB.pos, 2, pos
                 )
                 if (collided) { allEdges.push(edge); }
             } else {
                 let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x) - Math.PI / 2;
 
-                let offsetA = translateWithAngle(nodeA.pos, angle, 0, 25)
-                let offsetB = translateWithAngle(nodeB.pos, angle, 0, 25)
+                let offsetA = translateWithAngle(nodeA.pos, angle, 25, 25)
+                let offsetB = translateWithAngle(nodeB.pos, angle, 25, 25)
                 let collided = checkLinePointCollision(
                     offsetA, offsetB, 5, pos
                 )
