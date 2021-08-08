@@ -703,12 +703,10 @@ export class GraphView {
         ctx.font = "12pt Arial";
         let content = name + fps + " FPS";
         let textMeasurement = ctx.measureText(content);
-        ctx.clearRect(this.canvas.width - textMeasurement.width - 30, 25,
-                      textMeasurement.width + 40, 55);
         ctx.fillText(content,
                      this.canvas.width - textMeasurement.width - 10,
                      25 + vertOffset);
-        ctx.restore()
+        ctx.restore();
     }
 
     drawImportOverlay(ctx) {
