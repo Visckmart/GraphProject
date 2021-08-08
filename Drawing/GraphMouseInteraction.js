@@ -21,9 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {CanvasType, Tool} from "./General.js"
+import { CanvasType, Tool } from "./General.js"
 import { HighlightType } from "../Utilities/Highlights.js"
-import { getDistanceOf, isLeftClick, isRightClick } from "../Utilities/Utilities.js"
+import { getDistanceOf, isLeftClick, isRightClick, isTouchEnvironment } from "../Utilities/Utilities.js"
 import Edge from "../Structure/Edge.js";
 
 class GraphMouseHandler {
@@ -38,7 +38,7 @@ class GraphMouseHandler {
     getMousePos(mouseEvent) {
         let rawX = mouseEvent.clientX;
         let rawY = mouseEvent.clientY;
-        if (window.TouchEvent && mouseEvent instanceof TouchEvent) {
+        if (isTouchEnvironment()) {
             rawX = mouseEvent.changedTouches[0].clientX;
             rawY = mouseEvent.changedTouches[0].clientY;
         }
@@ -356,7 +356,7 @@ class GraphMouseHandler {
         let a = false;
         if (this.clickPosition) {
             let d = getDistanceOf(this.clickPosition, pos);
-            a = this.clickedNode || d >= 5;
+            a = ((this.clickedNode || this.clickedEdge) && d >= 3) || (!this.clickedNode && !this.clickedEdge && d >= 10);
         }
         if (mouseEvent.buttons != 0 && isLeftClick(mouseEvent) && a) {
             this.isMovingLeftClick(pos);
@@ -510,6 +510,7 @@ class GraphMouseHandler {
     mouseLeaveEvent = () => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
+
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
             // Para de desenhar

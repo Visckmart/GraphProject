@@ -23,9 +23,9 @@
 
 import { Tool } from "./General.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
-import { getAlgorithmFromName } from "./Interaction.js";
+// import { getAlgorithmFromName } from "./Interaction.js";
 import { getFormattedTime } from "../Utilities/Utilities.js";
-import { g } from "./GraphView.js";
+import { getAlgorithmModuleFromName } from "./GraphMenuHandler.js";
 
 class GraphKeyboardHandler {
 
@@ -76,16 +76,21 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = true;
         }
 
-        if (document.activeElement.tagName != "BODY") { return; }
+
 
 
         let metaPressed = this.isMetaKey(keyboardEvent)
         if (metaPressed) {
-            if (this.lastToolChoice == null) {
-                this.lastToolChoice = this.graphView.primaryTool;
+            let originalToolChoice = this.lastToolChoice;
+            if (this.lastToolChoice == Tool.MOVE) {
+                this.graphView.primaryTool = Tool.CONNECT;
+            } else if (this.lastToolChoice == Tool.CONNECT) {
+                this.graphView.primaryTool = Tool.MOVE;
             }
-            this.graphView.primaryTool = Tool.CONNECT;
+            this.lastToolChoice = originalToolChoice;
         }
+
+        if (document.activeElement.tagName != "BODY") { return; }
 
         switch (keyboardEvent.key) {
         case "1":
@@ -127,14 +132,15 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = false;
         }
 
-        if (document.activeElement.tagName != "BODY") { return; }
-
 
         let metaPressed = this.isMetaKey(keyboardEvent);
-        if (metaPressed == false && this.lastToolChoice == Tool.MOVE) {
-            this.graphView.primaryTool = Tool.MOVE;
-            this.lastToolChoice = null;
+        if (metaPressed == false) {
+            let originalToolChoice = this.lastToolChoice;
+            this.graphView.primaryTool = this.lastToolChoice;
+            this.lastToolChoice = originalToolChoice;
         }
+
+        if (document.activeElement.tagName != "BODY") { return; }
 
         switch (keyboardEvent.key) {
         case "a":
@@ -145,7 +151,7 @@ class GraphKeyboardHandler {
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
-            getAlgorithmFromName(algorithmSelector.value)
+            getAlgorithmModuleFromName(algorithmSelector.value)
                 .then(algorithm => {
                     if (!algorithm) return;
                     algorithmController.setup(algorithm);

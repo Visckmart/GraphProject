@@ -73,6 +73,7 @@
     /*opacity: 0.4;*/
     z-index: 20;
     display: none;
+    cursor: pointer;
 }
 
 #algorithmMenu:hover #algorithmMenuPin, #algorithmMenu:hover #algorithmMenuUnpin {

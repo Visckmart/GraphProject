@@ -21,89 +21,87 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { prepareCanvasSharing } from "./InteractionShare.js";
-import {exportAsFile, exportAsText, exportAsURL, exportViewAsImage,deserializeURL, importFromFile, importFromText} from "./InteractionShare.js"
+import { deserializeURL, exportAsURL, importFromFile, importFromText } from "./InteractionShare.js";
 import { g, isMobile } from "./GraphView.js";
 
 if (!isMobile) {
-    // console.log("Inicializando...");
-    let exportFileButton = document.getElementById("exportFile");
-    if (exportFileButton) {
-        exportFileButton.onclick = () => exportAsFile(g.structure);
-    } else {
-        console.warn("Botão de exportar como arquivo não foi encontrado.");
-    }
-
-    let exportTextButton = document.getElementById("exportText");
-    if (exportTextButton) {
-        exportTextButton.onclick = () => exportAsText(g.structure);
-    } else {
-        console.warn("Botão de exportar como texto não foi encontrado.");
-    }
-
-    let exportLinkButton = document.getElementById("exportLink");
-    if (exportLinkButton) {
-        exportLinkButton.onclick = () => exportAsURL(g.structure);
-    } else {
-        console.warn("Botão de exportar como link não foi encontrado.");
-    }
-
-    let exportImageButton = document.getElementById("exportImage");
-    if (exportImageButton) {
-        exportImageButton.onclick = () => exportViewAsImage(g);
-    } else {
-        console.warn("Botão de exportar como imagem não foi encontrado.");
-    }
-
-    let tutorialOverlay = document.getElementById("tutorial-overlay");
-    // console.log(window.localStorage.getItem("tutorial-quit"))
-    if (window.localStorage.getItem("tutorial-quit") != "true") {
-        tutorialOverlay.style.visibility = "visible";
-    }
-    let quitTutorialButton = document.getElementById("quit-tutorial");
-    quitTutorialButton.onclick = () => {
-        tutorialOverlay.style.display = "none";
-        window.localStorage.setItem("tutorial-quit", true);
-    }
-
-    let undoButton = document.getElementById("undo-button");
-    undoButton.onclick = () => {
-        let step = g.history.goToStep(-1);
-        if (step) {
-            g.structure = step;
-            g.refreshGraph();
-        }
-    }
-    let redoButton = document.getElementById("redo-button");
-    redoButton.onclick = () => {
-        let step = g.history.goToStep(1);
-        if (step) {
-            g.structure = step;
-            g.refreshGraph();
-        }
-    }
-
-
-    window.addEventListener("load", deserializeURL.bind(null, g));
-    window.onpopstate = (event) => {
-        if (event.state) { deserializeURL(g) }
-    }
-
-    prepareCanvasSharing(g)
-
-    // TODO: Organizar
-    let fileInputElement = document.getElementById("inputFile");
-    fileInputElement.onchange = importFromFile.bind(null, g)
-    let importFileButton = document.getElementsByClassName("importFile");
-    for (let x of importFileButton) {
-        // console.log(x)
-        x.onclick = () => fileInputElement.click();
-    }
-    let importTextButton = document.getElementsByClassName("importText");
-    for (let x of importTextButton) {
-        // console.log(x)
-        x.onclick = importFromText.bind(null, g)
-    }
+    // let exportFileButton = document.getElementById("exportFile");
+    // if (exportFileButton) {
+    //     exportFileButton.onclick = () => exportAsFile(g.structure);
+    // } else {
+    //     console.warn("Botão de exportar como arquivo não foi encontrado.");
+    // }
+    //
+    // let exportTextButton = document.getElementById("exportText");
+    // if (exportTextButton) {
+    //     exportTextButton.onclick = () => exportAsText(g.structure);
+    // } else {
+    //     console.warn("Botão de exportar como texto não foi encontrado.");
+    // }
+    //
+    // let exportLinkButton = document.getElementById("exportLink");
+    // if (exportLinkButton) {
+    //     exportLinkButton.onclick = () => exportAsURL(g.structure);
+    // } else {
+    //     console.warn("Botão de exportar como link não foi encontrado.");
+    // }
+    //
+    // let exportImageButton = document.getElementById("exportImage");
+    // if (exportImageButton) {
+    //     exportImageButton.onclick = () => exportViewAsImage(g);
+    // } else {
+    //     console.warn("Botão de exportar como imagem não foi encontrado.");
+    // }
+    //
+    // let tutorialOverlay = document.getElementById("tutorial-overlay");
+    // // console.log(window.localStorage.getItem("tutorial-quit"))
+    // if (window.localStorage.getItem("tutorial-quit") != "true") {
+    //     tutorialOverlay.style.visibility = "visible";
+    // }
+    // let quitTutorialButton = document.getElementById("quit-tutorial");
+    // quitTutorialButton.onclick = () => {
+    //     tutorialOverlay.style.display = "none";
+    //     window.localStorage.setItem("tutorial-quit", true);
+    // }
+    //
+    // let undoButton = document.getElementById("undo-button");
+    // undoButton.onclick = () => {
+    //     let step = g.history.goToStep(-1);
+    //     if (step) {
+    //         g.structure = step;
+    //         g.refreshGraph();
+    //     }
+    // }
+    // let redoButton = document.getElementById("redo-button");
+    // redoButton.onclick = () => {
+    //     let step = g.history.goToStep(1);
+    //     if (step) {
+    //         g.structure = step;
+    //         g.refreshGraph();
+    //     }
+    // }
+    //
+    //
+    // window.addEventListener("load", deserializeURL.bind(null, g));
+    // window.onpopstate = (event) => {
+    //     if (event.state) { deserializeURL(g) }
+    // }
+    //
+    // prepareCanvasSharing(g)
+    //
+    // // TODO: Organizar
+    // let fileInputElement = document.getElementById("inputFile");
+    // fileInputElement.onchange = importFromFile.bind(null, g)
+    // let importFileButton = document.getElementsByClassName("importFile");
+    // for (let x of importFileButton) {
+    //     // console.log(x)
+    //     x.onclick = () => fileInputElement.click();
+    // }
+    // let importTextButton = document.getElementsByClassName("importText");
+    // for (let x of importTextButton) {
+    //     // console.log(x)
+    //     x.onclick = importFromText.bind(null, g)
+    // }
 } else {
     // TODO: Organizar
     let menuArea = document.getElementById("menuArea")

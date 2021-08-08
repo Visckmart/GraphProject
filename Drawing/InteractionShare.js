@@ -21,8 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {getFormattedTime} from "../Utilities/Utilities.js";
-import { loadCategoriesFromStorage } from "./Interaction.js";
+import { getFormattedTime } from "../Utilities/Utilities.js";
+// import { loadCategoriesFromStorage } from "./Interaction.js";
 
 //region Exportação
 
@@ -92,14 +92,13 @@ export function exportViewAsImage(graphView) {
 
 // Importar por Link
 export function deserializeURL(graph) {
-    const urlParams = new URLSearchParams(location.search);
-    if (urlParams.has("graph") && urlParams.get("graph") !== "") {
-        console.log("Deserializing graph " + urlParams.get("graph"));
-        graph.loadSerializedGraph(urlParams.get("graph"));
-    } else {
-        console.log("load from storage")
-        loadCategoriesFromStorage()
-    }
+    // const urlParams = new URLSearchParams(location.search);
+    // if (urlParams.has("graph") && urlParams.get("graph") !== "") {
+    //     console.log("Deserializing graph " + urlParams.get("graph"));
+    //     graph.loadSerializedGraph(urlParams.get("graph"));
+    // } else {
+    //     loadCategoriesFromStorage()
+    // }
 }
 
 //region Importar por Gesto

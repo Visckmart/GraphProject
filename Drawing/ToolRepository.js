@@ -65,14 +65,18 @@ export default {
 
     [Tool.DISCONNECT_ALL]: function () {
         console.log(this)
-        let [targetNodes,] = getTargetElements(this);
+        let [targetNodes,targetEdges] = getTargetElements(this);
 
         console.group("Desconectar " + targetNodes.length + " nós");
+        for (let edge of targetEdges) {
+            this.structure.removeEdge(edge);
+        }
         for (let node of targetNodes) {
             for (let [edge, , ] of this.structure.edgesFrom(node)) {
                 this.structure.removeEdge(edge);
             }
         }
+
         console.groupEnd();
         this.refreshGraph();
     },

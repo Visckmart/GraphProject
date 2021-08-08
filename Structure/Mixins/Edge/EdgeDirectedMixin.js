@@ -48,6 +48,7 @@ let EdgeDirectedMixin = (superclass) => {
                 30, theta - Math.PI/2)
             if (doubled) {
                 ctx.beginPath()
+                ctx.lineCap = "round";
                 ctx.moveTo(xStart, yStart);
                 let offset = 50;
                 let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
@@ -67,8 +68,8 @@ let EdgeDirectedMixin = (superclass) => {
             let arrowAngle = Math.atan2(arrowStartX - xEnd, arrowStartY - yEnd) + Math.PI;
 
             let arrowHeadSize = 25
-            ctx.moveTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle - Math.PI / 6.5)),
-                       newp.y - (arrowHeadSize * Math.cos(arrowAngle - Math.PI / 6.5)));
+            ctx.moveTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle - Math.PI / 5)),
+                       newp.y - (arrowHeadSize * Math.cos(arrowAngle - Math.PI / 5)));
 
             ctx.lineTo(newp.x, newp.y);
 

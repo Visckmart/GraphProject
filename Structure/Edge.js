@@ -83,6 +83,8 @@ export default class Edge {
             ctx.lineDashOffset = -(window.performance.now() - this._initialTime) / 75
         } else if (this.highlights.has(HighlightType.DISABLED)) {
             ctx.setLineDash([10, 5]);
+        } else {
+            ctx.lineCap = "round";
         }
 
     }

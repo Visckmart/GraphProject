@@ -138,51 +138,12 @@
                 <h1>JavaScript é necessário para executar a ferramenta</h1>
             </div>
         </noscript>
-        <style>
-            /* Tooltip container */
-            .tooltip {
-                position: relative;
-                display: inline-block;
-                border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-            }
-
-            /* Tooltip text */
-            .tooltip .tooltiptext {
-                visibility: hidden;
-                width: 120px;
-                font-size: 10.5pt;
-                background-color: black;
-                color: #fff;
-                text-align: center;
-                padding: 5px 0;
-                border-radius: 6px;
-
-                /* Position the tooltip text - see examples below! */
-                position: absolute;
-                z-index: 1;
-            }
-
-            /* Show the tooltip text when you mouse over the tooltip container */
-            .tooltip:hover .tooltiptext {
-                visibility: visible;
-            }
-            .tooltip .tooltiptext {
-                width: 50pt;
-                bottom: 125%;
-                left: 50%;
-                margin-left: calc(-55pt/2); /* Use half of the width (120/2 = 60), to center the tooltip */
-            }
-            .tooltip button {
-                border-radius: 4pt;
-            }
-        </style>
         <div id="history-tray" class="toolTray">
-            <div class="tooltip">
+            <div class="tooltip" title="Desfazer">
                 <button id="undo-button">↺</button>
-                <span class="tooltiptext">Desfazer</span>
             </div>
-            <div class="tooltip"><button id="redo-button">↻</button>
-                <span class="tooltiptext">Refazer</span>
+            <div class="tooltip" title="Desfazer">
+                <button id="redo-button">↻</button>
             </div>
 
         </div>
@@ -403,7 +364,7 @@
                     <div class="settingsRow">
                         <button style="margin-left: 0pt; margin-right: 2pt;" id="exportFile">Arquivo</button>
                         <button style="margin-right: 2pt;" id="exportText">Texto</button>
-                        <!--                        <button style="margin-right: 2pt;" id="exportLink">Link</button>-->
+<!--                        <button style="margin-right: 2pt;" id="exportLink">Link</button>-->
                         <a id="exportLink">Link</a>
                         <button style="margin-right: 2pt;" id="exportImage">Imagem</button>
                     </div>

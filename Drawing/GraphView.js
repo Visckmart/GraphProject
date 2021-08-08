@@ -31,13 +31,13 @@ import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
-import { colorFromComponents, } from "../Utilities/Utilities.js";
+import { colorFromComponents, isTouchEnvironment } from "../Utilities/Utilities.js";
 import PropertyList from "../Structure/Properties/PropertyList.js";
 import { regularNodeRadius } from "../Structure/Node.js";
 
 import HistoryTracker from "../Utilities/HistoryTracker.js"
 import cacheFrames from "./GraphFrameCaching.js";
-import { refreshInterfaceCategories } from "./Interaction.js";
+// import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLinePointCollision, checkRectangleSquareCollision, checkSquarePointCollision, createRectangleChecker,
     translateWithAngle
@@ -94,16 +94,16 @@ export class GraphView {
         if (interactive) {
             // Mouse
             if (!isMobile) {
-                if (!window.TouchEvent) {
+                if (isTouchEnvironment()) {
+                    canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
+                    canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
+                    canvas.ontouchend = this.mouseHandler.mouseUpEvent;
+                } else {
                     canvas.onmousedown = this.mouseHandler.mouseDownEvent;
                     canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
                     canvas.onmouseup = this.mouseHandler.mouseUpEvent;
                     canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
                     canvas.onmouseout = this.mouseHandler.mouseLeaveEvent;
-                } else {
-                    canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
-                    canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
-                    canvas.ontouchend = this.mouseHandler.mouseUpEvent;
                 }
             } else {
                 canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
@@ -249,6 +249,7 @@ export class GraphView {
         if (this.primaryTool !== Tool.CONNECT) {
             this.mouseHandler.shouldDrawTemporaryEdge = false;
         }
+        this.keyboardHandler.lastToolChoice = this.primaryTool;
         this.delegate.didChangeTool(anotherTool);
     }
 
@@ -266,6 +267,8 @@ export class GraphView {
                                                       NodeConstructor: NodeType,
                                                       EdgeConstructor: EdgeType
         });
+        // TODO: Melhorar
+        g.structure.categories = new Set(categories);
         g.refreshGraph();
     }
 
@@ -369,16 +372,16 @@ export class GraphView {
 
             if (undirected || straightLine) {
                 let collided = checkLinePointCollision(
-                    nodeA.pos, nodeB.pos, 1, pos
+                    nodeA.pos, nodeB.pos, 2, pos
                 )
                 if (collided) { allEdges.push(edge); }
             } else {
                 let angle = Math.atan2(nodeB.pos.y - nodeA.pos.y, nodeB.pos.x - nodeA.pos.x) - Math.PI / 2;
 
-                let offsetA = translateWithAngle(nodeA.pos, angle, 0, 25)
-                let offsetB = translateWithAngle(nodeB.pos, angle, 0, 25)
+                let offsetA = translateWithAngle(nodeA.pos, angle, 25, 25)
+                let offsetB = translateWithAngle(nodeB.pos, angle, 25, 25)
                 let collided = checkLinePointCollision(
-                    offsetA, offsetB, 5, pos
+                    offsetA, offsetB, 2, pos
                 )
                 if (collided) { allEdges.push(edge); }
             }
@@ -587,7 +590,7 @@ export class GraphView {
         this.structure = deserializedGraph;
         let shareModal = document.getElementById("shareModal")
         shareModal.style.display = "none";
-        refreshInterfaceCategories();
+        // refreshInterfaceCategories();
         this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();
@@ -700,12 +703,10 @@ export class GraphView {
         ctx.font = "12pt Arial";
         let content = name + fps + " FPS";
         let textMeasurement = ctx.measureText(content);
-        ctx.clearRect(this.canvas.width - textMeasurement.width - 30, 25,
-                      textMeasurement.width + 40, 55);
         ctx.fillText(content,
                      this.canvas.width - textMeasurement.width - 10,
                      25 + vertOffset);
-        ctx.restore()
+        ctx.restore();
     }
 
     drawImportOverlay(ctx) {
