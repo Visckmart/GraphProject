@@ -381,7 +381,7 @@ export class GraphView {
                 let offsetA = translateWithAngle(nodeA.pos, angle, 25, 25)
                 let offsetB = translateWithAngle(nodeB.pos, angle, 25, 25)
                 let collided = checkLinePointCollision(
-                    offsetA, offsetB, 5, pos
+                    offsetA, offsetB, 2, pos
                 )
                 if (collided) { allEdges.push(edge); }
             }
