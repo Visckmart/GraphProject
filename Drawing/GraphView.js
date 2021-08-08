@@ -37,7 +37,7 @@ import { regularNodeRadius } from "../Structure/Node.js";
 
 import HistoryTracker from "../Utilities/HistoryTracker.js"
 import cacheFrames from "./GraphFrameCaching.js";
-import { refreshInterfaceCategories } from "./Interaction.js";
+// import { refreshInterfaceCategories } from "./Interaction.js";
 import {
     checkLinePointCollision, checkRectangleSquareCollision, checkSquarePointCollision, createRectangleChecker,
     translateWithAngle
@@ -588,7 +588,7 @@ export class GraphView {
         this.structure = deserializedGraph;
         let shareModal = document.getElementById("shareModal")
         shareModal.style.display = "none";
-        refreshInterfaceCategories();
+        // refreshInterfaceCategories();
         this.recalculateLayout()
         this.refreshGraph();
         this.registerStep();

@@ -23,8 +23,9 @@
 
 import { Tool } from "./General.js"
 import AlgorithmController from "../Algorithm/Control/AlgorithmController.js";
-import { getAlgorithmFromName } from "./Interaction.js";
+// import { getAlgorithmFromName } from "./Interaction.js";
 import { getFormattedTime } from "../Utilities/Utilities.js";
+import { getAlgorithmModuleFromName } from "./GraphMenuHandler.js";
 
 class GraphKeyboardHandler {
 
@@ -150,7 +151,7 @@ class GraphKeyboardHandler {
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
             let algorithmSelector = document.getElementById("algorithm")
-            getAlgorithmFromName(algorithmSelector.value)
+            getAlgorithmModuleFromName(algorithmSelector.value)
                 .then(algorithm => {
                     if (!algorithm) return;
                     algorithmController.setup(algorithm);
