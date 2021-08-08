@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {getFormattedTime} from "../Utilities/Utilities.js";
+import { getFormattedTime } from "../Utilities/Utilities.js";
 import { loadCategoriesFromStorage } from "./Interaction.js";
 
 //region Exportação
@@ -97,7 +97,6 @@ export function deserializeURL(graph) {
         console.log("Deserializing graph " + urlParams.get("graph"));
         graph.loadSerializedGraph(urlParams.get("graph"));
     } else {
-        console.log("load from storage")
         loadCategoriesFromStorage()
     }
 }

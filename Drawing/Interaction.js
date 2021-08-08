@@ -49,7 +49,7 @@ let algorithmSelector = document.getElementById("algorithm")
 algorithmSelector.onchange = (event) => refreshCheckboxesFromAlgorithm(event.target.value)
 
 function refreshCheckboxesFromAlgorithm(selectedAlgorithm) {
-    console.log("selectedAlgorithm", selectedAlgorithm)
+    console.log("Refreshing checkboxes based on", selectedAlgorithm)
     algorithmSelector.blur()
     let boundCategories = getRequiredCategoriesForAlgorithm(selectedAlgorithm)
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
@@ -62,10 +62,9 @@ function refreshCheckboxesFromAlgorithm(selectedAlgorithm) {
         }
     }
     window.localStorage.setItem("selectedAlgorithm", selectedAlgorithm)
-    updateGraph()
+    updateGraphFromCheckboxes()
 }
 function getRequiredCategoriesForAlgorithm(alg) {
-    console.log(alg)
     let boundCategories = {};
     switch (alg) {
     case 'DFS':
@@ -93,9 +92,19 @@ function getRequiredCategoriesForAlgorithm(alg) {
     default:
         break;
     }
+    console.log("Bound categories", boundCategories);
     return boundCategories;
 }
+
 let runAlgorithmButton = document.getElementById("run_algorithm")
+
+runAlgorithmButton.onclick = async () => {
+    let algorithmController = new AlgorithmController(g);
+    let algorithm = await getAlgorithmFromName(algorithmSelector.value);
+    if (!algorithm) return;
+    await algorithmController.setup(algorithm);
+}
+
 export async function getAlgorithmFromName(name) {
     let algModuleName;
     switch (name) {
@@ -136,12 +145,6 @@ export async function getAlgorithmFromName(name) {
     }
     return null;
 }
-runAlgorithmButton.onclick = async () => {
-    let algorithmController = new AlgorithmController(g);
-    let algorithm = await getAlgorithmFromName(algorithmSelector.value);
-    if (!algorithm) return;
-    await algorithmController.setup(algorithm);
-}
 
 // Window Resizing
 window.onresize = g.recalculateLayout.bind(g)
@@ -153,9 +156,9 @@ document.body.onblur = function() {
     // }
 }
 
-function updateGraph() {
-    console.log("updateGraph")
-    // console.trace()
+function updateGraphFromCheckboxes() {
+    console.log("Updating graph constructors from checkboxes")
+
     let enabledCategories = []
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         window.localStorage.setItem(category, checkbox.checked)
@@ -166,12 +169,28 @@ function updateGraph() {
 
 export function refreshInterfaceCategories() {
     let categoriesState = g.structure.getCategories();
+    console.log("Graph store categories", categoriesState);
+
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         checkbox.checked = categoriesState.has(category);
+    }
+    let storedAlgorithm = window.localStorage.getItem("selectedAlgorithm")
+    let boundCategories = getRequiredCategoriesForAlgorithm(storedAlgorithm)
+    for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
+        let boundStatus = boundCategories[category]
+        if (boundStatus != null && boundStatus != checkbox.checked) {
+            return;
+        }
+    }
+    if (storedAlgorithm) {
+        algorithmSelector.value = storedAlgorithm
+        refreshCheckboxesFromAlgorithm(storedAlgorithm)
     }
 }
 // updateGraph()
 export function loadCategoriesFromStorage() {
+    console.log("Preparando menu lateral usando informações anteriores");
+
     for (let [category, checkbox] of Object.entries(categoryCheckboxes)) {
         let storedState = window.localStorage.getItem(category)
         checkbox.checked = storedState == "true"
@@ -180,7 +199,6 @@ export function loadCategoriesFromStorage() {
         }
     }
 
-
     let storedAlgorithm = window.localStorage.getItem("selectedAlgorithm")
     if (storedAlgorithm) {
         algorithmSelector.value = storedAlgorithm
@@ -188,9 +206,9 @@ export function loadCategoriesFromStorage() {
     }
 }
 //Opções de formato de grafo
-categoryCheckboxes[GraphCategory.COLORED_NODES].addEventListener('change', updateGraph)
-categoryCheckboxes[GraphCategory.WEIGHTED_EDGES].addEventListener('change', updateGraph)
-categoryCheckboxes[GraphCategory.DIRECTED_EDGES].addEventListener('change', updateGraph)
+categoryCheckboxes[GraphCategory.COLORED_NODES].addEventListener('change', updateGraphFromCheckboxes)
+categoryCheckboxes[GraphCategory.WEIGHTED_EDGES].addEventListener('change', updateGraphFromCheckboxes)
+categoryCheckboxes[GraphCategory.DIRECTED_EDGES].addEventListener('change', updateGraphFromCheckboxes)
 
 // Executa a primeira vez
 // g.refreshTrayIcons();
