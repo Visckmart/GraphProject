@@ -43,7 +43,7 @@ export default class GraphMenuHandler {
 
         this.runAlgorithmButton.onclick = async () => {
             let algorithmController = new AlgorithmController(g);
-            let algorithm = await getAlgorithmFromName(this.algorithmSelector.value);
+            let algorithm = await getAlgorithmModuleFromName(this.algorithmSelector.value);
             if (!algorithm) {
                 console.error("Algoritmo selecionado não foi encontrado.");
                 return;
