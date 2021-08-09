@@ -88,9 +88,199 @@
 
   <div class="instruction-block" id="selecionar-elementos">
     <div class="instruction-explanation">
-      <h3><span class="instruction-title"><a href="#selecionar-elementos">Selecionar Elementos</a></span></h3>
-      <p><span class="instruction-content">Ao <span class="click-action">clicar</span><span class="touch-action">tocar</span> em um nó, com a ferramenta Nó selecionada<span class="click-action"> com o botão esquerdo do mouse</span>o nó é selecionado.</span></p>
-      <p><span class="instruction-content">Ao <span class="click-action">clicar</span><span class="touch-action">tocar</span> em uma aresta, com a ferramenta Aresta selecionada<span class="click-action"> com o botão esquerdo do mouse</span>a aresta é selecionada.</span></p>
+      <h3><span class="instruction-title"><a href="#selecionar-elementos">Selecionar elementos</a></span></h3>
+      <p><span class="instruction-content">Ao <span class="click-action">clicar</span><span class="touch-action">tocar</span> em um nó, com a ferramenta Nó selecionada<span class="click-action"> com o botão esquerdo do mouse</span> o nó é selecionado.</span></p>
+      <p><span class="instruction-content">Ao <span class="click-action">clicar</span><span class="touch-action">tocar</span> em uma aresta, com a ferramenta Aresta selecionada<span class="click-action"> com o botão esquerdo do mouse</span> a aresta é selecionada.</span></p>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+
+  <h2>Mais Interações</h2>
+  <div class="instruction-block" id="selecao-em-area">
+    <div class="instruction-explanation">
+      <h3><span class="instruction-title"><a href="#selecao-em-area">Seleção em área</a></span></h3>
+      <p><span class="instruction-content">
+        Ao <span class="click-action">clicar</span><span class="touch-action">tocar</span>
+        no fundo<span class="click-action"> com o botão esquerdo do mouse</span>
+        e arrastar, uma área será marcada e o conteúdo dela será selecionado de acordo com
+        a ferramenta que está escolhida.
+      </span></p>
+      <p><span class="instruction-content">
+        Se isso for feito com a ferramenta Nó, somente nós contidos na área serão
+        selecionados. Se for feito com a ferramenta Aresta, somente arestas contidas
+        na área serão selecionadas.
+      </span></p>
+      <p><span class="instruction-content">
+
+      </span></p>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+  <div class="instruction-block" id="selecao-multipla">
+    <div class="instruction-explanation">
+      <h3><span class="instruction-title"><a href="#selecao-multipla">Seleção múltipla</a></span></h3>
+      <p><span class="instruction-content">
+        Segurar Shift evita que os elementos que estão fora da área percam a seleção.
+        Isso funciona tanto ao selecionar individualmente quanto ao selecionar em área.
+      </span></p>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+
+  <div class="instruction-block" id="remover-elementos">
+    <div class="instruction-explanation">
+      <h3><span class="instruction-title"><a href="#remover-elementos">
+        Remover Nós e Arestas
+      </a></span></h3>
+      <p>
+        <span class="instruction-content">
+          Ao clicar com o botão direito do mouse o nó será
+          removido junto com as arestas conectadas a ele (ou que saem dele, caso
+          sejam direcionadas).
+        </span>
+      </p>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+
+<!--  <h2></h2>-->
+  <div class="instruction-block" id="barra-inferior">
+    <div class="instruction-explanation list">
+      <h3><span class="instruction-title"><a href="#barra-inferior">
+        Opções da Barra Inferior
+      </a></span></h3>
+      <ul><li>
+        <h4>Alinhar</h4>
+        <ul><li>
+          <p><span class="instruction-content">
+            A opção alinhar move os nós para que suas posições se encaixem em uma
+            grade (que não é visível).
+          </span></p>
+        </li></ul>
+      </li></ul>
+      <ul><li>
+        <h4>Conectar</h4>
+        <ul><li>
+          <p><span class="instruction-content">
+              A opção conectar cria arestas entre todos os nós selecionados.
+              Se não houver seleção ela age sobre todos os nós.
+            </span></p>
+        </li></ul>
+      </li></ul>
+      <ul><li>
+        <h4>Desconectar</h4>
+        <ul><li>
+          <p><span class="instruction-content">
+              A opção desconectar remove arestas entre todos os nós selecionados,
+          além de remover as arestas selecionadas.
+          Se não houver seleção ela desconecta todos os nós.
+            </span></p>
+        </li></ul>
+      </li></ul>
+      <ul><li>
+        <h4>Remover</h4>
+        <ul><li>
+          <p><span class="instruction-content">
+        <span class="click-action">Ao clicar com o botão direito do mouse, ou ao </span>
+        <span class="touch-action">Ao</span>
+        selecionar uma aresta e tocar na opção Remover na barra inferior, a aresta será removida.
+        </span></p>
+        </li></ul>
+      </li></ul>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+  <div class="instruction-block" id="historico">
+    <div class="instruction-explanation list">
+      <h3><span class="instruction-title"><a href="#historico">
+        Histórico
+      </a></span></h3>
+      <p><span class="instruction-content">
+        No canto da interface estão dois botões cujos ícones são <span style="font-size: 15pt;">↺</span> e <span style="font-size: 15pt;">↻</span>, que representam
+        respectivamente as ações de Desfazer e Refazer. Elas avançam e retrocedem as
+        últimas ações feitas pelo usuário.
+      </span></p>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+<!--  <div class="instruction-block" id="desconectar">-->
+<!--    <div class="instruction-explanation">-->
+<!--      <h3><span class="instruction-title"><a href="#desconectar">-->
+<!--        Desconectar-->
+<!--      </a></span></h3>-->
+<!--      <p>-->
+<!--        <span class="instruction-content">-->
+<!--          A opção desconectar remove arestas entre todos os nós selecionados,-->
+<!--          além de remover as arestas selecionadas.-->
+<!--          Se não houver seleção ela desconecta todos os nós.-->
+<!--        </span>-->
+<!--      </p>-->
+<!--    </div>-->
+<!--    <div class="instruction-demo"></div>-->
+<!--  </div>-->
+
+<!--  <div class="instruction-block" id="remover">-->
+<!--    <div class="instruction-explanation">-->
+<!--      <h3><span class="instruction-title"><a href="#remover">-->
+<!--        Remover</a></span></h3>-->
+<!--      <p>-->
+<!--        <span class="instruction-content">-->
+<!--        <span class="click-action">Ao clicar com o botão direito do mouse, ou ao </span>-->
+<!--        <span class="touch-action">Ao</span>-->
+<!--        selecionar uma aresta e tocar na opção Remover na barra inferior, a aresta será removida.-->
+<!--        </span>-->
+<!--      </p>-->
+<!--    </div>-->
+<!--    <div class="instruction-demo"></div>-->
+<!--  </div>-->
+
+  <h2>Execução de algoritmos</h2>
+  <div class="instruction-block" id="barra-de-algoritmos">
+    <div class="instruction-explanation">
+      <h3><span class="instruction-title"><a href="#barra-de-algoritmos">Barra de algoritmos</a></span></h3>
+      <div>
+        <p class="instruction-content">Durante a execução de um algoritmo a barra inferior é composta por 3 elementos.</p>
+        <ul>
+          <li>
+            <p class="instruction-content">
+              Linha do tempo que pode ser manipulada para avançar e
+              retroceder etapas do algoritmo.
+            </p>
+          </li>
+          <li>
+            <p class="instruction-content">
+              Barra de velocidade, que altera a velocidade que os passos do algoritmo
+              são exibidos.
+            </p>
+          </li>
+          <li>
+            <p class="instruction-content">
+              Área com explicações sobre o que foi feito pelo algoritmo no passo atual.
+            </p>
+          </li>
+      </ul>
+      </div>
+    </div>
+    <div class="instruction-demo"></div>
+  </div>
+  <div class="instruction-block" id="showcase-algoritmos">
+    <div class="instruction-explanation">
+      <h3><span class="instruction-title"><a href="#showcase-algoritmos">Showcase de algoritmos</a></span></h3>
+      <div>
+        <p class="instruction-content">
+          Durante a execução de um algoritmo, uma aba aparecerá na esquerda da interface.
+          Ela abre uma pequena janela com informações adicionais sobre a execução.
+        </p>
+        <p class="instruction-content">
+          A aba de Estruturas de Dados contém informações sobre o estado da estrutura interna
+          do grafo em cada um dos passos de execução.
+        </p>
+        <p class="instruction-content">
+          A aba de Pseudocódigo contém um protótipo que mostra como seria implementado o
+          algoritmo escolhido. Ela conta também com o destaque das linhas que estariam sendo
+          executadas em um dado passo.
+        </p>
+      </div>
     </div>
     <div class="instruction-demo"></div>
   </div>

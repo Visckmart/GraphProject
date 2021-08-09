@@ -39,18 +39,21 @@ body {
 }
 h1 {
     font-size: 30pt;
-    margin-bottom: 10pt;
-    margin-top: 0;
+    margin-bottom: 20pt;
+    margin-top: 10pt;
 }
 h1 a {
     text-decoration: none;
     color: inherit;
 }
 .instruction-section {
-    max-width: 700pt;
+    max-width: 50em;
     margin-left: auto;
     margin-right: auto;
-
+}
+.instruction-section h2 {
+    border-top: 1pt solid gray;
+    padding-top: 4pt;
 }
 .instruction-block {
     /*background-color: #F008;*/
@@ -66,14 +69,42 @@ h1 a {
     text-decoration: none;
     color: inherit;
 }
-.instruction-explanation h3 {
-    margin: 0;
+.instruction-title a:hover::before {
+    content:"#";
+    font-size: 15pt;
+    display: inline-block;
+    /*color: var(--section-title-hashtag-color);*/
+    margin-left: -10pt;
+    font-family: monospace;
+    /*font-weight: normal;*/
+    color: gray;
+    float:left;
 }
 .instruction-explanation {
     /*background-color: #0F08;*/
-    width: 35em;
+    /*width: 35em;*/
+}
+.instruction-explanation ul {
+    padding-left: 20pt;
+}
+.list ul {
+    list-style-type: none;
+}
+.list > ul {
+    padding-left: 0;
+}
+.instruction-explanation h3 {
+    margin: 0;
+}
+.instruction-explanation p {
+    margin-top: 4pt;
+}
+.list h4 {
+    margin-top: 4pt;
+    margin-bottom: 0;
 }
 .instruction-demo {
+    display: none;
     width: 200pt;
     height: 100pt;
     background-color: black;
@@ -87,6 +118,9 @@ h1 a {
     display: none;
 }
 @media(hover: hover) and (pointer: fine) {
+    h1 {
+        margin-top: 0;
+    }
     .touch-action {
         display: none;
     }
