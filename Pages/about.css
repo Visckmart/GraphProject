@@ -162,11 +162,13 @@ h1 a {
     color: var(--text-quaternary-color);
     transition: 0.2s;
 }
-.authorSection:hover, .authorSection:focus-within {
-    /*transform: translateY(-10pt);*/
-    /*background: red;*/
-    transform: scale(1.025);
-    box-shadow: 0px 0px 35px 5px var(--card-shadow-color);
+@media(hover: hover) and (pointer: fine) {
+    .authorSection:hover, .authorSection:focus-within {
+        /*transform: translateY(-10pt);*/
+        /*background: red;*/
+        transform: scale(1.025);
+        box-shadow: 0px 0px 35px 5px var(--card-shadow-color);
+    }
 }
 .authorSection:hover .contact a, .authorSection .contact a:focus {
     color: var(--card-contact-highlight-color);
