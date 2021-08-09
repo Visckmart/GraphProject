@@ -93,7 +93,6 @@ export class GraphInterface {
         undoButton.onclick = () => {
             let step = this.view.history.goToStep(-1);
             if (step) {
-                this.view.structure = step;
                 this.view.refreshGraph();
             }
         }
@@ -101,7 +100,6 @@ export class GraphInterface {
         redoButton.onclick = () => {
             let step = this.view.history.goToStep(1);
             if (step) {
-                this.view.structure = step;
                 this.view.refreshGraph();
             }
         }

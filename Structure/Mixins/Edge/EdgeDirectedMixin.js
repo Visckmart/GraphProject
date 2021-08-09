@@ -23,6 +23,7 @@
 
 import {HighlightType} from "../../../Utilities/Highlights.js";
 import { pointFromCircleAngle } from "../../../Drawing/GeometryHelper.js";
+import { getDistanceOf } from "../../../Utilities/Utilities.js";
 
 let EdgeDirectedMixin = (superclass) => {
     return class EdgeDirected extends superclass {
