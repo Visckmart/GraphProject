@@ -155,6 +155,7 @@ h1 a {
     font-size: 13pt;
     /*color: #777;*/
     margin-bottom: 0;
+    text-align: center;
 }
 .authorSection .contact a {
     text-decoration: none;
@@ -188,6 +189,7 @@ h1 a {
 .subtitle {
     font-size: 13pt;
     color: var(--text-quaternary-color);
+    text-align: center;
 }
 .description {
     font-size: 13.5pt;
@@ -282,20 +284,26 @@ h1 a {
 /*        color: white;*/
 /*    }*/
 /*}*/
-.aboutContent > ul {
+.aboutContent > ul, .duas-colunas ul {
     padding-left: 15pt;
     font-size: 13pt;
 }
-.aboutContent > ul ul {
+.aboutContent ul ul {
     padding-left: 15pt;
     font-size: 12pt;
 }
-.aboutContent > ul ul li {
+.aboutContent ul ul li {
     padding-top: 2pt;
 }
 .aboutSection code {
     font-family: sans-serif;
     font-style: italic;
+}
+.duas-colunas {
+    display: flex;
+    gap: 25pt;
+    /*columns: 2;*/
+    max-width: 30em;
 }
 
 .license {
@@ -317,6 +325,14 @@ h1 a {
 @media only screen and (max-width: 800px) {
     body {
         margin: 0 18pt;
+    }
+    .subhead {
+        font-size: 15pt;
+    }
+    .history p, .history a {
+        font-size: 14pt;
+        padding-left: 18pt;
+        padding-right: 18pt;
     }
     #authorsTitle {
         padding: 10pt 18pt;
@@ -350,9 +366,19 @@ h1 a {
         display: initial;
     }
     .aboutSection {
-        padding: 10pt 15pt;
+        padding: 10pt 0pt;
     }
     .aboutSection ul {
         padding-left: 1em;
+    }
+    .aboutContent {
+        margin-top: 8pt;
+        margin-left: 0;
+        margin-right: 0;
+        text-align: justify;
+    }
+
+    .duas-colunas {
+        display: block;
     }
 }
