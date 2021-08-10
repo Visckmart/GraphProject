@@ -46,44 +46,32 @@ h1 a {
     text-decoration: none;
     color: inherit;
 }
+
+/* Instructions */
 .instruction-section {
-    max-width: 50em;
     padding: 0 40pt;
     margin-left: auto;
     margin-right: auto;
+
+    max-width: 50em;
 }
-.instruction-section h2 {
-    border-top: 1pt solid gray;
+.instruction-section-title {
     padding-top: 4pt;
+
+    border-top: 1pt solid gray;
 }
+
 .instruction-block {
-    /*background-color: #F008;*/
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
     padding: 8pt 0;
-}
-.instruction-title {
-    /*background-color: #00F4;*/
-}
-.instruction-title a {
-    text-decoration: none;
-    color: inherit;
-}
-.instruction-title a:hover::before {
-    content:"#";
-    font-size: 15pt;
-    display: inline-block;
-    /*color: var(--section-title-hashtag-color);*/
-    margin-left: -10pt;
-    font-family: monospace;
-    /*font-weight: normal;*/
-    color: gray;
-    float:left;
+    /*background-color: #F008;*/
 }
 .instruction-explanation {
-    /*background-color: #0F08;*/
     /*width: 35em;*/
+    /*background-color: #0F08;*/
 }
 .instruction-explanation ul {
     padding-left: 20pt;
@@ -95,18 +83,37 @@ h1 a {
     margin-top: 8pt;
     padding-left: 12pt;
 }
-.instruction-explanation h3 {
-    margin: 0;
-}
-.instruction-explanation p {
-    margin-top: 4pt;
-}
 .list h4 {
     margin-top: 4pt;
     margin-bottom: 0;
 }
+.instruction-explanation p {
+    margin-top: 4pt;
+}
+.instruction-title {
+    margin: 0;
+    /*background-color: #00F4;*/
+}
+.instruction-title a {
+    text-decoration: none;
+    color: inherit;
+}
+.instruction-title a:hover::before {
+    content:"#";
+
+    display: inline-block;
+    margin-left: -10pt;
+    float:left;
+
+    font-size: 15pt;
+    /*color: var(--section-title-hashtag-color);*/
+    font-family: monospace;
+    color: gray;
+}
+
 .instruction-demo {
     display: none;
+
     width: 200pt;
     height: 100pt;
     background-color: black;
@@ -125,23 +132,25 @@ h1 a {
     display: inline-block;
     margin-top: 4pt;
 }
-.mac {
-    font-family: monospace;
+.instruction-details .shortcut-key {
+    color: #444;
+}
+.shortcut-key {
+    display: inline-block;
+
+    padding: 2px 4px;
     background-color: #eee;
     border-radius: 3px;
     border: 1px solid #b4b4b4;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+
     color: #333;
-    display: inline-block;
+    font-family: monospace;
     font-size: 10pt;
-    font-weight: 700;
-    /*margin-bottom: 2pt;*/
+    font-weight: bold;
     line-height: 1;
-    padding: 2px 4px;
+
     white-space: nowrap;
-}
-.instruction-details .mac {
-    color: #444;
 }
 /*.mac {*/
 /*    font-size: 11pt;*/
