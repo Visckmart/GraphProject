@@ -76,9 +76,6 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = true;
         }
 
-
-
-
         let metaPressed = this.isMetaKey(keyboardEvent)
         if (metaPressed) {
             let originalToolChoice = this.lastToolChoice;
@@ -98,6 +95,20 @@ class GraphKeyboardHandler {
             break;
         case "2":
             this.graphView.primaryTool = Tool.CONNECT;
+            break;
+
+        case "z":
+            if (keyboardEvent.shiftKey == false) {
+                let step = this.graphView.history.goToStep(-1);
+                if (step) {
+                    keyboardEvent.preventDefault();
+                }
+            } else {
+                let step = this.graphView.history.goToStep(1);
+                if (step) {
+                    keyboardEvent.preventDefault();
+                }
+            }
             break;
 
         case "s": // TODO: Organizar atalho de salvamento
@@ -164,23 +175,6 @@ class GraphKeyboardHandler {
         case "m":
             this.graphView.snapNodesToGrid();
             break;
-
-        case "z":
-            if (keyboardEvent.shiftKey == false) {
-                let step = this.graphView.history.goToStep(-1);
-                if (step) {
-                    keyboardEvent.preventDefault();
-                }
-            }
-            break;
-
-        case "Z":
-            let step = this.graphView.history.goToStep(1);
-            if (step) {
-                keyboardEvent.preventDefault();
-            }
-            break;
-
 
         case "Escape":
             this.graphView.selectionHandler.clear();
