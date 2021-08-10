@@ -31,7 +31,7 @@ export default class GraphMenuHandler {
 
     constructor(view) {
         this.graphView = view;
-        this.favoritesHandler = new FavoritesHandler()
+        this.favoritesHandler = new FavoritesHandler(this.refreshMenuFromGraph.bind(this))
         this.favoritesHandler.updateFavorites();
 
 
