@@ -400,7 +400,7 @@ class AlgorithmController {
         this.graphView.keyboardHandler.enable()
 
         for (let tray of document.getElementsByClassName("toolTray")) {
-            tray.style.display = 'unset';
+            tray.style.removeProperty("display");
         }
         // TODO: Organizar
         let menuArea = document.getElementById("menuArea");
