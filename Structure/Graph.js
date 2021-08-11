@@ -254,12 +254,14 @@ class Graph {
             serializedEdges += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`;
         }
 
+        serializedEdges = serializedEdges.slice(0, -1);
         return graphType + serializedNodes + "~" + serializedEdges;
     }
 
     static deserialize(serialized, clone = false) {
         if (serialized.indexOf("~") < 0) { return; }
         let serializedPrefix = serialized.match(/^([a-zA-Z]+).+?/);
+        serialized = serialized + ".";
         let cat = new Set();
 
         let nodeConstructor = Node
