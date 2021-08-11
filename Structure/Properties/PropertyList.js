@@ -95,6 +95,7 @@ class PropertyList extends HTMLElement {
             if (type != "text" || event.target.value != "") {
                 artifacts.map(a => a[property] = event.target.value)
                 g.refreshGraph()
+                g.registerStep()
             }
         })
         this.container.appendChild(pElement)

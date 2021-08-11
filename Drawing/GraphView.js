@@ -199,6 +199,7 @@ export class GraphView {
         if (!isNewStep) {
             this.structure = this.history.getCurrentStep();
             this.refreshGraph();
+            this.selectionHandler.clear();
         }
         let serializedGraph = this.structure.serialize();
         let shareLink = window.location.protocol + "//"
@@ -271,14 +272,6 @@ export class GraphView {
         g.structure.categories = new Set(categories);
         g.refreshGraph();
     }
-
-    /* Atualiza os botões para que eles reflitam o estado das ferramentas */
-    // refreshTrayIcons() {
-    //     for (let element of toolTrayElement.getElementsByTagName("input")) {
-    //         if (element.value === this.primaryTool) { element.click(); }
-    //     }
-    //     this.mouseHandler.refreshCursorStyle();
-    // }
 
     selectAllNodes() {
         let allElements = [];
