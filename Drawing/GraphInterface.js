@@ -114,7 +114,7 @@ export class GraphInterface {
 
         // TODO: Organizar
         let fileInputElement = document.getElementById("inputFile");
-        fileInputElement.onchange = importFromFile.bind(null, this)
+        fileInputElement.onchange = importFromFile.bind(null, this.view)
         let importFileButton = document.getElementsByClassName("importFile");
         for (let x of importFileButton) {
             // console.log(x)
