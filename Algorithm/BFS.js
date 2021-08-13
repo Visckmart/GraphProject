@@ -54,6 +54,15 @@ function executeBFS(controller, startNode)
 
     let graph = controller.graphView.structure
     let queue = new Queue()
+
+    // Preparando o visual dos nós e das arestas
+    for (let node of graph.nodes()) {
+        node.highlights.setTo(HighlightType.DISABLED)
+    }
+    for (let [edge, , ] of graph.uniqueEdges()) {
+        edge.highlights.setTo(HighlightType.DISABLED)
+    }
+
     queue.insert(new nodeEdgePair(startNode, null))
     controller.showcasing = queue
 
@@ -73,16 +82,19 @@ function executeBFS(controller, startNode)
         if(currentEdge)
         {
             currentEdge.highlights.add(HighlightType.COLORED_A)
-            controller.addStep(graph, `Visitando o nó ${currentNode.label} a partir da aresta ${currentEdge.label}.`, 'loopStart')
+
             currentEdge.highlights.remove(HighlightType.COLORED_A)
-            currentEdge.highlights.add(HighlightType.LIGHTEN)
+            currentEdge.highlights.add(HighlightType.COLORED_A)
+
+            controller.addStep(graph, `Visitando o nó ${currentNode.label} a partir da aresta ${currentEdge.label}.`, 'loopStart')
+
         } else {
             // Removendo highlight para o primeiro nó
             currentNode.highlights.remove(HighlightType.DISABLED)
 
             controller.addStep(graph, `Visitando o nó ${currentNode.label}.`, 'loopStart')
         }
-        currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
+        // currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
 
 
 
