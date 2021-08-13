@@ -39,7 +39,7 @@ export default class Queue extends AlgorithmShowcase {
     }
 
     addStep() {
-        let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
+        let fullMessage = (this._messages.length > 0) ? '' : 'Nenhuma ação feita'
         for(let message of this._messages) {
             fullMessage += message + '\n'
         }
@@ -61,7 +61,7 @@ export default class Queue extends AlgorithmShowcase {
     }
 
     updateShowcase() {
-        this.resizeCanvas(this.body.clientWidth, this.length * stackElementSize + paddingTop + paddingBottom)
+        this.resizeCanvas(this.body.clientWidth, stackElementSize + paddingTop + paddingBottom)
 
         requestAnimationFrame(this.drawStack)
     }
@@ -117,12 +117,12 @@ export default class Queue extends AlgorithmShowcase {
     /* Funções de stack */
     insert(element) {
         this._queue.push(element)
-        this._messages.push(`Inserindo o elemento ${element.toString()}`)
+        this._messages.push(`Inserindo o elemento ${element.toString()}.`)
     }
 
     remove() {
         let element = this._queue.shift()
-        this._messages.push(`Removendo o elemento ${element.toString()} do topo da pilha`)
+        this._messages.push(`Removendo o elemento ${element.toString()} do início da fila.`)
         return element
     }
 

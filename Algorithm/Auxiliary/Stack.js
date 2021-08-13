@@ -39,7 +39,7 @@ export default class Stack extends AlgorithmShowcase {
     }
 
     addStep() {
-        let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
+        let fullMessage = (this._messages.length > 0) ? '' : 'Nenhuma ação feita'
         for(let message of this._messages) {
             fullMessage += message + '\n'
         }
@@ -117,12 +117,12 @@ export default class Stack extends AlgorithmShowcase {
     /* Funções de stack */
     push(element) {
         this._stack.push(element)
-        this._messages.push(`Inserindo o elemento ${element.toString()}`)
+        this._messages.push(`Inserindo o elemento ${element.toString()}.`)
     }
 
     pop() {
         let element = this._stack.pop()
-        this._messages.push(`Removendo o elemento ${element.toString()} do topo da pilha`)
+        this._messages.push(`Removendo o elemento ${element.toString()} do topo da pilha.`)
         return element
     }
 
