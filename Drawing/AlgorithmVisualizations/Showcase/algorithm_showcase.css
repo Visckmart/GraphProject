@@ -47,7 +47,7 @@
 }
 #showcaseMessage {
     flex: 0 1 auto;
-    height: 100pt;
+    height: fit-content;
     max-height: 250pt;
     overflow: auto;
     margin: 10pt;
