@@ -35,6 +35,9 @@ class GraphMouseHandler {
         this.canvasRect = this.graphView.canvas.getBoundingClientRect();
     }
 
+    debugRawEvents = false;
+    debugEvents = false;
+
     getMousePos(mouseEvent) {
         let rawX = mouseEvent.clientX;
         let rawY = mouseEvent.clientY;
@@ -65,12 +68,14 @@ class GraphMouseHandler {
     }
 
     willClick(pos) {
+        if (this.debugEvents) { console.log("willClick", pos) }
         this.clickPosition = pos;
         this.moved = false;
     }
 
     // Preparação para o clique com o botão esquerdo
     willLeftClick(pos) {
+        if (this.debugEvents) { console.log("willLeftClick", pos) }
 
         if (this.clickedNode) {
             if (Tool.MOVE == this.graphView.primaryTool) {
@@ -98,6 +103,7 @@ class GraphMouseHandler {
     // nodeListPos = [];
     // Finalizado um clique com o botão esquerdo, sem arrastar
     didLeftClick(pos) {
+        if (this.debugEvents) { console.log("didLeftClick", pos) }
         this.clickPosition = pos;
 
         if (this.clickedNode) {
@@ -148,6 +154,8 @@ class GraphMouseHandler {
     }
 
     didRightClick(pos) {
+        if (this.debugEvents) { console.log("didRightClick", pos) }
+
         if (this.clickedNode) {
             if (Tool.MOVE == this.graphView.primaryTool) {
                 this.graphView.removeNodeAt(pos);
@@ -161,6 +169,8 @@ class GraphMouseHandler {
     // nodeList = [];
     // Um movimento está sendo feito com o botão esquerdo apertado
     isMovingLeftClick(pos) {
+        if (this.debugEvents) { console.log("isMovingLeftClick", pos) }
+
         this.moved = true;
         // console.log("move", getDistanceOf(this.clickPosition, pos));
         if (this.clickedNode) {
@@ -241,6 +251,8 @@ class GraphMouseHandler {
     }
 
     didMoveLeftClick(pos) {
+        if (this.debugEvents) { console.log("didMoveLeftClick", pos) }
+
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
             // Para de desenhar
@@ -263,7 +275,6 @@ class GraphMouseHandler {
                 }
                 // Pare de atualizar a aresta temporária
                 this.shouldDrawTemporaryEdge = false;
-                this.graphView.refreshFastCanvas();
             }
         }
         if (this.selection.isQuickSelection) {
@@ -277,6 +288,7 @@ class GraphMouseHandler {
     mouseDownEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if (!this._enabled) { return; }
+        if (this.debugRawEvents) { console.log("mouse down") }
 
         // Atualizando posição do mouse
         let pos = this.getMousePos(mouseEvent);
@@ -342,10 +354,11 @@ class GraphMouseHandler {
     mouseMoveEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
-
+        if (this.debugRawEvents) { console.log("mouse move") }
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         this.handleEdgeHover(pos);
+
         // if (this.clickedNode) {
         //     let d = getDistanceOf(this.clickPosition, pos)
         //     if (this.moved == false) {
@@ -415,6 +428,7 @@ class GraphMouseHandler {
         // console.log(mouseEvent);
         let pos = this.getMousePos(mouseEvent);
         // console.log(mouseEvent);
+        if (this.debugRawEvents) { console.log("mouse up") }
         if (isLeftClick(mouseEvent)) {
             if (this.moved) {
                 this.didMoveLeftClick(pos);
@@ -510,6 +524,7 @@ class GraphMouseHandler {
     mouseLeaveEvent = () => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
+        if (this.debugRawEvents) { console.log("mouse leave event") }
 
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
