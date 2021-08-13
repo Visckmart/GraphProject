@@ -71,6 +71,7 @@ class GraphMouseHandler {
         if (this.debugEvents) { console.log("willClick", pos) }
         this.clickPosition = pos;
         this.moved = false;
+        document.getSelection().removeAllRanges();
     }
 
     // Preparação para o clique com o botão esquerdo
@@ -371,7 +372,7 @@ class GraphMouseHandler {
             let d = getDistanceOf(this.clickPosition, pos);
             a = ((this.clickedNode || this.clickedEdge) && d >= 3) || (!this.clickedNode && !this.clickedEdge && d >= 10);
         }
-        if (mouseEvent.buttons != 0 && isLeftClick(mouseEvent) && a) {
+        if (mouseEvent.buttons != 0 && isLeftClick(mouseEvent) && (a || this.moved)) {
             this.isMovingLeftClick(pos);
         }
         this.refreshCursorStyle();
@@ -532,12 +533,16 @@ class GraphMouseHandler {
             this.selection.clearSelectionArea();
             this.selection.refreshMenu()
         }
+
+        this.moved = false;
         // // Pare de atualizar a aresta temporária
         this.shouldDrawTemporaryEdge = false;
 
         // Atualiza a posição dos nós selecionados, para que o próximo
         // gesto de mover esses nós tenha as posições adequadas.
         this.selection.registerNodePositions();
+        this.clickedNode = null
+        this._clickPosition = null;
     }
 
     // Estilo do ponteiro do mouse
