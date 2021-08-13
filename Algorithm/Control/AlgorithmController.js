@@ -374,6 +374,8 @@ class AlgorithmController {
         menuArea.style.width = "0";
         let canvasArea = document.getElementById("canvasArea");
         canvasArea.style.minWidth = "100%";
+        this.graphView.recalculateLayout()
+        this.graphView.redrawGraph()
         await algorithm(this)
         this.ready()
     }
@@ -428,6 +430,7 @@ class AlgorithmController {
 
         // Restaurando grafo ao estado inicial
         this.graphView.structure = this.initialGraph
+        this.graphView.recalculateLayout()
         this.graphView.refreshGraph()
         this.adjustNodePositions()
     }
