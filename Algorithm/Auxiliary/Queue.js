@@ -70,13 +70,15 @@ export default class Queue extends AlgorithmShowcase {
         let ctx = this.ctx
 
         let x = this.canvas.width/2 - stackElementSize/2
-        let y = (this.length - index - 1)*stackElementSize + paddingTop
+        let y = (index)*(stackElementSize+5) + 10
 
         ctx.save()
         ctx.beginPath()
-        ctx.strokeStyle = '#8b0000'
-        ctx.fillStyle = '#ff726f'
-        ctx.rect(x, y, stackElementSize, stackElementSize)
+        ctx.strokeStyle = '#00000044'
+        ctx.lineWidth = 5;
+        console.log(element);
+        ctx.fillStyle = element.node.color;
+        ctx.rect(y, paddingTop, stackElementSize, stackElementSize)
         ctx.fill()
         ctx.stroke()
 
@@ -84,7 +86,7 @@ export default class Queue extends AlgorithmShowcase {
         ctx.textBaseline = 'middle'
         ctx.font = 'bold 30px Arial'
         ctx.fillStyle = '#ffffff'
-        ctx.fillText(element.toString(), x + stackElementSize/2, y + stackElementSize/2, stackElementSize)
+        ctx.fillText(element.toString(), y + stackElementSize/2, paddingTop + stackElementSize/2, stackElementSize)
         ctx.restore()
     }
 

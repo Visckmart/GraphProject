@@ -74,8 +74,9 @@ export default class Stack extends AlgorithmShowcase {
 
         ctx.save()
         ctx.beginPath()
-        ctx.strokeStyle = '#8b0000'
-        ctx.fillStyle = '#ff726f'
+        ctx.strokeStyle = '#00000044'
+        ctx.lineWidth = 5
+        ctx.fillStyle = element.node.color;
         ctx.rect(x, y, stackElementSize, stackElementSize)
         ctx.fill()
         ctx.stroke()
