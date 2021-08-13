@@ -108,14 +108,15 @@ function executeBFS(controller, startNode)
                 // Removendo highlight para nós descobertos
                 node.highlights.remove(HighlightType.DISABLED)
 
-                edge.highlights.add(HighlightType.COLORED_A)
+                edge.highlights.remove(HighlightType.DISABLED);
+                edge.highlights.setTo(HighlightType.LIGHTEN)
                 controller.addStep(graph, `Descobrindo o nó ${node.toString()} e colocando-o na fila.`, 'visitStart')
-                edge.highlights.remove(HighlightType.COLORED_A)
+                edge.highlights.remove(HighlightType.LIGHTEN)
                 node.visited = true
             }
         }
 
-        currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
+        // currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
     }
     currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
     controller.addStep(graph, "Algoritmo finalizado.")
