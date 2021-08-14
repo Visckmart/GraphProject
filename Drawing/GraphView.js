@@ -474,7 +474,9 @@ export class GraphView {
     // ARESTAS
     insertEdgeBetween(nodeA, nodeB, refresh = true) {
         if(this.structure.checkEdgeBetween(nodeA, nodeB)) {
-            console.error('Já existe uma aresta entre os nós.')
+            if (refresh) {
+                console.error('Já existe uma aresta entre os nós.')
+            }
             return
         }
 
