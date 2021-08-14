@@ -142,6 +142,7 @@ export class GraphInterface {
             break;
         case "feature":
             ToolRepository[targetElement.value].bind(this.view)();
+            this.view.registerStep();
             targetElement.checked = false;
             break;
         }

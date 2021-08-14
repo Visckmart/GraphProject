@@ -50,6 +50,7 @@ export default {
         this.snapNodesToGrid(targetNodes);
         this.refreshGraph();
     },
+
     [Tool.CONNECT_ALL]: function () {
         let [targetNodes,] = getTargetElements(this);
 
