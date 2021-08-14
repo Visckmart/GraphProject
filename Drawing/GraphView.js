@@ -271,6 +271,7 @@ export class GraphView {
         // TODO: Melhorar
         g.structure.categories = new Set(categories);
         g.refreshGraph();
+        this.registerStep();
     }
 
     selectAllNodes() {
