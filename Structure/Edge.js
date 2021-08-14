@@ -78,6 +78,7 @@ export default class Edge {
         ctx.strokeStyle = this.color;
         ctx.lineWidth = this.width;
         ctx.setLineDash([]);
+        ctx.lineCap = "butt";
         if (this.highlights.has(HighlightType.SELECTION)) {
             ctx.setLineDash([12, 8]);
             ctx.lineDashOffset = -(window.performance.now() - this._initialTime) / 75

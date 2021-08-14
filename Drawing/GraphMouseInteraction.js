@@ -282,6 +282,7 @@ class GraphMouseHandler {
                 }
                 // Pare de atualizar a aresta temporária
                 this.shouldDrawTemporaryEdge = false;
+                this.graphView.requestCanvasRefresh(CanvasType.FAST);
             }
         }
         if (this.selection.isQuickSelection) {
