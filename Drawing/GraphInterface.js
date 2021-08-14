@@ -37,8 +37,7 @@ export class GraphInterface {
         this.view = new GraphView(this, view[0], view[1], view[2], true);
         this.tray = new TrayHandler(tray, this);
         this.menu = new GraphMenuHandler(this.view);
-        console.log(this.view, this.tray, this.menu);
-        // console.log(this.view.keyboardHandler.lastToolChoice)
+
         // Window Resizing
         window.onresize = this.view.recalculateLayout.bind(this.view)
         this.view.recalculateLayout()
@@ -106,8 +105,8 @@ export class GraphInterface {
 
 
         window.addEventListener("load", this.deserializeURL.bind(this));
-        window.onpopstate = (event) => {
-            if (event.state) { this.deserializeURL(this) }
+        window.onpopstate = () => {
+            this.deserializeURL(this)
         }
 
         prepareCanvasSharing(this.view)
