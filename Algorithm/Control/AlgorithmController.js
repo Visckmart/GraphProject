@@ -186,8 +186,8 @@ class AlgorithmController {
                 }
                 let newState = this.steps[value].graphState.clone()
                 this.graphView.structure = newState
+                // this.adjustNodePositions()
                 this.graphView.refreshGraph()
-                this.adjustNodePositions()
             }
         }
     }
@@ -371,9 +371,10 @@ class AlgorithmController {
         // TODO: Organizar
         let menuArea = document.getElementById("menuArea");
         menuArea.style.display = "none";
-        menuArea.style.width = "0";
+        // menuArea.style.width = "0";
         let canvasArea = document.getElementById("canvasArea");
-        canvasArea.style.minWidth = "100%";
+        canvasArea.style.width = "100%";
+        this.adjustNodePositions()
         this.graphView.recalculateLayout()
         this.graphView.redrawGraph()
         await algorithm(this)
@@ -406,10 +407,10 @@ class AlgorithmController {
         }
         // TODO: Organizar
         let menuArea = document.getElementById("menuArea");
-        menuArea.style.display = "unset";
-        menuArea.style.width = "unset";
+        menuArea.style.removeProperty("display")
+        menuArea.style.removeProperty("width")
         let canvasArea = document.getElementById("canvasArea");
-        canvasArea.style.minWidth = "unset";
+        canvasArea.style.removeProperty("width")
 
         for (let [input, originalState] of this?.enabledInputs ?? []) {
             input.disabled = originalState
@@ -428,9 +429,12 @@ class AlgorithmController {
         this.menuHandler?.finish()
         this.pseudocode?.finish()
 
+        // TODO: Revisitar os ajustes de posição dos nós ao entrar e sair da
+        //       execução de um algoritmo.
+
         // Restaurando grafo ao estado inicial
-        this.graphView.structure = this.initialGraph
         this.graphView.recalculateLayout()
+        this.graphView.structure = this.initialGraph
         this.graphView.refreshGraph()
         this.adjustNodePositions()
     }

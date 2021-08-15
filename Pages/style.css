@@ -227,7 +227,7 @@ body {
   user-select: none;
 
   width: calc(100% - var(--menuWidth));
-  max-width: calc(100% - var(--menuWidth));
+  max-width: 100%;
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
 }
 @media (prefers-color-scheme: dark) {
