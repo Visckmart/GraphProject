@@ -20,34 +20,20 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 :root {
-    --background-color: #F8F8F8;
-
-    --text-primary-color: black;
-    --text-secondary-color: #222;
-    --text-tertiary-color: #333;
-    --text-quaternary-color: #777;
-
     --card-background-color: #FFF;
     --card-shadow-color: #EEE;
     --card-contact-highlight-color: #00F;
 
     --section-title-highlight-color: lightblue;
-    --section-title-hashtag-color: lightgray;
+    --section-title-hashtag-color: #AAA;
 
     --license-background-color: #EAEAEA;
     --license-border-color: #BBB;
 }
+
 @media (prefers-color-scheme: dark) {
     :root {
-        --background-color: #222;
-
-        --text-primary-color: white;
-        --text-secondary-color: #EFEFEF;
-        --text-tertiary-color: #CCC;
-        --text-quaternary-color: #AAA;
-
         --card-background-color: #333;
         --card-shadow-color: #111;
         --card-contact-highlight-color: #09F;
@@ -60,30 +46,15 @@
     }
 }
 body {
+    margin: 0;
     font-family: sans-serif;
-    margin: 0 18pt;
-    /*max-width: 70em;*/
     background-color: var(--background-color);
     color: var(--text-primary-color);
 }
-/*@media (prefers-color-scheme: dark) {*/
-/*    body {*/
-/*        background-color: #222;*/
-/*        color: white;*/
-/*    }*/
-/*}*/
-#bg {
-    padding-top:20pt;
-    padding-bottom: 40pt;
-}
-h1 {
-    font-size: 30pt;
-    margin-bottom: 10pt;
-    margin-top: 0;
-}
-h1 a {
-    text-decoration: none;
-    color: inherit;
+main {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 65em;
 }
 .subhead {
     text-align: center;
@@ -95,21 +66,20 @@ h1 a {
     margin-right: auto;
 }
 
-.history {
+.description {
     display: flex;
     flex-direction: column;
-    /*margin-bottom: 0pt;*/
-    /*align-items: flex-end;*/
 }
-.history p, .history a {
-    font-size: 14pt;
+.description p, .description a {
     max-width: 42em;
-    padding-left: 40pt;
-    padding-right: 40pt;
     margin-top: 0;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 5pt;
+    padding-left: 40pt;
+    padding-right: 40pt;
+
+    font-size: 14pt;
     text-align: justify;
     line-height: 1.3;
     letter-spacing: 0.25pt;
@@ -121,40 +91,41 @@ h1 a {
     display: none;
 }
 #sidebyside {
-    margin: 5pt;
     display: flex;
+    justify-content: space-evenly;
+
+    margin: 5pt;
     flex-direction: row;
     /*width: calc(100vw - 10pt);*/
-    justify-content: space-evenly;
 }
 #sidebyside > div {
     max-width: 40%;
     width: 25em;
 }
 .authorSection {
-    scroll-snap-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--card-background-color);
-    /*border: 2pt #FFE0F3 solid;*/
-    border-radius: 20pt;
-    box-shadow: 0px 0px 20px 0px var(--card-shadow-color);
-    padding: 25pt;
-    transition: transform 0.2s, box-shadow 0.2s;
+
     margin-top: 20pt;
     margin-bottom: 20pt;
+    padding: 25pt;
+
+    background-color: var(--card-background-color);
+    border-radius: 20pt;
+    box-shadow: 0px 0px 20px 0px var(--card-shadow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 .authorSection > * {
     margin: 15pt 5pt;
 }
 .authorSection .contact {
     margin-top: auto;
+    margin-bottom: 0;
     padding-top: 10pt;
+
     font-weight: bold;
     font-size: 13pt;
-    /*color: #777;*/
-    margin-bottom: 0;
     text-align: center;
 }
 .authorSection .contact a {
@@ -164,8 +135,6 @@ h1 a {
 }
 @media(hover: hover) and (pointer: fine) {
     .authorSection:hover, .authorSection:focus-within {
-        /*transform: translateY(-10pt);*/
-        /*background: red;*/
         transform: scale(1.025);
         box-shadow: 0px 0px 35px 5px var(--card-shadow-color);
     }
@@ -180,31 +149,31 @@ h1 a {
     border-radius: 50%;
     margin-top: 0;
 }
-.name, .name h3, .subtitle, .subtitle p {
+.card-name, .card-name h3, .card-subtitle, .card-subtitle p {
     margin: 0;
 }
-.name {
+.card-name {
     font-size: 15pt;
     letter-spacing: 0.25pt;
     margin-bottom: 4pt;
 }
-.subtitle {
+.card-subtitle {
     font-size: 13pt;
     color: var(--text-quaternary-color);
     text-align: center;
 }
-.description {
+.card-description {
     font-size: 13.5pt;
     line-height: 1.3;
-    color: var(--text-tertiary-color);
+    color: var(--text-secondary-color);
     margin-bottom: 0;
 }
-.description p {
+.card-description p {
     font-style: italic;
     margin: 0;
     margin-bottom: 8pt;
 }
-.description p:last-of-type {
+.card-description p:last-of-type {
     margin-bottom: 0
 }
 /*@media (prefers-color-scheme: dark) {*/
@@ -231,11 +200,10 @@ h1 a {
 
 
 .aboutSection {
-    /*width: 70em;*/
     padding: 10pt 50pt;
 }
 
-.aboutSection .aboutTitle {
+.aboutSection .aboutTitle h2 {
     margin-top: 0;
     font-size: 25pt;
     margin-bottom: 0;
@@ -244,26 +212,27 @@ h1 a {
 .aboutSection .aboutTitle:hover {
     background-color: var(--section-title-highlight-color);
 }
-.aboutSection .aboutTitle a {
+.aboutSection .aboutTitle {
     text-decoration: none;
     color: inherit;
 }
-.aboutSection .aboutTitle a:hover::before {
+.aboutSection .aboutTitle h2:hover::before {
     content:"#";
     display: inline-block;
-    color: var(--section-title-hashtag-color);
-    margin-left: -20pt;
-    font-family: monospace;
-    /*font-weight: normal;*/
     float:left;
+
+    margin-left: -20pt;
+
+    color: var(--section-title-hashtag-color);
+    font-family: monospace;
 }
 
 .aboutContent {
     margin-top: 8pt;
     margin-left: 2em;
     margin-right: 2em;
+
     text-align: justify;
-    /*max-width: 60em;*/
 }
 
 .aboutContent .topic-title {
@@ -324,14 +293,14 @@ h1 a {
 /*        border: 1pt solid #333;*/
 /*    }*/
 /*}*/
-@media only screen and (max-width: 800px) {
+@media only screen and (min-width: 620px) and (max-width: 800px) {
     body {
         margin: 0 18pt;
     }
     .subhead {
         font-size: 15pt;
     }
-    .history p, .history a {
+    .description p, .description a {
         font-size: 14pt;
         padding-left: 18pt;
         padding-right: 18pt;
@@ -345,11 +314,93 @@ h1 a {
         display: initial;
     }
     #sidebyside {
+        display: flex;
+        justify-content: space-evenly;
+
         margin: 5pt;
+        margin-left: 0;
+        margin-right: 0;
+        padding: 0;
+        gap: 0;
+
+        background: transparent;
+        box-shadow: 0px 0px 20px 0px var(--card-shadow-color);
+        border-radius: 20pt;
+    }
+    #sidebyside > div {
+        margin: 0;
+        gap: 0;
+        max-width: 100%;
+    }
+    .authorSection {
+        margin-top: 8pt;
+        margin-bottom: 8pt;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: none;
+    }
+    .authorSection:first-of-type {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: 1pt solid gray;
+    }
+    .authorSection:last-of-type {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: 1pt solid gray;
+    }
+
+    .authorSection:hover, .authorSection:focus-within {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .aboutSection {
+        padding: 10pt 10pt;
+    }
+    .aboutSection ul {
+        padding-left: 1em;
+    }
+    .aboutContent {
+        margin-top: 8pt;
+        margin-left: 0;
+        margin-right: 0;
+        text-align: justify;
+    }
+
+    .duas-colunas {
+        display: block;
+    }
+}
+@media only screen and (max-width: 619px) {
+    body {
+        margin: 0 18pt;
+    }
+    .subhead {
+        font-size: 15pt;
+        padding-left: 18pt;
+        padding-right: 18pt;
+    }
+    .description p, .description a {
+        font-size: 13pt;
+        padding-left: 10pt;
+        padding-right: 10pt;
+    }
+    #authorsTitle {
+        padding: 10pt 18pt;
+        padding-bottom: 0;
+        margin-top: 0;
+        font-size: 25pt;
+        margin-bottom: 0;
+        display: initial;
+    }
+    #sidebyside {
         display: flex;
         flex-direction: column;
-        /*width: calc(100vw - 10pt);*/
         justify-content: space-evenly;
+
+        margin: 5pt;
+        /*width: calc(100vw - 10pt);*/
     }
     #sidebyside > div {
         max-width: 80%;
@@ -360,11 +411,11 @@ h1 a {
         margin-left: auto;
         margin-right: auto;
     }
-    .authorSection > *:not(img, .name, .subtitle, .contact) {
+    .authorSection > *:not(img, .card-name, .card-subtitle, .contact) {
         display: none;
     }
 
-    .authorSection:hover > *:not(img, .name, .subtitle, .contact) {
+    .authorSection:hover > *:not(img, .card-name, .card-subtitle, .contact) {
         display: initial;
     }
     .aboutSection {

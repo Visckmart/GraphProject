@@ -61,44 +61,22 @@
     <script type="module" src="../Drawing/Initialization.js" crossorigin="anonymous"></script>
 
     <style>
-        #navigationBar {
-            /*background: #eee;*/
-            padding: var(--interfaceMargin);
-            padding-bottom: 0;
-            padding-top: 8pt;
-            /*margin-bottom: var(--interfaceMargin);*/
-            height: var(--navigationBarHeight);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        #navigationBar > #title {
-            margin: 0 0;
-        }
-
         #tutorialLink {
             color: blue;
             font-size: 11pt;
         }
-        #title a {
-            text-decoration: none;
-            color: black;
-        }
-        @media (prefers-color-scheme: dark) {
-            #navigationBar a {
-                color: white;
-            }
-        }
     </style>
+    <link rel="stylesheet" href="generalstyle.css">
 </head>
 <body>
-<div id="navigationBar">
+<nav id="navigationBar">
     <h2 id="title"><a href="./drawing.html">GraphTeacher <span class="version">αlpha</span></a></h2>
     <h4>
         <a href="./tutorial.html" id="tutorialLink">Tutorial</a>
-        <a href="./tutorial.html" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" alt="Abrir tutorial em nova aba"/></a></h4>
+        <a href="./tutorial.html" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" alt="Abrir tutorial em nova aba"/></a>
+    </h4>
 <!--    <span class="version">βeta</span>-->
-</div>
+</nav>
 <div id="interfaceContainer">
     <div id="canvasArea">
         <canvas id="mainCanvas"></canvas>

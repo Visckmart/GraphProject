@@ -27,46 +27,6 @@
   --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 20pt - var(--navigationBarHeight));
   --menuWidth: 200pt;
 }
-
-
-:root {
-  --background-color: #F8F8F8;
-
-  --text-primary-color: black;
-  --text-secondary-color: #222;
-  --text-tertiary-color: #333;
-  --text-quaternary-color: #777;
-
-  --card-background-color: #FFF;
-  --card-shadow-color: #EEE;
-  --card-contact-highlight-color: #00F;
-
-  --section-title-highlight-color: lightblue;
-  --section-title-hashtag-color: lightgray;
-
-  --license-background-color: #EAEAEA;
-  --license-border-color: #BBB;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #222;
-
-    --text-primary-color: white;
-    --text-secondary-color: #EFEFEF;
-    --text-tertiary-color: #CCC;
-    --text-quaternary-color: #AAA;
-
-    --card-background-color: #333;
-    --card-shadow-color: #111;
-    --card-contact-highlight-color: #09F;
-
-    --section-title-highlight-color: lightblue;
-    --section-title-hashtag-color: lightgray;
-
-    --license-background-color: #333;
-    --license-border-color: #555;
-  }
-}
 body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
@@ -84,6 +44,12 @@ body {
   touch-action: pan-x pan-y;
 }
 
+@media only screen and (max-width: 450pt), (max-height: 450pt) {
+  body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 .version {
   color: #1879F5;
   /*color: #FA690D;*/
@@ -120,9 +86,9 @@ body {
   font-size: 15pt;
   text-align: center;
 }
-#shareModal button:hover {
-  background: #ccc;
-}
+/*#shareModal button:hover {*/
+/*  background: #ccc;*/
+/*}*/
 #shareModal h1 {
   margin-top: 0;
   margin-bottom: 15pt;
@@ -388,7 +354,7 @@ body {
 .settingsSection input {
   font-size: 12pt;
 }
-.settingsSection button, .settingsSection a {
+.settingsSection button, .settingsSection a, .modalDiv button {
   margin: 0;
   padding: 3pt 5pt;
   appearance: none;
@@ -410,12 +376,14 @@ body {
 }
 @media(hover: hover) and (pointer: fine) {
   .settingsSection button:hover,
-  .settingsSection a:hover {
+  .settingsSection a:hover,
+  .modalDiv button:hover {
     background: #eee;
   }
 }
 .settingsSection button:active,
-.settingsSection a:active {
+.settingsSection a:active,
+.modalDiv button:active {
   background: #aaa;
   color: white;
 }

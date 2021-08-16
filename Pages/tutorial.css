@@ -20,14 +20,10 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+html {
+    -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape while allowing user zoom */
+}
 :root {
-    --background-color: #F8F8F8;
-
-    --text-primary-color: black;
-    --text-secondary-color: #222;
-    --text-tertiary-color: #333;
-    --text-quaternary-color: #777;
-
     --section-title-hashtag-color: gray;
 
     --shortcut-key-background-color: #EEE;
@@ -37,13 +33,6 @@
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        --background-color: #222;
-
-        --text-primary-color: white;
-        --text-secondary-color: #EFEFEF;
-        --text-tertiary-color: #CCC;
-        --text-quaternary-color: #AAA;
-
         --section-title-hashtag-color: lightgray;
 
         --shortcut-key-background-color: #333;
@@ -54,32 +43,25 @@
 }
 body {
     font-family: sans-serif;
-    margin: 0 18pt;
+    margin: 0;
     background-color: var(--background-color);
     color: var(--text-primary-color);
     padding-bottom: 50pt;
 }
-#bg {
-    padding-top:20pt;
-    padding-bottom: 400pt;
-}
-h1 {
-    font-size: 30pt;
-    margin-bottom: 20pt;
-    margin-top: 10pt;
-}
-h1 a {
-    text-decoration: none;
-    color: inherit;
-}
 
 /* Instructions */
 .instruction-section {
-    padding: 0 40pt;
+    max-width: 50em;
+
     margin-left: auto;
     margin-right: auto;
+    padding: 0 40pt;
+}
 
-    max-width: 50em;
+@media only screen and (max-width: 800px) {
+    .instruction-section {
+        padding: 0 20pt;
+    }
 }
 .instruction-section-title {
     padding-top: 4pt;
@@ -115,9 +97,11 @@ h1 a {
 }
 .instruction-explanation p {
     margin-top: 4pt;
+    font-size: 1em;
 }
 .instruction-title {
     margin: 0;
+    font-size: 1.2em;
     /*background-color: #00F4;*/
 }
 .instruction-title a {

@@ -25,47 +25,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1">
+
+    <title>GraphTeacher – Sobre o Projeto</title>
     <meta name="description" content="Explicação, história e detalhes da ferramenta de manipulação de grafos e exploração de algoritmos GraphTeacher.">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="about.css">
-    <title>GraphTeacher – Sobre Nós</title>
-    <style>
-
-    </style>
-    <style>
-        #navigationBar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            padding-top: 8pt;
-            padding-bottom: 0;
-            height: var(--navigationBarHeight);
-        }
-        #navigationBar > #title {
-            margin: 0 -8pt;
-        }
-        #navigationBar a {
-            text-decoration: none;
-            color: black;
-        }
-        @media (prefers-color-scheme: dark) {
-            #navigationBar a {
-                color: white;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="generalstyle.css">
 </head>
 <body>
-<div id="navigationBar">
+<nav id="navigationBar">
     <h2 id="title"><a href="./drawing.html">GraphTeacher</a></h2>
-</div>
-<div id="bg">
-    <h1 style="text-align: center"><a href="">Sobre o Projeto</a></h1>
+</nav>
+<main>
+    <h1 class="page-title"><a href="./about.html">Sobre o Projeto</a></h1>
     <p class="subhead">
         Ferramenta de manipulação de grafos e exploração de algoritmos.
     </p>
-    <div class="history">
+    <div class="description">
         <p>
             A ferramenta permite a exploração e manipulação de
             grafos e facilita o aprendizado do funcionamento de diversos
@@ -77,14 +54,15 @@
             e se tornou uma ferramenta útil para o aprendizado de outros estudantes.
         </p>
     </div>
-    <div style="margin-left:auto;margin-right:auto;max-width:65em;">
+
+    <section>
         <h2 id="authorsTitle">Autores</h2>
         <div id="sidebyside">
             <div class="authorSection">
                 <img src="../assets/img/thiago.jpeg" class="profilePicture" alt="Foto do Thiago Lamenza"/>
-                <div class="name"><h3>Thiago Lamenza</h3></div>
-                <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
-                <div class="description">
+                <div class="card-name"><h3>Thiago Lamenza</h3></div>
+                <div class="card-subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+                <div class="card-description">
                     <p>
                         Sempre tive muita afinidade por computadores e vontade de entender como eles
                         funcionavam então a escolha de computação foi natural para mim.
@@ -103,9 +81,9 @@
 
             <div class="authorSection">
                 <img src="../assets/img/victor_foto.jpeg" class="profilePicture" alt="Foto do Victor Martins"/>
-                <div class="name"><h3>Victor Martins</h3></div>
-                <div class="subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
-                <div class="description">
+                <div class="card-name"><h3>Victor Martins</h3></div>
+                <div class="card-subtitle"><p>Ciência da Computação na PUC-Rio</p></div>
+                <div class="card-description">
                     <p>
                         Sou apaixonado por computação desde que eu era bem novo.
                         Mesmo entendendo pouco do que eu procurava, a vontade de entender estava lá.
@@ -122,39 +100,42 @@
                 <div class="contact"><a href="mailto: victormartins@aluno.puc-rio.br?subject=GraphTeacher">victormartins@aluno.puc-rio.br</a></div>
             </div>
         </div>
-        <div class="aboutSection" id="História">
-            <h2 class="aboutTitle"><a href="#História">História</a></h2>
-            <div class="aboutContent">
-                <p class="topic-content" style="font-size: 14pt">
-                    Enquanto dois estudantes de computação passavam por disciplinas que
-                    exploravam o conceito de grafos, eles sentiram a
-                    falta de uma ferramenta didática para entender melhor o que estava
-                        sendo ensinado, e então resolveram criar uma do zero.
-                </p>
-                <p class="topic-content">
-                    Durante as férias o projeto começou a ser discutido e
-                    implementado. Conversamos sobre o foco principal e os
-                    recursos essenciais, e discutimos sobre os primeiros passos
-                    da implementação.
-                </p>
-                <p class="topic-content">
-                    Com o passar das semanas fomos continuamente adicionando e
-                    aprimorando a ferramenta de acordo com o que fomos conversando
-                    ao longo do tempo.
-                </p>
-                <p class="topic-content">
-                    Ainda que seja um projeto no qual temos total liberdade para
-                    tomar decisões, inclusive com relação ao tempo que dedicamos
-                    a ele, escolhemos como uma meta ideal termos os recursos
-                    essenciais funcionando antes da volta às aulas (já que
-                    nosso tempo livre diminui bastante).
-                    Conseguimos fazer isso, e continuamos aprimorando a ferramenta
-                    e desenvolvendo novos recursos no tempo livre que temos.
-                </p>
-            </div>
+    </section>
+
+    <section class="aboutSection" id="História">
+        <a href="#História" class="aboutTitle"><h2>História</h2></a>
+        <div class="aboutContent">
+            <p class="topic-content" style="font-size: 14pt">
+                Enquanto dois estudantes de computação passavam por disciplinas que
+                exploravam o conceito de grafos, eles sentiram a
+                falta de uma ferramenta didática para entender melhor o que estava
+                sendo ensinado, e então resolveram criar uma do zero.
+            </p>
+            <p class="topic-content">
+                Durante as férias o projeto começou a ser discutido e
+                implementado. Conversamos sobre o foco principal e os
+                recursos essenciais, e discutimos sobre os primeiros passos
+                da implementação.
+            </p>
+            <p class="topic-content">
+                Com o passar das semanas fomos continuamente adicionando e
+                aprimorando a ferramenta de acordo com o que fomos conversando
+                ao longo do tempo.
+            </p>
+            <p class="topic-content">
+                Ainda que seja um projeto no qual temos total liberdade para
+                tomar decisões, inclusive com relação ao tempo que dedicamos
+                a ele, escolhemos como uma meta ideal termos os recursos
+                essenciais funcionando antes da volta às aulas (já que
+                nosso tempo livre diminui bastante).
+                Conseguimos fazer isso, e continuamos aprimorando a ferramenta
+                e desenvolvendo novos recursos no tempo livre que temos.
+            </p>
         </div>
-        <div class="aboutSection" id="Fundamentos">
-            <h2 class="aboutTitle"><a href="#Fundamentos">Fundamentos</a></h2>
+    </section>
+
+    <section class="aboutSection" id="Fundamentos">
+        <a href="#Fundamentos" class="aboutTitle"><h2>Fundamentos</h2></a>
             <div class="aboutContent">
                 <h3 class="topic-title">O que são grafos?</h3>
                 <p class="topic-content">
@@ -175,49 +156,49 @@
                     de alunos, o tamanho de cada sala e outros diversos fatores.
                 </p>
             </div>
-        </div>
-        <div class="aboutSection" id="Recursos">
-            <h2 class="aboutTitle"><a href="#Recursos">Recursos</a></h2>
-            <div class="aboutContent">
-                <h3 class="topic-title">Manipular Grafos</h3>
-                <p class="topic-content">
-                    É possível criar e manipular livremente grafos de várias
-                    categorias, como grafos com peso nas arestas, arestas
-                    direcionadas, e etc.
-                </p>
-                <ul>
-                    <li>
-                        Tipos de Grafos
-                        <ul>
-                            <li>Direcionados e não-direcionados</li>
-                            <li>Nós coloridos e não-coloridos</li>
-                            <li>Arestas com valor associado (peso, custo, etc.) e sem valor associado</li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="duas-colunas">
-                    <ul><li>
-                        Ações em Nós
-                        <ul>
-                            <li>Criar</li>
-                            <li>Mover</li>
-                            <li>Selecionar</li>
-                            <li>Apagar</li>
-                        </ul>
-                    </li></ul>
-                    <ul><li>
-                        Ações em Arestas
-                        <ul>
-                            <li>Criar</li>
-                            <li>Selecionar</li>
-                            <li>Apagar</li>
-                        </ul>
-                    </li></ul>
-                </div>
-                <ul>
-                    <li>
-                    Ferramentas Auxiliares
-    <!--                        <p style="font-size: smaller"><i>As ações ocorrem sobre o grafo como um todo ou sobre os elementos selecionados, se houver algum.</i></p>-->
+    </section>
+
+    <section class="aboutSection" id="Recursos">
+        <a href="#Recursos" class="aboutTitle"><h2>Recursos</h2></a>
+        <div class="aboutContent">
+            <h3 class="topic-title">Manipular Grafos</h3>
+            <p class="topic-content">
+                É possível criar e manipular livremente grafos de várias
+                categorias, como grafos com peso nas arestas, arestas
+                direcionadas, e etc.
+            </p>
+            <ul>
+                <li>
+                    Tipos de Grafos
+                    <ul>
+                        <li>Direcionados e não-direcionados</li>
+                        <li>Nós coloridos e não-coloridos</li>
+                        <li>Arestas com valor associado (peso, custo, etc.) e sem valor associado</li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="duas-colunas">
+                <ul><li>
+                    Ações em Nós
+                    <ul>
+                        <li>Criar</li>
+                        <li>Mover</li>
+                        <li>Selecionar</li>
+                        <li>Apagar</li>
+                    </ul>
+                </li></ul>
+                <ul><li>
+                    Ações em Arestas
+                    <ul>
+                        <li>Criar</li>
+                        <li>Selecionar</li>
+                        <li>Apagar</li>
+                    </ul>
+                </li></ul>
+            </div>
+            <ul>
+                <li>
+                Ferramentas Auxiliares
                     <ul>
                         <li>Alinhar nós</li>
                         <li>Conectar desconectar nós</li>
@@ -225,48 +206,49 @@
                     </ul>
                 </li>
             </ul>
-                <h3 class="topic-title">Executar Algoritmos</h3>
-                <p class="topic-content">
-                    Além disso os usuários podem
-                    executar uma série de algoritmos nos próprios grafos e
-                    acompanhar o passo a passo com explicações no processo.
-                </p>
-                <h3 class="topic-title">Compartilhar</h3>
-                <p class="topic-content">
-                    O compartilhamento de grafos pode ser feito de diversas
-                    maneiras, como por meio de uma imagem ou mesmo
-                    por meio de um link ou arquivo que pode ser enviado a outra
-                    pessoa, possibilitando que ela então consiga manipular o grafo.
-                    Isso permite que colegas de turma discutam com facilidade
-                    uma execução em algoritmos criados por eles próprios.
-                </p>
-                <div class="duas-colunas">
-                    <ul style="padding-left: 15pt;">
-                        <li>
-                            Exportação
-                            <ul>
-                                <li>Arquivo</li>
-                                <li>Texto</li>
-                                <li>Link</li>
-                                <li>Imagem</li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul>
+            <h3 class="topic-title">Executar Algoritmos</h3>
+            <p class="topic-content">
+                Além disso os usuários podem
+                executar uma série de algoritmos nos próprios grafos e
+                acompanhar o passo a passo com explicações no processo.
+            </p>
+            <h3 class="topic-title">Compartilhar</h3>
+            <p class="topic-content">
+                O compartilhamento de grafos pode ser feito de diversas
+                maneiras, como por meio de uma imagem ou mesmo
+                por meio de um link ou arquivo que pode ser enviado a outra
+                pessoa, possibilitando que ela então consiga manipular o grafo.
+                Isso permite que colegas de turma discutam com facilidade
+                uma execução em algoritmos criados por eles próprios.
+            </p>
+            <div class="duas-colunas">
+                <ul style="padding-left: 15pt;">
                     <li>
-                        Importação
+                        Exportação
                         <ul>
                             <li>Arquivo</li>
                             <li>Texto</li>
                             <li>Link</li>
+                            <li>Imagem</li>
                         </ul>
                     </li>
-                    <li>Favoritos (armazenamento local)</li></ul>
-                </div>
+                </ul>
+                <ul>
+                <li>
+                    Importação
+                    <ul>
+                        <li>Arquivo</li>
+                        <li>Texto</li>
+                        <li>Link</li>
+                    </ul>
+                </li>
+                <li>Favoritos (armazenamento local)</li></ul>
             </div>
         </div>
-        <div class="aboutSection" id="DesafiosEAprendizados">
-        <h2 class="aboutTitle"><a href="#DesafiosEAprendizados">Desafios e Aprendizados</a></h2>
+    </section>
+
+    <section class="aboutSection" id="DesafiosEAprendizados">
+        <a href="#DesafiosEAprendizados" class="aboutTitle"><h2>Desafios e Aprendizados</h2></a>
         <div class="aboutContent">
             <h3 class="topic-title">Trabalho em Equipe</h3>
             <p class="topic-content">
@@ -321,15 +303,16 @@
                 do projeto.
             </p>
         </div>
-    </div>
-    <div class="aboutSection" id="DireitosAutoraisECodigoFonte">
-        <h2 class="aboutTitle"><a href="#DireitosAutoraisECodigoFonte">Direitos Autorais e Código Fonte</a></h2>
+    </section>
+
+    <section class="aboutSection" id="DireitosAutoraisECodigoFonte">
+        <a href="#DireitosAutoraisECodigoFonte" class="aboutTitle"><h2>Direitos Autorais e Código Fonte</h2></a>
         <div class="aboutContent">
             <h3 class="topic-title">Código Fonte</h3>
             <p class="topic-content">
                 Todo o código fonte da ferramenta está disponível no
                 <a href="https://github.com/Visckmart/GraphProject">repositório público</a>
-                <a href="https://github.com/Visckmart/GraphProject" target="_blank" rel=noopener><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" alt="Abrir tutorial em nova aba"/></a>
+                <a href="https://github.com/Visckmart/GraphProject" target="_blank" rel=noopener><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" width="12pt" height="12pt" alt="Abrir tutorial em nova aba"/></a>
                 e qualquer um pode explorá-lo.
                 <br>
                 Nossa proposta é que os alunos que usam a ferramenta possam
@@ -342,9 +325,10 @@
             <h3 class="topic-title">Licença</h3>
             <p class="topic-content">
                 O GraphTeacher utiliza a licença MIT, ela está presente no cabeçalho
-                dos arquivos do projeto.<br>
+                dos arquivos do projeto.
             </p>
-                <pre class="license">MIT License
+            <pre class="license">
+MIT License
 
 Copyright (c) 2021 Thiago Lamenza e Victor Martins
 
@@ -364,23 +348,9 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-                </pre>
+            </pre>
         </div>
-    </div>
-    </div>
-    <script>
-        // document.body.onscroll = function(a) {
-        //     // console.log(!!( a.offsetWidth || a.offsetHeight || a.getClientRects().length ));
-        //     let x = document.getElementsByClassName("authorSection")[0]
-        //     console.log(x.offsetTop > window.pageYOffset)
-        //     if (x.offsetTop > window.pageYOffset) {
-        //         document.body.classList.add("scrollStart")
-        //     } else {
-        //         document.body.classList.remove("scrollStart")
-        //     }
-            // console.log(x.offsetParent === null)
-        // }
-    </script>
-</div>
+    </section>
+    </main>
 </body>
 </html>
