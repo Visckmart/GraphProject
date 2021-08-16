@@ -184,6 +184,7 @@ class GraphMouseHandler {
             if (Tool.MOVE == this.graphView.primaryTool) {
                 if (this.selection.isQuickSelection) {
                     this.graphView.moveNode(this.clickedNode, pos);
+                    this.graphView.requestCanvasRefresh(CanvasType.GENERAL);
                 } else if (this.selection.selected.nodes.includes(this.clickedNode)) {
                     for (let nodeIndex in this.selection.selected.nodes) {
                         // Calcula cada nova posição levando em conta as posições
@@ -196,12 +197,11 @@ class GraphMouseHandler {
                         this.graphView.moveNode(this.selection.selected.nodes[nodeIndex],
                                                 newPosition);
                     }
-                    this.graphView.requestCanvasRefresh(CanvasType.GENERAL)
+                    this.graphView.requestCanvasRefresh(CanvasType.GENERAL);
                 }
             } else if (Tool.CONNECT == this.graphView.primaryTool) {
                 this.shouldDrawTemporaryEdge = true;
-                    this.graphView.requestCanvasRefresh(CanvasType.FAST);
-                    // this.graphView.refreshFastCanvas();
+                this.graphView.requestCanvasRefresh(CanvasType.FAST);
             }
         } else if (this.clickedEdge) {
             // console.log("Aresta");
