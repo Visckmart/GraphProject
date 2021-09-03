@@ -38,45 +38,51 @@ let EdgeDirectedMixin = (superclass) => {
             return super.getMixins().add(EdgeDirectedMixin)
         }
 
-        // TODO: Organizar
         prepareLine(ctx, xStart, yStart, xEnd, yEnd, doubled) {
-            // doubled = true;
-            let arrowStartX;
-            let arrowStartY;
             let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
-            let newp = pointFromCircleAngle(
-                {x:xEnd, y:yEnd},
-                30, theta - Math.PI/2)
+            // Recalcular o ponto final da aresta uma vez que ele deve estar na
+            // borda do nó e não no centro do nó
+            let endPoint = pointFromCircleAngle({x: xEnd, y: yEnd},
+                                                30, theta - Math.PI/2);
+
+            // Preparar o desenho da aresta, seja curvada ou reta
+            let arrowAngleAuxPoint = {x: xStart, y: yStart};
             if (doubled) {
                 ctx.beginPath()
                 ctx.moveTo(xStart, yStart);
+
                 let offset = 50;
                 let theta = Math.atan2(yEnd - yStart, xEnd - xStart) - Math.PI / 2;
-                let cpX = ((xStart + xEnd) / 2) + Math.cos(theta) * offset;
-                let cpY = ((yStart + yEnd) / 2) + Math.sin(theta) * offset;
-                arrowStartX = cpX
-                arrowStartY = cpY
-                let newp2 = pointFromCircleAngle(
-                    {x:xEnd, y:yEnd},
-                    30, Math.atan2(cpX - cpY, xEnd - xStart) - Math.PI / 2)
-                ctx.quadraticCurveTo(cpX, cpY, newp.x, newp.y);
+                let centerPoint = {x: ((xStart + xEnd) / 2) + Math.cos(theta) * offset,
+                                   y: ((yStart + yEnd) / 2) + Math.sin(theta) * offset };
+
+                arrowAngleAuxPoint = centerPoint;
+
+                ctx.quadraticCurveTo(centerPoint.x, centerPoint.y,
+                                     endPoint.x, endPoint.y);
             } else {
                 super.prepareLinePath(ctx, xStart, yStart, xEnd, yEnd, doubled)
-                arrowStartX = xStart;
-                arrowStartY = yStart;
             }
-            let arrowAngle = Math.atan2(arrowStartX - xEnd, arrowStartY - yEnd) + Math.PI;
 
-            let arrowHeadSize = 25
-            ctx.moveTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle - Math.PI / 5)),
-                       newp.y - (arrowHeadSize * Math.cos(arrowAngle - Math.PI / 5)));
+            // Desenhar a ponta da seta
+            let arrowAngle = Math.atan2(arrowAngleAuxPoint.x - xEnd, arrowAngleAuxPoint.y - yEnd) + Math.PI;
+            let arrowHeadSize = 25;
 
-            ctx.lineTo(newp.x, newp.y);
+            let headAngle = arrowAngle - Math.PI / 5;
+            ctx.moveTo(endPoint.x - (arrowHeadSize * Math.sin(headAngle)),
+                       endPoint.y - (arrowHeadSize * Math.cos(headAngle)));
 
-            ctx.moveTo(newp.x - (arrowHeadSize * Math.sin(arrowAngle + Math.PI / 6.5)),
-                       newp.y - (arrowHeadSize * Math.cos(arrowAngle + Math.PI / 6.5)));
+            ctx.lineTo(endPoint.x, endPoint.y);
 
-            ctx.lineTo(newp.x, newp.y);
+            if (doubled) {
+                headAngle = arrowAngle + Math.PI / 8;
+            } else {
+                headAngle = arrowAngle + Math.PI / 5;
+            }
+            ctx.moveTo(endPoint.x - (arrowHeadSize * Math.sin(headAngle)),
+                       endPoint.y - (arrowHeadSize * Math.cos(headAngle)));
+
+            ctx.lineTo(endPoint.x, endPoint.y);
 
         }
         getTextPosition({x: xStart, y: yStart}, {x: xEnd, y: yEnd}, doubled) {
