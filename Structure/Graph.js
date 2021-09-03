@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { GraphCategory, incrementGlobalIndex } from "../Drawing/General.js";
+import { canvas, GraphCategory, incrementGlobalIndex } from "../Drawing/General.js";
 
 import Node from "./Node.js";
 
@@ -226,6 +226,31 @@ class Graph {
         }
         return connA.get(nodeB) != null;
     }
+
+    stretchToFill() {
+        let left, right, top, bottom;
+        for (let node of this.nodes()) {
+            if (!left   || left > node.pos.x)   { left = node.pos.x; }
+            if (!right  || right < node.pos.x)  { right = node.pos.x; }
+            if (!top    || top > node.pos.y)    { top = node.pos.y; }
+            if (!bottom || bottom < node.pos.y) { bottom = node.pos.y; }
+        }
+        let range = { horiz: right - left, vert: bottom - top };
+
+        let marginProportion = { horiz: 0.1, vert: 0.1 };
+
+        let canvasMargin = { horiz: canvas.width * marginProportion.horiz,
+                             vert:  canvas.height * marginProportion.vert };
+        let canvasContentSpan = { horiz: canvas.width * (1 - marginProportion.horiz * 2),
+                                  vert:  canvas.height * (1 - marginProportion.vert * 2) };
+
+        for (let node of this.nodes()) {
+            node.pos.x = (node.pos.x - left)/range.horiz;
+            node.pos.x = (node.pos.x * canvasContentSpan.horiz) + canvasMargin.horiz;
+            node.pos.y = (node.pos.y - top)/range.vert;
+            node.pos.y = (node.pos.y * canvasContentSpan.vert) + canvasMargin.vert;
+        }
+    }
     //endregion
 
     //region Serialização
@@ -307,6 +332,7 @@ class Graph {
                 graph.insertNode(node)
             }
         }
+
         incrementGlobalIndex(biggestIndex+1)
         if (serializedEdges) {
             let serializedEdgesList = serializedEdges.split(".")

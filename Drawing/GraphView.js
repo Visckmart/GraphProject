@@ -583,11 +583,14 @@ export class GraphView {
     loadSerializedGraph(serialized) {
         let deserializedGraph = Graph.deserialize(serialized);
         if (!deserializedGraph) { return false; }
+        if (isMobile) {
+            deserializedGraph.stretchToFill();
+            document.getElementById("shareModal").style.display = "none";
+        }
+
         this.structure = deserializedGraph;
-        let shareModal = document.getElementById("shareModal")
-        shareModal.style.display = "none";
         // refreshInterfaceCategories();
-        this.recalculateLayout()
+        this.recalculateLayout();
         this.refreshGraph();
         this.registerStep();
         return true;
