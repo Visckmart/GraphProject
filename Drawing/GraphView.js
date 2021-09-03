@@ -54,7 +54,7 @@ const NodeLabeling = {
     LETTERS_ORD: "letters_ordered"
 }
 
-export let isMobile = navigator.userAgent.toLowerCase().match(/mobile/i);
+export let isMobile = window.innerWidth < 450 || window.innerHeight < 450;
 
 // isMobile = !isMobile
 

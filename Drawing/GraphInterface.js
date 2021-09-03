@@ -22,7 +22,7 @@
  */
 
 import { TrayHandler } from "./ToolInteraction.js";
-import { GraphView } from "./GraphView.js";
+import { GraphView, isMobile } from "./GraphView.js";
 import ToolRepository from "./ToolRepository.js";
 import GraphMenuHandler from "./GraphMenuHandler.js";
 import {
@@ -45,9 +45,15 @@ export class GraphInterface {
         document.body.onblur = function() {
             this.view.primaryTool = this.view.keyboardHandler.lastToolChoice;
         }.bind(this);
-        this.initialize()
+
+        if (!isMobile) {
+            this.initialize()
+        } else {
+            this.mobileInitialization();
+        }
     }
 
+    // TODO: Verificar e extrair possíveis similaridades entre as inicializações
     initialize() {
         let exportFileButton = document.getElementById("exportFile");
         if (exportFileButton) {
@@ -124,6 +130,64 @@ export class GraphInterface {
             x.onclick = importFromText.bind(null, this.view)
         }
     }
+
+    mobileInitialization() {
+        let menuArea = document.getElementById("menuArea")
+        if (menuArea) {
+            menuArea.style.display = "none";
+        } else {
+            console.warn("Menu lateral não foi encontrado.");
+        }
+
+        let tray = document.getElementById("tray")
+        if (tray) {
+            tray.style.display = "none";
+        } else {
+            console.warn("Tray não foi encontrada.");
+        }
+
+        let fileInputElement = document.getElementById("inputFile");
+        if (fileInputElement) {
+            fileInputElement.onchange = (e) => {
+                importFromFile(this.view, e, () => exportAsURL(this.view.structure))
+            }
+        } else {
+            console.warn("Elemento de escolha de arquivos não foi encontrado.");
+        }
+        let importFileButtons = document.getElementsByClassName("importFile");
+        for (let importFileButton of importFileButtons) {
+            importFileButton.onclick = () => fileInputElement.click();
+        }
+        let importTextButtons = document.getElementsByClassName("importText");
+        for (let importTextButton of importTextButtons) {
+            importTextButton.onclick = () => {
+                importFromText(this.view)
+                exportAsURL(this.view.structure)
+            }
+        }
+
+        let shareModal = document.getElementById("shareModal");
+        if (shareModal) {
+            shareModal.style.display = "flex";
+        } else {
+            console.warn("Tela de importação não foi encontrada.");
+        }
+        let closeModalButton = document.getElementsByClassName("importCancel")[0];
+        if (closeModalButton) {
+            closeModalButton.onclick = () => {
+                shareModal.style.display = "none";
+            }
+        } else {
+            console.warn("Botão de fechar a tela de importação não foi encontrado.");
+        }
+
+        window.addEventListener("load", this.deserializeURL.bind(this));
+        window.onpopstate = () => {
+            this.deserializeURL(this)
+        }
+        this.view.recalculateLayout();
+    }
+
     deserializeURL() {
         const urlParams = new URLSearchParams(location.search);
         if (urlParams.has("graph") && urlParams.get("graph") !== "") {
@@ -135,7 +199,6 @@ export class GraphInterface {
         }
     }
     didUpdateTray(targetElement) {
-        // console.log(type, name)
         switch (targetElement.name) {
         case "tool":
             this.view.primaryTool = targetElement.value;
