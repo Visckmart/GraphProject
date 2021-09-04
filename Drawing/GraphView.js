@@ -31,7 +31,7 @@ import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"
 import GraphSelection from "./GraphSelection.js"
 
-import { colorFromComponents, isTouchEnvironment } from "../Utilities/Utilities.js";
+import { colorFromComponents, getDistanceOf, isTouchEnvironment } from "../Utilities/Utilities.js";
 import PropertyList from "../Structure/Properties/PropertyList.js";
 import { regularNodeRadius } from "../Structure/Node.js";
 
@@ -91,24 +91,18 @@ export class GraphView {
                 this.darkModeChanged(event.matches);
             });
 
-        if (interactive) {
+        if (isMobile == false) {
             // Mouse
-            if (!isMobile) {
-                if (isTouchEnvironment()) {
-                    canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
-                    canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
-                    canvas.ontouchend = this.mouseHandler.mouseUpEvent;
-                } else {
-                    canvas.onmousedown = this.mouseHandler.mouseDownEvent;
-                    canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
-                    canvas.onmouseup = this.mouseHandler.mouseUpEvent;
-                    canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
-                    canvas.onmouseout = this.mouseHandler.mouseLeaveEvent;
-                }
-            } else {
+            if (isTouchEnvironment()) {
                 canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
                 canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
                 canvas.ontouchend = this.mouseHandler.mouseUpEvent;
+            } else {
+                canvas.onmousedown = this.mouseHandler.mouseDownEvent;
+                canvas.onmousemove = this.mouseHandler.mouseMoveEvent;
+                canvas.onmouseup = this.mouseHandler.mouseUpEvent;
+                canvas.onmouseleave = this.mouseHandler.mouseLeaveEvent;
+                canvas.onmouseout = this.mouseHandler.mouseLeaveEvent;
             }
 
             // Evite abrir o menu de contexto para não haver conflito com o gesto
@@ -119,67 +113,9 @@ export class GraphView {
             document.body.onkeydown = this.keyboardHandler.keyPressed;
             document.body.onkeyup = this.keyboardHandler.keyReleased;
         } else {
-            // The item (or items) to press and hold on
-            let item = this.canvas;
-
-            let timerID;
-            let counter = 0;
-
-            let pressHoldEvent = new CustomEvent("pressHold");
-
-            // Increase or decreae value to adjust how long
-            // one should keep pressing down before the pressHold
-            // event fires
-            let pressHoldDuration = 50;
-
-            // Listening for the mouse and touch events
-            item.addEventListener("mousedown", pressingDown, false);
-            item.addEventListener("mouseup", notPressingDown, false);
-            item.addEventListener("mouseleave", notPressingDown, false);
-
-            item.addEventListener("touchstart", pressingDown, false);
-            item.addEventListener("touchend", notPressingDown, false);
-
-            // Listening for our custom pressHold event
-            item.addEventListener("pressHold", doSomething, false);
-
-            function pressingDown(e) {
-                // Start the timer
-                requestAnimationFrame(timer);
-
-                e.preventDefault();
-
-                console.log("Pressing!");
-            }
-
-            function notPressingDown(e) {
-                // Stop the timer
-                cancelAnimationFrame(timerID);
-                counter = 0;
-
-                console.log("Not pressing!");
-            }
-
-            //
-            // Runs at 60fps when you are pressing down
-            //
-            function timer() {
-                console.log("Timer tick!");
-
-                if (counter < pressHoldDuration) {
-                    timerID = requestAnimationFrame(timer);
-                    counter++;
-                } else {
-                    console.log("Press threshold reached!");
-                    item.dispatchEvent(pressHoldEvent);
-                }
-            }
-
-            function doSomething(e) {
-                console.log("pressHold event fired!");
-                let shareModal = document.getElementById("shareModal")
-                shareModal.style.display = "flex";
-            }
+            canvas.ontouchstart = this.mouseHandler.mouseDownEvent;
+            canvas.ontouchmove = this.mouseHandler.mouseMoveEvent;
+            canvas.ontouchend = this.mouseHandler.mouseUpEvent;
         }
         // HISTORY
         this.history = new HistoryTracker();
@@ -430,7 +366,7 @@ export class GraphView {
     }
 
     nodeColorIndex = 0;
-    insertNewNodeAt(pos) {
+    insertNewNodeAt(pos, automated = false) {
         if (this.checkIfNodeAt(pos, true)) {
             return false;
         }
@@ -440,7 +376,7 @@ export class GraphView {
         incrementGlobalIndex();
 
         this.refreshGraph();
-        this.registerStep();
+        if (!automated) this.registerStep();
         return newNode;
     }
 
@@ -453,7 +389,7 @@ export class GraphView {
         this.requestCanvasRefresh(CanvasType.SLOW)
     }
 
-    removeNodeAt(pos) {
+    removeNodeAt(pos, automated = false) {
         let nodes = this.getNodesAt(pos)
         if (nodes.length === 0) {
             return;
@@ -468,7 +404,7 @@ export class GraphView {
         this.structure.removeNode(frontmostNode);
 
         this.refreshGraph();
-        this.registerStep();
+        if (!automated) this.registerStep();
     }
 
     // ARESTAS
@@ -566,6 +502,7 @@ export class GraphView {
         this.refreshGraph();
     }
     backingScale(context) {
+        if (isMobile) { return 1; }
         // return 0.5;
         // return 2;
         if ('devicePixelRatio' in window) {
@@ -630,10 +567,22 @@ export class GraphView {
         if (this.processingScreenshot && background == false) return;
         this.darkModeChanged(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
         this.ctx.save();
+
+        if (isMobile) {
+            if (this.mouseHandler.touchDownTime && window.performance.now() - this.mouseHandler.touchDownTime > 500) {
+                let shareModal = document.getElementById("shareModal")
+                shareModal.style.display = "flex";
+                this.mouseHandler.touchDownTime = null;
+            }
+            // return;
+        }
         // TODO: Esse if é meio gambiarra, o fundo deveria ser transparente
         //       o tempo todo, e o cache deveria saber lidar com isso.
         if (background == false && !this.selectionHandler.shouldDrawSelection) {
+            this.ctx.save();
+            this.ctx.resetTransform();
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.restore();
         } else {
             this.ctx.fillStyle = this.background;
             this.ctx.beginPath();
@@ -698,6 +647,7 @@ export class GraphView {
     drawCurrentMaxFPS(ctx, fps, name = "", vertOffset = 0) {
         // return;
         ctx.save()
+        ctx.resetTransform();
         ctx.fillStyle = "#AAA8";
         ctx.font = "12pt Arial";
         let content = name + fps + " FPS";
@@ -754,7 +704,8 @@ export class GraphView {
         let requestsInfo = this.frameRateRequests[canvasType];
 
         // Se for o canvas de uso geral e não houver nós, não atualize-o.
-        if (canvasType == CanvasType.GENERAL && this.structure.nodes().next().done) {
+        if (canvasType == CanvasType.GENERAL && this.structure.nodes().next().done
+            && this.mouseHandler.touchDownTime == null) {
             return 0;
         }
         // Evitando processamento se o mapa estiver vazio
@@ -820,7 +771,14 @@ export class GraphView {
     }
 
     refreshSlowCanvas(timestamp) {
-        this.slowCtx.clearRect(0, 0, this.width, this.height)
+        if (isMobile) {
+            this.ctx.save();
+            this.ctx.resetTransform();
+            this.slowCtx.clearRect(0, 0, this.width, this.height);
+            this.ctx.restore();
+        } else {
+            this.slowCtx.clearRect(0, 0, this.width, this.height);
+        }
         // Chamando a cadeia de desenho de textos de cada nó
         for (let node of this.structure.nodes()) {
             if (this.overlappingNodes.has(node)
