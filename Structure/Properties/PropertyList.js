@@ -25,6 +25,7 @@ import EdgePropertyRepository from "./EdgePropertyRepository.js";
 import NodePropertyRepository from "./NodePropertyRepository.js";
 import { g } from "../../Drawing/GraphView.js";
 
+// TODO: Usar templates
 class PropertyList extends HTMLElement {
     constructor() {
         super()
@@ -95,6 +96,7 @@ class PropertyList extends HTMLElement {
             if (type != "text" || event.target.value != "") {
                 artifacts.map(a => a[property] = event.target.value)
                 g.refreshGraph()
+                g.registerStep()
             }
         })
         this.container.appendChild(pElement)

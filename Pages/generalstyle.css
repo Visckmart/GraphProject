@@ -21,50 +21,61 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#showcaseContainer {
-    /*width: 250pt;*/
-    overflow: hidden;
-    position: relative;
+:root {
+    --background-color: #F8F8F8;
 
+    --text-primary-color: black;
+    --text-secondary-color: #222;
+    --text-tertiary-color: #333;
+    --text-quaternary-color: #777;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #222;
+
+        --text-primary-color: white;
+        --text-secondary-color: #EFEFEF;
+        --text-tertiary-color: #CCC;
+        --text-quaternary-color: #AAA;
+    }
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+#navigationBar {
     display: flex;
-    flex-direction: column;
-    color:white;
-}
+    justify-content: space-between;
+    align-items: center;
 
-#showcaseTitle {
-    text-align: center;
-    flex: 0 1 auto;
-    font-size: 14pt;
-    margin-bottom: 0;
-}
-#algorithmMenuBody p {
-    margin-left: 10pt;
-    margin-right: 10pt;
-    margin-bottom: 0;
+    height: var(--navigationBarHeight);
+
+    padding-top: 8pt;
     padding-left: 8pt;
     padding-right: 8pt;
-    padding-bottom: 0pt;
+    padding-bottom: 0;
 }
-#showcaseMessage {
-    flex: 0 1 auto;
-    height: fit-content;
-    max-height: 250pt;
-    overflow: auto;
-    margin: 10pt;
-    margin-top: 5pt;
-    padding: 4pt;
-    border: 2pt solid #888;
-    border-radius: 4pt;
+#navigationBar > #title {
+    margin: 0 0pt;
 }
-
-#showcaseBody {
-    font-size: 11pt;
-    flex: 1 1 auto;
-    overflow: auto;
-    height: fit-content;
+#navigationBar > #title a {
+    text-decoration: none;
+    color: var(--text-primary-color);
+}
+@media (prefers-color-scheme: dark) {
+    #navigationBar a {
+        color: white;
+    }
 }
 
-#showcase {
-    border-radius: 0;
-    background: none;
+.page-title {
+    text-align: center;
+    font-size: 30pt;
+    margin-bottom: 25pt;
+    margin-top: 10pt;
+}
+.page-title a {
+    text-decoration: none;
+    color: inherit;
 }

@@ -30,7 +30,7 @@ import { HighlightType, HighlightsHandler } from "../Utilities/Highlights.js";
 let globalEdgeIndex = 0
 export default class Edge {
 
-    constructor({ index = null, label, highlights = null } = {}) {
+    constructor({ index = null, label = null, highlights = null } = {}) {
         this._initialTime = window.performance.now();
         this.label = label ?? generateNewRandomLabel();
         this.highlights = new HighlightsHandler(highlights);
@@ -78,6 +78,7 @@ export default class Edge {
         ctx.strokeStyle = this.color;
         ctx.lineWidth = this.width;
         ctx.setLineDash([]);
+        ctx.lineCap = "butt";
         if (this.highlights.has(HighlightType.SELECTION)) {
             ctx.setLineDash([12, 8]);
             ctx.lineDashOffset = -(window.performance.now() - this._initialTime) / 75

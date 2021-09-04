@@ -21,10 +21,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { CanvasType, Tool } from "./General.js"
+import { CanvasType, HighFPSFeature, Tool } from "./General.js"
 import { HighlightType } from "../Utilities/Highlights.js"
 import { getDistanceOf, isLeftClick, isRightClick, isTouchEnvironment } from "../Utilities/Utilities.js"
 import Edge from "../Structure/Edge.js";
+import { isMobile } from "./GraphView.js";
 
 class GraphMouseHandler {
     
@@ -33,7 +34,11 @@ class GraphMouseHandler {
         this.selection = graphView.selectionHandler;
         this._enabled = true;
         this.canvasRect = this.graphView.canvas.getBoundingClientRect();
+        this.moved = false;
     }
+
+    debugRawEvents = false;
+    debugEvents = false;
 
     getMousePos(mouseEvent) {
         let rawX = mouseEvent.clientX;
@@ -58,19 +63,36 @@ class GraphMouseHandler {
     }
     set clickPosition(pos) {
         this._clickPosition = pos;
-        this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
-        // if (this.graphView.primaryTool == Tool.CONNECT) {
+        if (pos == null) {
+            this.clickedNode = null;
+            this.clickedEdge = null;
+        } else {
+            this.clickedNode = this.graphView.getNodesAt(this.clickPosition).pop();
+            // if (this.graphView.primaryTool == Tool.CONNECT) {
             this.clickedEdge = this.graphView.getEdgesAt(pos).pop();
-        // }
+            // }
+        }
     }
 
     willClick(pos) {
+        if (this.debugEvents) { console.log("willClick", pos) }
+
         this.clickPosition = pos;
         this.moved = false;
+        document.getSelection().removeAllRanges();
     }
-
+    touchDownTime = null;
     // Preparação para o clique com o botão esquerdo
     willLeftClick(pos) {
+        if (this.debugEvents) { console.log("willLeftClick", pos) }
+
+        if (isMobile) {
+            this.touchDownTime = window.performance.now();
+            console.log("touch down");
+            this.graphView.requestFramerateForCanvas(CanvasType.GENERAL, HighFPSFeature.HOLDING, 8)
+            this.graphView.requestCanvasRefresh(CanvasType.GENERAL)
+            return;
+        }
 
         if (this.clickedNode) {
             if (Tool.MOVE == this.graphView.primaryTool) {
@@ -98,6 +120,17 @@ class GraphMouseHandler {
     // nodeListPos = [];
     // Finalizado um clique com o botão esquerdo, sem arrastar
     didLeftClick(pos) {
+        if (this.debugEvents) { console.log("didLeftClick", pos) }
+
+        if (isMobile) {
+            if (window.performance.now() - this.touchDownTime > 150) {
+                let shareModal = document.getElementById("shareModal")
+                shareModal.style.display = "flex";
+                this.touchDownTime = null;
+            }
+            return;
+        }
+
         this.clickPosition = pos;
 
         if (this.clickedNode) {
@@ -145,9 +178,14 @@ class GraphMouseHandler {
             }
         }
         this.selection.registerNodePositions();
+        this.move = false;
     }
 
     didRightClick(pos) {
+        if (this.debugEvents) { console.log("didRightClick", pos) }
+
+        if (isMobile) { return; }
+
         if (this.clickedNode) {
             if (Tool.MOVE == this.graphView.primaryTool) {
                 this.graphView.removeNodeAt(pos);
@@ -157,16 +195,38 @@ class GraphMouseHandler {
                 this.graphView.removeEdgeAt(pos);
             }
         }
+        this.move = false;
     }
+    accumulatedTranslation = {x: 0, y: 0}
     // nodeList = [];
     // Um movimento está sendo feito com o botão esquerdo apertado
     isMovingLeftClick(pos) {
+        if (this.debugEvents) { console.log("isMovingLeftClick", pos) }
+
         this.moved = true;
-        // console.log("move", getDistanceOf(this.clickPosition, pos));
+        if (isMobile) {
+            this.touchDownTime = null;
+
+            let currentTranslation = {
+                x: pos.x - this.clickPosition.x + this.accumulatedTranslation.x,
+                y: pos.y - this.clickPosition.y + this.accumulatedTranslation.y
+            }
+
+            this.graphView.ctx.resetTransform();
+            this.graphView.ctx.translate(currentTranslation.x, currentTranslation.y);
+            this.graphView.requestCanvasRefresh(CanvasType.GENERAL);
+
+            this.graphView.slowCtx.resetTransform();
+            this.graphView.slowCtx.translate(currentTranslation.x, currentTranslation.y);
+            this.graphView.requestCanvasRefresh(CanvasType.SLOW);
+            return;
+        }
+
         if (this.clickedNode) {
             if (Tool.MOVE == this.graphView.primaryTool) {
                 if (this.selection.isQuickSelection) {
                     this.graphView.moveNode(this.clickedNode, pos);
+                    this.graphView.requestCanvasRefresh(CanvasType.GENERAL);
                 } else if (this.selection.selected.nodes.includes(this.clickedNode)) {
                     for (let nodeIndex in this.selection.selected.nodes) {
                         // Calcula cada nova posição levando em conta as posições
@@ -179,12 +239,11 @@ class GraphMouseHandler {
                         this.graphView.moveNode(this.selection.selected.nodes[nodeIndex],
                                                 newPosition);
                     }
-                    this.graphView.requestCanvasRefresh(CanvasType.GENERAL)
+                    this.graphView.requestCanvasRefresh(CanvasType.GENERAL);
                 }
             } else if (Tool.CONNECT == this.graphView.primaryTool) {
                 this.shouldDrawTemporaryEdge = true;
-                    this.graphView.requestCanvasRefresh(CanvasType.FAST);
-                    // this.graphView.refreshFastCanvas();
+                this.graphView.requestCanvasRefresh(CanvasType.FAST);
             }
         } else if (this.clickedEdge) {
             // console.log("Aresta");
@@ -236,11 +295,30 @@ class GraphMouseHandler {
                     this.selection.clear();
                 }
                 this.selection.draggingEvent(this.clickPosition, pos);
+            // this.graphView.ctx.resetTransform();
+            // this.graphView.ctx.translate(pos.x - this.clickPosition.x, pos.y - this.clickPosition.y);
+            // this.graphView.fastCtx.resetTransform();
+            // this.graphView.fastCtx.translate(pos.x - this.clickPosition.x, pos.y - this.clickPosition.y);
+            // this.graphView.slowCtx.resetTransform();
+            // this.graphView.slowCtx.translate(pos.x - this.clickPosition.x, pos.y - this.clickPosition.y);
+            // this.graphView.redrawGraph();
+            // this.graphView.requestCanvasRefresh(CanvasType.FAST);
+            // this.graphView.requestCanvasRefresh(CanvasType.SLOW);
             // }
         }
     }
 
     didMoveLeftClick(pos) {
+        if (this.debugEvents) { console.log("didMoveLeftClick", pos) }
+
+        if (isMobile) {
+            this.accumulatedTranslation = {
+                x: pos.x - this.clickPosition.x + this.accumulatedTranslation.x,
+                y: pos.y - this.clickPosition.y + this.accumulatedTranslation.y
+            };
+            return;
+        }
+
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
             // Para de desenhar
@@ -263,12 +341,13 @@ class GraphMouseHandler {
                 }
                 // Pare de atualizar a aresta temporária
                 this.shouldDrawTemporaryEdge = false;
-                this.graphView.refreshFastCanvas();
+                this.graphView.requestCanvasRefresh(CanvasType.FAST);
             }
         }
         if (this.selection.isQuickSelection) {
             this.selection.clear();
         }
+        this.moved = false;
     }
 
     // Mouse DOWN event
@@ -277,16 +356,20 @@ class GraphMouseHandler {
     mouseDownEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if (!this._enabled) { return; }
+        if (this.debugRawEvents) { console.log("mouse down") }
 
         // Atualizando posição do mouse
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         this.refreshCursorStyle();
-
+        console.log(isRightClick(mouseEvent) && this.moved == false);
+        if (isMobile) {
+            mouseEvent.preventDefault();
+        }
         if (isLeftClick(mouseEvent)) {
             this.willClick(pos);
             this.willLeftClick(pos);
-        } else if (isRightClick(mouseEvent)) {
+        } else if (isRightClick(mouseEvent) && this.moved == false) {
             this.willClick(pos);
         }
         this.refreshCursorStyle();
@@ -342,10 +425,12 @@ class GraphMouseHandler {
     mouseMoveEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
+        if (this.debugRawEvents) { console.log("mouse move") }
 
         let pos = this.getMousePos(mouseEvent);
         this.currentMousePos = pos;
         this.handleEdgeHover(pos);
+
         // if (this.clickedNode) {
         //     let d = getDistanceOf(this.clickPosition, pos)
         //     if (this.moved == false) {
@@ -353,12 +438,16 @@ class GraphMouseHandler {
         //     }
         // }
         // TODO: Organizar
-        let a = false;
-        if (this.clickPosition) {
-            let d = getDistanceOf(this.clickPosition, pos);
-            a = ((this.clickedNode || this.clickedEdge) && d >= 3) || (!this.clickedNode && !this.clickedEdge && d >= 10);
+        let validDistance = this.moved;
+        if (validDistance == false && this.clickPosition) {
+            let movedDistance = getDistanceOf(this.clickPosition, pos);
+            if (this.clickedNode || this.clickedEdge) {
+                validDistance = movedDistance >= 3;
+            } else {
+                validDistance = movedDistance >= 10;
+            }
         }
-        if (mouseEvent.buttons != 0 && isLeftClick(mouseEvent) && a) {
+        if (mouseEvent.buttons != 0 && isLeftClick(mouseEvent) && validDistance) {
             this.isMovingLeftClick(pos);
         }
         this.refreshCursorStyle();
@@ -412,20 +501,22 @@ class GraphMouseHandler {
     mouseUpEvent = (mouseEvent) => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
-        // console.log(mouseEvent);
+        if (this.debugRawEvents) { console.log("mouse up") }
+
         let pos = this.getMousePos(mouseEvent);
-        // console.log(mouseEvent);
+
         if (isLeftClick(mouseEvent)) {
             if (this.moved) {
                 this.didMoveLeftClick(pos);
             } else {
                 this.didLeftClick(pos);
             }
-        } else if (isRightClick(mouseEvent)) {
+            this.clickPosition = null;
+        } else if (isRightClick(mouseEvent) && this.moved == false) {
             this.didRightClick(pos);
+            this.clickPosition = null;
         }
         this.refreshCursorStyle();
-        this.clickedNode = null;
         this.graphView.requestCanvasRefresh(CanvasType.SLOW);
         // if (isRightClick(mouseEvent)
         //     && this.selection.shouldDrawSelection == false) {
@@ -510,6 +601,7 @@ class GraphMouseHandler {
     mouseLeaveEvent = () => {
         // Eventos de mouse desabilitados
         if(!this._enabled) { return; }
+        if (this.debugRawEvents) { console.log("mouse leave event") }
 
         // Se está desenhando a área de seleção
         if (this.selection.shouldDrawSelection) {
@@ -517,12 +609,15 @@ class GraphMouseHandler {
             this.selection.clearSelectionArea();
             this.selection.refreshMenu()
         }
+
+        this.moved = false;
         // // Pare de atualizar a aresta temporária
         this.shouldDrawTemporaryEdge = false;
 
         // Atualiza a posição dos nós selecionados, para que o próximo
         // gesto de mover esses nós tenha as posições adequadas.
         this.selection.registerNodePositions();
+        this.clickPosition = null;
     }
 
     // Estilo do ponteiro do mouse

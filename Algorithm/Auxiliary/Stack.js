@@ -39,7 +39,7 @@ export default class Stack extends AlgorithmShowcase {
     }
 
     addStep() {
-        let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
+        let fullMessage = (this._messages.length > 0) ? '' : 'Nenhuma ação feita'
         for(let message of this._messages) {
             fullMessage += message + '\n'
         }
@@ -74,8 +74,9 @@ export default class Stack extends AlgorithmShowcase {
 
         ctx.save()
         ctx.beginPath()
-        ctx.strokeStyle = '#8b0000'
-        ctx.fillStyle = '#ff726f'
+        ctx.strokeStyle = '#00000044'
+        ctx.lineWidth = 5
+        ctx.fillStyle = element.node.color;
         ctx.rect(x, y, stackElementSize, stackElementSize)
         ctx.fill()
         ctx.stroke()
@@ -117,12 +118,12 @@ export default class Stack extends AlgorithmShowcase {
     /* Funções de stack */
     push(element) {
         this._stack.push(element)
-        this._messages.push(`Inserindo o elemento ${element.toString()}`)
+        this._messages.push(`Inserindo o elemento ${element.toString()}.`)
     }
 
     pop() {
         let element = this._stack.pop()
-        this._messages.push(`Removendo o elemento ${element.toString()} do topo da pilha`)
+        this._messages.push(`Removendo o elemento ${element.toString()} do topo da pilha.`)
         return element
     }
 

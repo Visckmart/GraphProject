@@ -39,7 +39,7 @@ export default class Queue extends AlgorithmShowcase {
     }
 
     addStep() {
-        let fullMessage = (this._messages.length > 0) ? 'Ações desse passo: \n\n' : 'Nenhuma ação feita'
+        let fullMessage = (this._messages.length > 0) ? '' : 'Nenhuma ação feita'
         for(let message of this._messages) {
             fullMessage += message + '\n'
         }
@@ -61,7 +61,7 @@ export default class Queue extends AlgorithmShowcase {
     }
 
     updateShowcase() {
-        this.resizeCanvas(this.body.clientWidth, this.length * stackElementSize + paddingTop + paddingBottom)
+        this.resizeCanvas(this.body.clientWidth, stackElementSize + paddingTop + paddingBottom)
 
         requestAnimationFrame(this.drawStack)
     }
@@ -70,13 +70,15 @@ export default class Queue extends AlgorithmShowcase {
         let ctx = this.ctx
 
         let x = this.canvas.width/2 - stackElementSize/2
-        let y = (this.length - index - 1)*stackElementSize + paddingTop
+        let y = (index)*(stackElementSize+5) + 10
 
         ctx.save()
         ctx.beginPath()
-        ctx.strokeStyle = '#8b0000'
-        ctx.fillStyle = '#ff726f'
-        ctx.rect(x, y, stackElementSize, stackElementSize)
+        ctx.strokeStyle = '#00000044'
+        ctx.lineWidth = 5;
+        console.log(element);
+        ctx.fillStyle = element.node.color;
+        ctx.rect(y, paddingTop, stackElementSize, stackElementSize)
         ctx.fill()
         ctx.stroke()
 
@@ -84,7 +86,7 @@ export default class Queue extends AlgorithmShowcase {
         ctx.textBaseline = 'middle'
         ctx.font = 'bold 30px Arial'
         ctx.fillStyle = '#ffffff'
-        ctx.fillText(element.toString(), x + stackElementSize/2, y + stackElementSize/2, stackElementSize)
+        ctx.fillText(element.toString(), y + stackElementSize/2, paddingTop + stackElementSize/2, stackElementSize)
         ctx.restore()
     }
 
@@ -117,12 +119,12 @@ export default class Queue extends AlgorithmShowcase {
     /* Funções de stack */
     insert(element) {
         this._queue.push(element)
-        this._messages.push(`Inserindo o elemento ${element.toString()}`)
+        this._messages.push(`Inserindo o elemento ${element.toString()}.`)
     }
 
     remove() {
         let element = this._queue.shift()
-        this._messages.push(`Removendo o elemento ${element.toString()} do topo da pilha`)
+        this._messages.push(`Removendo o elemento ${element.toString()} do início da fila.`)
         return element
     }
 

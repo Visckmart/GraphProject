@@ -71,6 +71,11 @@ export function exportViewAsImage(graphView) {
     textImg.src = graphView.slowCanvas.toDataURL('image/png');
     // TODO: Melhorar organização
     textImg.onload = function() {
+        let filename = prompt("Nome do arquivo:",
+                              `Visualização do Grafo ${getFormattedTime()}.png`)
+        if (filename == null) {
+            return;
+        }
         graphView.redrawGraph(true);
         let ctx = graphView.canvas.getContext("2d");
         ctx.drawImage(textImg, 0, 0);
@@ -79,7 +84,7 @@ export function exportViewAsImage(graphView) {
         graphView.processingScreenshot = false;
 
         let temporaryLink = document.createElement('a');
-        temporaryLink.download = `Grafo ${getFormattedTime()}.png`;
+        temporaryLink.download = filename;
         temporaryLink.href = image;
 
         temporaryLink.click();
@@ -161,6 +166,9 @@ export function importFromFile(graphView, event, completionHandler = null) {
 // Importação de Texto
 export function importFromText(graphView) {
     let serializedInput = prompt("Grafo em Texto");
+    if (!serializedInput) {
+        return;
+    }
     graphView.loadSerializedGraph(serializedInput);
 }
 //endregion

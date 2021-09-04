@@ -117,12 +117,9 @@ let EdgeAssignedValueMixin = (superclass) => {
         }
 
         static deserialize(serializedEdge) {
-            let [superProperties, rest] = Edge.deserialize(serializedEdge, true);
-            let ab = superclass.deserialize(rest);
+            let rest = Edge.deserialize(serializedEdge, true);
             let assignedValueProperties = deserializeAssignedValue(rest);
             return new (EdgeAssignedValueMixin(superclass))({
-                                ...superProperties,
-                                ...ab._args,
                                 ...assignedValueProperties
                             })
         }

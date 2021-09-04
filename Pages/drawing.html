@@ -26,6 +26,7 @@
     <!--	<meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">-->
     <!--	<meta content="ISO-8859-1" http-equiv="encoding">-->
     <meta charset="UTF-8">
+    <meta name="description" content="Ferramenta de manipulação de grafos e exploração de algoritmos.">
     <title>GraphTeacher</title>
     <!--    <base href="http://graphteacher.inf.puc-rio.br/GraphProject/Pages/" />-->
     <!--    <link rel="stylesheet" href="style.css">-->
@@ -53,37 +54,22 @@
     <script type="module" src="../Drawing/Initialization.js" crossorigin="anonymous"></script>
 
     <style>
-        #navigationBar {
-            /*background: #eee;*/
-            padding: var(--interfaceMargin);
-            padding-bottom: 0;
-            padding-top: 8pt;
-            /*margin-bottom: var(--interfaceMargin);*/
-            height: var(--navigationBarHeight);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        #navigationBar > #title {
-            margin: 0 0;
-        }
-        #navigationBar a {
-            text-decoration: none;
-            color: black;
-        }
-        @media (prefers-color-scheme: dark) {
-            #navigationBar a {
-                color: white;
-            }
+        #tutorialLink {
+            color: blue;
+            font-size: 11pt;
         }
     </style>
+    <link rel="stylesheet" href="generalstyle.css">
 </head>
 <body>
-<div id="navigationBar">
+<nav id="navigationBar">
     <h2 id="title"><a href="./drawing.html">GraphTeacher <span class="version">αlpha</span></a></h2>
-    <h4><a href="./tutorial.html">Abrir Tutorial</a></h4>
+    <h4>
+        <a href="./tutorial.html" id="tutorialLink">Tutorial</a>
+        <a href="./tutorial.html" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/External.svg" height="12pt" alt="Abrir tutorial em nova aba"/></a>
+    </h4>
     <!--    <span class="version">βeta</span>-->
-</div>
+</nav>
 <div id="interfaceContainer">
     <div id="canvasArea">
         <canvas id="mainCanvas"></canvas>
@@ -140,10 +126,10 @@
         </noscript>
         <div id="history-tray" class="toolTray">
             <div class="tooltip" title="Desfazer">
-                <button id="undo-button">↺</button>
+                <button id="undo-button"><p>↺</p></button>
             </div>
             <div class="tooltip" title="Desfazer">
-                <button id="redo-button">↻</button>
+                <button id="redo-button"><p>↻</p></button>
             </div>
 
         </div>
@@ -266,10 +252,10 @@
                 <div id="algorithmMenuTabs">
                     <div id="pin">
                         <a id="algorithmMenuPin" onclick="toggleClass(document.getElementById('algorithmMenu'), 'open')">
-                            <img width="16" height="16" src="../assets/img/pin.svg" alt="pin" loading=lazy>
+                            <img width="16" height="16" src="../assets/img/pin.svg" alt="Fixar" loading=lazy>
                         </a>
                         <a id="algorithmMenuUnpin" onclick="toggleClass(document.getElementById('algorithmMenu'), 'open')">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-angle-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-label="Fixar" width="16" height="16" fill="currentColor" class="bi bi-pin-angle-fill" viewBox="0 0 16 16">
                                 <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
                             </svg>
                         </a>
@@ -344,8 +330,6 @@
                     <input type="checkbox" id="directedEdges"/><label for="directedEdges">Direcionadas</label>
                     <br>
                     <input type="checkbox" id="weightedEdges"/><label for="weightedEdges">Pesado</label>
-                    <!--                    <br>-->
-                    <!--                    <input type="checkbox" id="coloredEdges" /><label for="coloredEdges">Coloridas</label>-->
 
                     <h4 class="sectionSubtitle">
                         <label for="nodeLabeling">Nomenclatura dos nós</label>

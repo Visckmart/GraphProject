@@ -31,7 +31,7 @@ export default class GraphMenuHandler {
 
     constructor(view) {
         this.graphView = view;
-        this.favoritesHandler = new FavoritesHandler()
+        this.favoritesHandler = new FavoritesHandler(this.refreshMenuFromGraph.bind(this))
         this.favoritesHandler.updateFavorites();
 
 
@@ -43,7 +43,7 @@ export default class GraphMenuHandler {
 
         this.runAlgorithmButton.onclick = async () => {
             let algorithmController = new AlgorithmController(g);
-            let algorithm = await getAlgorithmFromName(this.algorithmSelector.value);
+            let algorithm = await getAlgorithmModuleFromName(this.algorithmSelector.value);
             if (!algorithm) {
                 console.error("Algoritmo selecionado não foi encontrado.");
                 return;
@@ -76,7 +76,6 @@ export default class GraphMenuHandler {
     }
 
     didSelectAlgorithm(selectedAlgorithm) {
-        console.log("Refreshing checkboxes based on", selectedAlgorithm)
         // Remover foco do seletor
         this.algorithmSelector.blur();
 
@@ -110,7 +109,6 @@ export default class GraphMenuHandler {
                 enabledCategories.push(category);
             }
         }
-        console.log("Categorias", enabledCategories);
         this.graphView.updateGraphConstructors(enabledCategories);
     }
 
@@ -137,7 +135,6 @@ export default class GraphMenuHandler {
 
     refreshMenuFromGraph() {
         let graphCategories = this.graphView.structure.getCategories();
-        console.log("Graph categories", graphCategories);
 
         for (let [category, checkbox] of Object.entries(this.categoryCheckboxes)) {
             checkbox.checked = graphCategories.has(category);
@@ -190,7 +187,6 @@ function getCategoryRestrictions(algorithmName) {
     default:
         break;
     }
-    console.log("Category restrictions", boundCategories);
     return boundCategories;
 }
 

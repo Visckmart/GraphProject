@@ -27,46 +27,6 @@
   --maxHeight: calc(100vh - 2*var(--interfaceMargin) - 20pt - var(--navigationBarHeight));
   --menuWidth: 200pt;
 }
-
-
-:root {
-  --background-color: #F8F8F8;
-
-  --text-primary-color: black;
-  --text-secondary-color: #222;
-  --text-tertiary-color: #333;
-  --text-quaternary-color: #777;
-
-  --card-background-color: #FFF;
-  --card-shadow-color: #EEE;
-  --card-contact-highlight-color: #00F;
-
-  --section-title-highlight-color: lightblue;
-  --section-title-hashtag-color: lightgray;
-
-  --license-background-color: #EAEAEA;
-  --license-border-color: #BBB;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #222;
-
-    --text-primary-color: white;
-    --text-secondary-color: #EFEFEF;
-    --text-tertiary-color: #CCC;
-    --text-quaternary-color: #AAA;
-
-    --card-background-color: #333;
-    --card-shadow-color: #111;
-    --card-contact-highlight-color: #09F;
-
-    --section-title-highlight-color: lightblue;
-    --section-title-hashtag-color: lightgray;
-
-    --license-background-color: #333;
-    --license-border-color: #555;
-  }
-}
 body {
   margin: 0;
   font-family: Helvetica Neue, sans-serif;
@@ -84,6 +44,12 @@ body {
   touch-action: pan-x pan-y;
 }
 
+@media only screen and (max-width: 450pt), (max-height: 450pt) {
+  body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 .version {
   color: #1879F5;
   /*color: #FA690D;*/
@@ -120,9 +86,9 @@ body {
   font-size: 15pt;
   text-align: center;
 }
-#shareModal button:hover {
-  background: #ccc;
-}
+/*#shareModal button:hover {*/
+/*  background: #ccc;*/
+/*}*/
 #shareModal h1 {
   margin-top: 0;
   margin-bottom: 15pt;
@@ -227,7 +193,7 @@ body {
   user-select: none;
 
   width: calc(100% - var(--menuWidth));
-  max-width: calc(100% - var(--menuWidth));
+  max-width: 100%;
   background: linear-gradient(to right, #E5E0FF, #FFE0F3);
 }
 @media (prefers-color-scheme: dark) {
@@ -274,14 +240,16 @@ body {
   color: black;
 }
 #history-tray button {
-  font-size: 14pt;
-  /*font-weight: bold;*/
-  /*margin-left: 2.5pt;*/
+  padding: 0;
   width: 25pt;
   height: 25pt;
   border: 1.5pt solid white;
   background: transparent;
   color: white;
+}
+#history-tray p {
+  font-size: 14pt;
+  margin: 0;
 }
 #history-tray svg {
   stroke-width: 30;
@@ -289,6 +257,13 @@ body {
   height: 13pt;
 }
 
+/* TODO: Gambiarra */
+@media(pointer: coarse) {
+  #history-tray p {
+    margin-top: -4pt;
+    font-size: 21pt;
+  }
+}
 /* MENU */
 #menuArea {
   flex: 1 1 auto;
@@ -379,7 +354,7 @@ body {
 .settingsSection input {
   font-size: 12pt;
 }
-.settingsSection button, .settingsSection a {
+.settingsSection button, .settingsSection a, .modalDiv button {
   margin: 0;
   padding: 3pt 5pt;
   appearance: none;
@@ -401,12 +376,14 @@ body {
 }
 @media(hover: hover) and (pointer: fine) {
   .settingsSection button:hover,
-  .settingsSection a:hover {
+  .settingsSection a:hover,
+  .modalDiv button:hover {
     background: #eee;
   }
 }
 .settingsSection button:active,
-.settingsSection a:active {
+.settingsSection a:active,
+.modalDiv button:active {
   background: #aaa;
   color: white;
 }
@@ -467,14 +444,19 @@ footer p, footer a {
   margin-bottom: 0;
   text-align: center;
 }
+#authors {
+  text-decoration: underline;
+  text-decoration-color: blue;
+}
 footer a:hover > #authors {
   background-color: greenyellow;
 }
 @media (prefers-color-scheme: dark) {
   footer a:hover > #authors {
-    background-color: forestgreen;
+    background-color: darkblue;
   }
-
+  footer p, footer a {
+  }
 }
 @media only screen and (max-width: 720pt), only screen and (max-height: 225pt) {
   #menuArea {

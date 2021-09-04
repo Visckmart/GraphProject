@@ -76,7 +76,7 @@ function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let heap = new MinHeap()
     controller.showcasing = heap
 
-    // Preparando visualmente as arestas
+    // Preparando o visual dos nós e das arestas
     for (let node of graph.nodes()) {
         node.highlights.setTo(HighlightType.DISABLED)
     }

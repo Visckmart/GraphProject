@@ -76,21 +76,9 @@ class GraphKeyboardHandler {
             this.selection.additionOnlyMode = true;
         }
 
-
-
-
         let metaPressed = this.isMetaKey(keyboardEvent)
-        if (metaPressed) {
-            let originalToolChoice = this.lastToolChoice;
-            if (this.lastToolChoice == Tool.MOVE) {
-                this.graphView.primaryTool = Tool.CONNECT;
-            } else if (this.lastToolChoice == Tool.CONNECT) {
-                this.graphView.primaryTool = Tool.MOVE;
-            }
-            this.lastToolChoice = originalToolChoice;
-        }
 
-        if (document.activeElement.tagName != "BODY") { return; }
+        if (document.activeElement.tagName != "BODY") { console.log("ignored"); return; }
 
         switch (keyboardEvent.key) {
         case "1":
@@ -98,6 +86,20 @@ class GraphKeyboardHandler {
             break;
         case "2":
             this.graphView.primaryTool = Tool.CONNECT;
+            break;
+
+        case "z":
+            if (keyboardEvent.shiftKey == false) {
+                let step = this.graphView.history.goToStep(-1);
+                if (step) {
+                    keyboardEvent.preventDefault();
+                }
+            } else {
+                let step = this.graphView.history.goToStep(1);
+                if (step) {
+                    keyboardEvent.preventDefault();
+                }
+            }
             break;
 
         case "s": // TODO: Organizar atalho de salvamento
@@ -119,6 +121,15 @@ class GraphKeyboardHandler {
                 console.log(this.graphView.structure.serialize());
             }
             break;
+        }
+        if (metaPressed) {
+            let originalToolChoice = this.lastToolChoice;
+            if (this.lastToolChoice == Tool.MOVE) {
+                this.graphView.primaryTool = Tool.CONNECT;
+            } else if (this.lastToolChoice == Tool.CONNECT) {
+                this.graphView.primaryTool = Tool.MOVE;
+            }
+            this.lastToolChoice = originalToolChoice;
         }
     }
 
@@ -143,10 +154,11 @@ class GraphKeyboardHandler {
         if (document.activeElement.tagName != "BODY") { return; }
 
         switch (keyboardEvent.key) {
-        case "a":
-            this.graphView.selectAllNodes();
-            keyboardEvent.preventDefault();
-            break;
+        // case "a":
+        //     console.log(keyboardEvent.key);
+        //     this.graphView.selectAllNodes();
+        //     keyboardEvent.preventDefault();
+        //     break;
 
         case "d":
             let algorithmController = new AlgorithmController(this.graphView);
@@ -164,23 +176,6 @@ class GraphKeyboardHandler {
         case "m":
             this.graphView.snapNodesToGrid();
             break;
-
-        case "z":
-            if (keyboardEvent.shiftKey == false) {
-                let step = this.graphView.history.goToStep(-1);
-                if (step) {
-                    keyboardEvent.preventDefault();
-                }
-            }
-            break;
-
-        case "Z":
-            let step = this.graphView.history.goToStep(1);
-            if (step) {
-                keyboardEvent.preventDefault();
-            }
-            break;
-
 
         case "Escape":
             this.graphView.selectionHandler.clear();

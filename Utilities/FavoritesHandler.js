@@ -28,7 +28,8 @@ export default class FavoritesHandler {
 
     deletingFavorite = null;
 
-    constructor() {
+    constructor(callback) {
+        this.callback = callback;
         this.favoritesList = document.getElementById("favoritesList");
         this.menuBody = document.getElementsByClassName("menuBody")[0];
 
@@ -118,6 +119,7 @@ export default class FavoritesHandler {
         loadBtn.onclick = () => {
             let favoriteContent = window.localStorage.getItem(key);
             g.loadSerializedGraph(favoriteContent);
+            this.callback()
             this.updateFavorites();
         }
         loadBtn.removeAttribute("id");

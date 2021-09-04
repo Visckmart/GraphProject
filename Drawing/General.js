@@ -62,7 +62,8 @@ export const HighFPSFeature = {
     CONNECTING: "connecting",
     SELECTING: "selecting",
     BLINKING: "blinking",
-    NODE_HIGHLIGHT: "node_highlight"
+    NODE_HIGHLIGHT: "node_highlight",
+    HOLDING: "holding"
 }
 
 export const GraphCategory = {
