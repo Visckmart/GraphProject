@@ -32,19 +32,26 @@ export function serializeEdge() {
     // }
     // console.log("s", serializedHighlights)
     // return `${this.label}${serializedHighlights}`
-    return `${this.label}`;
+    return ``;
 }
 
 export function deserializeEdge(serializedEdge, partially = false) {
-    const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
-    let matchResult = serializedEdge.match(edgeDeserializationFormat);
-    if (!matchResult) {
-        console.error("Erro na deserialização: ", serializedEdge, matchResult)
-        return;
-    }
+    // console.log("deserializeEdge", serializedEdge);
+    // const edgeDeserializationFormat = /([a-zA-Z0-9]+)-?(.*)?/i;
+    // console.trace();
+    // let matchResult = serializedEdge.match(edgeDeserializationFormat);
+    // console.log(serializedEdge);
+    // if (!matchResult) {
+    //     console.error("Erro na deserialização: ", serializedEdge, matchResult)
+    //     return;
+    // }
 
-    // const [, label, serializedHighlights] = matchResult;
-    const [, label, rest] = matchResult;
+    // let label = null;
+    // let rest = null;
+    // if (matchResult) {
+    //     // const [, label, serializedHighlights] = matchResult;
+    //     [, label, rest] = matchResult;
+    // }
     // console.log(label, rest)
     // let highlights;
     // if (serializedHighlights != null) {
@@ -53,9 +60,9 @@ export function deserializeEdge(serializedEdge, partially = false) {
     // }
 
     if (partially == false) {
-        return new Edge({ label });
+        return new Edge();
     } else {
-        return [{ label }, rest];
+        return serializedEdge;
     }
 }
 //endregion
@@ -67,6 +74,6 @@ export function serializeAssignedValue() {
 }
 
 export function deserializeAssignedValue(serializedValue) {
-    return { assignedValue: serializedValue ? parseInt(serializedValue) : -1 }
+    return { assignedValue: serializedValue ? parseInt(serializedValue.substring(1)) : -1 }
 }
 //endregion

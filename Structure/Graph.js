@@ -273,10 +273,11 @@ class Graph {
         for(let node of this.nodes()) {
             serializedNodes += `${node.serialize()}.`;
         }
+        serializedNodes = serializedNodes.slice(0, -1);
 
         let serializedEdges = "";
         for(let [edge, nodeA, nodeB] of this.uniqueEdges()) {
-            serializedEdges += `${nodeA.index}_${nodeB.index}-${edge.serialize()}.`;
+            serializedEdges += `${nodeA.index}_${nodeB.index}${edge.serialize()}.`;
         }
 
         serializedEdges = serializedEdges.slice(0, -1);
@@ -321,9 +322,12 @@ class Graph {
         let [serializedNodes, serializedEdges] = serialized.split("~")
         let deserializedNodes = []
         let biggestIndex = 0;
+        let nodeLastChar = serializedNodes.slice(-1);
+        if (nodeLastChar == ".") {
+            serializedNodes = serializedNodes.slice(0, -1);
+        }
         if (serializedNodes) {
             let serializedNodesList = serializedNodes.split(".")
-            serializedNodesList.splice(-1, 1)
             for (let nodeStr of serializedNodesList) {
                 let node = nodeConstructor.deserialize(nodeStr)
                 if (node == undefined) continue;
@@ -338,7 +342,7 @@ class Graph {
             let serializedEdgesList = serializedEdges.split(".")
             serializedEdgesList.splice(-1, 1)
             for (let edgeStr of serializedEdgesList) {
-                const re = /(\d+)_(\d+)-(.*)/i;
+                const re = /(\d+)_(\d+)(-?.*)/i;
                 let found = edgeStr.match(re);
                 if (found == undefined) continue;
 
