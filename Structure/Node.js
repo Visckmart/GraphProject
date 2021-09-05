@@ -24,7 +24,7 @@
 // Node Definition
 import { globalNodeIndex } from "../Drawing/General.js";
 
-import { HighlightType, HighlightsHandler } from "../Utilities/Highlights.js"
+import { HighlightType, HighlightsHandler, NodeHighlight } from "../Utilities/Highlights.js"
 import { generateNewRandomLabel, colorFromComponents } from "../Utilities/Utilities.js";
 import ResponsibilityChain from "./Mixins/ResponsabilityChain.js";
 
@@ -111,9 +111,8 @@ export default class Node {
         ctx.beginPath();
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2*Math.PI);
 
-        let hasHighlightWithBG = this.highlights.has(HighlightType.DARK_WITH_BLINK)
-                                 || this.highlights.has(HighlightType.LIGHTEN)
-                                 || this.highlights.has(HighlightType.DARKEN)
+        let hasHighlightWithBG = this.highlights.has(NodeHighlight.overlayLight)
+                                 || this.highlights.has(NodeHighlight.overlayDark)
         if (!hasHighlightWithBG) {
             ctx.fillStyle = background;
         } else {
@@ -124,7 +123,7 @@ export default class Node {
             ctx.fillStyle = "#EEEC";
             ctx.fill();
         }
-        if (this.highlights.has(HighlightType.DISABLED)) {
+        if (this.highlights.has(NodeHighlight.disabled)) {
             ctx.globalAlpha = 0.5;
         }
         ctx.stroke();
@@ -152,14 +151,15 @@ export default class Node {
 
     /** Desenho dos destaques **/
     _drawHighlights = (ctx) => {
+        // console.log(this.highlights);
         let fpsRequests = [0]
         // console.log(this.highlights.highlights)
-        if (this.highlights.has(HighlightType.SELECTION)) {
+        if (this.highlights.has(NodeHighlight.selection)) {
             /* Borda pontilhada */
-            ctx.save()
+            ctx.save();
 
-            ctx.strokeStyle = "#1050FF"
-            ctx.lineWidth = 4
+            ctx.strokeStyle = "#1050FF";
+            ctx.lineWidth = 4;
 
             // Raio do tracejado
             // (A soma faz com que o tracejado fique do lado de fora do círculo)
@@ -183,82 +183,50 @@ export default class Node {
             fpsRequests.push(20);
         }
 
-        if (this.highlights.has(HighlightType.DARK_WITH_BLINK)) {
+        if (this.highlights.has(NodeHighlight.blinkWithColor())) {
+            let [color, speed] = this.highlights.getColor(NodeHighlight.blinkWithColor());
             /* Fundo cinza escuro */
             // drawPreservingState(ctx, () => {
             ctx.save();
-            if (this.highlights.has(HighlightType.COLORED_A)) {
-                let twinkleTime = window.performance.now() / 500;
-                let whiteLayerAlpha = -(Math.sin(twinkleTime) - 0.85);
-                ctx.globalAlpha = whiteLayerAlpha < 0 ? 0 : whiteLayerAlpha;
-                fpsRequests.push(20);
-            }
+            let twinkleTime = window.performance.now() / (250/speed);
+            let whiteLayerAlpha = -(Math.sin(twinkleTime) - 1);
+            ctx.globalAlpha = whiteLayerAlpha < 0 ? 0 : whiteLayerAlpha;
+            fpsRequests.push(20);
 
-            ctx.fillStyle = colorFromComponents(50, 50, 50, 0.8)
+            ctx.fillStyle = color
             ctx.fill();
             ctx.restore();
             // })
         }
-
-        if (this.highlights.has(HighlightType.LIGHTEN)) { /* Clarear */
+        if (this.highlights.has(NodeHighlight.overlayWithColor())) {
             ctx.save()
 
-            ctx.fillStyle = colorFromComponents(255, 255, 255, 0.8)
-            ctx.fill();
-
-            ctx.restore();
-        } else if (this.highlights.has(HighlightType.DARKEN)) { /* Escurecer */
-            ctx.save()
-
-            ctx.fillStyle = colorFromComponents(50, 50, 50, 0.5)
+            if (this.highlights.has(NodeHighlight.overlayLight)) { /* Clarear */
+                ctx.fillStyle = colorFromComponents(255, 255, 255, 0.8)
+            } else if (this.highlights.has(NodeHighlight.overlayDark)) { /* Escurecer */
+                ctx.fillStyle = colorFromComponents(50, 50, 50, 0.5)
+            } else {
+                ctx.fillStyle = this.highlights.getColor(NodeHighlight.overlayWithColor());
+            }
             ctx.fill();
 
             ctx.restore();
         }
 
-        if (this.highlights.has(HighlightType.COLORED_A)) { /* Borda colorida */
+        // console.log(1, this.highlights.has(NodeHighlight.borderWithColor()))
+        // console.log(2, this.highlights.getColor(NodeHighlight.borderWithColor()))
+        if (this.highlights.has(NodeHighlight.borderWithColor())) { /* Borda colorida */
+            let color = this.highlights.getColor(NodeHighlight.borderWithColor());
             ctx.save();
 
             // Configuramos a borda
-            ctx.strokeStyle = "MediumSeaGreen";
+            ctx.strokeStyle = color;
             ctx.lineWidth = 4
 
             // Desenhamos a borda
             ctx.beginPath();
             ctx.arc(this.pos.x, this.pos.y,
                     this.radius + 4,
-                    0, 2 * Math.PI);
-            ctx.stroke();
-
-            ctx.restore();
-        } else if (this.highlights.has(HighlightType.COLORED_BORDER2)) { /* Borda colorida */
-            ctx.save();
-
-            ctx.lineWidth = 5
-
-            // Configuramos a borda
-            ctx.strokeStyle = "MediumSpringGreen";
-
-            // Desenhamos a borda
-            ctx.beginPath();
-            ctx.arc(this.pos.x, this.pos.y,
-                    this.radius + 5,
-                    0, 2 * Math.PI);
-            ctx.stroke();
-
-            ctx.restore();
-        } else if (this.highlights.has(HighlightType.ALGORITHM_VISITING)) {
-            ctx.save();
-
-            ctx.lineWidth = 5
-
-            // Configuramos a borda
-            ctx.strokeStyle = "blue";
-
-            // Desenhamos a borda
-            ctx.beginPath();
-            ctx.arc(this.pos.x, this.pos.y,
-                    this.radius + 5,
                     0, 2 * Math.PI);
             ctx.stroke();
 
@@ -271,7 +239,7 @@ export default class Node {
     drawLabel = (ctx, background, nodeLabeling) => {
         ctx.save()
         ctx.font = "bold 30px Arial";
-        ctx.fillStyle = this.highlights.has(HighlightType.DARKEN) ? background : this.color;
+        ctx.fillStyle = this.highlights.has(NodeHighlight.overlayDark) ? background : this.color;
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
         let nodeText;
@@ -286,7 +254,7 @@ export default class Node {
             nodeText = String.fromCharCode(this.index+65)
             break;
         }
-        if (this.highlights.has(HighlightType.DISABLED)) {
+        if (this.highlights.has(NodeHighlight.disabled)) {
             ctx.globalAlpha = 0.5;
         }
         ctx.fillText(nodeText, this.pos.x, this.pos.y);

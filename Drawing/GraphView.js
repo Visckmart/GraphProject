@@ -25,7 +25,7 @@ import {
     canvas, CanvasType, fastOverlayCanvas, GraphCategory, HighFPSFeature, incrementGlobalIndex, slowOverlayCanvas, Tool
 } from "./General.js"
 import Graph from "../Structure/Graph.js"
-import { HighlightType } from "../Utilities/Highlights.js";
+import { HighlightType, NodeHighlight as NodeHighlights } from "../Utilities/Highlights.js";
 
 import GraphMouseHandler from "./GraphMouseInteraction.js"
 import GraphKeyboardHandler from "./GraphKeyboardInteraction.js"

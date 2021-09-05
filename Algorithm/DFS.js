@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { HighlightType } from "../Utilities/Highlights.js"
+import { HighlightType, NodeHighlight } from "../Utilities/Highlights.js"
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import Stack from "./Auxiliary/Stack.js";
 
@@ -59,7 +59,7 @@ function executeDFS(controller, startNode)
 
     // Highlight para nós que não foram descobertos
     for(let node of graph.nodes()) {
-        node.highlights.add(HighlightType.DISABLED)
+        node.highlights.add(NodeHighlight.disabled)
     }
 
     controller.addStep(graph, `Adicionando o nó inicial ${startNode.toString()} na pilha.`, 'init')
@@ -68,7 +68,7 @@ function executeDFS(controller, startNode)
     outerLoop: while(stack.length > 0){
         ({node: currentNode, edge: currentEdge} = stack.pop())
 
-        currentNode.highlights.add(HighlightType.COLORED_BORDER2)
+        currentNode.highlights.add(NodeHighlight.borderWithColor("MediumSpringGreen"))
         currentNode.visited = true
 
         if(currentEdge)
@@ -79,11 +79,11 @@ function executeDFS(controller, startNode)
             currentEdge.highlights.add(HighlightType.LIGHTEN)
         } else {
             // Removendo highlight para o primeiro nó
-            currentNode.highlights.remove(HighlightType.DISABLED)
+            currentNode.highlights.remove(NodeHighlight.disabled)
 
             controller.addStep(graph, `Visitando o nó ${currentNode.toString()}.`, 'loopStart')
         }
-        currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
+        currentNode.highlights.remove(NodeHighlight.borderWithColor())
 
         for(let [edge, node] of graph.edgesFrom(currentNode))
         {
@@ -94,7 +94,7 @@ function executeDFS(controller, startNode)
                 stack.push(new nodeEdgePair(node, edge))
 
                 // Removendo highlight para nós descobertos
-                node.highlights.remove(HighlightType.DISABLED)
+                node.highlights.remove(NodeHighlight.disabled)
 
                 edge.highlights.add(HighlightType.COLORED_A)
                 controller.addStep(graph, `Adicionando o nó ${currentNode.toString()} na pilha e partindo para o nó ${node.toString()}.`, 'visitStart')
@@ -102,10 +102,9 @@ function executeDFS(controller, startNode)
                 continue outerLoop;
             }
         }
-        currentNode.highlights.add(HighlightType.COLORED_BORDER2)
+        currentNode.highlights.add(NodeHighlight.borderWithColor("MediumSpringGreen"))
         controller.addStep(graph, `Nó ${currentNode.toString()} não tem mais vizinhos não visitados.`, 'visitStart')
-        currentNode.highlights.remove(HighlightType.COLORED_BORDER2)
+        currentNode.highlights.remove(NodeHighlight.borderWithColor())
     }
-    currentNode.highlights.remove(HighlightType.DARK_WITH_BLINK)
     controller.addStep(graph, "Algoritmo finalizado.")
 }

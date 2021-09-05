@@ -21,6 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 export const HighlightType = {
     SELECTION:            "selection",
     DARK_WITH_BLINK:      "algorithm_focus",
@@ -31,6 +32,45 @@ export const HighlightType = {
     COLORED_A:       "algorithm_result",
     FEATURE_PREVIEW:      "feature_preview",
     COLORED_BORDER2: "cb2"
+}
+
+// export const NodeHighlight = {
+//     SELECTION:            ["selection"],
+//
+//     COLORED_BORDER:       function (color) { return ["border", color]; },
+//
+//     BLINK_COLORED:        function (color, speed = 1) { return ["blink", color, speed]; },
+//     BLINK_DARK:           ["blink", "black", 1],
+//
+//     OVERLAY_COLORED:      function (color) { return ["overlay", color]; },
+//     OVERLAY_LIGHT:        ["overlay", "white"],
+//     OVERLAY_DARK:         ["overlay", "black"],
+//
+//     DISABLED:             ["disabled"]
+// }
+
+export const NodeHighlight = {
+    selection:          ["selection"],
+
+    borderWithColor:    function (color) {
+                            if (color == undefined) { return "border"; }
+                            return ["border", color];
+                        },
+
+    blinkWithColor:     function (color, speed = 1) {
+                            if (color == undefined) { return "blink"; }
+                            return ["blink", color, speed];
+                        },
+    blinkToDark:        ["blink", "black", 1],
+
+    overlayWithColor:   function (color) {
+                            if (color == undefined) { return "overlay"; }
+                            return ["overlay", color];
+                        },
+    overlayLight:       ["overlay", "white"],
+    overlayDark:        ["overlay", "black"],
+
+    disabled:           ["disabled"]
 }
 
 const highlightNames = Object.entries(HighlightType)
@@ -61,15 +101,37 @@ export class HighlightsHandler {
         this.highlights.clear()
         this.highlights.add(highlight)
     }
-    remove(highlight) {
-        if (this.has(highlight) == false && highlight != HighlightType.SELECTION) {
-            if (this.debug) console.warn(`Destaque ${highlight} já não está presente.`)
+
+    remove(highlightType) {
+        if (this.has(highlightType) == false && highlightType != HighlightType.SELECTION) {
+            if (this.debug) console.warn(`Destaque ${highlightType} já não está presente.`)
         }
-        this.highlights.delete(highlight)
+
+        let removed = this.highlights.delete(highlightType) != null;
+        if (removed) { return; }
+
+        for (let highlightInfo of this.highlights) {
+            if (highlightType == highlightInfo[0])
+                this.highlights.delete(highlightInfo)
+        }
     }
 
-    has(highlight) {
-        return this.highlights.has(highlight);
+    has(highlightType) {
+        if (this.highlights.has(highlightType)) { return true; }
+        for (let highlightInfo of this.highlights) {
+            if (highlightType == highlightInfo[0]) { return true; }
+        }
+        return false;
+    }
+
+    getColor(highlightType) {
+        for (let highlightInfo of this.highlights) {
+            if (highlightInfo[0] == highlightType && highlightInfo.length > 1) {
+                let infoCopy = [...highlightInfo];
+                infoCopy.shift();
+                return infoCopy;
+            }
+        }
     }
 
     clear() {
