@@ -25,6 +25,7 @@ import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import {HighlightType} from "../Utilities/Highlights.js";
+import pseudocode from "../Algorithm/Pseudocodes/FordFulkerson.htm";
 
 
 export default async function FordFulkerson(controller) {
@@ -80,7 +81,7 @@ function findPath(graph, source, sink) {
 
 function executeFordFulkerson(controller, source, sink) {
     let graph = controller.graphView.structure
-    controller.setPseudocode('../Algorithm/Pseudocodes/FordFulkerson.html')
+    controller.setPseudocode(pseudocode)
 
     // Verificando nós de entrada e saída
     if(graph.edgesFrom(sink).next().value) {

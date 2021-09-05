@@ -24,6 +24,7 @@
 import { HighlightType } from "../Utilities/Highlights.js"
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import Queue from "./Auxiliary/Queue.js";
+import pseudocode from '../Algorithm/Pseudocodes/BFS.htm'
 
 // Prepara a execução do BFS
 export default async function BFS(controller)
@@ -50,7 +51,7 @@ class nodeEdgePair {
 // Executa o BFS
 function executeBFS(controller, startNode)
 {
-    controller.setPseudocode('../Algorithm/Pseudocodes/BFS.html')
+    controller.setPseudocode(pseudocode)
 
     let graph = controller.graphView.structure
     let queue = new Queue()

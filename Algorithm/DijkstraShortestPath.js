@@ -26,6 +26,7 @@ import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMixin.js";
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
+import pseudocode from "../Algorithm/Pseudocodes/DijkstraShortestPath.htm";
 
 export default async function DijkstraShortestPath(controller) {
     let initialNode
@@ -47,7 +48,7 @@ export default async function DijkstraShortestPath(controller) {
 
 function executeDijkstraShortestPath(controller, initialNode, finalNode) {
     let graph = controller.graphView.structure
-    controller.setPseudocode('../Algorithm/Pseudocodes/DijkstraShortestPath.html')
+    controller.setPseudocode(pseudocode)
 
     // Preparando a relação entre distance e assignedValue
     for (let node of graph.nodes()) {

@@ -25,6 +25,7 @@ import NodeAssignedValueMixin from "../Structure/Mixins/Node/NodeAssignedValueMi
 import {cloneTransformNodes} from "./Auxiliary/GraphTransformations.js";
 import {HighlightType} from "../Utilities/Highlights.js";
 import {MinHeap} from "./Auxiliary/Heap.js";
+import pseudocode from "../Algorithm/Pseudocodes/PrimMST.htm";
 
 function markArtifactAsUnreached(artifact) {
     artifact.highlights.add(HighlightType.DISABLED)
@@ -55,7 +56,7 @@ function toggleArtifactExploring(artifact) {
 export default function PrimMST(controller) {
     /* Esse algoritmo usa nós com assignedValue para visualização */
     controller.graphView.structure = cloneTransformNodes(controller.graphView.structure, NodeAssignedValueMixin)
-    controller.setPseudocode('../Algorithm/Pseudocodes/PrimMST.html')
+    controller.setPseudocode(pseudocode)
 
     let graph = controller.graphView.structure
 

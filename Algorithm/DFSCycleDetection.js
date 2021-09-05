@@ -25,6 +25,8 @@ import {HighlightType} from "../Utilities/Highlights.js";
 import Stack from "./Auxiliary/Stack.js";
 import GraphDirectedMixin from "../Structure/Mixins/Graph/GraphDirectedMixin.js";
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
+import pseudocode from "../Algorithm/Pseudocodes/DFSCycleDetection.htm";
+
 export default async function DFSCycleDetection(controller) {
     let initialNode = null
 
@@ -53,7 +55,7 @@ export function ExecuteDFSCycleDetection(controller,
 
 
     if (record) {
-        controller.setPseudocode('../Algorithm/Pseudocodes/DFSCycleDetection.html')
+        controller.setPseudocode(pseudocode)
     }
 
     const isDirected = graph.mixins.has(GraphDirectedMixin)

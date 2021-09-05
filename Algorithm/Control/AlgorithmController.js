@@ -291,23 +291,11 @@ class AlgorithmController {
 
     //#region Comportamento de pseudo-código
     setPseudocode(code) {
-        let request = new XMLHttpRequest()
-        request.addEventListener('load', (response) => {
-            // if(request.status === 200) {
-                this.pseudocode = new AlgorithmPseudocode(request.response)
-            // }
-            // else {
-            //     console.warn(request.status);
-            //     console.warn(response);
-            //     throw Error("Pseudo-código não pode ser recuperado.")
-            // }
-            if(!this.menuHandler) {
-                this.menuHandler = new AlgorithmMenu()
-            }
-        })
-        request.open("GET", code)
-        request.send()
-        // console.warn("2",request.status);
+        this.pseudocode = new AlgorithmPseudocode(code)
+
+        if(!this.menuHandler) {
+            this.menuHandler = new AlgorithmMenu()
+        }
     }
     //#endregion
     // Esconde a barra de play

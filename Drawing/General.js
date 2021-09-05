@@ -22,6 +22,7 @@
  */
 
 import "../Pages/style.css"
+import "../Pages/generalstyle.css"
 
 // Canvas
 export var canvas = document.getElementById("mainCanvas");

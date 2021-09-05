@@ -24,6 +24,7 @@
 import { HighlightType } from "../Utilities/Highlights.js"
 import {RequirementType} from "./Control/AlgorithmRequirements.js";
 import Stack from "./Auxiliary/Stack.js";
+import pseudocode from "../Algorithm/Pseudocodes/DFS.htm";
 
 // Prepara a execução do BFS
 export default async function BFS(controller)
@@ -50,7 +51,7 @@ class nodeEdgePair {
 // Executa o BFS
 function executeDFS(controller, startNode)
 {
-    controller.setPseudocode('../Algorithm/Pseudocodes/DFS.html')
+    controller.setPseudocode(pseudocode)
 
     let graph = controller.graphView.structure
     let stack = new Stack()

@@ -57,10 +57,21 @@ module.exports = {
                 type: 'asset/resource',
             },
             {
+                // Load pseudocode as string
+                test: /.htm$/i,
+                type: 'asset/source'
+            },
+            {
                 test: /\.html$/i,
                 loader: "html-loader",
                 options: {
-                    sources: false,
+                    sources: {
+                        list: [{
+                            tag: "img",
+                            attribute: "src",
+                            type: "src",
+                        }]
+                    },
                     preprocessor: (content, loaderContext) => {
                         let array = content.split('\n')
                         array = array.filter(a => {

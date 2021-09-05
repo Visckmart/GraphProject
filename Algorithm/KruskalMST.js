@@ -24,11 +24,12 @@
 import UnionFind from "./Auxiliary/UnionFind.js";
 import {HighlightType} from "../Utilities/Highlights.js";
 import Explanation from "./Explanations/KruskalMSTExplanation.js";
+import pseudocode from "../Algorithm/Pseudocodes/KruskalMST.htm";
 
 export default function KruskalMST(controller) {
     let graph = controller.graphView.structure
 
-    controller.setPseudocode('../Algorithm/Pseudocodes/KruskalMST.html')
+    controller.setPseudocode(pseudocode)
 
     let nodes = Array.from(graph.nodes())
     let unionFind = new UnionFind(nodes)
